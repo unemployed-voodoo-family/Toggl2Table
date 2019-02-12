@@ -50,7 +50,7 @@
         </Menu>
       </menus>
     </MenuBar>
-      <GridPane prefHeight="585.0" prefWidth="900.0">
+      <GridPane fx:id="appRoot" prefHeight="585.0" prefWidth="900.0">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="445.0" minWidth="10.0" prefWidth="165.0" />
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="764.0" minWidth="10.0" prefWidth="735.0" />
@@ -63,12 +63,8 @@
                <children>
                   <HBox prefHeight="68.0" prefWidth="165.0">
                      <children>
-                        <ImageView fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../Downloads/icons8-user-filled-96.png" />
-                           </image>
-                        </ImageView>
-                        <Label text="User Name" />
+                        <ImageView fx:id="avatarView" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                        <Label fx:id="userNameLabel" text="User Name" />
                      </children>
                      <VBox.margin>
                         <Insets />
@@ -77,8 +73,8 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
                   </HBox>
-                  <Button mnemonicParsing="false" prefHeight="31.0" prefWidth="342.0" text="Table View" />
-                  <Button mnemonicParsing="false" prefHeight="31.0" prefWidth="240.0" text="Settings" />
+                  <Button fx:id="tableNavBtn" mnemonicParsing="false" prefHeight="31.0" prefWidth="342.0" text="Table View" />
+                  <Button fx:id="settingsNavBtn" mnemonicParsing="false" prefHeight="31.0" prefWidth="240.0" text="Settings" />
                </children>
             </VBox>
          </children>

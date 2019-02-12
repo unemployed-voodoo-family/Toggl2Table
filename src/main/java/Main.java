@@ -24,6 +24,7 @@ public class Main extends Application {
         URL r = getClass().getClassLoader().getResource("login.fxml");
         Parent root = FXMLLoader.load(r);
         Scene scene = new Scene(root);
+        scene.getStylesheets().add("styles.css");
         //scene.getStylesheets().add("styles/style.css");
         primaryStage.setTitle("Toggle Time Sheet - Login");
         primaryStage.setScene(scene);
