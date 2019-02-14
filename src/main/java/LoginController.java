@@ -1,4 +1,5 @@
 import ch.simas.jtoggl.JToggl;
+import ch.simas.jtoggl.User;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
@@ -32,13 +33,29 @@ public class LoginController {
         String password = PasswordField.getText();
         jToggl = new JToggl(user, password);
         jToggl.switchLoggingOn();
-
-        try {
-
-            new GUIBaseController().start();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if(isLoggedIn()){
+            try {
+                new GUIBaseController().start();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+
+
+
+    }
+
+    private boolean isLoggedIn(){
+        boolean loggedIn;
+        User user = jToggl.getCurrentUser();
+        String userString = user.toString();
+        if(userString.contains("api_token")){
+            loggedIn = true;
+        }
+        else{
+            loggedIn = false;
+        }
+        return loggedIn;
     }
 
 }
