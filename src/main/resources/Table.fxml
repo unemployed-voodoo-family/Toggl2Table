@@ -1,39 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
-
 
 <TabPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="TableViewController">
    <tabs>
       <Tab text="Formatted data">
          <content>
-            <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0">
+            <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="600.0">
               <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="510.0" minWidth="10.0" prefWidth="500.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="295.0" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
+                <ColumnConstraints hgrow="ALWAYS" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" />
               </columnConstraints>
               <rowConstraints>
-                <RowConstraints maxHeight="195.0" minHeight="10.0" prefHeight="64.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="351.0" minHeight="10.0" prefHeight="336.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="336.0" vgrow="ALWAYS" />
               </rowConstraints>
                <children>
-                  <GridPane GridPane.rowIndex="1">
+                  <GridPane>
                     <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                      <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
                     </columnConstraints>
                     <rowConstraints>
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" vgrow="ALWAYS" />
                     </rowConstraints>
                      <children>
-                        <TableView prefHeight="200.0" prefWidth="200.0">
+                        <TableView>
                           <columns>
                             <TableColumn prefWidth="75.0" text="C1" />
                             <TableColumn prefWidth="75.0" text="C2" />
                           </columns>
                         </TableView>
                      </children>
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
                   </GridPane>
                </children>
             </GridPane>
