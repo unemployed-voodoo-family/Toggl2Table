@@ -9,7 +9,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUIBaseController">
+<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.GUIBaseController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -63,7 +63,10 @@
                <children>
                   <HBox prefHeight="68.0" prefWidth="165.0">
                      <children>
-                        <ImageView fx:id="avatarView" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fx:id="avatarView" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icons/icons8-user-filled-96.png" />
+                           </image></ImageView>
                         <Label fx:id="userNameLabel" text="User Name" />
                      </children>
                      <VBox.margin>

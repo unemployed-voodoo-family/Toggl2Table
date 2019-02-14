@@ -1,3 +1,5 @@
+package GUI;
+
 import ch.simas.jtoggl.JToggl;
 import ch.simas.jtoggl.User;
 import javafx.fxml.FXML;
@@ -5,7 +7,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
-import javax.xml.soap.Text;
 import java.io.IOException;
 
 public class LoginController {
@@ -16,7 +17,7 @@ public class LoginController {
     private TextField emailField;
     @FXML
     private PasswordField PasswordField;
-    private static JToggl jToggl;
+    private JToggl jToggl;
 
 
     public void initialize() {

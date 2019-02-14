@@ -1,3 +1,12 @@
+body {
+    -fx-font-family: Roboto, Arial;
+}
+
+.settingsHeader {
+    -fx-font-size: 14px;
+    -fx-text-fill:#646464 ;
+}
+
 .root   {
     -fx-background-color: #ffffff;
     -fx-text-fill: #444444;

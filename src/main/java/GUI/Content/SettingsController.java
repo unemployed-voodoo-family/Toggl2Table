@@ -1,11 +1,10 @@
+package GUI.Content;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 
@@ -33,17 +32,10 @@ public class SettingsController {
     @FXML
     private Pane contentRoot;
 
-    public SettingsController() {
-
-    }
 
     public Node loadFXML() throws IOException {
         URL r = getClass().getClassLoader().getResource("Settings.fxml");
         return FXMLLoader.load(r);
-    }
-
-    @FXML
-    public void initialize() {
     }
 
 
