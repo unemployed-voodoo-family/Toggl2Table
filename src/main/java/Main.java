@@ -1,3 +1,4 @@
+import ch.simas.jtoggl.JToggl;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
