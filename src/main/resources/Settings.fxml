@@ -20,7 +20,7 @@
                 <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Label id="SettingsTitle" text="Set Work Hours">
+                  <Label text="Set Work Hours">
                      <font>
                         <Font size="20.0" />
                      </font>
@@ -63,7 +63,7 @@
                 <RowConstraints maxHeight="89.0" minHeight="71.0" prefHeight="71.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Label id="SettingsTitle" text="Stored data">
+                  <Label text="Stored data">
                      <font>
                         <Font size="20.0" />
                      </font>
@@ -102,7 +102,7 @@
             </Separator>
             <GridPane prefWidth="370.0" vgap="15.0">
                <children>
-                  <Label id="SettingsTitle" text="Logout">
+                  <Label text="Logout">
                      <font>
                         <Font size="20.0" />
                      </font>

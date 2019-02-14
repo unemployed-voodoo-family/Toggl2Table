@@ -1,10 +1,20 @@
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
+
+import javax.xml.soap.Text;
+import java.io.IOException;
 
 public class LoginController {
 
     @FXML
     private Button SubmitBtn;
+    @FXML
+    private TextField emailField;
+    @FXML
+    private PasswordField PasswordField;
+
 
     public void initialize() {
         setKeyAndClickListeners();
@@ -17,8 +27,9 @@ public class LoginController {
     private void login() {
         //TODO: verify login credentials
         try {
+
             new GUIBaseController().start();
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
