@@ -4,6 +4,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
+import javax.xml.soap.Text;
+import java.io.IOException;
+
 public class LoginController {
 
     @FXML
@@ -13,6 +16,7 @@ public class LoginController {
     @FXML
     private PasswordField PasswordField;
     private static JToggl jToggl;
+
 
     public void initialize() {
         setKeyAndClickListeners();
@@ -30,8 +34,9 @@ public class LoginController {
         jToggl.switchLoggingOn();
 
         try {
+
             new GUIBaseController().start();
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
