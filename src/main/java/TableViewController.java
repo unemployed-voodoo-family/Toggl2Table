@@ -4,7 +4,7 @@ import javafx.scene.Node;
 import java.io.IOException;
 import java.net.URL;
 
-public class TableViewController {
+public class TableViewController{
 
     public Node loadFXML() throws IOException {
         URL r = getClass().getClassLoader().getResource("Table.fxml");

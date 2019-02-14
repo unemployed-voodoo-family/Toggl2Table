@@ -1,3 +1,4 @@
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -46,6 +47,9 @@ public class GUIBaseController {
     @FXML
     private Pane contentRoot;
 
+    private Node settings;
+    private Node table;
+
     @FXML
     public void start() throws IOException {
         Stage newStage = new Stage();
@@ -59,6 +63,18 @@ public class GUIBaseController {
 
     public void initialize() {
         setKeyAndClickListeners();
+        loadContent();
+    }
+
+    private void loadContent() {
+        try {
+            settings = new SettingsController().loadFXML();
+            table = new TableViewController().loadFXML();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
 
@@ -67,31 +83,21 @@ public class GUIBaseController {
 
     private void setKeyAndClickListeners() {
 
-        settingsNavBtn.setOnAction(event -> showSettingsView());
-        tableNavBtn.setOnAction(event -> showTableView());
+        settingsNavBtn.setOnAction(event -> switchContentView(settings));
+        tableNavBtn.setOnAction(event -> switchContentView(table));
     }
 
-    private void showTableView() {
-        TableViewController settings = new TableViewController();
-        try {
-            Node content = (TabPane) settings.loadFXML();
-            contentRoot.getChildren().addAll(content);
-        } catch (IOException e) {
-            e.printStackTrace();
+
+    private void switchContentView(Node content) {
+        ObservableList<Node> children = contentRoot.getChildren();
+        if (children.isEmpty()) {
+                children.addAll(content);
+        } else if (!children.contains(content)){
+            children.clear();
+            children.addAll(content);
         }
     }
 
-    private void showSettingsView() {
-        //TODO: Find the scroll-bar
-        SettingsController settings = new SettingsController();
-        try {
-            ScrollPane content = (ScrollPane) settings.loadFXML();
-            content.setPrefWidth(contentRoot.getWidth());
-            contentRoot.getChildren().addAll(content);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
 
 }

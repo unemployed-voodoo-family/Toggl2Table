@@ -30,7 +30,6 @@ public class SettingsController {
     private TextField dataPathField;
     @FXML
     private Button logoutBtn;
-
     @FXML
     private Pane contentRoot;
 
@@ -38,10 +37,10 @@ public class SettingsController {
 
     }
 
-   public Node loadFXML() throws IOException {
-       URL r = getClass().getClassLoader().getResource("Settings.fxml");
-       return FXMLLoader.load(r);
-   }
+    public Node loadFXML() throws IOException {
+        URL r = getClass().getClassLoader().getResource("Settings.fxml");
+        return FXMLLoader.load(r);
+    }
 
     @FXML
     public void initialize() {
