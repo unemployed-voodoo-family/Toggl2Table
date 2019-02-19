@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
 <?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.geometry.Insets?>
@@ -27,7 +28,7 @@
           </Menu>
         </menus>
       </MenuBar>
-      <GridPane prefHeight="462.0" prefWidth="829.0">
+      <GridPane fx:id="gridPane" prefHeight="462.0" prefWidth="829.0">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -61,6 +62,21 @@
                <GridPane.margin>
                   <Insets />
                </GridPane.margin>
+            </VBox>
+            <VBox GridPane.columnIndex="1" GridPane.rowIndex="2">
+               <children>
+                  <Pane prefHeight="200.0" prefWidth="200.0" />
+                  <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                     <children>
+                        <Pane prefHeight="180.0" prefWidth="48.0" />
+                        <ImageView fx:id="bufferImg" fitHeight="180.0" fitWidth="238.0" pickOnBounds="true" preserveRatio="true" visible="false">
+                           <image>
+                              <Image url="@icons/ajax-loader.gif" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </HBox>
+               </children>
             </VBox>
          </children>
       </GridPane>

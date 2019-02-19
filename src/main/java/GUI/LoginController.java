@@ -6,9 +6,16 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 
 public class LoginController {
 
@@ -18,7 +25,10 @@ public class LoginController {
     private TextField emailField;
     @FXML
     private PasswordField passwordField;
+    @FXML
+    private ImageView bufferImg;
     private JToggl jToggl;
+    boolean loggedIn = false;
 
 
     public void initialize() {
@@ -31,9 +41,15 @@ public class LoginController {
 
     private void login() {
         //TODO: verify login credentials
-        String user = emailField.getText();
-        String password = passwordField.getText();
-        jToggl = new JToggl(user, password);
+        bufferImg.setVisible(true);
+        toggleThread.start();
+    }
+
+
+
+    // Run thread to avoid GUI freeze
+    Thread toggleThread = new Thread(() -> {
+        jToggl = new JToggl(emailField.getText(), passwordField.getText());
         jToggl.switchLoggingOn();
         if(isLoggedIn()) {
             try {
@@ -42,13 +58,13 @@ public class LoginController {
             catch(IOException e) {
                 e.printStackTrace();
             }
+            bufferImg.setVisible(false);
         }
+    });
 
 
-    }
 
     private boolean isLoggedIn() {
-        boolean loggedIn;
         User user = jToggl.getCurrentUser();
         String userString = user.toString();
         if(userString.contains("api_token")) {
@@ -65,6 +81,6 @@ public class LoginController {
         if(e.getCode().toString().equals("ENTER")) {
             login();
         }
+        //System.out.println("ok");
     }
-
 }
