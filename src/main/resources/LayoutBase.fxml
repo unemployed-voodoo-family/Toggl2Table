@@ -9,7 +9,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUIBaseController">
+<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.GUIBaseController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -50,9 +50,9 @@
         </Menu>
       </menus>
     </MenuBar>
-      <GridPane prefHeight="585.0" prefWidth="900.0">
+      <GridPane fx:id="appRoot" prefHeight="585.0" prefWidth="900.0">
         <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="445.0" minWidth="10.0" prefWidth="165.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="165.0" minWidth="165.0" prefWidth="165.0" />
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="764.0" minWidth="10.0" prefWidth="735.0" />
         </columnConstraints>
         <rowConstraints>
@@ -63,12 +63,11 @@
                <children>
                   <HBox prefHeight="68.0" prefWidth="165.0">
                      <children>
-                        <ImageView fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="avatarView" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../Downloads/icons8-user-filled-96.png" />
-                           </image>
-                        </ImageView>
-                        <Label text="User Name" />
+                              <Image url="@icons/icons8-user-filled-96.png" />
+                           </image></ImageView>
+                        <Label fx:id="userNameLabel" text="User Name" />
                      </children>
                      <VBox.margin>
                         <Insets />
@@ -77,10 +76,11 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
                   </HBox>
-                  <Button mnemonicParsing="false" prefHeight="31.0" prefWidth="342.0" text="Table View" />
-                  <Button mnemonicParsing="false" prefHeight="31.0" prefWidth="240.0" text="Settings" />
+                  <Button fx:id="tableNavBtn" mnemonicParsing="false" prefHeight="31.0" prefWidth="342.0" text="Table View" />
+                  <Button fx:id="settingsNavBtn" mnemonicParsing="false" prefHeight="31.0" prefWidth="240.0" text="Settings" />
                </children>
             </VBox>
+            <Pane fx:id="contentRoot" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" />
          </children>
       </GridPane>
     <HBox id="HBox" alignment="CENTER_LEFT" spacing="5.0" VBox.vgrow="NEVER">
