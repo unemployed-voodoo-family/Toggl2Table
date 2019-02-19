@@ -1,6 +1,7 @@
 # Compiled files
 out/
 *.class
+target
 
 # Log file
 *.log
@@ -8,6 +9,7 @@ out/
 # IntelliJ files
 /.idea/*
 !/.idea/codeStyles/*
+.iml
 
 # BlueJ files
 *.ctxt
