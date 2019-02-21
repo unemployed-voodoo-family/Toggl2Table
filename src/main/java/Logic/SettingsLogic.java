@@ -9,19 +9,26 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
 
+/**
+ * Class to handle the logic of the settings
+ */
 public class SettingsLogic {
 
     private static DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
-    public SettingsLogic() {
-    }
-
+    /**
+     * Writes the specified work hours to the "hours.properties" file.
+     * @param fromDate the start of the period
+     * @param toDate the end of the period
+     * @param hoursStr the standard work hours for this period
+     * @throws URISyntaxException
+     * @throws IOException
+     */
     public void setWorkHours(LocalDate fromDate, LocalDate toDate,
                              String hoursStr) throws URISyntaxException, IOException {
         Double hours = Double.valueOf(hoursStr);
@@ -38,6 +45,14 @@ public class SettingsLogic {
 
     }
 
+    /**
+     * Checks for overlap between the newly created period and the already existing ones.
+     * Fixes overlap by overwriting old entries, and stitches
+     * continous periods which have the same value.
+     * @param props the properties to write to
+     * @param newRange the DateRange entered by the user
+     * @param newValue the work hours entered by the user
+     */
     private void fixHoursOverlap(Properties props, DateRange newRange, Double newValue) {
 
         //TODO: Check if user input is logical

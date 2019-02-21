@@ -2,6 +2,10 @@ package GUI;
 
 import java.time.LocalDate;
 
+/**
+ * Class to store a period of time, denoted by a from and to date.
+ * Includes helper methods to comapare with other DateRanges
+ */
 public class DateRange {
     private LocalDate from;
     private LocalDate to;
@@ -27,6 +31,11 @@ public class DateRange {
         this.to = to;
     }
 
+    /**
+     * Check if "from" value overlaps with another DateRange
+     * @param otherRange the DateRange to compare with
+     * @return true/false
+     */
     public boolean fromValueinRange(DateRange otherRange) {
         boolean inRange = false;
         if(this.from.isAfter(otherRange.from) && this.from.isBefore(otherRange.to) || this.from.equals(otherRange.to)) {
@@ -35,6 +44,11 @@ public class DateRange {
         return inRange;
     }
 
+    /**
+     * Check if "to" value overlaps with another DateRange
+     * @param otherRange the DateRange to compare with
+     * @return true/false
+     */
     public boolean toValueInRange(DateRange otherRange) {
         boolean inRange = false;
         if(this.to.isAfter(otherRange.from) && this.to.isBefore(otherRange.to) || this.to.equals(otherRange.from)) {
@@ -43,6 +57,11 @@ public class DateRange {
         return inRange;
     }
 
+    /**
+     * Check if this DateRange encapsulates another DateRange
+     * @param otherRange the DateRange to compare with
+     * @return true/false
+     */
     public boolean isEncapsulating(DateRange otherRange) {
         boolean encapsulating = false;
         if(isBeforeOrEqual(this.from, otherRange.from) && isAfterOrEqual(this.to, otherRange.to)) {
@@ -50,6 +69,7 @@ public class DateRange {
         }
         return encapsulating;
     }
+
 
     private boolean isAfterOrEqual(LocalDate date, LocalDate otherDate) {
         boolean afterOrEqual = false;

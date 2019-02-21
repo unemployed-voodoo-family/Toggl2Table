@@ -1,27 +1,16 @@
 package GUI.Content;
 
-import GUI.DateRange;
 import Logic.SettingsLogic;
-import com.sun.scenario.Settings;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
+import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
-import javafx.util.converter.DoubleStringConverter;
-import javafx.util.converter.NumberStringConverter;
-
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Properties;
 
 public class SettingsController {
 
@@ -45,10 +34,16 @@ public class SettingsController {
     private Pane contentRoot;
     @FXML
     private TextField hoursField;
+    @FXML
+    TableView hoursView;
 
-    private static DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     private SettingsLogic logic;
 
+    /**
+     * Load and return the root node of Settings.fxml
+     * @return the root node of Settings.fxml
+     * @throws IOException
+     */
     public Node loadFXML() throws IOException {
         URL r = getClass().getClassLoader().getResource("Settings.fxml");
         return FXMLLoader.load(r);
@@ -57,6 +52,7 @@ public class SettingsController {
     public void initialize() {
         this.logic = new SettingsLogic();
         initilizeFields();
+        hoursView.setVisible(false);
         setKeyAndClickListeners();
     }
 
@@ -68,11 +64,52 @@ public class SettingsController {
         });
     }
 
+    /**
+     * Set key and click listeners
+     */
     private void setKeyAndClickListeners() {
-
         confirmHoursBtn.setOnAction(event -> trySetWorkHours());
+        viewHoursBtn.setOnAction(event -> toggleViewHoursList());
     }
 
+    /**
+     * Toggle visibility of hours table
+     */
+    private void toggleViewHoursList() {
+        if(hoursView.isVisible()) {
+            hoursView.setVisible(false);
+            viewHoursBtn.setText("View hours");
+        } else {
+            hoursView.setVisible(true);
+            viewHoursBtn.setText("Hide hours");
+            populateHoursList();
+        }
+    }
+
+    /**
+     * WIP
+     */
+    private void populateHoursList() {
+        URL resourceUrl = getClass().getResource("/Settings/hours.properties");
+        File filename = null;
+        try {
+            filename = new File(resourceUrl.toURI().getPath());
+        }
+        catch(URISyntaxException e) {
+            e.printStackTrace();
+        }
+        Properties props = new Properties();
+        try {
+            props.load(new FileInputStream(filename));
+        }
+        catch(IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Sets work hours if fields are not empty
+     */
     private void trySetWorkHours() {
         try {
             boolean success = true;
@@ -99,24 +136,6 @@ public class SettingsController {
         catch(IOException e) {
             e.printStackTrace();
         }
-    }
-
-    class NumberField extends TextField {
-        @Override
-        public void replaceText(int start, int end, String text) {
-            if(text.matches("[0-9]*")) {
-                super.replaceText(start, end, text);
-            }
-        }
-
-        @Override
-        public void replaceSelection(String text) {
-            if(text.matches("[0-9]*")) {
-                super.replaceSelection(text);
-            }
-        }
-
-        ;
     }
 }
 
