@@ -7,16 +7,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
 
 public class LoginController {
 
@@ -28,8 +22,8 @@ public class LoginController {
     private PasswordField passwordField;
     @FXML
     private ImageView bufferImg;
+
     private JToggl jToggl;
-    private boolean loggedIn = false;
 
 
     public void initialize() {
@@ -51,7 +45,6 @@ public class LoginController {
         Thread toggleThread = new Thread(() -> {
             jToggl = new JToggl(username, password);
             jToggl.switchLoggingOn();
-
             if(isLoggedIn()){
                 Platform.runLater(() -> {
                     try{
@@ -62,17 +55,23 @@ public class LoginController {
                     }
                 });
             }
-
             bufferImg.setVisible(false);
             });
         toggleThread.start();
     }
 
 
-    //TODO: If username or password is wrong, make sure it doesn't crash
     private boolean isLoggedIn() {
-        User user = jToggl.getCurrentUser();
-        String userString = user.toString();
+        String userString = "";
+        try{
+            User user = jToggl.getCurrentUser();
+            userString = user.toString();
+        }
+        catch(Throwable t){
+            System.out.println("\nWrong username or password");
+        }
+
+        boolean loggedIn;
         if(userString.contains("api_token")) {
             loggedIn = true;
         }
