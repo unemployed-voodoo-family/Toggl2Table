@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.Iterator;
 import java.util.Properties;
@@ -33,12 +34,13 @@ public class SettingsLogic {
 
         DateRange range = new DateRange(fromDate, toDate);
         fixHoursOverlap(props, range, hours);
-        props.store(new FileOutputStream(filename), "Datez");
+        props.store(new FileOutputStream(filename), "Work hours");
 
     }
 
     private void fixHoursOverlap(Properties props, DateRange newRange, Double newValue) {
 
+        //TODO: Check if user input is logical
         //TODO: sort stored properties properly
         //TODO: combine entries if value is the same and they are in same time ranges
         Set<String> hours = props.stringPropertyNames();
@@ -46,29 +48,46 @@ public class SettingsLogic {
             Iterator it = hours.iterator();
             while(it.hasNext()) {
                 String key = (String) it.next();
-                String value = props.getProperty(key);
-                boolean changed = false;
+                String valueStr = props.getProperty(key);
+                Double value = Double.parseDouble(valueStr);
+                boolean keyChanged = false;
                 String[] dates = key.split(" - ");
                 System.out.println();
                 DateRange oldRange = new DateRange(LocalDate.parse(dates[0], DATE_FORMAT),
                                                    LocalDate.parse(dates[1], DATE_FORMAT));
-
                 //if new "from" value overrides old "to" value
                 if(newRange.fromValueinRange(oldRange)) {
-                    oldRange.setTo(newRange.getFrom().minusDays(1));
-                    changed = true;
+                    if(newValue.equals(value)) {
+                        newRange.setFrom(oldRange.getFrom());
+                    } else {
+                        oldRange.setTo(newRange.getFrom().minusDays(1));
+                        keyChanged = true;
+                    }
                 }
+                LocalDate fromValue = newRange.getFrom();
+                if(newValue.equals(value) && fromValue.minusDays(1).equals(oldRange.getTo())) {
+                    newRange.setFrom(oldRange.getFrom());
+                }
+
                 //if new "to" value overrides old "from" value
                 if(newRange.toValueInRange(oldRange)) {
-                    oldRange.setFrom(newRange.getTo().plusDays(1));
-                    changed = true;
+                    if(newValue.equals(value)) {
+                        newRange.setTo(oldRange.getTo());
+                    } else {
+                        oldRange.setFrom(newRange.getTo().plusDays(1));
+                        keyChanged = true;
+                    }
+                }
+                LocalDate toValue = newRange.getTo();
+                if(newValue.equals(value) && toValue.plusDays(1).equals(oldRange.getFrom())) {
+                    newRange.setTo(oldRange.getTo());
                 }
 
                 //if another value was changed, change it
-                if(changed) {
+                if(keyChanged) {
                     props.remove(key);
                     props.put(oldRange.getFrom().format(DATE_FORMAT) + " - " + oldRange.getTo().format(DATE_FORMAT),
-                              value);
+                              valueStr);
                 }
 
                 //if values are illogical or overwritten by the new value, remove
