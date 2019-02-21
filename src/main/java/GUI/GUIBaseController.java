@@ -11,8 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -44,7 +43,7 @@ public class GUIBaseController {
     private Color x4;
 
     @FXML
-    private Pane contentRoot;
+    private AnchorPane contentRoot;
 
     private Node settings;
     private Node table;
@@ -65,6 +64,9 @@ public class GUIBaseController {
         loadContent();
     }
 
+    /**
+     * Loads the other GUI controllers and sets them as nodes
+     */
     private void loadContent() {
         try {
             settings = new SettingsController().loadFXML();
@@ -72,17 +74,21 @@ public class GUIBaseController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
     }
 
+    /**
+     * Sets input actions on UI elements
+     */
     private void setKeyAndClickListeners() {
 
         settingsNavBtn.setOnAction(event -> switchContentView(settings));
         tableNavBtn.setOnAction(event -> switchContentView(table));
     }
 
-
+    /**
+     * Switches between the different GUI controllers
+     * @param content the GUI controller, as a node, to switch to
+     */
     private void switchContentView(Node content) {
         ObservableList<Node> children = contentRoot.getChildren();
         if (children.isEmpty()) {
