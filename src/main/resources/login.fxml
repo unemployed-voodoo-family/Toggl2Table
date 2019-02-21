@@ -43,16 +43,16 @@
             <VBox prefHeight="228.0" prefWidth="276.0" spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <children>
                   <Label text="Email" />
-                  <TextField fx:id="emailField" onKeyPressed="#enterButtonPressed" />
+                  <TextField fx:id="emailField" onKeyPressed="#buttonPressedListener" />
                   <Label text="Password" />
-                  <PasswordField fx:id="passwordField" onKeyPressed="#enterButtonPressed" />
+                  <PasswordField fx:id="passwordField" onKeyPressed="#buttonPressedListener" />
                   <HBox alignment="TOP_RIGHT" prefHeight="30.0" prefWidth="276.0">
                      <children>
-                        <Hyperlink text="Forgot password?" />
+                        <Hyperlink onKeyPressed="#buttonPressedListener" text="Forgot password?" />
                      </children>
                   </HBox>
-                  <CheckBox fx:id="RememberEmailCheck" mnemonicParsing="false" text="Remember email" />
-                  <CheckBox fx:id="RememberPasswordCheck" mnemonicParsing="false" text="Remember password" />
+                  <CheckBox fx:id="RememberEmailCheck" mnemonicParsing="false" onKeyPressed="#buttonPressedListener" text="Remember email" />
+                  <CheckBox fx:id="RememberPasswordCheck" mnemonicParsing="false" onKeyPressed="#buttonPressedListener" text="Remember password" />
                   <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0">
                      <children>
                         <Button fx:id="submitBtn" mnemonicParsing="false" text="Submit" />

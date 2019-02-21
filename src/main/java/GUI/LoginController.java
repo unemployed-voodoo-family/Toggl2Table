@@ -34,6 +34,7 @@ public class LoginController {
         submitBtn.setOnAction(event -> login());
     }
 
+
     private void login() {
         bufferImg.setVisible(true);
         attemptAuthentication(emailField.getText(), passwordField.getText());
@@ -56,34 +57,34 @@ public class LoginController {
                 });
             }
             bufferImg.setVisible(false);
+
             });
         toggleThread.start();
     }
 
 
     private boolean isLoggedIn() {
-        String userString = "";
-        try{
-            User user = jToggl.getCurrentUser();
-            userString = user.toString();
-        }
-        catch(Throwable t){
-            System.out.println("\nWrong username or password");
-        }
-
-        boolean loggedIn;
-        if(userString.contains("api_token")) {
-            loggedIn = true;
-        }
-        else {
-            loggedIn = false;
-        }
+        String userString;
+        boolean loggedIn = false;
+            try{
+                User user = jToggl.getCurrentUser();
+                userString = user.toString();
+                if(userString.contains("api_token")) {
+                    loggedIn = true;
+                }
+                else {
+                    loggedIn = false;
+                }
+            }
+            catch(Throwable t){
+                System.out.println("\nWrong username or password");
+            }
         return loggedIn;
     }
 
 
     @FXML
-    public void enterButtonPressed(KeyEvent e) {
+    public void buttonPressedListener(KeyEvent e) {
         if(e.getCode().toString().equals("ENTER")) {
             login();
         }
