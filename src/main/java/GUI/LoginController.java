@@ -2,6 +2,7 @@ package GUI;
 
 import ch.simas.jtoggl.JToggl;
 import ch.simas.jtoggl.User;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
@@ -28,7 +29,7 @@ public class LoginController {
     @FXML
     private ImageView bufferImg;
     private JToggl jToggl;
-    boolean loggedIn = false;
+    private boolean loggedIn = false;
 
 
     public void initialize() {
@@ -40,30 +41,35 @@ public class LoginController {
     }
 
     private void login() {
-        //TODO: verify login credentials
         bufferImg.setVisible(true);
+        attemptAuthentication(emailField.getText(), passwordField.getText());
+    }
+
+
+    private void attemptAuthentication(String username, String password){
+        // Run this thread to avoid GUI freezing
+        Thread toggleThread = new Thread(() -> {
+            jToggl = new JToggl(username, password);
+            jToggl.switchLoggingOn();
+
+            if(isLoggedIn()){
+                Platform.runLater(() -> {
+                    try{
+                        new GUIBaseController().start();
+                    }
+                    catch(IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+            }
+
+            bufferImg.setVisible(false);
+            });
         toggleThread.start();
     }
 
 
-
-    // Run thread to avoid GUI freeze
-    Thread toggleThread = new Thread(() -> {
-        jToggl = new JToggl(emailField.getText(), passwordField.getText());
-        jToggl.switchLoggingOn();
-        if(isLoggedIn()) {
-            try {
-                new GUIBaseController().start();
-            }
-            catch(IOException e) {
-                e.printStackTrace();
-            }
-            bufferImg.setVisible(false);
-        }
-    });
-
-
-
+    //TODO: If username or password is wrong, make sure it doesn't crash
     private boolean isLoggedIn() {
         User user = jToggl.getCurrentUser();
         String userString = user.toString();
@@ -76,11 +82,11 @@ public class LoginController {
         return loggedIn;
     }
 
+
     @FXML
     public void enterButtonPressed(KeyEvent e) {
         if(e.getCode().toString().equals("ENTER")) {
             login();
         }
-        //System.out.println("ok");
     }
 }
