@@ -66,19 +66,19 @@ public class LoginController {
     private boolean isLoggedIn() {
         String userString;
         boolean loggedIn = false;
-            try{
-                User user = jToggl.getCurrentUser();
-                userString = user.toString();
-                if(userString.contains("api_token")) {
-                    loggedIn = true;
-                }
-                else {
-                    loggedIn = false;
-                }
+        try{
+            User user = jToggl.getCurrentUser();
+            userString = user.toString();
+            if(userString.contains("api_token")) {
+                loggedIn = true;
             }
-            catch(Throwable t){
-                System.out.println("\nWrong username or password");
+            else {
+                loggedIn = false;
             }
+        }
+        catch(RuntimeException t){
+            System.out.println("\nWrong username or password");
+        }
         return loggedIn;
     }
 

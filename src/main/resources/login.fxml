@@ -66,9 +66,9 @@
             <VBox GridPane.columnIndex="1" GridPane.rowIndex="2">
                <children>
                   <Pane prefHeight="200.0" prefWidth="200.0" />
-                  <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                  <HBox GridPane.columnIndex="1" GridPane.rowIndex="2">
                      <children>
-                        <Pane prefHeight="180.0" prefWidth="48.0" />
+                        <Pane prefHeight="180.0" prefWidth="71.0" />
                         <ImageView fx:id="bufferImg" fitHeight="180.0" fitWidth="238.0" pickOnBounds="true" preserveRatio="true" visible="false">
                            <image>
                               <Image url="@icons/ajax-loader.gif" />
