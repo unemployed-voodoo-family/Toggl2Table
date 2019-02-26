@@ -71,7 +71,8 @@ public class GUIBaseController {
         try {
             settings = new SettingsController().loadFXML();
             table = new TableViewController().loadFXML();
-        } catch (IOException e) {
+        }
+        catch(IOException e) {
             e.printStackTrace();
         }
     }
@@ -91,14 +92,14 @@ public class GUIBaseController {
      */
     private void switchContentView(Node content) {
         ObservableList<Node> children = contentRoot.getChildren();
-        if (children.isEmpty()) {
-                children.addAll(content);
-        } else if (!children.contains(content)){
+        if(children.isEmpty()) {
+            children.addAll(content);
+        }
+        else if(! children.contains(content)) {
             children.clear();
             children.addAll(content);
         }
     }
-
 
 
 }
