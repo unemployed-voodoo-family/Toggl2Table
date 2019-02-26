@@ -117,10 +117,8 @@ public class SettingsLogic {
                 String valueStr = props.getProperty(key);
                 Double value = Double.parseDouble(valueStr);
                 boolean keyChanged = false;
-                String[] dates = key.split(" - ");
                 System.out.println();
-                DateRange oldRange = new DateRange(LocalDate.parse(dates[0], DATE_FORMAT),
-                                                   LocalDate.parse(dates[1], DATE_FORMAT));
+                DateRange oldRange = DateRange.ofString(key, DATE_FORMAT);
                 //if new "from" value overrides old "to" value
                 if(newRange.fromValueinRange(oldRange)) {
                     if(newValue.equals(value)) {
@@ -177,7 +175,6 @@ public class SettingsLogic {
     }
 
     public void populateHoursTable(TableView table) {
-        //TODO: make view properly sorted
         fromCol = new TableColumn<>("From");
         toCol = new TableColumn<>("To");
         hoursCol = new TableColumn<>("Hours");
@@ -200,7 +197,7 @@ public class SettingsLogic {
             data.add(new WorkHoursData(range.getFrom(), range.getTo(), Double.valueOf(value)));
         }
         table.getItems().clear();
-        table.getItems().addAll(data);
+        table.getItems().addAll(data.sorted());
     }
 
 }
