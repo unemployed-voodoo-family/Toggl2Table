@@ -1,6 +1,12 @@
 package UnemployedVoodooFamily.Logic;
 
-import UnemployedVoodooFamily.GUI.DateRange;
+import UnemployedVoodooFamily.Data.WorkHoursData;
+import UnemployedVoodooFamily.Data.DateRange;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,7 +25,56 @@ import java.util.Set;
  */
 public class SettingsLogic {
 
+    private Properties props = new Properties();
+    private static final String HOURS_PATH = "/Settings/hours.properties";
     private static DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+    @FXML
+    private TableColumn periodCol;
+    @FXML
+    private TableColumn<WorkHoursData, String> fromCol;
+    @FXML
+    private TableColumn<WorkHoursData, String> toCol;
+    @FXML
+    private TableColumn<WorkHoursData, Double> hoursCol;
+
+
+    public SettingsLogic() {
+
+    }
+
+    private void loadProps(String path) {
+        File file = getFile(path);
+        try {
+            props.load(new FileInputStream(file));
+        }
+        catch(IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void saveProps(String path) {
+        File file = getFile(path);
+        try {
+            props.store(new FileOutputStream(file),"");
+        }
+        catch(IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private File getFile(String path) {
+        URL resourceUrl = getClass().getResource(path);
+        File file = null;
+        try {
+            file = new File(resourceUrl.toURI().getPath());
+        }
+        catch(URISyntaxException e) {
+            e.printStackTrace();
+        }
+        return file;
+    }
 
     /**
      * Writes the specified work hours to the "hours.properties" file.
@@ -34,14 +89,11 @@ public class SettingsLogic {
         Double hours = Double.valueOf(hoursStr);
 
         //load props file
-        URL resourceUrl = getClass().getResource("/Settings/hours.properties");
-        File filename = new File(resourceUrl.toURI().getPath());
-        Properties props = new Properties();
-        props.load(new FileInputStream(filename));
+        loadProps(HOURS_PATH);
 
         DateRange range = new DateRange(fromDate, toDate);
         fixHoursOverlap(props, range, hours);
-        props.store(new FileOutputStream(filename), "Work hours");
+        saveProps(HOURS_PATH);
 
     }
 
@@ -57,7 +109,6 @@ public class SettingsLogic {
 
         //TODO: Check if user input is logical
         //TODO: sort stored properties properly
-        //TODO: combine entries if value is the same and they are in same time ranges
         Set<String> hours = props.stringPropertyNames();
         if(!hours.isEmpty()) {
             Iterator it = hours.iterator();
@@ -123,6 +174,33 @@ public class SettingsLogic {
                       newValue.toString());
         }
         System.out.println(props.stringPropertyNames().toString());
+    }
+
+    public void populateHoursTable(TableView table) {
+        //TODO: make view properly sorted
+        fromCol = new TableColumn<>("From");
+        toCol = new TableColumn<>("To");
+        hoursCol = new TableColumn<>("Hours");
+        table.getColumns().clear();
+        table.getColumns().addAll(fromCol, toCol, hoursCol);
+        fromCol.setCellValueFactory(param -> param.getValue().fromProperty());
+        toCol.setCellValueFactory(param -> param.getValue().toProperty());
+        hoursCol.setCellValueFactory(param -> param.getValue().hoursProperty());
+
+        //load props file
+        loadProps(HOURS_PATH);
+        Set<String> periods = props.stringPropertyNames();
+        Iterator it = periods.iterator();
+
+        ObservableList<WorkHoursData> data = FXCollections.observableArrayList();
+        while(it.hasNext()) {
+            String key = (String) it.next();
+            String value = props.getProperty(key);
+            DateRange range = DateRange.ofString(key, DATE_FORMAT);
+            data.add(new WorkHoursData(range.getFrom(), range.getTo(), Double.valueOf(value)));
+        }
+        table.getItems().clear();
+        table.getItems().addAll(data);
     }
 
 }

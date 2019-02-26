@@ -6,12 +6,12 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="631.0" prefWidth="734.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UnemployedVoodooFamily.GUI.Content.SettingsController">
+<ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="631.0" prefWidth="925.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UnemployedVoodooFamily.GUI.Content.SettingsController">
    <content>
-      <GridPane prefHeight="605.0" prefWidth="727.0">
+      <GridPane prefHeight="605.0" prefWidth="805.0">
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="509.0" minWidth="10.0" prefWidth="454.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="275.0" minWidth="10.0" prefWidth="273.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
          </columnConstraints>
          <rowConstraints>
             <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
@@ -140,12 +140,16 @@
                   <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                </padding>
             </VBox>
-            <VBox prefHeight="605.0" prefWidth="205.0" GridPane.columnIndex="1">
+            <VBox prefHeight="605.0" prefWidth="320.0" GridPane.columnIndex="1">
                <children>
-                  <TableView fx:id="hoursView" prefHeight="200.0" prefWidth="200.0">
+                  <TableView fx:id="hoursView" prefHeight="200.0" prefWidth="310.0">
                     <columns>
-                      <TableColumn prefWidth="152.0" text="Period" />
-                      <TableColumn prefWidth="55.0" text="Hours" />
+                      <TableColumn fx:id="periodCol" maxWidth="-1.0" minWidth="195.0" prefWidth="-1.0" text="Period">
+                           <columns>
+                              <TableColumn fx:id="fromCol" minWidth="95.0" prefWidth="-1.0" text="From" />
+                              <TableColumn fx:id="toCol" minWidth="95.0" prefWidth="-1.0" text="To" />
+                           </columns></TableColumn>
+                      <TableColumn fx:id="hoursCol" minWidth="100.0" prefWidth="-1.0" text="Hours" />
                     </columns>
                   </TableView>
                </children>

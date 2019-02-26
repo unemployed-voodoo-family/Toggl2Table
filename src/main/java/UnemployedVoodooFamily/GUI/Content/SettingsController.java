@@ -1,6 +1,8 @@
 package UnemployedVoodooFamily.GUI.Content;
 
 import UnemployedVoodooFamily.Logic.SettingsLogic;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -34,7 +36,7 @@ public class SettingsController {
     @FXML
     private TextField hoursField;
     @FXML
-    TableView hoursView;
+    private TableView hoursView;
 
     private SettingsLogic logic;
 
@@ -56,6 +58,7 @@ public class SettingsController {
     }
 
     private void initilizeFields() {
+        //allow only number input in hoursField
         hoursField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue.matches("\\d{0,9}([\\.]\\d{0,9})?")) {
                 hoursField.setText(oldValue);
@@ -89,21 +92,7 @@ public class SettingsController {
      * WIP
      */
     private void populateHoursList() {
-        URL resourceUrl = getClass().getResource("/Settings/hours.properties");
-        File filename = null;
-        try {
-            filename = new File(resourceUrl.toURI().getPath());
-        }
-        catch(URISyntaxException e) {
-            e.printStackTrace();
-        }
-        Properties props = new Properties();
-        try {
-            props.load(new FileInputStream(filename));
-        }
-        catch(IOException e) {
-            e.printStackTrace();
-        }
+        logic.populateHoursTable(hoursView);
     }
 
     /**

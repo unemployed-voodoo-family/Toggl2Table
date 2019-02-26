@@ -1,18 +1,29 @@
-package UnemployedVoodooFamily.GUI;
+package UnemployedVoodooFamily.Data;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Class to store a period of time, denoted by a from and to date.
  * Includes helper methods to comapare with other DateRanges
  */
 public class DateRange {
+    private static final int STANDARD_YEAR = 2000;
     private LocalDate from;
     private LocalDate to;
 
     public DateRange(LocalDate from, LocalDate to) {
         this.from = from;
         this.to = to;
+        normalize();
+    }
+
+    /**
+     * Sets the same year value for every daterange
+     */
+    private void normalize() {
+        this.from = LocalDate.of(STANDARD_YEAR, from.getMonth(), from.getDayOfMonth());
+        this.to = LocalDate.of(STANDARD_YEAR, to.getMonth(), to.getDayOfMonth());
     }
 
     public LocalDate getFrom() {
@@ -85,5 +96,10 @@ public class DateRange {
             afterOrEqual = true;
         }
         return afterOrEqual;
+    }
+
+    public static DateRange ofString(String rangeStr, DateTimeFormatter formatter) {
+        String[] dates = rangeStr.split(" - ");
+        return new DateRange(LocalDate.parse(dates[0], formatter), LocalDate.parse(dates[1], formatter));
     }
 }
