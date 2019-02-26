@@ -9,7 +9,7 @@ target
 # IntelliJ files
 /.idea/*
 !/.idea/codeStyles/*
-.iml
+*.iml
 
 # BlueJ files
 *.ctxt
