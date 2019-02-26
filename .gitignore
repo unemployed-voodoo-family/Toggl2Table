@@ -7,9 +7,9 @@ target
 *.log
 
 # IntelliJ files
+*.iml
 /.idea/*
 !/.idea/codeStyles/*
-*.iml
 
 # BlueJ files
 *.ctxt
