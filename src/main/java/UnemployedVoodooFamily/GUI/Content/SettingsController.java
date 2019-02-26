@@ -1,17 +1,15 @@
 package UnemployedVoodooFamily.GUI.Content;
 
 import UnemployedVoodooFamily.Logic.SettingsLogic;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
+
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Properties;
 
 public class SettingsController {
 
@@ -60,7 +58,7 @@ public class SettingsController {
     private void initilizeFields() {
         //allow only number input in hoursField
         hoursField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\d{0,9}([\\.]\\d{0,9})?")) {
+            if(! newValue.matches("\\d{0,9}([\\.]\\d{0,9})?")) {
                 hoursField.setText(oldValue);
             }
         });
@@ -81,7 +79,8 @@ public class SettingsController {
         if(hoursView.isVisible()) {
             hoursView.setVisible(false);
             viewHoursBtn.setText("View hours");
-        } else {
+        }
+        else {
             hoursView.setVisible(true);
             viewHoursBtn.setText("Hide hours");
             populateHoursList();
@@ -109,12 +108,15 @@ public class SettingsController {
                 success = false;
                 //set error message
             }
-            if(hoursField.getText() == null) {
+            if(hoursField.getText().equals("")) {
                 success = false;
                 //set error message
             }
             if(success) {
                 logic.setWorkHours(hoursFromField.getValue(), hoursToField.getValue(), hoursField.getText());
+                if(hoursView.isVisible()) {
+                    logic.populateHoursTable(hoursView);
+                }
             }
         }
         catch(URISyntaxException e) {

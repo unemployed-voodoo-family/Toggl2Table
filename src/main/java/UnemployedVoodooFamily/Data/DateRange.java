@@ -9,10 +9,12 @@ import java.time.format.DateTimeFormatter;
  */
 public class DateRange {
     private static final int STANDARD_YEAR = 2000;
+    private DateTimeFormatter formatter;
     private LocalDate from;
     private LocalDate to;
 
-    public DateRange(LocalDate from, LocalDate to) {
+    public DateRange(LocalDate from, LocalDate to, DateTimeFormatter formatter) {
+        this.formatter = formatter;
         this.from = from;
         this.to = to;
         normalize();
@@ -100,6 +102,11 @@ public class DateRange {
 
     public static DateRange ofString(String rangeStr, DateTimeFormatter formatter) {
         String[] dates = rangeStr.split(" - ");
-        return new DateRange(LocalDate.parse(dates[0], formatter), LocalDate.parse(dates[1], formatter));
+        return new DateRange(LocalDate.parse(dates[0], formatter), LocalDate.parse(dates[1], formatter), formatter);
+    }
+
+    @Override
+    public String toString() {
+        return this.from.format(formatter) + " - " + this.to.format(formatter);
     }
 }
