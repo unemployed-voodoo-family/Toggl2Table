@@ -1,3 +1,5 @@
+package UnemployedVoodooFamily;
+
 import ch.simas.jtoggl.JToggl;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -17,7 +19,7 @@ public class Main extends Application {
      * This method is called automatically by JavaFX when the application is
      * launched
      *
-     * @param primaryStage The main "stage" where the GUI will be rendered
+     * @param primaryStage The main "stage" where the UnemployedVoodooFamily.GUI will be rendered
      * @throws Exception
      */
     @Override

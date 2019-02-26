@@ -1,6 +1,6 @@
-package Logic;
+package UnemployedVoodooFamily.Logic;
 
-import GUI.DateRange;
+import UnemployedVoodooFamily.GUI.DateRange;
 
 import java.io.File;
 import java.io.FileInputStream;

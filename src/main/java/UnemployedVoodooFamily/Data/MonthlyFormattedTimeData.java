@@ -1,4 +1,4 @@
-package Data;
+package UnemployedVoodooFamily.Data;
 
 import javafx.beans.property.SimpleStringProperty;
 

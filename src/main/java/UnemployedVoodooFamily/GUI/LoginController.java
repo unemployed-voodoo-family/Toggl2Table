@@ -1,4 +1,4 @@
-package GUI;
+package UnemployedVoodooFamily.GUI;
 
 import ch.simas.jtoggl.JToggl;
 import ch.simas.jtoggl.User;
@@ -42,7 +42,7 @@ public class LoginController {
 
 
     private void attemptAuthentication(String username, String password){
-        // Run this thread to avoid GUI freezing
+        // Run this thread to avoid UnemployedVoodooFamily.GUI freezing
         Thread toggleThread = new Thread(() -> {
             jToggl = new JToggl(username, password);
             jToggl.switchLoggingOn();

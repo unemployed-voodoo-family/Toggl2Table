@@ -1,4 +1,4 @@
-package GUI;
+package UnemployedVoodooFamily.GUI;
 
 import java.time.LocalDate;
 

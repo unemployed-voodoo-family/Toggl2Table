@@ -1,7 +1,7 @@
-package GUI;
+package UnemployedVoodooFamily.GUI;
 
-import GUI.Content.SettingsController;
-import GUI.Content.TableViewController;
+import UnemployedVoodooFamily.GUI.Content.SettingsController;
+import UnemployedVoodooFamily.GUI.Content.TableViewController;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -65,7 +65,7 @@ public class GUIBaseController {
     }
 
     /**
-     * Loads the other GUI controllers and sets them as nodes
+     * Loads the other UnemployedVoodooFamily.GUI controllers and sets them as nodes
      */
     private void loadContent() {
         try {
@@ -87,8 +87,8 @@ public class GUIBaseController {
     }
 
     /**
-     * Switches between the different GUI controllers
-     * @param content the GUI controller, as a node, to switch to
+     * Switches between the different UnemployedVoodooFamily.GUI controllers
+     * @param content the UnemployedVoodooFamily.GUI controller, as a node, to switch to
      */
     private void switchContentView(Node content) {
         ObservableList<Node> children = contentRoot.getChildren();

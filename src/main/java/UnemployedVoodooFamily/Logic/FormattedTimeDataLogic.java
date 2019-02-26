@@ -1,4 +1,4 @@
-package Logic;
+package UnemployedVoodooFamily.Logic;
 
 public class FormattedTimeDataLogic {
     //TODO This class should be called to from the TableViewController

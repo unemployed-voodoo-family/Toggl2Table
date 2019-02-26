@@ -1,6 +1,6 @@
-package GUI.Content;
+package UnemployedVoodooFamily.GUI.Content;
 
-import Logic.SettingsLogic;
+import UnemployedVoodooFamily.Logic.SettingsLogic;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -9,7 +9,6 @@ import javafx.scene.layout.Pane;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Properties;
 
 public class SettingsController {

@@ -1,8 +1,8 @@
-package GUI.Content;
+package UnemployedVoodooFamily.GUI.Content;
 
-import Data.MonthlyFormattedTimeData;
-import Data.RawTimeDataModel;
-import Data.WeeklyFormattedTimeDataModel;
+import UnemployedVoodooFamily.Data.MonthlyFormattedTimeData;
+import UnemployedVoodooFamily.Data.RawTimeDataModel;
+import UnemployedVoodooFamily.Data.WeeklyFormattedTimeDataModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
