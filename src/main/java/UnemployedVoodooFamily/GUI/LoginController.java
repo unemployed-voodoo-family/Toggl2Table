@@ -1,92 +1,56 @@
-package UnemployedVoodooFamily.GUI;
+package UnemployedVoodooFamily.Logic;
 
+import UnemployedVoodooFamily.GUI.GUIBaseController;
 import ch.simas.jtoggl.JToggl;
 import ch.simas.jtoggl.User;
 import javafx.application.Platform;
-import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyEvent;
+
 
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-public class LoginController {
-
-    @FXML
-    private Button submitBtn;
-    @FXML
-    private TextField emailField;
-    @FXML
-    private PasswordField passwordField;
-    @FXML
-    private ImageView bufferImg;
+public class LoginLogic {
 
     private JToggl jToggl;
 
 
-    public void initialize() {
-        setKeyAndClickListeners();
-    }
-
-    private void setKeyAndClickListeners() {
-        submitBtn.setOnAction(event -> login());
-    }
-
-
-    private void login() {
-        bufferImg.setVisible(true);
-        attemptAuthentication(emailField.getText(), passwordField.getText());
-    }
-
-
-    private void attemptAuthentication(String username, String password){
+    public boolean attemptAuthentication(String username, String password){
         // Run this thread to avoid UnemployedVoodooFamily.GUI freezing
+        AtomicBoolean loginStatus = new AtomicBoolean(false);
+        jToggl = new JToggl(username, password);
         Thread toggleThread = new Thread(() -> {
-            jToggl = new JToggl(username, password);
             jToggl.switchLoggingOn();
-            if(isLoggedIn()){
+            loginStatus.set(isLoggedIn());
+            if(loginStatus.get()){
                 Platform.runLater(() -> {
-                    try{
+                    try {
                         new GUIBaseController().start();
                     }
-                    catch(IOException e) {
-                        e.printStackTrace();
+                    catch(IOException ioe)  {
+                        System.out.println(ioe.getMessage());
                     }
                 });
             }
-            bufferImg.setVisible(false);
-
-            });
+        });
         toggleThread.start();
+        Session.getInstance().setSession(jToggl);
+        return loginStatus.get();
     }
 
 
     private boolean isLoggedIn() {
         String userString;
         boolean loggedIn = false;
-        try{
-            User user = jToggl.getCurrentUser();
-            userString = user.toString();
-            if(userString.contains("api_token")) {
-                loggedIn = true;
-            }
-            else {
-                loggedIn = false;
-            }
+        User user = jToggl.getCurrentUser();
+        userString = user.toString();
+        if(userString.contains("api_token")) {
+            loggedIn = true;
         }
-        catch(RuntimeException t){
+        else {
+            loggedIn = false;
             System.out.println("\nWrong username or password");
         }
         return loggedIn;
     }
 
-
-    @FXML
-    public void buttonPressedListener(KeyEvent e) {
-        if(e.getCode().toString().equals("ENTER")) {
-            login();
-        }
-    }
 }
