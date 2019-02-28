@@ -17,15 +17,17 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class RawTimeDataLogic {
-    //TODO This class should be called to from the TableViewController
     // and is responsible for handling raw time data
+    private JToggl jToggl = Session.getInstance().getSession();
+    private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
+    /**
+     * Build an observable list with RawTimeDataModel, using time entries imported from Toggl.
+     * @return the ObservableList
+     */
     public ObservableList<RawTimeDataModel> buildObservableRawTimeData() {
-        JToggl jToggl = Session.getInstance().getSession();
-
         ObservableList<RawTimeDataModel> data = FXCollections.observableArrayList();
         Iterator<TimeEntry> it = jToggl.getTimeEntries().iterator();
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         List<Project> projects = jToggl.getProjects();
 
         while(it.hasNext()) {
@@ -48,6 +50,7 @@ public class RawTimeDataLogic {
                     break;
                 }
             }
+
             RawTimeDataModel dataModel = new RawTimeDataModel(projectName, description, startDate, startTime, stopDate,
                                                               stopTime, String.valueOf(durationStr));
             data.add(dataModel);
