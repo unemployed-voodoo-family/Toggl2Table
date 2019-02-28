@@ -19,6 +19,7 @@ public class LoginLogic {
         Thread toggleThread = new Thread(() -> {
             jToggl.switchLoggingOn();
             if(isLoggedIn()){
+                Session.getInstance().setSession(jToggl);
                 Platform.runLater(() -> {
                     try {
                         new GUIBaseController().start();
@@ -28,14 +29,16 @@ public class LoginLogic {
                     }
                 });
             }
+            else{
+                Session.getInstance().terminateSession();
+            }
         });
         toggleThread.start();
-        Session.getInstance().setSession(jToggl);
         return isLoggedIn();
     }
 
 
-    private boolean isLoggedIn() {
+    public boolean isLoggedIn() {
         String userString;
         boolean loggedIn = false;
         try{

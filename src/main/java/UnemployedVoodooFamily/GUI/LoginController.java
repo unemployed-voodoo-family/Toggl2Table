@@ -34,10 +34,13 @@ public class LoginController {
         Thread loginCredThread = new Thread(() -> {
             bufferImg.setVisible(true);
             loginLogic.attemptAuthentication(emailField.getText(), passwordField.getText());
+            if(!loginLogic.isLoggedIn()){
+                emailField.getStyleClass().add("error");
+                passwordField.getStyleClass().add("error");
+            }
             bufferImg.setVisible(false);
             });
         loginCredThread.start();
-
     }
 
     public void buttonPressedListener(KeyEvent e) {
