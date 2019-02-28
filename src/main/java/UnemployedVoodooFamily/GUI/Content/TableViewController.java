@@ -92,7 +92,6 @@ public class TableViewController {
         });
 
         weeklyToggleBtn.setOnAction((ActionEvent e) -> buildFormattedDataTable());
-
         monthlyToggleBtn.setOnAction((ActionEvent e) -> buildFormattedDataTable());
     }
 
