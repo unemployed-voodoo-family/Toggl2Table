@@ -3,6 +3,10 @@ package UnemployedVoodooFamily.GUI.Content;
 import UnemployedVoodooFamily.Data.MonthlyFormattedTimeData;
 import UnemployedVoodooFamily.Data.RawTimeDataModel;
 import UnemployedVoodooFamily.Data.WeeklyFormattedTimeDataModel;
+import UnemployedVoodooFamily.GUI.DateRange;
+import ch.simas.jtoggl.JToggl;
+import ch.simas.jtoggl.Project;
+import ch.simas.jtoggl.TimeEntry;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -14,6 +18,13 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.Scanner;
 
 public class TableViewController {
 
@@ -130,13 +141,36 @@ public class TableViewController {
      * @return an ObservableList containing RawTimeDatModel objects
      */
     private ObservableList<RawTimeDataModel> getObservableRawData() {
+        Scanner reader = new Scanner(System.in); //REMOVE WHEN SESSIONS ARE IMPLEMENTED
+        JToggl jToggl = new JToggl(reader.nextLine(), reader.nextLine()); //REMOVE WHEN SESSIONS ARE IMPLEMENTED
+
         ObservableList<RawTimeDataModel> observableList = FXCollections.observableArrayList();
 
         //TODO Remove the two lines below when raw data import is implemented
-        //This is here for testing purposes only
-        observableList.add(new RawTimeDataModel("Some project", "Yeah", "okay", "6969", "420", "maybe", "??", "dunno"));
+        ObservableList<RawTimeDataModel> data = FXCollections.observableArrayList();
+        Iterator<TimeEntry> it = jToggl.getTimeEntries().iterator();
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        while(it.hasNext()) {
+            TimeEntry timeEntry = it.next();
+            System.out.println(timeEntry.toString());
+            Project project = timeEntry.getProject();
+            String projectName = "";
+            if(project != null) {
+                projectName = project.getName();
+            }
+            String description = timeEntry.getDescription();
+            LocalDateTime start = timeEntry.getStart().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+            LocalDateTime stop = timeEntry.getStop().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+            String startDate = start.toLocalDate().format(dateFormatter);
+            String stopDate = stop.toLocalDate().format(dateFormatter);
+            String startTime = start.toLocalTime().toString();
+            String stopTime = stop.toLocalTime().toString();
+            long duration = timeEntry.getDuration();
 
-        return observableList;
+            RawTimeDataModel dataModel = new RawTimeDataModel(projectName, "", description, startDate, startTime, stopDate,
+                                                              stopTime, String.valueOf(duration));
+            data.add(dataModel);
+        } return observableList;
     }
 
     // |##################################################|
