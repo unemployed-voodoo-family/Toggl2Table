@@ -24,8 +24,8 @@ public class RawTimeDataLogic {
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         while(it.hasNext()) {
             TimeEntry timeEntry = it.next();
-            System.out.println(timeEntry.toString());
-            Project project = timeEntry.getProject();
+
+            Project project = timeEntry.getProject(); //TODO: BUG: project is always null ? ? ?
             String projectName = "";
             if(project != null) {
                 projectName = project.getName();
