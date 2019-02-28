@@ -7,9 +7,11 @@ import ch.simas.jtoggl.Project;
 import ch.simas.jtoggl.TimeEntry;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.apache.http.impl.cookie.DateUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -37,8 +39,8 @@ public class RawTimeDataLogic {
             String startTime = start.toLocalTime().toString();
             String stopTime = stop.toLocalTime().toString();
             long duration = timeEntry.getDuration();
+            String durationStr = LocalTime.MIN.plusSeconds(duration).format(DateTimeFormatter.ISO_LOCAL_TIME);
             Long pid = timeEntry.getPid();
-
             String projectName = "";
             for(Project project: projects) {
                 if(project.getId().equals(pid)) {
@@ -47,7 +49,7 @@ public class RawTimeDataLogic {
                 }
             }
             RawTimeDataModel dataModel = new RawTimeDataModel(projectName, description, startDate, startTime, stopDate,
-                                                              stopTime, String.valueOf(duration));
+                                                              stopTime, String.valueOf(durationStr));
             data.add(dataModel);
         }
         return data;
