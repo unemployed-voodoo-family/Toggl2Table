@@ -16,26 +16,29 @@ public class LoginLogic {
     public boolean attemptAuthentication(String username, String password){
         // Run this thread to avoid UnemployedVoodooFamily.GUI freezing
         jToggl = new JToggl(username, password);
-        Thread toggleThread = new Thread(() -> {
-            jToggl.switchLoggingOn();
-            if(isLoggedIn()){
-                Platform.runLater(() -> {
-                    try {
-                        new GUIBaseController().start();
-                    }
-                    catch(IOException ioe)  {
-                        System.out.println(ioe.getMessage());
-                    }
-                });
-            }
-        });
-        toggleThread.start();
-        Session.getInstance().setSession(jToggl);
-        return isLoggedIn();
+        Session session = Session.getInstance();
+        boolean loggedIn = false;
+        try {
+            session.setSession(jToggl);
+            Platform.runLater(() -> {
+                try {
+                    new GUIBaseController().start();
+                }
+                catch(IOException ioe)  {
+                    System.out.println(ioe.getMessage());
+                }
+            });
+            loggedIn = true;
+        }
+        catch(RuntimeException e) {
+            //Forbidden!
+            Session.getInstance().terminateSession();
+        }
+        return loggedIn;
     }
 
 
-    private boolean isLoggedIn() {
+    /*private boolean isLoggedIn() {
         String userString;
         boolean loggedIn = false;
         try{
@@ -53,6 +56,6 @@ public class LoginLogic {
             System.out.println(t.getMessage());
         }
         return loggedIn;
-    }
+    }*/
 
 }
