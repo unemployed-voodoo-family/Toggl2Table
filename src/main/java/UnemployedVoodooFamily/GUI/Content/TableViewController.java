@@ -97,9 +97,6 @@ public class TableViewController {
         TableColumn<RawTimeDataModel, String> projectCol = new TableColumn<>("Project");
         projectCol.setCellValueFactory(new PropertyValueFactory<>("project"));
 
-        TableColumn<RawTimeDataModel, String> taskCol = new TableColumn<>("Task");
-        taskCol.setCellValueFactory(new PropertyValueFactory<>("task"));
-
         TableColumn<RawTimeDataModel, String> descCol = new TableColumn<>("Description");
         descCol.setCellValueFactory(new PropertyValueFactory<>("description"));
 
@@ -121,7 +118,7 @@ public class TableViewController {
         //Adds the columns to the table and updates it
         rawData.setEditable(true);
         rawData.getColumns()
-               .addAll(projectCol, taskCol, descCol, startDateCol, startTimeCol, endDateCol, endTimeCol, durationCol);
+               .addAll(projectCol, descCol, startDateCol, startTimeCol, endDateCol, endTimeCol, durationCol);
         rawData.getItems().setAll(getObservableRawData());
     }
 
@@ -134,7 +131,7 @@ public class TableViewController {
 
         //TODO Remove the two lines below when raw data import is implemented
         //This is here for testing purposes only
-        observableList.add(new RawTimeDataModel("Some project", "Yeah", "okay", "6969", "420", "maybe", "??", "dunno"));
+        observableList.add(new RawTimeDataModel("Some project", "Yeah",  "6969", "420", "maybe", "??", "dunno"));
 
         return observableList;
     }
