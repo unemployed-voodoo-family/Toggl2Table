@@ -3,6 +3,11 @@ package UnemployedVoodooFamily.GUI.Content;
 import UnemployedVoodooFamily.Data.MonthlyFormattedTimeData;
 import UnemployedVoodooFamily.Data.RawTimeDataModel;
 import UnemployedVoodooFamily.Data.WeeklyFormattedTimeDataModel;
+import UnemployedVoodooFamily.GUI.DateRange;
+import UnemployedVoodooFamily.Logic.RawTimeDataLogic;
+import ch.simas.jtoggl.JToggl;
+import ch.simas.jtoggl.Project;
+import ch.simas.jtoggl.TimeEntry;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -14,6 +19,13 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.Scanner;
 
 public class TableViewController {
 
@@ -36,6 +48,8 @@ public class TableViewController {
     private ToggleButton monthlyToggleBtn;
 
     private final ToggleGroup timeSpanToggleGroup = new ToggleGroup();
+
+    private RawTimeDataLogic rawTimeDataLogic = new RawTimeDataLogic();
 
     public Node loadFXML() throws IOException {
         URL r = getClass().getClassLoader().getResource("Table.fxml");
@@ -97,9 +111,6 @@ public class TableViewController {
         TableColumn<RawTimeDataModel, String> projectCol = new TableColumn<>("Project");
         projectCol.setCellValueFactory(new PropertyValueFactory<>("project"));
 
-        TableColumn<RawTimeDataModel, String> taskCol = new TableColumn<>("Task");
-        taskCol.setCellValueFactory(new PropertyValueFactory<>("task"));
-
         TableColumn<RawTimeDataModel, String> descCol = new TableColumn<>("Description");
         descCol.setCellValueFactory(new PropertyValueFactory<>("description"));
 
@@ -121,7 +132,7 @@ public class TableViewController {
         //Adds the columns to the table and updates it
         rawData.setEditable(true);
         rawData.getColumns()
-               .addAll(projectCol, taskCol, descCol, startDateCol, startTimeCol, endDateCol, endTimeCol, durationCol);
+               .addAll(projectCol, descCol, startDateCol, startTimeCol, endDateCol, endTimeCol, durationCol);
         rawData.getItems().setAll(getObservableRawData());
     }
 
@@ -130,13 +141,7 @@ public class TableViewController {
      * @return an ObservableList containing RawTimeDatModel objects
      */
     private ObservableList<RawTimeDataModel> getObservableRawData() {
-        ObservableList<RawTimeDataModel> observableList = FXCollections.observableArrayList();
-
-        //TODO Remove the two lines below when raw data import is implemented
-        //This is here for testing purposes only
-        observableList.add(new RawTimeDataModel("Some project", "Yeah", "okay", "6969", "420", "maybe", "??", "dunno"));
-
-        return observableList;
+        return rawTimeDataLogic.buildObservableRawTimeData();
     }
 
     // |##################################################|

@@ -5,7 +5,6 @@ import javafx.beans.property.SimpleStringProperty;
 public class RawTimeDataModel {
 
     private SimpleStringProperty project;
-    private SimpleStringProperty task;
     private SimpleStringProperty description;
     private SimpleStringProperty startDate;
     private SimpleStringProperty startTime;
@@ -17,7 +16,6 @@ public class RawTimeDataModel {
      * Creates a RawTimeDataModel object
      * Used to structure data for the corresponding TableView
      * @param project String with project name
-     * @param task String with task name
      * @param description String with description
      * @param startDate String with start date
      * @param startTime String with start time
@@ -25,10 +23,9 @@ public class RawTimeDataModel {
      * @param endTime String with end time
      * @param duration String with duration
      */
-    public RawTimeDataModel(String project, String task, String description, String startDate, String startTime,
+    public RawTimeDataModel(String project, String description, String startDate, String startTime,
                             String endDate, String endTime, String duration) {
         this.project = new SimpleStringProperty(project);
-        this.task = new SimpleStringProperty(task);
         this.description = new SimpleStringProperty(description);
         this.startDate = new SimpleStringProperty(startDate);
         this.startTime = new SimpleStringProperty(startTime);
@@ -43,14 +40,6 @@ public class RawTimeDataModel {
      */
     public String getProject() {
         return project.get();
-    }
-
-    /**
-     * Returns the task name
-     * @return the task name
-     */
-    public String getTask() {
-        return task.get();
     }
 
     /**
