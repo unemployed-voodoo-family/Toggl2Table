@@ -3,7 +3,7 @@ package UnemployedVoodooFamily.GUI.Content;
 import UnemployedVoodooFamily.Data.MonthlyFormattedTimeData;
 import UnemployedVoodooFamily.Data.RawTimeDataModel;
 import UnemployedVoodooFamily.Data.WeeklyFormattedTimeDataModel;
-import UnemployedVoodooFamily.GUI.DateRange;
+import UnemployedVoodooFamily.Data.DateRange;
 import UnemployedVoodooFamily.Logic.RawTimeDataLogic;
 import ch.simas.jtoggl.JToggl;
 import ch.simas.jtoggl.Project;
