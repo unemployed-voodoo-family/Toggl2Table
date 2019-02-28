@@ -6,10 +6,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
+
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Properties;
 
 public class SettingsController {
 
@@ -34,7 +34,7 @@ public class SettingsController {
     @FXML
     private TextField hoursField;
     @FXML
-    TableView hoursView;
+    private TableView hoursView;
 
     private SettingsLogic logic;
 
@@ -56,8 +56,9 @@ public class SettingsController {
     }
 
     private void initilizeFields() {
+        //allow only number input in hoursField
         hoursField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\d{0,9}([\\.]\\d{0,9})?")) {
+            if(! newValue.matches("\\d{0,9}([\\.]\\d{0,9})?")) {
                 hoursField.setText(oldValue);
             }
         });
@@ -78,7 +79,8 @@ public class SettingsController {
         if(hoursView.isVisible()) {
             hoursView.setVisible(false);
             viewHoursBtn.setText("View hours");
-        } else {
+        }
+        else {
             hoursView.setVisible(true);
             viewHoursBtn.setText("Hide hours");
             populateHoursList();
@@ -89,21 +91,7 @@ public class SettingsController {
      * WIP
      */
     private void populateHoursList() {
-        URL resourceUrl = getClass().getResource("/Settings/hours.properties");
-        File filename = null;
-        try {
-            filename = new File(resourceUrl.toURI().getPath());
-        }
-        catch(URISyntaxException e) {
-            e.printStackTrace();
-        }
-        Properties props = new Properties();
-        try {
-            props.load(new FileInputStream(filename));
-        }
-        catch(IOException e) {
-            e.printStackTrace();
-        }
+        logic.populateHoursTable(hoursView);
     }
 
     /**
@@ -120,12 +108,15 @@ public class SettingsController {
                 success = false;
                 //set error message
             }
-            if(hoursField.getText() == null) {
+            if(hoursField.getText().equals("")) {
                 success = false;
                 //set error message
             }
             if(success) {
                 logic.setWorkHours(hoursFromField.getValue(), hoursToField.getValue(), hoursField.getText());
+                if(hoursView.isVisible()) {
+                    logic.populateHoursTable(hoursView);
+                }
             }
         }
         catch(URISyntaxException e) {
