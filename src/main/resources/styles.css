@@ -118,4 +118,8 @@ body {
     -fx-text-fill: #444444;
 }
 
-.
+.text-field.error {
+    -fx-border-color: rgba(255, 0, 0, 0.3);
+    -fx-border-width: 2px;
+    -fx-focus-color: red;
+}

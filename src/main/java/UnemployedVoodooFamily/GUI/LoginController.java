@@ -32,8 +32,10 @@ public class LoginController {
 
     public void loginWithCredentials() {
         Thread loginCredThread = new Thread(() -> {
-            bufferImg.setVisible(true);
-            loginLogic.attemptAuthentication(emailField.getText(), passwordField.getText());
+            if(!emailField.getText().isEmpty() && !passwordField.getText().isEmpty()){
+                bufferImg.setVisible(true);
+                loginLogic.attemptAuthentication(emailField.getText(), passwordField.getText());
+            }
             if(!loginLogic.isLoggedIn()){
                 emailField.getStyleClass().add("error");
                 passwordField.getStyleClass().add("error");
