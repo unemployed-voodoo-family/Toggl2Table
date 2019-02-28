@@ -16,7 +16,6 @@ public class LoginLogic {
     public boolean attemptAuthentication(String username, String password){
         // Run this thread to avoid UnemployedVoodooFamily.GUI freezing
         jToggl = new JToggl(username, password);
-
         Thread toggleThread = new Thread(() -> {
             jToggl.switchLoggingOn();
             if(isLoggedIn()){
@@ -31,6 +30,7 @@ public class LoginLogic {
             }
         });
         toggleThread.start();
+        Session.getInstance().setSession(jToggl);
         return isLoggedIn();
     }
 
