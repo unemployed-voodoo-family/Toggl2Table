@@ -31,9 +31,13 @@ public class LoginController {
     }
 
     public void loginWithCredentials() {
-        bufferImg.setVisible(true);
-        loginLogic.attemptAuthentication(emailField.getText(), passwordField.getText());
-        bufferImg.setVisible(false);
+        Thread loginCredThread = new Thread(() -> {
+            bufferImg.setVisible(true);
+            loginLogic.attemptAuthentication(emailField.getText(), passwordField.getText());
+            bufferImg.setVisible(false);
+            });
+        loginCredThread.start();
+
     }
 
     public void buttonPressedListener(KeyEvent e) {
