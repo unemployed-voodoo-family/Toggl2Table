@@ -1,10 +1,19 @@
 package UnemployedVoodooFamily.Logic;
 
 import ch.simas.jtoggl.JToggl;
+import ch.simas.jtoggl.Project;
+import ch.simas.jtoggl.TimeEntry;
+import ch.simas.jtoggl.User;
+
+import java.util.List;
 
 public class Session {
 
-    private static JToggl jToggl = null;
+    private JToggl jToggl = null;
+    private List<TimeEntry> timeEntries;
+    private List<Project> projects;
+    private User user;
+
     private static Session ourInstance = new Session();
 
     public static Session getInstance() {
@@ -17,9 +26,10 @@ public class Session {
     public void setSession(JToggl jToggl) {
         if(this.jToggl == null) {
             this.jToggl = jToggl;
+            refreshData();
         }
         else {
-            //do something
+            //already logged in!
         }
     }
 
@@ -29,5 +39,23 @@ public class Session {
 
     public void terminateSession() {
         jToggl = null;
+    }
+
+    public List<TimeEntry> getTimeEntries() {
+        return timeEntries;
+    }
+
+    public List<Project> getProjects() {
+        return projects;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void refreshData() {
+        this.user = jToggl.getCurrentUser();
+        this.timeEntries = jToggl.getTimeEntries();
+        this.projects = jToggl.getProjects();
     }
 }
