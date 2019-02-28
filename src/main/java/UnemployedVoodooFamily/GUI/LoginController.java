@@ -16,7 +16,7 @@ public class LoginLogic {
 
     public boolean attemptAuthentication(String username, String password){
         // Run this thread to avoid UnemployedVoodooFamily.GUI freezing
-        AtomicBoolean loginStatus = new AtomicBoolean(false);
+        AtomicBoolean loginStatus = new AtomicBoolean();
         jToggl = new JToggl(username, password);
         Thread toggleThread = new Thread(() -> {
             jToggl.switchLoggingOn();
@@ -41,15 +41,22 @@ public class LoginLogic {
     private boolean isLoggedIn() {
         String userString;
         boolean loggedIn = false;
-        User user = jToggl.getCurrentUser();
-        userString = user.toString();
-        if(userString.contains("api_token")) {
-            loggedIn = true;
+        try {
+            User user = jToggl.getCurrentUser();
+            userString = user.toString();
+
+            if(userString.contains("api_token")) {
+                loggedIn = true;
+            }
+            else {
+                loggedIn = false;
+                System.out.println("\nWrong username or password");
+            }
         }
-        else {
-            loggedIn = false;
-            System.out.println("\nWrong username or password");
+        catch(RuntimeException t){
+            System.out.println("error");
         }
+
         return loggedIn;
     }
 
