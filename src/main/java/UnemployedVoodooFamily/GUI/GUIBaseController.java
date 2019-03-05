@@ -2,6 +2,7 @@ package UnemployedVoodooFamily.GUI;
 
 import UnemployedVoodooFamily.GUI.Content.SettingsController;
 import UnemployedVoodooFamily.GUI.Content.TableViewController;
+import UnemployedVoodooFamily.Logic.Session;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -41,6 +42,9 @@ public class GUIBaseController {
 
     @FXML
     private Color x4;
+
+    @FXML
+    private ImageView refreshBtn;
 
     @FXML
     private AnchorPane contentRoot;
@@ -84,6 +88,11 @@ public class GUIBaseController {
 
         settingsNavBtn.setOnAction(event -> switchContentView(settings));
         tableNavBtn.setOnAction(event -> switchContentView(table));
+    }
+
+    public void refreshRawData(){
+        Session instance = Session.getInstance();
+        instance.refreshData();
     }
 
     /**
