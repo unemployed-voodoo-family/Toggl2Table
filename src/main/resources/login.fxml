@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox prefHeight="520.0" prefWidth="829.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UnemployedVoodooFamily.GUI.LoginController">
+   <children>
+      <MenuBar>
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Close" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Edit">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Delete" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+      <GridPane fx:id="gridPane" prefHeight="462.0" prefWidth="829.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints maxHeight="90.0" minHeight="90.0" prefHeight="90.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="315.0" minHeight="10.0" prefHeight="278.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="90.0" minHeight="90.0" prefHeight="90.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <VBox prefHeight="228.0" prefWidth="276.0" spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <children>
+                  <Label text="Email" />
+                  <TextField fx:id="emailField" onKeyPressed="#buttonPressedListener" />
+                  <Label text="Password" />
+                  <PasswordField fx:id="passwordField" onKeyPressed="#buttonPressedListener" />
+                  <HBox alignment="TOP_RIGHT" prefHeight="30.0" prefWidth="276.0">
+                     <children>
+                        <Hyperlink onKeyPressed="#buttonPressedListener" text="Forgot password?" />
+                     </children>
+                  </HBox>
+                  <CheckBox fx:id="RememberEmailCheck" mnemonicParsing="false" onKeyPressed="#buttonPressedListener" text="Remember email" />
+                  <CheckBox fx:id="RememberPasswordCheck" mnemonicParsing="false" onKeyPressed="#buttonPressedListener" text="Remember password" />
+                  <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <Button fx:id="submitBtn" mnemonicParsing="false" text="Submit" />
+                     </children>
+                  </HBox>
+               </children>
+               <GridPane.margin>
+                  <Insets />
+               </GridPane.margin>
+            </VBox>
+            <VBox GridPane.columnIndex="1" GridPane.rowIndex="2">
+               <children>
+                  <Pane prefHeight="200.0" prefWidth="200.0" />
+                  <HBox GridPane.columnIndex="1" GridPane.rowIndex="2">
+                     <children>
+                        <Pane prefHeight="180.0" prefWidth="71.0" />
+                        <ImageView fx:id="bufferImg" fitHeight="180.0" fitWidth="238.0" pickOnBounds="true" preserveRatio="true" visible="false">
+                           <image>
+                              <Image url="@icons/ajax-loader.gif" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </GridPane>
+   </children>
+</VBox>
