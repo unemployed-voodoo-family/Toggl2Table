@@ -84,7 +84,7 @@
                               <Insets bottom="10.0" top="10.0" />
                            </padding>
                         </Separator>
-                        <Button mnemonicParsing="false" text="Export to excel" />
+                        <Button fx:id="exportBtn" mnemonicParsing="false" text="Export to excel" />
                      </children>
                      <padding>
                         <Insets left="5.0" right="5.0" />

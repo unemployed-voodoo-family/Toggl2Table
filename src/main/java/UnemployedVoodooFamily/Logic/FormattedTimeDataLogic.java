@@ -1,7 +1,12 @@
 package UnemployedVoodooFamily.Logic;
 
 public class FormattedTimeDataLogic {
-    //TODO This class should be called to from the TableViewController
-    // and is responsible for handling formatted time data
+
+    //Called when the "export to excel" button is pressed
+    public boolean buildExcelDocument()    {
+        boolean exportSuccess = new ExcelWriter().generateExcelSheet();
+        System.out.println(exportSuccess);
+        return exportSuccess;
+    }
 
 }

@@ -4,6 +4,8 @@ import UnemployedVoodooFamily.Data.MonthlyFormattedTimeData;
 import UnemployedVoodooFamily.Data.RawTimeDataModel;
 import UnemployedVoodooFamily.Data.WeeklyFormattedTimeDataModel;
 import UnemployedVoodooFamily.Data.DateRange;
+import UnemployedVoodooFamily.Logic.ExcelWriter;
+import UnemployedVoodooFamily.Logic.FormattedTimeDataLogic;
 import UnemployedVoodooFamily.Logic.RawTimeDataLogic;
 import ch.simas.jtoggl.JToggl;
 import ch.simas.jtoggl.Project;
@@ -47,9 +49,13 @@ public class TableViewController {
     @FXML
     private ToggleButton monthlyToggleBtn;
 
+    @FXML
+    private Button exportBtn;
+
     private final ToggleGroup timeSpanToggleGroup = new ToggleGroup();
 
     private RawTimeDataLogic rawTimeDataLogic = new RawTimeDataLogic();
+    private FormattedTimeDataLogic formattedTimeDataLogic = new FormattedTimeDataLogic();
 
     public Node loadFXML() throws IOException {
         URL r = getClass().getClassLoader().getResource("Table.fxml");
@@ -79,6 +85,10 @@ public class TableViewController {
      * Sets input actions on UI elements
      */
     private void setKeyAndClickListeners() {
+        exportBtn.setOnAction(event ->  {
+            formattedTimeDataLogic.buildExcelDocument();
+        });
+
         rawDataTab.setOnSelectionChanged(event -> {
             if(rawDataTab.isSelected()) {
                 buildRawDataTable();
