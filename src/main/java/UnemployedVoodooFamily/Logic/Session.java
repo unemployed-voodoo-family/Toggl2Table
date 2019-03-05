@@ -9,10 +9,10 @@ import java.util.List;
 
 public class Session {
 
-    private JToggl jToggl = null;
-    private List<TimeEntry> timeEntries;
-    private List<Project> projects;
-    private User user;
+    private static JToggl jToggl = null;
+    private static List<TimeEntry> timeEntries;
+    private static List<Project> projects;
+    private static User user;
 
     private static Session ourInstance = new Session();
 
@@ -33,29 +33,38 @@ public class Session {
         }
     }
 
-    public JToggl getSession() {
-        return this.jToggl;
-    }
-
-    public void terminateSession() {
+    public static void terminateSession() {
         jToggl = null;
     }
 
-    public List<TimeEntry> getTimeEntries() {
+    public static List<TimeEntry> getTimeEntries() {
         return timeEntries;
     }
 
-    public List<Project> getProjects() {
+    public static List<Project> getProjects() {
         return projects;
     }
 
-    public User getUser() {
+    public static User getUser() {
         return user;
     }
 
-    public void refreshData() {
-        this.user = jToggl.getCurrentUser();
-        this.timeEntries = jToggl.getTimeEntries();
-        this.projects = jToggl.getProjects();
+    public static void refreshUser() {
+        user = jToggl.getCurrentUser();
+    }
+
+    public static void refreshTimeEntries() {
+        timeEntries = jToggl.getTimeEntries();
+    }
+
+    public static void refreshProjects() {
+
+        projects = jToggl.getProjects();
+    }
+
+    public static void refreshData() {
+        user = jToggl.getCurrentUser();
+        timeEntries = jToggl.getTimeEntries();
+        projects = jToggl.getProjects();
     }
 }
