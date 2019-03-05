@@ -18,7 +18,6 @@ import java.util.*;
 
 public class RawTimeDataLogic {
     // and is responsible for handling raw time data
-    private JToggl jToggl = Session.getInstance().getSession();
     private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
     /**
@@ -27,8 +26,8 @@ public class RawTimeDataLogic {
      */
     public ObservableList<RawTimeDataModel> buildObservableRawTimeData() {
         ObservableList<RawTimeDataModel> data = FXCollections.observableArrayList();
-        Iterator<TimeEntry> it = jToggl.getTimeEntries().iterator();
-        List<Project> projects = jToggl.getProjects();
+        Iterator<TimeEntry> it = Session.getTimeEntries().iterator();
+        List<Project> projects = Session.getProjects();
 
         while(it.hasNext()) {
             TimeEntry timeEntry = it.next();
