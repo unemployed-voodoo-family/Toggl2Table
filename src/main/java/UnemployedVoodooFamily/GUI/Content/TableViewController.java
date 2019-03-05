@@ -4,6 +4,7 @@ import UnemployedVoodooFamily.Data.MonthlyFormattedTimeData;
 import UnemployedVoodooFamily.Data.RawTimeDataModel;
 import UnemployedVoodooFamily.Data.WeeklyFormattedTimeDataModel;
 import UnemployedVoodooFamily.Data.DateRange;
+import UnemployedVoodooFamily.Logic.FormattedTimeDataLogic;
 import UnemployedVoodooFamily.Logic.RawTimeDataLogic;
 import ch.simas.jtoggl.JToggl;
 import ch.simas.jtoggl.Project;
@@ -50,6 +51,7 @@ public class TableViewController {
     private final ToggleGroup timeSpanToggleGroup = new ToggleGroup();
 
     private RawTimeDataLogic rawTimeDataLogic = new RawTimeDataLogic();
+    private FormattedTimeDataLogic formattedTimeDataLogic = new FormattedTimeDataLogic();
 
     public Node loadFXML() throws IOException {
         URL r = getClass().getClassLoader().getResource("Table.fxml");
@@ -254,13 +256,7 @@ public class TableViewController {
         //TODO: - Remove the two lines below when formatted data import is implemented
         //      - Make FormattedTimeDataLogic return a list of the required information
         //This is here for testing purposes only
-        observableList
-                .add(new WeeklyFormattedTimeDataModel("Monday", "1969-10-10", "Moon landing", "T", "T+13324", "Many",
-                                                      "???", "Too much"));
-        observableList
-                .add(new WeeklyFormattedTimeDataModel("Tuesday", "1969-10-11", "Moon landing 2: Electric boogaloo", "T",
-                                                      "T+13324", "Yes", "???", "Too much"));
-
+        formattedTimeDataLogic.buildObservableWeeklyTimeData();
         return observableList;
     }
 
