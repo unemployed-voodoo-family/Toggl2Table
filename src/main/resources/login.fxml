@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.scene.image.*?>
 <?import java.lang.*?>
 <?import javafx.geometry.*?>
@@ -36,7 +37,7 @@
         </columnConstraints>
         <rowConstraints>
           <RowConstraints maxHeight="90.0" minHeight="90.0" prefHeight="90.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="315.0" minHeight="10.0" prefHeight="278.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="278.0" vgrow="SOMETIMES" />
           <RowConstraints maxHeight="90.0" minHeight="90.0" prefHeight="90.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
@@ -46,11 +47,12 @@
                   <TextField fx:id="emailField" onKeyPressed="#buttonPressedListener" />
                   <Label text="Password" />
                   <PasswordField fx:id="passwordField" onKeyPressed="#buttonPressedListener" />
-                  <HBox alignment="TOP_RIGHT" prefHeight="30.0" prefWidth="276.0">
+                  <HBox alignment="TOP_RIGHT" prefHeight="30.0" prefWidth="274.0">
                      <children>
                         <Hyperlink onKeyPressed="#buttonPressedListener" text="Forgot password?" />
                      </children>
                   </HBox>
+                  <Label fx:id="wrongCredentials" alignment="CENTER" prefHeight="15.0" prefWidth="272.0" />
                   <CheckBox fx:id="RememberEmailCheck" mnemonicParsing="false" onKeyPressed="#buttonPressedListener" text="Remember email" />
                   <CheckBox fx:id="RememberPasswordCheck" mnemonicParsing="false" onKeyPressed="#buttonPressedListener" text="Remember password" />
                   <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0">

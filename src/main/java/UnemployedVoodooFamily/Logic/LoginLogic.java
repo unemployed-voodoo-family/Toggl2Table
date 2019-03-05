@@ -13,6 +13,7 @@ public class LoginLogic {
     private JToggl jToggl;
 
 
+
     public boolean attemptAuthentication(String username, String password){
         // Run this thread to avoid UnemployedVoodooFamily.GUI freezing
         jToggl = new JToggl(username, password);
