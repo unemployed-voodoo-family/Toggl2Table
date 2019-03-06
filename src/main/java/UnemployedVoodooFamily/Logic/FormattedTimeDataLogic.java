@@ -25,9 +25,10 @@ public class FormattedTimeDataLogic {
     //TODO This class should be called to from the TableViewController
     // and is responsible for handling formatted time data
     public ObservableList<MonthlyFormattedTimeData> buildObservableMonthlyTimeData() {
+        Session session = Session.getInstance();
         ObservableList<MonthlyFormattedTimeData> data = FXCollections.observableArrayList();
-        Iterator<TimeEntry> it = Session.getTimeEntries().iterator();
-        List<Project> projects = Session.getProjects();
+        Iterator<TimeEntry> it = session.getTimeEntries().iterator();
+        List<Project> projects = session.getProjects();
 
         //MonthlyFormattedTimeData dataModel = new MonthlyFormattedTimeData();
         //data.add(dataModel);
@@ -37,8 +38,9 @@ public class FormattedTimeDataLogic {
     }
 
     public ObservableList<TimeEntry> buildObservableWeeklyTimeData() {
+        Session session = Session.getInstance();
         ObservableList<TimeEntry> data = FXCollections.observableArrayList();
-        Iterator<TimeEntry> it = Session.getTimeEntries().iterator();
+        Iterator<TimeEntry> it = session.getTimeEntries().iterator();
 
         while(it.hasNext()) {
             TimeEntry entry = it.next();

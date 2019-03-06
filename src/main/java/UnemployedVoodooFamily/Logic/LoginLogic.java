@@ -13,30 +13,36 @@ public class LoginLogic {
     private JToggl jToggl;
 
 
-    public boolean attemptAuthentication(String username, String password){
+    public boolean attemptAuthentication(String username, String password) {
         // Run this thread to avoid UnemployedVoodooFamily.GUI freezing
-        jToggl = new JToggl(username, password);
         Session session = Session.getInstance();
         boolean loggedIn = false;
         try {
-            session.setSession(jToggl);
-            Thread togglThread = new Thread(() -> {
-                Platform.runLater(() -> {
-                    try {
-                        new GUIBaseController().start();
-                    }
-                    catch(IOException ioe) {
-                        System.out.println(ioe.getMessage());
-                    }
-                });
-            });
+            session.setSession(new JToggl(username, password));
+            Thread togglThread = new Thread(() -> Platform.runLater(() -> {
+                try {
+                    new GUIBaseController().start();
+                }
+                catch(IOException ioe) {
+                    System.out.println(ioe.getMessage());
+                }
+            }));
             togglThread.start();
             loggedIn = true;
+            Thread timeDataThread = new Thread(() -> Session.getInstance().refreshTimeData());
+            timeDataThread.start();
+
+            togglThread.join();
+            timeDataThread.join();
         }
         catch(RuntimeException e) {
             //Forbidden!
             Session.getInstance().terminateSession();
         }
+        catch(InterruptedException e) {
+            e.printStackTrace();
+        }
+
 
         return loggedIn;
     }
