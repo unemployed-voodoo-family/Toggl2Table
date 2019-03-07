@@ -91,7 +91,7 @@ public class TableViewController implements DataLoadedListener {
      */
     private void setKeyAndClickListeners() {
         exportBtn.setOnAction(event ->  {
-            formattedTimeDataLogic.buildExcelDocument();
+            formattedTimeDataLogic.exportToExcelDocument();
         });
 
         rawDataTab.setOnSelectionChanged(event -> {

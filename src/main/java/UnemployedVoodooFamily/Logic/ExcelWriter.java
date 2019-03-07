@@ -1,30 +1,32 @@
 package UnemployedVoodooFamily.Logic;
 
-import UnemployedVoodooFamily.Data.MonthlyFormattedTimeData;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import UnemployedVoodooFamily.Data.MonthlySheetRowEntry;
+import UnemployedVoodooFamily.Enums.Month;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class ExcelWriter {
 
+    private Workbook workbook;
 
-    private static String[] timeOverviewColumns = {"Week number", "Supposed work hours", "Worked hours", "Overtime"};
-    //TODO create own data class for excel sheet(?)
-    private static List<MonthlyFormattedTimeData> monthlyEntries = new ArrayList<>();
+    private static CellStyle headerCellStyle;
+    private static CellStyle dataCellStyle;
+    private static String[] columnNames = {"Week number", "Week day", "Date" ,"Supposed work hours", "Worked hours", "Overtime"};
 
-    //TODO feed the generator with appropriate parameters
-    public boolean generateExcelSheet() {
+    public ExcelWriter()    {
+        this.workbook = new XSSFWorkbook();
+        setupStandardRowFormatting();
+    }
+
+    public boolean generateExcelSheet(HashMap<String, ArrayList> monthLists) {
         boolean success = false;
         try {
-            buildEntriesList(); //Put list in as parameter(?)
-            buildSheet();
+            buildWorkbook(monthLists);
             success = true;
         }
         catch(IOException e) {
@@ -33,65 +35,65 @@ public class ExcelWriter {
         return success; //Return true if document was build correctly, false if failed
     }
 
-    private void buildEntriesList() { //TODO parameters
-
-        //########TESTING########
-        monthlyEntries.add(new MonthlyFormattedTimeData("Jan", "2", "3", "4", "1"));
-    }
-
-    private void buildSheet() throws IOException {
-        //Create Excel workbook ( .xlsx file)
-        Workbook workbook = new XSSFWorkbook();
+    private void buildWorkbook(HashMap<String, ArrayList> monthLists) throws IOException {
         CreationHelper creationHelper = workbook.getCreationHelper();
-
-
-        //Set up fonts
-        Font headerFont = workbook.createFont();
-        headerFont.setBold(true);
-
-        //TODO Create a separate method which generates the cell styles
-        //Create cell style
-        CellStyle summaryCellStyle = workbook.createCellStyle();
-        summaryCellStyle.setFont(headerFont);
-
-        //TODO create a "sheet" factory
-        Sheet janSheet = workbook.createSheet(monthlyEntries.get(0).getMonth());
-
-        //Create row
-        Row janSummaryRow = janSheet.createRow(0);
-
-        //Create header summary cells
-        for(int i = 0; i < (timeOverviewColumns.length); i++) { //For all the columns
-            Cell cell = janSummaryRow.createCell(i);
-            cell.setCellValue(timeOverviewColumns[i]);
-            cell.setCellStyle(summaryCellStyle);
+        for(String key : monthLists.keySet())   {
+            constructSheet(key, monthLists.get(key));
         }
-
-        //Create information cells
-
-        int rowNumber = 1;
-        for(MonthlyFormattedTimeData entry: monthlyEntries) {
-            Row row = janSheet.createRow(rowNumber++);
-            row.createCell(0).setCellValue(entry.getWeekNumber());
-            row.createCell(1).setCellValue(Double.parseDouble(entry.getSupposedHours()));
-            row.createCell(2).setCellValue(Double.parseDouble(entry.getWorkedHours()));
-            row.createCell(3).setCellFormula("SUM(" + row.getCell(2).getAddress().formatAsString()
-                                                     + "-" + row.getCell(1).getAddress().formatAsString()
-                                                     + ")");
+        int order = 0;
+        for(Month month : Month.values())   {
+            workbook.setSheetOrder(StringUtils.capitalize(month.toString().toLowerCase()), order);
+            order++;
         }
-
-        //resize columns
-        for(int i = 0; i <timeOverviewColumns.length; i++)  {
-            janSheet.autoSizeColumn(i);
-        }
-
-        //Write file to output
         FileOutputStream fileOut = new FileOutputStream("Time Report.xlsx");
         workbook.write(fileOut);
         fileOut.close();
 
         workbook.close();
-
     }
 
+    private void constructSheet(String sheetName, ArrayList<MonthlySheetRowEntry> data)  {
+        Sheet sheet = this.workbook.createSheet(sheetName);
+
+        //Create Header row
+        Row headerRow = sheet.createRow(0);
+        for(int i = 0; i < (columnNames.length); i++) { //For all the columns
+            Cell cell = headerRow.createCell(i);
+            cell.setCellValue(columnNames[i]);
+            cell.setCellStyle(headerCellStyle);
+        }
+
+        //Create data rows for every data entry
+        int rowNumber = 1;
+        for(MonthlySheetRowEntry m : data)  {
+            Row row = sheet.createRow(rowNumber++);
+            row.createCell(0).setCellValue(m.getWeekNumber());
+            row.createCell(1).setCellValue(m.getWeekDay());
+            row.createCell(2).setCellValue(m.getDate());
+            row.createCell(3).setCellValue(m.getSupposedWorkHours());
+            row.createCell(4).setCellValue(m.getActualWorkedHours());
+            row.createCell(5).setCellFormula("SUM(" + row.getCell(4).getAddress().formatAsString()
+                                                     + "-" + row.getCell(3).getAddress().formatAsString()
+                                                     + ")");
+            for(Cell cell : row)    {
+                cell.setCellStyle(dataCellStyle);
+            }
+        }
+        for(int i = 0; i < columnNames.length; i++)  {
+            sheet.autoSizeColumn(i);
+        }
+    }
+
+    private void setupStandardRowFormatting()   {
+        headerCellStyle = workbook.createCellStyle();
+        dataCellStyle = workbook.createCellStyle();
+
+        Font headerFont = workbook.createFont();
+        headerFont.setBold(true);
+
+        headerCellStyle.setFont(headerFont);
+        headerCellStyle.setAlignment(HorizontalAlignment.RIGHT);
+
+        dataCellStyle.setAlignment(HorizontalAlignment.RIGHT);
+    }
 }

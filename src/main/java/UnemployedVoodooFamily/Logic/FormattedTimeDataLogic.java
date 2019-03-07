@@ -34,8 +34,12 @@ public class FormattedTimeDataLogic {
         //data.add(dataModel);
         //TODO: unfinished
         return data;
+    }
 
-
+    //Called when the "export to excel" button is pressed
+    public boolean exportToExcelDocument()    {
+        ExcelExportHandler exportHandler = new ExcelExportHandler();
+        return exportHandler.makeExcelDocument();
     }
 
     public ObservableList<TimeEntry> buildObservableWeeklyTimeData() {
@@ -60,13 +64,4 @@ public class FormattedTimeDataLogic {
 
     private void summarizeDay() {
     }
-  
-    //Called when the "export to excel" button is pressed
-    public boolean buildExcelDocument()    {
-        boolean exportSuccess = new ExcelWriter().generateExcelSheet();
-        System.out.println(exportSuccess);
-        return exportSuccess;
-    }
-
-    
 }
