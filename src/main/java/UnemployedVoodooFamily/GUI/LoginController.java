@@ -25,6 +25,7 @@ public class LoginController {
 
     private LoginLogic loginLogic = new LoginLogic();
     private boolean isLoggedIn;
+    private boolean loginInProgress;
 
     public void initialize() {
         setKeyAndClickListeners();
@@ -35,12 +36,16 @@ public class LoginController {
     }
 
     public void loginWithCredentials() {
+        loginInProgress = true;
+        submitBtn.setDisable(true);
         Thread loginCredThread = new Thread(() -> {
             bufferImg.setVisible(true);
             loginLogic.attemptAuthentication(emailField.getText(), passwordField.getText());
             isLoggedIn = loginLogic.attemptAuthentication(emailField.getText(), passwordField.getText());
             bufferImg.setVisible(false);
             Platform.runLater(() -> {
+                loginInProgress = false;
+                submitBtn.setDisable(false);
                 if(!isLoggedIn) {
                     showWrongCredentialsError("Wrong email or password");
                     emailField.getStyleClass().add("error");
@@ -52,13 +57,21 @@ public class LoginController {
     }
 
     public void buttonPressedListener(KeyEvent e) {
-        if(e.getCode().toString().equals("ENTER")) {
-            loginWithCredentials();
+        if(!loginInProgress) {
+            if(e.getCode().toString().equals("ENTER")) {
+                loginWithCredentials();
+            }
         }
+
     }
 
     private void showWrongCredentialsError(String errorMessage) {
         wrongCredentials.setText(errorMessage);
         wrongCredentials.getStyleClass().add("error");
     }
+
+    private void disableSubmit() {
+
+    }
 }
+
