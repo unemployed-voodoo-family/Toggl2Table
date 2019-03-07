@@ -45,6 +45,12 @@ public class FormattedTimeDataLogic {
         return data;
     }
 
+    //Called when the "export to excel" button is pressed
+    public boolean exportToExcelDocument()    {
+        ExcelExportHandler exportHandler = new ExcelExportHandler();
+        return exportHandler.makeExcelDocument();
+    }
+
     public ObservableList<DailySummarizedDataModel> buildObservableWeeklyTimeData() {
 
         Session session = Session.getInstance();
@@ -85,6 +91,5 @@ public class FormattedTimeDataLogic {
         System.out.println(exportSuccess);
         return exportSuccess;
     }
-
 
 }
