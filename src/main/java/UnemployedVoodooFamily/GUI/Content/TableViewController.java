@@ -3,18 +3,12 @@ package UnemployedVoodooFamily.GUI.Content;
 import UnemployedVoodooFamily.Data.Enums.Data;
 import UnemployedVoodooFamily.Data.MonthlyFormattedTimeData;
 import UnemployedVoodooFamily.Data.RawTimeDataModel;
-import UnemployedVoodooFamily.Data.WeeklyFormattedTimeDataModel;
-import UnemployedVoodooFamily.Data.DateRange;
+import UnemployedVoodooFamily.Data.DailySummarizedDataModel;
 import UnemployedVoodooFamily.Logic.FormattedTimeDataLogic;
 import UnemployedVoodooFamily.Logic.Listeners.DataLoadedListener;
 
-import UnemployedVoodooFamily.Logic.ExcelWriter;
-import UnemployedVoodooFamily.Logic.FormattedTimeDataLogic;
 import UnemployedVoodooFamily.Logic.RawTimeDataLogic;
 import UnemployedVoodooFamily.Logic.Session;
-import ch.simas.jtoggl.JToggl;
-import ch.simas.jtoggl.Project;
-import ch.simas.jtoggl.TimeEntry;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -26,10 +20,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class TableViewController implements DataLoadedListener {
@@ -71,6 +61,8 @@ public class TableViewController implements DataLoadedListener {
     // |##################################################|
 
     public void initialize() {
+        buildRawDataTable();
+        buildFormattedWeeklyTable();
         Session.getInstance().addListener(this);
         setupUIElements();
         setKeyAndClickListeners();
@@ -80,7 +72,7 @@ public class TableViewController implements DataLoadedListener {
      * Sets up the UI elements
      */
     private void setupUIElements() {
-        buildRawDataTable();
+        buildFormattedDataTable();
         weeklyToggleBtn.setToggleGroup(timeSpanToggleGroup);
         monthlyToggleBtn.setToggleGroup(timeSpanToggleGroup);
         weeklyToggleBtn.setSelected(true);
@@ -94,11 +86,6 @@ public class TableViewController implements DataLoadedListener {
             formattedTimeDataLogic.buildExcelDocument();
         });
 
-        rawDataTab.setOnSelectionChanged(event -> {
-            if(rawDataTab.isSelected()) {
-                //buildRawDataTable();
-            }
-        });
 
         formattedDataTab.setOnSelectionChanged(event -> {
             if(formattedDataTab.isSelected()) {
@@ -147,7 +134,6 @@ public class TableViewController implements DataLoadedListener {
         rawData.setEditable(true);
         rawData.getColumns()
                .addAll(projectCol, descCol, startDateCol, startTimeCol, endDateCol, endTimeCol, durationCol);
-        //rawData.getItems().setAll(getObservableRawData());
     }
 
     private void setRawDataTableData() {
@@ -193,40 +179,24 @@ public class TableViewController implements DataLoadedListener {
         clearTable(formattedData);
 
         //Create all columns necessary
-        TableColumn<WeeklyFormattedTimeDataModel, String> weekDayCol = new TableColumn<>("Week Day");
+        TableColumn<DailySummarizedDataModel, String> weekDayCol = new TableColumn<>("Week Day");
         weekDayCol.setCellValueFactory(new PropertyValueFactory<>("weekDay"));
         weekDayCol.setSortable(false);
 
-        TableColumn<WeeklyFormattedTimeDataModel, String> dateCol = new TableColumn<>("Date");
-        dateCol.setCellValueFactory(new PropertyValueFactory<>("date"));
-        dateCol.setSortable(false);
-
-        TableColumn<WeeklyFormattedTimeDataModel, String> projectCol = new TableColumn<>("Project");
-        projectCol.setCellValueFactory(new PropertyValueFactory<>("project"));
-        projectCol.setSortable(false);
-
-        TableColumn<WeeklyFormattedTimeDataModel, String> startTimeCol = new TableColumn<>("Start Time");
-        startTimeCol.setCellValueFactory(new PropertyValueFactory<>("startTime"));
-        startTimeCol.setSortable(false);
-
-        TableColumn<WeeklyFormattedTimeDataModel, String> endTimeCol = new TableColumn<>("End Time");
-        endTimeCol.setCellValueFactory(new PropertyValueFactory<>("endTime"));
-        endTimeCol.setSortable(false);
-
-        TableColumn<WeeklyFormattedTimeDataModel, String> workedHoursCol = new TableColumn<>("Worked Hours");
+        TableColumn<DailySummarizedDataModel, String> workedHoursCol = new TableColumn<>("Worked Hours");
         workedHoursCol.setCellValueFactory(new PropertyValueFactory<>("workedHours"));
         workedHoursCol.setSortable(false);
 
-        TableColumn<WeeklyFormattedTimeDataModel, String> supposedHoursCol = new TableColumn<>("Supposed Hours");
+        TableColumn<DailySummarizedDataModel, String> supposedHoursCol = new TableColumn<>("Supposed Hours");
         supposedHoursCol.setCellValueFactory(new PropertyValueFactory<>("supposedHours"));
         supposedHoursCol.setSortable(false);
 
-        TableColumn<WeeklyFormattedTimeDataModel, String> overtimeCol = new TableColumn<>("Overtime");
+        TableColumn<DailySummarizedDataModel, String> overtimeCol = new TableColumn<>("Overtime");
         overtimeCol.setCellValueFactory(new PropertyValueFactory<>("overtime"));
         overtimeCol.setSortable(false);
 
         //Adds the columns to the table and updates it
-        formattedData.getColumns().addAll(weekDayCol, dateCol, projectCol, startTimeCol, endTimeCol, workedHoursCol,
+        formattedData.getColumns().addAll(weekDayCol, workedHoursCol,
                                           supposedHoursCol, overtimeCol);
         formattedData.setEditable(false);
     }
@@ -270,7 +240,7 @@ public class TableViewController implements DataLoadedListener {
      * Creates an observable list containing WeeklyTimeDataModel objects
      * @return an ObservableList containing WeeklyTimeDatModel objects
      */
-    private ObservableList<WeeklyFormattedTimeDataModel> getObservableWeeklyData() {
+    private ObservableList<DailySummarizedDataModel> getObservableWeeklyData() {
         return formattedTimeDataLogic.buildObservableWeeklyTimeData();
     }
 
@@ -312,10 +282,13 @@ public class TableViewController implements DataLoadedListener {
     public void dataLoaded(Data e) {
         loadedData.add(e);
         //check if necassary data is loaded
-        if(loadedData.containsAll(EnumSet.of(Data.TIME_ENTRIES, Data.PROJECTS, Data.TASKS, Data.WORKSPACES))) {
-            setRawDataTableData();
+        if(loadedData.containsAll(EnumSet.of(Data.TIME_ENTRIES))) {
             setWeeklyTableData();
-            loadedData = EnumSet.noneOf(Data.class); //empty the set, readying it for next
+            if(loadedData.containsAll(EnumSet.of(Data.TIME_ENTRIES, Data.PROJECTS, Data.TASKS))) {
+                setRawDataTableData();
+                loadedData = EnumSet.noneOf(Data.class); //empty the set, readying it for next
+            }
         }
+
     }
 }

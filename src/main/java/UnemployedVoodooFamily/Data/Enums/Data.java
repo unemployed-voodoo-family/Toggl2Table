@@ -8,5 +8,5 @@ public enum Data {
     PROJECTS,
     TASKS,
     WORKSPACES,
-    USER
+    USER,
 }

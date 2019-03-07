@@ -1,26 +1,26 @@
 package UnemployedVoodooFamily.Logic;
 
 import UnemployedVoodooFamily.Data.MonthlyFormattedTimeData;
-import UnemployedVoodooFamily.Data.RawTimeDataModel;
-import UnemployedVoodooFamily.Data.WeeklyFormattedTimeDataModel;
-import UnemployedVoodooFamily.Data.WeeklyFormattedTimeDataModelBuilder;
+import UnemployedVoodooFamily.Data.DailySummarizedDataModel;
+import UnemployedVoodooFamily.Data.DailySummarizedDataModelBuilder;
 import ch.simas.jtoggl.Project;
 import ch.simas.jtoggl.TimeEntry;
+import io.rocketbase.toggl.api.TogglReportApi;
+import io.rocketbase.toggl.api.TogglReportApiBuilder;
+import io.rocketbase.toggl.api.model.WeeklyUsersTimeResult;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.sql.Time;
-import java.text.SimpleDateFormat;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.IsoFields;
 import java.util.*;
 
 public class FormattedTimeDataLogic {
     private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-    private static List<ObservableList<MonthlyFormattedTimeData>> monthsList = new ArrayList<>(12);
-    private static PropertiesLogic propsLogic = new PropertiesLogic();
-    private static Properties props = new Properties();
-    HashMap<Month, ObservableList<MonthlyFormattedTimeData>> monthsMap = new HashMap<>();
+    private HashMap<Month, ObservableList<MonthlyFormattedTimeData>> monthsMap = new HashMap<>();
 
 
     public FormattedTimeDataLogic() {
@@ -44,8 +44,7 @@ public class FormattedTimeDataLogic {
     public ObservableList<MonthlyFormattedTimeData> buildObservableMonthlyTimeData() {
         Session session = Session.getInstance();
         ObservableList<MonthlyFormattedTimeData> data = FXCollections.observableArrayList();
-        Iterator<TimeEntry> it = session.getTimeEntries().iterator();
-        List<Project> projects = session.getProjects();
+
 
         //MonthlyFormattedTimeData dataModel = new MonthlyFormattedTimeData();
         //data.add(dataModel);
@@ -53,46 +52,46 @@ public class FormattedTimeDataLogic {
         return data;
     }
 
-    public ObservableList<WeeklyFormattedTimeDataModel> buildObservableWeeklyTimeData() {
-        Session session = Session.getInstance();
-        ObservableList<WeeklyFormattedTimeDataModel> data = FXCollections.observableArrayList();
-        Iterator<TimeEntry> it = session.getTimeEntries().iterator();
-        WeeklyFormattedTimeDataModelBuilder builder = new WeeklyFormattedTimeDataModelBuilder();
+    public ObservableList<DailySummarizedDataModel> buildObservableWeeklyTimeData() {
 
-        for(DayOfWeek day : DayOfWeek.values()) {
-            while(it.hasNext()) {
-                TimeEntry t = it.next();
-                if(isSameDay(t.getStart(), day.getValue())) {
+        Session session = Session.getInstance();
+
+        ObservableList<DailySummarizedDataModel> data = FXCollections.observableArrayList();
+        List<TimeEntry> timeEntries = session.getTimeEntries();
+
+        //TODO: implement date filtering
+        LocalDate startDate = LocalDate.of(2019, 1, 1);
+        LocalDate endDate = LocalDate.of(2019, 4, 30);
+
+        //iterate over all the days in the given range
+        int i = 0;
+        for(LocalDate date = startDate; date.isBefore(endDate.plusDays(1)); date = date.plusDays(1)) {
+            boolean done = false;
+            DailySummarizedDataModelBuilder builder = new DailySummarizedDataModelBuilder(date);
+            //summarize the time entries for one daylars
+            while(i < timeEntries.size() && !done) {
+                TimeEntry t = timeEntries.get(i);
+                LocalDate start = t.getStart().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                if(start.equals(date)) {
                     builder.addTimeEntry(t);
                 }
+                else {
+                    data.add(builder.build());
+                    i--;
+                    done = true;
+                }
+                i++;
             }
-            WeeklyFormattedTimeDataModel dayData = builder.build();
-            data.add(dayData);
         }
-
-
         return data;
     }
 
-    private boolean isSameDay(Date d1, int d2) {
-        Calendar c = Calendar.getInstance();
-        c.setTime(d1);
-        int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
-        return dayOfWeek == d2;
-    }
-
-    private void summarizeDay() {
-    }
-
-    private void summarizeWeek() {
-    }
-  
     //Called when the "export to excel" button is pressed
-    public boolean buildExcelDocument()    {
+    public boolean buildExcelDocument() {
         boolean exportSuccess = new ExcelWriter().generateExcelSheet();
         System.out.println(exportSuccess);
         return exportSuccess;
     }
 
-    
+
 }

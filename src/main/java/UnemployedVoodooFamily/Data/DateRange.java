@@ -18,15 +18,6 @@ public class DateRange {
         this.formatter = formatter;
         this.from = from;
         this.to = to;
-        normalize();
-    }
-
-    /**
-     * Sets the same year value for every daterange
-     */
-    private void normalize() {
-        this.from = LocalDate.of(STANDARD_YEAR, from.getMonth(), from.getDayOfMonth());
-        this.to = LocalDate.of(STANDARD_YEAR, to.getMonth(), to.getDayOfMonth());
     }
 
     public LocalDate getFrom() {
@@ -108,7 +99,7 @@ public class DateRange {
 
     public boolean contains(LocalDate date) {
         boolean contains = false;
-        if(isAfterOrEqual(date, to) && isBeforeOrEqual(date, to)) {
+        if(isAfterOrEqual(date, from) && isBeforeOrEqual(date, to)) {
             contains = true;
         }
         return contains;

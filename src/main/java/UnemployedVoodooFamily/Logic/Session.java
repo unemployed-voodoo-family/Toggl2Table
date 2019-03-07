@@ -4,7 +4,6 @@ import UnemployedVoodooFamily.Data.Enums.Data;
 import UnemployedVoodooFamily.Data.Enums.FilePath;
 import UnemployedVoodooFamily.Logic.Listeners.DataLoadedListener;
 import ch.simas.jtoggl.*;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -17,6 +16,7 @@ public class Session {
     private List<Workspace> workspaces;
     private List<Task> tasks;
     private User user;
+
     private Properties workHours;
     private PropertiesLogic propsLogic;
 
@@ -48,7 +48,7 @@ public class Session {
     }
 
     public void notifyDataLoaded(Data e) {
-        for(DataLoadedListener l : listeners) {
+        for(DataLoadedListener l: listeners) {
             l.dataLoaded(e);
         }
     }
