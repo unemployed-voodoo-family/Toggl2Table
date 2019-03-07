@@ -1,12 +1,21 @@
 package UnemployedVoodooFamily.Logic;
 
+import UnemployedVoodooFamily.Enums.Month;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class FormattedTimeDataLogic {
 
-    //Called when the "export to excel" button is pressed
-    public boolean buildExcelDocument()    {
-        boolean exportSuccess = new ExcelWriter().generateExcelSheet();
-        System.out.println(exportSuccess);
-        return exportSuccess;
+
+
+    public FormattedTimeDataLogic() {
+
     }
 
+    //Called when the "export to excel" button is pressed
+    public boolean exportToExcelDocument()    {
+        ExcelExportHandler exportHandler = new ExcelExportHandler();
+        return exportHandler.makeExcelDocument();
+    }
 }

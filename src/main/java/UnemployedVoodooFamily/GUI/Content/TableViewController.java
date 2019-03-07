@@ -86,7 +86,7 @@ public class TableViewController {
      */
     private void setKeyAndClickListeners() {
         exportBtn.setOnAction(event ->  {
-            formattedTimeDataLogic.buildExcelDocument();
+            formattedTimeDataLogic.exportToExcelDocument();
         });
 
         rawDataTab.setOnSelectionChanged(event -> {
