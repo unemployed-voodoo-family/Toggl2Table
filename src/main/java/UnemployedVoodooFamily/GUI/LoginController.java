@@ -3,10 +3,12 @@ package UnemployedVoodooFamily.GUI;
 import UnemployedVoodooFamily.Logic.LoginLogic;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
+import javafx.application.Platform;
 
 public class LoginController {
 
@@ -18,9 +20,11 @@ public class LoginController {
     private TextField emailField;
     @FXML
     private PasswordField passwordField;
+    @FXML
+    private Label wrongCredentials;
 
     private LoginLogic loginLogic = new LoginLogic();
-
+    private boolean isLoggedIn;
 
     public void initialize() {
         setKeyAndClickListeners();
@@ -34,15 +38,27 @@ public class LoginController {
         Thread loginCredThread = new Thread(() -> {
             bufferImg.setVisible(true);
             loginLogic.attemptAuthentication(emailField.getText(), passwordField.getText());
+            isLoggedIn = loginLogic.attemptAuthentication(emailField.getText(), passwordField.getText());
             bufferImg.setVisible(false);
+            Platform.runLater(() -> {
+                if(!isLoggedIn) {
+                    showWrongCredentialsError("Wrong email or password");
+                    emailField.getStyleClass().add("error");
+                    passwordField.getStyleClass().add("error");
+                }
             });
+        });
         loginCredThread.start();
-
     }
 
     public void buttonPressedListener(KeyEvent e) {
         if(e.getCode().toString().equals("ENTER")) {
             loginWithCredentials();
         }
+    }
+
+    private void showWrongCredentialsError(String errorMessage) {
+        wrongCredentials.setText(errorMessage);
+        wrongCredentials.getStyleClass().add("error");
     }
 }

@@ -7,6 +7,9 @@ import UnemployedVoodooFamily.Data.WeeklyFormattedTimeDataModel;
 import UnemployedVoodooFamily.Data.DateRange;
 import UnemployedVoodooFamily.Logic.FormattedTimeDataLogic;
 import UnemployedVoodooFamily.Logic.Listeners.DataLoadedListener;
+
+import UnemployedVoodooFamily.Logic.ExcelWriter;
+import UnemployedVoodooFamily.Logic.FormattedTimeDataLogic;
 import UnemployedVoodooFamily.Logic.RawTimeDataLogic;
 import UnemployedVoodooFamily.Logic.Session;
 import ch.simas.jtoggl.JToggl;
@@ -49,6 +52,9 @@ public class TableViewController implements DataLoadedListener {
     @FXML
     private ToggleButton monthlyToggleBtn;
 
+    @FXML
+    private Button exportBtn;
+
     private final ToggleGroup timeSpanToggleGroup = new ToggleGroup();
 
     private RawTimeDataLogic rawTimeDataLogic = new RawTimeDataLogic();
@@ -84,6 +90,10 @@ public class TableViewController implements DataLoadedListener {
      * Sets input actions on UI elements
      */
     private void setKeyAndClickListeners() {
+        exportBtn.setOnAction(event ->  {
+            formattedTimeDataLogic.buildExcelDocument();
+        });
+
         rawDataTab.setOnSelectionChanged(event -> {
             if(rawDataTab.isSelected()) {
                 //buildRawDataTable();
