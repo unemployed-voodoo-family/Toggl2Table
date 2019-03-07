@@ -42,7 +42,7 @@ public class SettingsLogic {
      * @throws IOException
      */
     public void setWorkHours(LocalDate fromDate, LocalDate toDate,
-                             String hoursStr) throws URISyntaxException, IOException {
+                             String hoursStr){
         Double hours = Double.valueOf(hoursStr);
 
         //load props file

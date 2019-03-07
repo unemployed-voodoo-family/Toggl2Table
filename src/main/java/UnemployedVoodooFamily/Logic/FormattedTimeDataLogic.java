@@ -3,19 +3,12 @@ package UnemployedVoodooFamily.Logic;
 import UnemployedVoodooFamily.Data.MonthlyFormattedTimeData;
 import UnemployedVoodooFamily.Data.DailySummarizedDataModel;
 import UnemployedVoodooFamily.Data.DailySummarizedDataModelBuilder;
-import ch.simas.jtoggl.Project;
 import ch.simas.jtoggl.TimeEntry;
-import io.rocketbase.toggl.api.TogglReportApi;
-import io.rocketbase.toggl.api.TogglReportApiBuilder;
-import io.rocketbase.toggl.api.model.WeeklyUsersTimeResult;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.IsoFields;
 import java.util.*;
 
 public class FormattedTimeDataLogic {
