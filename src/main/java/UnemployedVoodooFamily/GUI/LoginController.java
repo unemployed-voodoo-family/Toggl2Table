@@ -68,9 +68,5 @@ public class LoginController {
         wrongCredentials.setText(errorMessage);
         wrongCredentials.getStyleClass().add("error");
     }
-
-    private void disableSubmit() {
-
-    }
 }
 
