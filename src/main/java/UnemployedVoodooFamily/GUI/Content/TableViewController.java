@@ -86,7 +86,7 @@ public class TableViewController implements DataLoadedListener {
     private void setKeyAndClickListeners() {
         rawDataTab.setOnSelectionChanged(event -> {
             if(rawDataTab.isSelected()) {
-                buildRawDataTable();
+                //buildRawDataTable();
             }
         });
 
