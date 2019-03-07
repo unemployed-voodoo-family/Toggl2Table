@@ -14,12 +14,12 @@ public class PropertiesLogic {
     public Properties loadProps(String path) {
         Properties props = new Properties();
         File file = getFile(path);
-        try {
-            props.load(new FileInputStream(file));
-        }
-        catch(IOException e) {
-            e.printStackTrace();
-        }
+            try {
+                props.load(new FileInputStream(file));
+            }
+            catch(IOException e) {
+                e.printStackTrace();
+            }
         return props;
     }
 
@@ -38,9 +38,10 @@ public class PropertiesLogic {
         URL resourceUrl = getClass().getResource(path);
         File file = null;
         try {
-            file = new File(resourceUrl.toURI().getPath());
+            file = new File(path);
+            file.createNewFile();
         }
-        catch(URISyntaxException e) {
+        catch(IOException e) {
             e.printStackTrace();
         }
         return file;
