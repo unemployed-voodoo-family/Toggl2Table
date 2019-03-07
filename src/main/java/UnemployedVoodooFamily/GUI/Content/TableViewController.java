@@ -1,12 +1,17 @@
 package UnemployedVoodooFamily.GUI.Content;
 
+import UnemployedVoodooFamily.Data.Enums.Data;
 import UnemployedVoodooFamily.Data.MonthlyFormattedTimeData;
 import UnemployedVoodooFamily.Data.RawTimeDataModel;
 import UnemployedVoodooFamily.Data.WeeklyFormattedTimeDataModel;
 import UnemployedVoodooFamily.Data.DateRange;
+import UnemployedVoodooFamily.Logic.FormattedTimeDataLogic;
+import UnemployedVoodooFamily.Logic.Listeners.DataLoadedListener;
+
 import UnemployedVoodooFamily.Logic.ExcelWriter;
 import UnemployedVoodooFamily.Logic.FormattedTimeDataLogic;
 import UnemployedVoodooFamily.Logic.RawTimeDataLogic;
+import UnemployedVoodooFamily.Logic.Session;
 import ch.simas.jtoggl.JToggl;
 import ch.simas.jtoggl.Project;
 import ch.simas.jtoggl.TimeEntry;
@@ -25,11 +30,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Scanner;
+import java.util.*;
 
-public class TableViewController {
+public class TableViewController implements DataLoadedListener {
 
     @FXML
     private Tab rawDataTab;
@@ -56,6 +59,7 @@ public class TableViewController {
 
     private RawTimeDataLogic rawTimeDataLogic = new RawTimeDataLogic();
     private FormattedTimeDataLogic formattedTimeDataLogic = new FormattedTimeDataLogic();
+    private EnumSet<Data> loadedData = EnumSet.noneOf(Data.class);
 
     public Node loadFXML() throws IOException {
         URL r = getClass().getClassLoader().getResource("Table.fxml");
@@ -67,15 +71,16 @@ public class TableViewController {
     // |##################################################|
 
     public void initialize() {
+        Session.getInstance().addListener(this);
         setupUIElements();
         setKeyAndClickListeners();
-        buildRawDataTable();
     }
 
     /**
      * Sets up the UI elements
      */
     private void setupUIElements() {
+        buildRawDataTable();
         weeklyToggleBtn.setToggleGroup(timeSpanToggleGroup);
         monthlyToggleBtn.setToggleGroup(timeSpanToggleGroup);
         weeklyToggleBtn.setSelected(true);
@@ -91,7 +96,7 @@ public class TableViewController {
 
         rawDataTab.setOnSelectionChanged(event -> {
             if(rawDataTab.isSelected()) {
-                buildRawDataTable();
+                //buildRawDataTable();
             }
         });
 
@@ -142,6 +147,10 @@ public class TableViewController {
         rawData.setEditable(true);
         rawData.getColumns()
                .addAll(projectCol, descCol, startDateCol, startTimeCol, endDateCol, endTimeCol, durationCol);
+        //rawData.getItems().setAll(getObservableRawData());
+    }
+
+    private void setRawDataTableData() {
         rawData.getItems().setAll(getObservableRawData());
     }
 
@@ -264,13 +273,7 @@ public class TableViewController {
         //TODO: - Remove the two lines below when formatted data import is implemented
         //      - Make FormattedTimeDataLogic return a list of the required information
         //This is here for testing purposes only
-        observableList
-                .add(new WeeklyFormattedTimeDataModel("Monday", "1969-10-10", "Moon landing", "T", "T+13324", "Many",
-                                                      "???", "Too much"));
-        observableList
-                .add(new WeeklyFormattedTimeDataModel("Tuesday", "1969-10-11", "Moon landing 2: Electric boogaloo", "T",
-                                                      "T+13324", "Yes", "???", "Too much"));
-
+        formattedTimeDataLogic.buildObservableWeeklyTimeData();
         return observableList;
     }
 
@@ -300,5 +303,21 @@ public class TableViewController {
     private void clearTable(TableView table) {
         table.getColumns().clear();
         table.getItems().clear();
+    }
+
+
+    /**
+     * Set newly loaded data to the tables, only when
+     * all the necessary data has been loaded
+     * @param e
+     */
+    @Override
+    public void dataLoaded(Data e) {
+        loadedData.add(e);
+        //check if necassary data is loaded
+        if(loadedData.containsAll(EnumSet.of(Data.TIME_ENTRIES, Data.PROJECTS, Data.TASKS, Data.WORKSPACES))) {
+            setRawDataTableData();
+            loadedData = EnumSet.noneOf(Data.class); //empty the set, readying it for next
+        }
     }
 }

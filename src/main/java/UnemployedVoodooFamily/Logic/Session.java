@@ -1,35 +1,47 @@
 package UnemployedVoodooFamily.Logic;
 
-import ch.simas.jtoggl.JToggl;
-import ch.simas.jtoggl.Project;
-import ch.simas.jtoggl.TimeEntry;
-import ch.simas.jtoggl.User;
+import UnemployedVoodooFamily.Data.Enums.Data;
+import UnemployedVoodooFamily.Logic.Listeners.DataLoadedListener;
+import ch.simas.jtoggl.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Session {
 
     private static JToggl jToggl = null;
-    private static List<TimeEntry> timeEntries;
-    private static List<Project> projects;
-    private static User user;
+    private List<TimeEntry> timeEntries;
+    private List<Project> projects;
+    private List<Workspace> workspaces;
+    private List<Task> tasks;
+    private User user;
 
-    private static Session ourInstance = new Session();
+    private static Session togglSession = new Session();
 
-    public static Session getInstance() {
-        return ourInstance;
+    private List<DataLoadedListener> listeners = new ArrayList<>();
+
+
+    synchronized public static Session getInstance() {
+        return togglSession;
     }
 
-    private Session() {
-    }
-
-    public void setSession(JToggl jToggl) {
-        if(this.jToggl == null) {
-            this.jToggl = jToggl;
-            refreshData();
+    public void setSession(JToggl newSession) {
+        if(jToggl == null) {
+            jToggl = newSession;
+            refreshUser();
         }
         else {
             //already logged in!
+        }
+    }
+
+    public void addListener(DataLoadedListener listener) {
+        listeners.add(listener);
+    }
+
+    public void notifyDataLoaded(Data e) {
+        for(DataLoadedListener l : listeners) {
+            l.dataLoaded(e);
         }
     }
 
@@ -37,34 +49,55 @@ public class Session {
         jToggl = null;
     }
 
-    public static List<TimeEntry> getTimeEntries() {
+    public List<TimeEntry> getTimeEntries() {
         return timeEntries;
     }
 
-    public static List<Project> getProjects() {
+    public List<Project> getProjects() {
         return projects;
     }
 
-    public static User getUser() {
+    public List<Workspace> getWorkspaces() {
+        return workspaces;
+    }
+
+    public List<Task> getTasks() {
+        return tasks;
+    }
+
+    public User getUser() {
         return user;
     }
 
-    public static void refreshUser() {
+    public void refreshUser() {
         user = jToggl.getCurrentUser();
+        this.notifyDataLoaded(Data.USER);
     }
 
-    public static void refreshTimeEntries() {
+    public void refreshTimeEntries() {
         timeEntries = jToggl.getTimeEntries();
+        this.notifyDataLoaded(Data.TIME_ENTRIES);
     }
 
-    public static void refreshProjects() {
-
+    public void refreshProjects() {
         projects = jToggl.getProjects();
+        this.notifyDataLoaded(Data.PROJECTS);
     }
 
-    public static void refreshData() {
-        user = jToggl.getCurrentUser();
-        timeEntries = jToggl.getTimeEntries();
-        projects = jToggl.getProjects();
+    public void refreshWorkspaces() {
+        workspaces = jToggl.getWorkspaces();
+        this.notifyDataLoaded(Data.WORKSPACES);
+    }
+
+    public void refreshTasks() {
+        tasks = jToggl.getTasks();
+        this.notifyDataLoaded(Data.TASKS);
+    }
+
+    public void refreshTimeData() {
+        this.refreshTimeEntries();
+        this.refreshProjects();
+        this.refreshWorkspaces();
+        this.refreshTasks();
     }
 }
