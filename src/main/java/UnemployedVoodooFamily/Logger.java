@@ -1,7 +1,7 @@
 package UnemployedVoodooFamily;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import ch.simas.jtoggl.TimeEntry;
+import com.google.gson.*;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.sql.Time;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -73,6 +74,12 @@ public class Logger {
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.setPrettyPrinting().create();
         gson.toJson(dataset, writer);
+        /*JsonArray jsonArray= new JsonParser().parse(gson.toJson(dataset)).getAsJsonArray();
+        String jsonStr = jsonArray.get(0).toString();
+        TimeEntry t = new TimeEntry(jsonStr);
+        System.out.println(t.toString());
+        //TimeEntry t = new TimeEntry();
+        Convert json to timeentry (for later reference)*/
         try {
             writer.close();
         }
