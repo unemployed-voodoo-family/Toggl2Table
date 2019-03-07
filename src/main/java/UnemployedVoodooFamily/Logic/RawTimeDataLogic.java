@@ -25,9 +25,10 @@ public class RawTimeDataLogic {
      * @return the ObservableList
      */
     public ObservableList<RawTimeDataModel> buildObservableRawTimeData() {
+        Session session = Session.getInstance();
         ObservableList<RawTimeDataModel> data = FXCollections.observableArrayList();
-        Iterator<TimeEntry> it = Session.getTimeEntries().iterator();
-        List<Project> projects = Session.getProjects();
+        Iterator<TimeEntry> it = session.getTimeEntries().iterator();
+        List<Project> projects = session.getProjects();
 
         while(it.hasNext()) {
             TimeEntry timeEntry = it.next();
