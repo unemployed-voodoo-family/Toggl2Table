@@ -3,12 +3,14 @@ package UnemployedVoodooFamily.Logic;
 import UnemployedVoodooFamily.Data.MonthlyFormattedTimeData;
 import UnemployedVoodooFamily.Data.RawTimeDataModel;
 import UnemployedVoodooFamily.Data.WeeklyFormattedTimeDataModel;
+import UnemployedVoodooFamily.Data.WeeklyFormattedTimeDataModelBuilder;
 import ch.simas.jtoggl.Project;
 import ch.simas.jtoggl.TimeEntry;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.sql.Time;
+import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -51,24 +53,32 @@ public class FormattedTimeDataLogic {
         return data;
     }
 
-    public ObservableList<TimeEntry> buildObservableWeeklyTimeData() {
+    public ObservableList<WeeklyFormattedTimeDataModel> buildObservableWeeklyTimeData() {
         Session session = Session.getInstance();
-        ObservableList<TimeEntry> data = FXCollections.observableArrayList();
+        ObservableList<WeeklyFormattedTimeDataModel> data = FXCollections.observableArrayList();
         Iterator<TimeEntry> it = session.getTimeEntries().iterator();
+        WeeklyFormattedTimeDataModelBuilder builder = new WeeklyFormattedTimeDataModelBuilder();
 
-        while(it.hasNext()) {
-            TimeEntry entry = it.next();
-            Date startDate = entry.getStart();
-            LocalDate date = Instant.ofEpochMilli(startDate.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
-            String weekDay = date.getDayOfWeek().name();
-            Double supposedHours;
-            Double workedHours;
-            Double overTime;
+        for(DayOfWeek day : DayOfWeek.values()) {
+            while(it.hasNext()) {
+                TimeEntry t = it.next();
+                if(isSameDay(t.getStart(), day.getValue())) {
+                    builder.addTimeEntry(t);
+                }
+            }
+            WeeklyFormattedTimeDataModel dayData = builder.build();
+            data.add(dayData);
         }
-        //TODO: unfinished
-        //WeeklyFormattedTimeDataModel dataModel = new WeeklyFormattedTimeDataModel();
-        //data.add(dataModel);
+
+
         return data;
+    }
+
+    private boolean isSameDay(Date d1, int d2) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(d1);
+        int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
+        return dayOfWeek == d2;
     }
 
     private void summarizeDay() {

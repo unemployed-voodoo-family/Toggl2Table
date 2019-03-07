@@ -1,6 +1,7 @@
 package UnemployedVoodooFamily.Logic;
 
 import UnemployedVoodooFamily.Data.Enums.Data;
+import UnemployedVoodooFamily.Data.Enums.FilePath;
 import UnemployedVoodooFamily.Logic.Listeners.DataLoadedListener;
 import ch.simas.jtoggl.*;
 
@@ -16,12 +17,16 @@ public class Session {
     private List<Workspace> workspaces;
     private List<Task> tasks;
     private User user;
-    private Properties worksHours;
+    private Properties workHours;
+    private PropertiesLogic propsLogic;
 
     private static Session togglSession = new Session();
 
     private List<DataLoadedListener> listeners = new ArrayList<>();
 
+    private Session() {
+        this.propsLogic = new PropertiesLogic();
+    }
 
     synchronized public static Session getInstance() {
         return togglSession;
@@ -31,7 +36,7 @@ public class Session {
         if(jToggl == null) {
             jToggl = newSession;
             refreshUser();
-            //worksHours.
+            this.workHours = propsLogic.loadProps(FilePath.getCurrentUserWorkhours());
         }
         else {
             //already logged in!
@@ -102,5 +107,9 @@ public class Session {
         this.refreshProjects();
         this.refreshWorkspaces();
         this.refreshTasks();
+    }
+
+    public Properties getWorkHours() {
+        return workHours;
     }
 }

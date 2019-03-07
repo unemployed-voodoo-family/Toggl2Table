@@ -1,6 +1,7 @@
 package UnemployedVoodooFamily.Data;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
@@ -103,6 +104,14 @@ public class DateRange {
     public static DateRange ofString(String rangeStr, DateTimeFormatter formatter) {
         String[] dates = rangeStr.split(" - ");
         return new DateRange(LocalDate.parse(dates[0], formatter), LocalDate.parse(dates[1], formatter), formatter);
+    }
+
+    public boolean contains(LocalDate date) {
+        boolean contains = false;
+        if(isAfterOrEqual(date, to) && isBeforeOrEqual(date, to)) {
+            contains = true;
+        }
+        return contains;
     }
 
     @Override

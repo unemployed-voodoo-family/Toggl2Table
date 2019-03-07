@@ -154,6 +154,10 @@ public class TableViewController implements DataLoadedListener {
         rawData.getItems().setAll(getObservableRawData());
     }
 
+    private void setWeeklyTableData() {
+        formattedData.getItems().setAll(getObservableWeeklyData());
+    }
+
     /**
      * Creates an observable list containing RawTimeDataModel objects
      * @return an ObservableList containing RawTimeDatModel objects
@@ -224,7 +228,6 @@ public class TableViewController implements DataLoadedListener {
         //Adds the columns to the table and updates it
         formattedData.getColumns().addAll(weekDayCol, dateCol, projectCol, startTimeCol, endTimeCol, workedHoursCol,
                                           supposedHoursCol, overtimeCol);
-        formattedData.getItems().setAll(getObservableWeeklyData());
         formattedData.setEditable(false);
     }
 
@@ -268,13 +271,7 @@ public class TableViewController implements DataLoadedListener {
      * @return an ObservableList containing WeeklyTimeDatModel objects
      */
     private ObservableList<WeeklyFormattedTimeDataModel> getObservableWeeklyData() {
-        ObservableList<WeeklyFormattedTimeDataModel> observableList = FXCollections.observableArrayList();
-
-        //TODO: - Remove the two lines below when formatted data import is implemented
-        //      - Make FormattedTimeDataLogic return a list of the required information
-        //This is here for testing purposes only
-        formattedTimeDataLogic.buildObservableWeeklyTimeData();
-        return observableList;
+        return formattedTimeDataLogic.buildObservableWeeklyTimeData();
     }
 
     /**
@@ -317,6 +314,7 @@ public class TableViewController implements DataLoadedListener {
         //check if necassary data is loaded
         if(loadedData.containsAll(EnumSet.of(Data.TIME_ENTRIES, Data.PROJECTS, Data.TASKS, Data.WORKSPACES))) {
             setRawDataTableData();
+            setWeeklyTableData();
             loadedData = EnumSet.noneOf(Data.class); //empty the set, readying it for next
         }
     }

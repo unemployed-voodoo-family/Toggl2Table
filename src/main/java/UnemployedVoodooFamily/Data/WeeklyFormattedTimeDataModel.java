@@ -27,13 +27,9 @@ public class WeeklyFormattedTimeDataModel {
      * @param supposedHours String with supposed work hours
      * @param overtime      String with overtime
      */
-    public WeeklyFormattedTimeDataModel(Date start, Date stop, Double workedHours, Double supposedHours,
+    public WeeklyFormattedTimeDataModel(String weekDay, Double workedHours, Double supposedHours,
                                         Double overtime) {
-        LocalDate localStart = Instant.ofEpochMilli(start.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
-        String weekDayStr = localStart.getDayOfWeek().name();
-
-
-        this.weekDay = new SimpleStringProperty(weekDayStr);
+        this.weekDay = new SimpleStringProperty(weekDay);
         this.workedHours = new SimpleDoubleProperty(workedHours);
         this.supposedHours = new SimpleDoubleProperty(supposedHours);
         this.overtime = new SimpleDoubleProperty(overtime);
