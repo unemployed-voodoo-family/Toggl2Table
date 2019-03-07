@@ -32,6 +32,7 @@ public class FormattedTimeDataLogic {
 
         //MonthlyFormattedTimeData dataModel = new MonthlyFormattedTimeData();
         //data.add(dataModel);
+        //TODO: unfinished
         return data;
 
 
@@ -51,7 +52,7 @@ public class FormattedTimeDataLogic {
             Double workedHours;
             Double overTime;
         }
-
+        //TODO: unfinished
         //WeeklyFormattedTimeDataModel dataModel = new WeeklyFormattedTimeDataModel();
         //data.add(dataModel);
         return data;
