@@ -1,5 +1,6 @@
 package UnemployedVoodooFamily;
 
+import UnemployedVoodooFamily.Data.Enums.FilePath;
 import ch.simas.jtoggl.JToggl;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -8,11 +9,32 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.net.URL;
 
 public class Main extends Application {
     public static void main(String[] args) {
         launch(args);
+    }
+
+    private void createDirsIfNotExists(String path) {
+        File theDir = new File(path);
+
+        // if the directory does not exist, create it
+        if (!theDir.exists()) {
+            System.out.println("creating directory: " + theDir.toString());
+            boolean result = false;
+
+            try{
+                result = theDir.mkdirs();
+            }
+            catch(SecurityException se){
+                //handle it
+            }
+            if(result) {
+                System.out.println("DIR created");
+            }
+        }
     }
 
     /**
@@ -24,6 +46,7 @@ public class Main extends Application {
      */
     @Override
     public void start(Stage primaryStage) throws Exception {
+        createDirsIfNotExists(FilePath.SETTINGS_HOME.getProperty());
         URL r = getClass().getClassLoader().getResource("login.fxml");
         Parent root = FXMLLoader.load(r);
         Scene scene = new Scene(root);

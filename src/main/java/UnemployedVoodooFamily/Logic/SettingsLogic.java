@@ -2,6 +2,8 @@ package UnemployedVoodooFamily.Logic;
 
 import UnemployedVoodooFamily.Data.WorkHoursData;
 import UnemployedVoodooFamily.Data.DateRange;
+import UnemployedVoodooFamily.Data.Enums.FilePath;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
@@ -23,7 +25,7 @@ import java.util.*;
 public class SettingsLogic {
 
     private Properties props = new Properties();
-    private static final String HOURS_PATH = "/Settings/hours.properties";
+    //private static final String HOURS_PATH = "/Settings/hours.properties";
     private static DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     PropertiesLogic propsLogic = new PropertiesLogic();
 
@@ -44,11 +46,12 @@ public class SettingsLogic {
         Double hours = Double.valueOf(hoursStr);
 
         //load props file
-        props = propsLogic.loadProps(HOURS_PATH);
+        System.out.println(FilePath.SAVED_WORKHOURS.getProperty());
+        props = propsLogic.loadProps(FilePath.getCurrentUserWorkhours());
 
         DateRange range = new DateRange(fromDate, toDate, DATE_FORMAT);
         fixHoursOverlap(props, range, hours);
-        propsLogic.saveProps(HOURS_PATH, props);
+        propsLogic.saveProps(FilePath.getCurrentUserWorkhours(), props);
 
     }
 
@@ -140,7 +143,7 @@ public class SettingsLogic {
         hoursCol.setCellValueFactory(param -> param.getValue().hoursProperty());
 
         //load props file
-        props = propsLogic.loadProps(HOURS_PATH);
+        props = propsLogic.loadProps(FilePath.getCurrentUserWorkhours());
         Set<String> periods = props.stringPropertyNames();
 
         ObservableList<WorkHoursData> data = FXCollections.observableArrayList();

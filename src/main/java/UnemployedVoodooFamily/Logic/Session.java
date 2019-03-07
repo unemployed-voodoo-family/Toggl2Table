@@ -6,6 +6,7 @@ import ch.simas.jtoggl.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 public class Session {
 
@@ -15,6 +16,7 @@ public class Session {
     private List<Workspace> workspaces;
     private List<Task> tasks;
     private User user;
+    private Properties worksHours;
 
     private static Session togglSession = new Session();
 
@@ -29,6 +31,7 @@ public class Session {
         if(jToggl == null) {
             jToggl = newSession;
             refreshUser();
+            //worksHours.
         }
         else {
             //already logged in!

@@ -18,6 +18,21 @@ public class FormattedTimeDataLogic {
     private static List<ObservableList<MonthlyFormattedTimeData>> monthsList = new ArrayList<>(12);
     private static PropertiesLogic propsLogic = new PropertiesLogic();
     private static Properties props = new Properties();
+    HashMap<Month, ObservableList<MonthlyFormattedTimeData>> monthsMap = new HashMap<>();
+
+
+    public FormattedTimeDataLogic() {
+        monthsMap.put(Month.JANUARY, null);
+        monthsMap.put(Month.FEBRUARY, null);
+        monthsMap.put(Month.MARCH, null);
+        monthsMap.put(Month.APRIL, null);
+        monthsMap.put(Month.MAY, null);
+        monthsMap.put(Month.JUNE, null);
+        monthsMap.put(Month.JULY, null);
+        monthsMap.put(Month.OCTOBER, null);
+        monthsMap.put(Month.NOVEMBER, null);
+        monthsMap.put(Month.DECEMBER, null);
+    }
 
     // List of the observable lists for all months.
     // Ranged from index 0 (January) to 11 (december)
@@ -34,8 +49,6 @@ public class FormattedTimeDataLogic {
         //data.add(dataModel);
         //TODO: unfinished
         return data;
-
-
     }
 
     public ObservableList<TimeEntry> buildObservableWeeklyTimeData() {
@@ -59,6 +72,9 @@ public class FormattedTimeDataLogic {
     }
 
     private void summarizeDay() {
+    }
+
+    private void summarizeWeek() {
     }
   
     //Called when the "export to excel" button is pressed

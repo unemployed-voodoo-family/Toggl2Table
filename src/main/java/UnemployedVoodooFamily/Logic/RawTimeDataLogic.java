@@ -32,7 +32,6 @@ public class RawTimeDataLogic {
 
         while(it.hasNext()) {
             TimeEntry timeEntry = it.next();
-
             String description = timeEntry.getDescription();
             LocalDateTime start = timeEntry.getStart().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
             LocalDateTime stop;

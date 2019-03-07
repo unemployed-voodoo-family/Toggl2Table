@@ -3,6 +3,11 @@ package UnemployedVoodooFamily.Data;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
+
 public class WeeklyFormattedTimeDataModel {
 
     private SimpleStringProperty weekDay;
@@ -22,9 +27,13 @@ public class WeeklyFormattedTimeDataModel {
      * @param supposedHours String with supposed work hours
      * @param overtime      String with overtime
      */
-    public WeeklyFormattedTimeDataModel(String weekDay, Double workedHours, Double supposedHours,
+    public WeeklyFormattedTimeDataModel(Date start, Date stop, Double workedHours, Double supposedHours,
                                         Double overtime) {
-        this.weekDay = new SimpleStringProperty(weekDay);
+        LocalDate localStart = Instant.ofEpochMilli(start.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
+        String weekDayStr = localStart.getDayOfWeek().name();
+
+
+        this.weekDay = new SimpleStringProperty(weekDayStr);
         this.workedHours = new SimpleDoubleProperty(workedHours);
         this.supposedHours = new SimpleDoubleProperty(supposedHours);
         this.overtime = new SimpleDoubleProperty(overtime);
