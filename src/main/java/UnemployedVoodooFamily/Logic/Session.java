@@ -3,8 +3,6 @@ package UnemployedVoodooFamily.Logic;
 import UnemployedVoodooFamily.Data.Enums.Data;
 import UnemployedVoodooFamily.Logic.Listeners.DataLoadedListener;
 import ch.simas.jtoggl.*;
-import io.rocketbase.toggl.api.TogglReportApi;
-import io.rocketbase.toggl.api.TogglReportApiBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
