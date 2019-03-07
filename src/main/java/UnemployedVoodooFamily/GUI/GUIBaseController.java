@@ -2,6 +2,7 @@ package UnemployedVoodooFamily.GUI;
 
 import UnemployedVoodooFamily.GUI.Content.SettingsController;
 import UnemployedVoodooFamily.GUI.Content.TableViewController;
+import UnemployedVoodooFamily.Logic.Listeners.DataLoadedListener;
 import UnemployedVoodooFamily.Logic.Session;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -19,6 +20,8 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GUIBaseController {
 
@@ -51,6 +54,8 @@ public class GUIBaseController {
 
     private Node settings;
     private Node table;
+
+
 
     @FXML
     public void start() throws IOException {
@@ -92,7 +97,8 @@ public class GUIBaseController {
 
     public void refreshRawData(){
         Session instance = Session.getInstance();
-        instance.refreshData();
+        Thread t = new Thread(() -> instance.refreshTimeData());
+        t.start();
     }
 
     /**
@@ -109,6 +115,4 @@ public class GUIBaseController {
             children.addAll(content);
         }
     }
-
-
 }

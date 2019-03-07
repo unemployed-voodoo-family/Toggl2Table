@@ -25,44 +25,11 @@ public class SettingsLogic {
     private Properties props = new Properties();
     private static final String HOURS_PATH = "/Settings/hours.properties";
     private static DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-
+    PropertiesLogic propsLogic = new PropertiesLogic();
 
     private TableColumn<WorkHoursData, String> fromCol;
     private TableColumn<WorkHoursData, String> toCol;
     private TableColumn<WorkHoursData, Double> hoursCol;
-
-    private void loadProps(String path) {
-        File file = getFile(path);
-        try {
-            props.load(new FileInputStream(file));
-        }
-        catch(IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void saveProps(String path) {
-        File file = getFile(path);
-        try {
-            props.store(new FileOutputStream(file), "");
-        }
-        catch(IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    private File getFile(String path) {
-        URL resourceUrl = getClass().getResource(path);
-        File file = null;
-        try {
-            file = new File(resourceUrl.toURI().getPath());
-        }
-        catch(URISyntaxException e) {
-            e.printStackTrace();
-        }
-        return file;
-    }
 
     /**
      * Writes the specified work hours to the "hours.properties" file.
@@ -77,11 +44,11 @@ public class SettingsLogic {
         Double hours = Double.valueOf(hoursStr);
 
         //load props file
-        loadProps(HOURS_PATH);
+        props = propsLogic.loadProps(HOURS_PATH);
 
         DateRange range = new DateRange(fromDate, toDate, DATE_FORMAT);
         fixHoursOverlap(props, range, hours);
-        saveProps(HOURS_PATH);
+        propsLogic.saveProps(HOURS_PATH, props);
 
     }
 
@@ -173,7 +140,7 @@ public class SettingsLogic {
         hoursCol.setCellValueFactory(param -> param.getValue().hoursProperty());
 
         //load props file
-        loadProps(HOURS_PATH);
+        props = propsLogic.loadProps(HOURS_PATH);
         Set<String> periods = props.stringPropertyNames();
 
         ObservableList<WorkHoursData> data = FXCollections.observableArrayList();
