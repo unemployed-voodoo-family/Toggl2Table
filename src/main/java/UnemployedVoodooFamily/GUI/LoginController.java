@@ -37,7 +37,6 @@ public class LoginController {
     public void loginWithCredentials() {
         Thread loginCredThread = new Thread(() -> {
             bufferImg.setVisible(true);
-            loginLogic.attemptAuthentication(emailField.getText(), passwordField.getText());
             isLoggedIn = loginLogic.attemptAuthentication(emailField.getText(), passwordField.getText());
             bufferImg.setVisible(false);
             Platform.runLater(() -> {

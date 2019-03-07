@@ -5,6 +5,7 @@ import UnemployedVoodooFamily.Data.MonthlyFormattedTimeData;
 import UnemployedVoodooFamily.Data.RawTimeDataModel;
 import UnemployedVoodooFamily.Data.WeeklyFormattedTimeDataModel;
 import UnemployedVoodooFamily.Data.DateRange;
+import UnemployedVoodooFamily.Logger;
 import UnemployedVoodooFamily.Logic.FormattedTimeDataLogic;
 import UnemployedVoodooFamily.Logic.Listeners.DataLoadedListener;
 
@@ -318,6 +319,7 @@ public class TableViewController implements DataLoadedListener {
         if(loadedData.containsAll(EnumSet.of(Data.TIME_ENTRIES, Data.PROJECTS, Data.TASKS, Data.WORKSPACES))) {
             setRawDataTableData();
             loadedData = EnumSet.noneOf(Data.class); //empty the set, readying it for next
+            Logger.getInstance().log(Session.getInstance().getTimeEntries());
         }
     }
 }
