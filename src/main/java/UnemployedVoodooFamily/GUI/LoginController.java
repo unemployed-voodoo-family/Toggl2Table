@@ -10,6 +10,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.application.Platform;
 
+import java.awt.*;
+
 public class LoginController {
 
     @FXML
@@ -21,11 +23,16 @@ public class LoginController {
     @FXML
     private PasswordField passwordField;
     @FXML
+    private Checkbox RememberPasswordCheck;
+    @FXML
     private Label wrongCredentials;
 
     private LoginLogic loginLogic = new LoginLogic();
     private boolean isLoggedIn;
     private boolean loginInProgress;
+    private boolean rememberPassword = RememberPasswordCheck.getState();
+
+    public LoginController() {}
 
     public void initialize() {
         setKeyAndClickListeners();
@@ -40,7 +47,7 @@ public class LoginController {
         submitBtn.setDisable(true);
         Thread loginCredThread = new Thread(() -> {
             bufferImg.setVisible(true);
-            isLoggedIn = loginLogic.attemptAuthentication(emailField.getText(), passwordField.getText());
+            isLoggedIn = loginLogic.attemptAuthentication(emailField.getText(), passwordField.getText(), rememberPassword);
             bufferImg.setVisible(false);
             Platform.runLater(() -> {
                 loginInProgress = false;
