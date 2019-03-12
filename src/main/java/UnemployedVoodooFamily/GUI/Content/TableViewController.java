@@ -9,6 +9,7 @@ import UnemployedVoodooFamily.Logic.Listeners.DataLoadedListener;
 
 import UnemployedVoodooFamily.Logic.RawTimeDataLogic;
 import UnemployedVoodooFamily.Logic.Session;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -48,6 +49,11 @@ public class TableViewController implements DataLoadedListener {
 
     @FXML
     private GridPane tableRoot;
+
+    @FXML
+    private Label rawStartDate;
+    @FXML
+    private Label rawEndDate;
 
     private TableView monthlyTable;
 
@@ -146,6 +152,11 @@ public class TableViewController implements DataLoadedListener {
 
     private void setRawDataTableData() {
         rawData.getItems().setAll(getObservableRawData());
+        Platform.runLater(() -> {
+            rawEndDate.setText(rawTimeDataLogic.getDataEndTime());
+            rawStartDate.setText(rawTimeDataLogic.getDataStartTime());
+        });
+
     }
 
     private void setFormattedTableData() {
