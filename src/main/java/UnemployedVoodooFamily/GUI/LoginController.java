@@ -6,11 +6,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.control.CheckBox;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.application.Platform;
 
-import java.awt.*;
+
 
 public class LoginController {
 
@@ -23,14 +24,13 @@ public class LoginController {
     @FXML
     private PasswordField passwordField;
     @FXML
-    private Checkbox RememberPasswordCheck;
+    private CheckBox RememberPasswordCheck;
     @FXML
     private Label wrongCredentials;
 
     private LoginLogic loginLogic = new LoginLogic();
     private boolean isLoggedIn;
     private boolean loginInProgress;
-    private boolean rememberPassword = RememberPasswordCheck.getState();
 
     public LoginController() {}
 
@@ -43,6 +43,7 @@ public class LoginController {
     }
 
     public void loginWithCredentials() {
+        boolean rememberPassword = RememberPasswordCheck.isSelected();
         loginInProgress = true;
         submitBtn.setDisable(true);
         Thread loginCredThread = new Thread(() -> {
