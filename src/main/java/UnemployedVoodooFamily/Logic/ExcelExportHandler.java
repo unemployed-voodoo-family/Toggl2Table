@@ -33,17 +33,37 @@ public class ExcelExportHandler {
     //TODO remove these when proper data getting methods have been implemented
     private ArrayList<MonthlySheetRowEntry> buildDummyList(double testDouble) {
         ArrayList<MonthlySheetRowEntry> l = new ArrayList<>();
-        l.add(new MonthlySheetRowEntry("Week Number", WeekDay.FRIDAY, LocalDate.now(), testDouble, testDouble + 1));
+        l.add(new MonthlySheetRowEntry(1 + (4*(int)testDouble - 4), WeekDay.MONDAY, LocalDate.now(), 8, 12));
+        l.add(new MonthlySheetRowEntry(1 + (4*(int)testDouble - 4), WeekDay.TUESDAY, LocalDate.now(), 8, 8));
+        l.add(new MonthlySheetRowEntry(1 + (4*(int)testDouble - 4), WeekDay.WEDNESDAY, LocalDate.now(), 8, 8));
+        l.add(new MonthlySheetRowEntry(1 + (4*(int)testDouble - 4), WeekDay.THURSDAY, LocalDate.now(), 8, 8));
+        l.add(new MonthlySheetRowEntry(1 + (4*(int)testDouble - 4), WeekDay.FRIDAY, LocalDate.now(), 8, 8));
+
+        l.add(new MonthlySheetRowEntry(2 + (4*(int)testDouble - 4), WeekDay.MONDAY, LocalDate.now(), 8, 8));
+        l.add(new MonthlySheetRowEntry(2 + (4*(int)testDouble - 4), WeekDay.TUESDAY, LocalDate.now(), 8, 7));
+        l.add(new MonthlySheetRowEntry(2 + (4*(int)testDouble - 4), WeekDay.WEDNESDAY, LocalDate.now(), 8, 7));
+        l.add(new MonthlySheetRowEntry(2 + (4*(int)testDouble - 4), WeekDay.THURSDAY, LocalDate.now(), 8, 8));
+        l.add(new MonthlySheetRowEntry(2 + (4*(int)testDouble - 4), WeekDay.FRIDAY, LocalDate.now(), 8, 8));
+
+        l.add(new MonthlySheetRowEntry(3 + (4*(int)testDouble - 4), WeekDay.TUESDAY, LocalDate.now(), 8, 9));
+        l.add(new MonthlySheetRowEntry(3 + (4*(int)testDouble - 4), WeekDay.WEDNESDAY, LocalDate.now(), 8, 9));
+        l.add(new MonthlySheetRowEntry(3 + (4*(int)testDouble - 4), WeekDay.THURSDAY, LocalDate.now(), 8, 8));
+        l.add(new MonthlySheetRowEntry(3 + (4*(int)testDouble - 4), WeekDay.FRIDAY, LocalDate.now(), 8, 8));
+
+        l.add(new MonthlySheetRowEntry(4 + (4*(int)testDouble - 4), WeekDay.MONDAY, LocalDate.now(), 7.5, 14-testDouble));
+        l.add(new MonthlySheetRowEntry(4 + (4*(int)testDouble - 4), WeekDay.TUESDAY, LocalDate.now(), 7.5, 14-testDouble));
+        l.add(new MonthlySheetRowEntry(4 + (4*(int)testDouble - 4), WeekDay.WEDNESDAY, LocalDate.now(), 7.5, 14));
+        l.add(new MonthlySheetRowEntry(4 + (4*(int)testDouble - 4), WeekDay.THURSDAY, LocalDate.now(), 7.5, 8));
+        l.add(new MonthlySheetRowEntry(4 + (4*(int)testDouble - 4), WeekDay.FRIDAY, LocalDate.now(), 7.5, 8));
+
         return l;
     }
 
     private void generateDummyLists() {
         int testInt = 1;
         for(String key: monthlyDataLists.keySet()) {
-            testInt++;
             monthlyDataLists.put(key, buildDummyList(testInt));
-
+            testInt++;
         }
     }
-
 }

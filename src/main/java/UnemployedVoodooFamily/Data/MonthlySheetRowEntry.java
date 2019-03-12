@@ -7,13 +7,13 @@ import java.time.LocalDate;
 
 public class MonthlySheetRowEntry {
 
-    private String weekNumber;
+    private int weekNumber;
     private WeekDay weekDay;
     private String date;
     private double supposedWorkHours;
     private double actualWorkedHours;
 
-    public MonthlySheetRowEntry(String weekNumber, WeekDay weekDay, LocalDate date, double supposedWorkHours,
+    public MonthlySheetRowEntry(int weekNumber, WeekDay weekDay, LocalDate date, double supposedWorkHours,
                                 double actualWorkedHours) {
         this.weekNumber = weekNumber;
         this.weekDay = weekDay;
@@ -22,7 +22,7 @@ public class MonthlySheetRowEntry {
         this.actualWorkedHours = actualWorkedHours;
     }
 
-    public String getWeekNumber() {
+    public int getWeekNumber() {
         return weekNumber;
     }
 
