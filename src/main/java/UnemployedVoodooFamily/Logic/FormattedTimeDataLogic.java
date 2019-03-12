@@ -16,7 +16,7 @@ import java.time.temporal.WeekFields;
 import java.util.*;
 
 public class FormattedTimeDataLogic {
-    private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd. LLLL yyyy");
     private HashMap<Month, ObservableList<WeeklyFormattedDataModel>> monthsMap = new HashMap<>();
 
     private ObservableList<DailyFormattedDataModel> weeklyMasterData;

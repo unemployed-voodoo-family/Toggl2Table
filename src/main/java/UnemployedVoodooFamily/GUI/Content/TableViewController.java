@@ -9,6 +9,7 @@ import UnemployedVoodooFamily.Logic.Listeners.DataLoadedListener;
 
 import UnemployedVoodooFamily.Logic.RawTimeDataLogic;
 import UnemployedVoodooFamily.Logic.Session;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -17,7 +18,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 
 import java.io.IOException;
 import java.net.URL;
@@ -49,6 +52,16 @@ public class TableViewController implements DataLoadedListener {
     @FXML
     private GridPane tableRoot;
 
+    @FXML
+    private Label rawStartDate;
+    @FXML
+    private Label rawEndDate;
+    @FXML
+    private Pane summaryRoot;
+
+    private Node weeklySummary;
+    private Node monthlySummary;
+
     private TableView monthlyTable;
 
 
@@ -77,6 +90,13 @@ public class TableViewController implements DataLoadedListener {
      * Sets up the UI elements
      */
     private void setupUIElements() {
+        try {
+            this.weeklySummary = new WeeklySummaryViewController().loadFXML();
+            this.monthlySummary = new MonthlySummaryViewController().loadFXML();
+        }
+        catch(IOException e) {
+            e.printStackTrace();
+        }
         buildFormattedMonthlyTable();
         buildFormattedWeeklyTable();
         buildRawDataTable();
@@ -101,8 +121,14 @@ public class TableViewController implements DataLoadedListener {
         });
 
 
-        weeklyToggleBtn.setOnAction((ActionEvent e) -> switchTableView(weeklyTable));
-        monthlyToggleBtn.setOnAction((ActionEvent e) -> switchTableView(monthlyTable));
+        weeklyToggleBtn.setOnAction((ActionEvent e) -> {
+            switchTableView(weeklyTable);
+            switchSummaryView(weeklySummary);
+        });
+        monthlyToggleBtn.setOnAction((ActionEvent e) -> {
+            switchTableView(monthlyTable);
+            switchSummaryView(monthlySummary);
+        });
     }
 
     // |##################################################|
@@ -146,6 +172,11 @@ public class TableViewController implements DataLoadedListener {
 
     private void setRawDataTableData() {
         rawData.getItems().setAll(getObservableRawData());
+        Platform.runLater(() -> {
+            rawEndDate.setText(rawTimeDataLogic.getDataEndTime());
+            rawStartDate.setText(rawTimeDataLogic.getDataStartTime());
+        });
+
     }
 
     private void setFormattedTableData() {
@@ -270,6 +301,17 @@ public class TableViewController implements DataLoadedListener {
 
     private void switchTableView(Node content) {
         ObservableList<Node> children = tableRoot.getChildren();
+        if(children.isEmpty()) {
+            children.addAll(content);
+        }
+        else if(! children.contains(content)) {
+            children.clear();
+            children.addAll(content);
+        }
+    }
+
+    private void switchSummaryView(Node content) {
+        ObservableList<Node> children = summaryRoot.getChildren();
         if(children.isEmpty()) {
             children.addAll(content);
         }
