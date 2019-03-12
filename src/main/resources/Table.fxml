@@ -5,7 +5,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<TabPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UnemployedVoodooFamily.GUI.Content.TableViewController">
+<TabPane prefHeight="636.0" prefWidth="644.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UnemployedVoodooFamily.GUI.Content.TableViewController">
    <tabs>
       <Tab fx:id="rawDataTab" closable="false" text="Raw time data">
          <content>
@@ -90,19 +90,15 @@
                         <Insets left="5.0" right="5.0" />
                      </padding>
                   </VBox>
-                  <GridPane GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+                  <GridPane fx:id="tableRoot" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                     <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="3.0" prefWidth="3.0" />
                       <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="3.0" prefWidth="3.0" />
                     </columnConstraints>
                     <rowConstraints>
-                      <RowConstraints maxHeight="-Infinity" minHeight="3.0" prefHeight="3.0" vgrow="SOMETIMES" />
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
-                      <RowConstraints maxHeight="-Infinity" minHeight="3.0" prefHeight="3.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <TableView fx:id="formattedData" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
+                        <TableView fx:id="weeklyTable" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                           <columns>
                             <TableColumn prefWidth="75.0" text="C1" />
                             <TableColumn prefWidth="75.0" text="C2" />
