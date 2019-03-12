@@ -49,19 +49,25 @@ public class FormattedTimeDataLogic {
 
     //TODO This class should be called to from the TableViewController
     // and is responsible for handling formatted time data
+
+    /**
+     * Builds data for the monthly table using the daily formatted data
+     * @return the ObservableList containing all summarized weeks
+     */
     public ObservableList<WeeklyFormattedDataModel> buildObservableMonthlyTimeData() {
 
-        Session session = Session.getInstance();
         ObservableList<WeeklyFormattedDataModel> data = FXCollections.observableArrayList();
 
-        //find the month of each entry
+        //iterate trough each week of the time period
         int i = 0;
-        for(LocalDate date = startDate; date.isBefore(endDate.plusDays(1)); date = date.with(TemporalAdjusters.next(FIRST_DAY_OF_WEEK))) {
+        for(LocalDate date = startDate; date.isBefore(endDate.plusDays(1)); date = date
+                .with(TemporalAdjusters.next(FIRST_DAY_OF_WEEK))) {
             boolean weekFormatted = false;
             TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();
             int weekNumber = date.get(woy);
             WeeklyFormattedDataModelBuilder builder = new WeeklyFormattedDataModelBuilder(weekNumber);
 
+            //format each time entry in the week
             while(i < weeklyMasterData.size() && ! weekFormatted) {
                 DailyFormattedDataModel dailyData = weeklyMasterData.get(i);
 
@@ -91,6 +97,10 @@ public class FormattedTimeDataLogic {
         return exportHandler.makeExcelDocument();
     }
 
+    /**
+     * Builds daily formatted data for use in the weekly table
+     * @return the ObservableList containing each summarized day
+     */
     public ObservableList<DailyFormattedDataModel> buildObservableWeeklyTimeData() {
 
         Session session = Session.getInstance();
