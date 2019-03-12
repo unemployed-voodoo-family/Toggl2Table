@@ -8,8 +8,9 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 
-public class DailySummarizedDataModel {
+public class DailyFormattedDataModel {
 
+    private LocalDate day;
     private SimpleStringProperty weekDay;
     private SimpleDoubleProperty workedHours;
     private SimpleDoubleProperty supposedHours;
@@ -23,12 +24,13 @@ public class DailySummarizedDataModel {
      * @param supposedHours String with supposed work hours
      * @param overtime      String with overtime
      */
-    public DailySummarizedDataModel(String weekDay, Double workedHours, Double supposedHours,
-                                    Double overtime) {
+    public DailyFormattedDataModel(String weekDay, Double workedHours, Double supposedHours,
+                                   Double overtime, LocalDate day) {
         this.weekDay = new SimpleStringProperty(weekDay);
         this.workedHours = new SimpleDoubleProperty(workedHours);
         this.supposedHours = new SimpleDoubleProperty(supposedHours);
         this.overtime = new SimpleDoubleProperty(overtime);
+        this.day = day;
     }
 
     /**
@@ -61,5 +63,9 @@ public class DailySummarizedDataModel {
      */
     public Double getOvertime() {
         return overtime.get();
+    }
+
+    public LocalDate getDay() {
+        return day;
     }
 }

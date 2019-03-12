@@ -1,19 +1,34 @@
 package UnemployedVoodooFamily.Logic;
 
-import UnemployedVoodooFamily.Data.MonthlyFormattedTimeData;
-import UnemployedVoodooFamily.Data.DailySummarizedDataModel;
-import UnemployedVoodooFamily.Data.DailySummarizedDataModelBuilder;
+import UnemployedVoodooFamily.Data.WeeklyFormattedDataModel;
+import UnemployedVoodooFamily.Data.DailyFormattedDataModel;
+import UnemployedVoodooFamily.Data.DailyFormattedDataModelBuilder;
+import UnemployedVoodooFamily.Data.WeeklyFormattedDataModelBuilder;
 import ch.simas.jtoggl.TimeEntry;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
+import java.time.temporal.TemporalField;
+import java.time.temporal.WeekFields;
 import java.util.*;
 
 public class FormattedTimeDataLogic {
     private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-    private HashMap<Month, ObservableList<MonthlyFormattedTimeData>> monthsMap = new HashMap<>();
+    private HashMap<Month, ObservableList<WeeklyFormattedDataModel>> monthsMap = new HashMap<>();
+
+    private ObservableList<DailyFormattedDataModel> weeklyMasterData;
+    private ObservableList<WeeklyFormattedDataModel> monthtlyMasterData;
+
+    // The time range of the fetched toggl data
+    // current values are temporary
+    private LocalDate startDate = LocalDate.of(2019, 3, 4);
+    private LocalDate endDate = LocalDate.of(2019, 12, 30);
+
+    private static DayOfWeek LAST_DAY_OF_WEEK = DayOfWeek.SUNDAY;
+    private static DayOfWeek FIRST_DAY_OF_WEEK = DayOfWeek.MONDAY;
 
 
     public FormattedTimeDataLogic() {
@@ -34,62 +49,80 @@ public class FormattedTimeDataLogic {
 
     //TODO This class should be called to from the TableViewController
     // and is responsible for handling formatted time data
-    public ObservableList<MonthlyFormattedTimeData> buildObservableMonthlyTimeData() {
+    public ObservableList<WeeklyFormattedDataModel> buildObservableMonthlyTimeData() {
+
         Session session = Session.getInstance();
-        ObservableList<MonthlyFormattedTimeData> data = FXCollections.observableArrayList();
+        ObservableList<WeeklyFormattedDataModel> data = FXCollections.observableArrayList();
 
+        //find the month of each entry
+        int i = 0;
+        for(LocalDate date = startDate; date.isBefore(endDate.plusDays(1)); date = date.with(TemporalAdjusters.next(FIRST_DAY_OF_WEEK))) {
+            boolean weekFormatted = false;
+            TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();
+            int weekNumber = date.get(woy);
+            WeeklyFormattedDataModelBuilder builder = new WeeklyFormattedDataModelBuilder(weekNumber);
 
-        //MonthlyFormattedTimeData dataModel = new MonthlyFormattedTimeData();
-        //data.add(dataModel);
-        //TODO: unfinished
+            while(i < weeklyMasterData.size() && ! weekFormatted) {
+                DailyFormattedDataModel dailyData = weeklyMasterData.get(i);
+
+                int entryWeekNumber = dailyData.getDay().get(woy);
+
+                if(entryWeekNumber == weekNumber) {
+                    builder.addDailyData(dailyData);
+                    if(i >= weeklyMasterData.size()) {
+                        weekFormatted = true;
+                    }
+                }
+                else {
+                    i--;
+                    weekFormatted = true;
+                }
+                i++;
+            }
+            data.add(builder.build());
+        }
+        monthtlyMasterData = data;
         return data;
     }
 
     //Called when the "export to excel" button is pressed
-    public boolean exportToExcelDocument()    {
+    public boolean exportToExcelDocument() {
         ExcelExportHandler exportHandler = new ExcelExportHandler();
         return exportHandler.makeExcelDocument();
     }
 
-    public ObservableList<DailySummarizedDataModel> buildObservableWeeklyTimeData() {
+    public ObservableList<DailyFormattedDataModel> buildObservableWeeklyTimeData() {
 
         Session session = Session.getInstance();
 
-        ObservableList<DailySummarizedDataModel> data = FXCollections.observableArrayList();
+        ObservableList<DailyFormattedDataModel> data = FXCollections.observableArrayList();
         List<TimeEntry> timeEntries = session.getTimeEntries();
 
         //TODO: implement date filtering
-        LocalDate startDate = LocalDate.of(2019, 1, 1);
-        LocalDate endDate = LocalDate.of(2019, 4, 30);
+
 
         //iterate over all the days in the given range
         int i = 0;
         for(LocalDate date = startDate; date.isBefore(endDate.plusDays(1)); date = date.plusDays(1)) {
-            boolean done = false;
-            DailySummarizedDataModelBuilder builder = new DailySummarizedDataModelBuilder(date);
-            //summarize the time entries for one daylars
-            while(i < timeEntries.size() && !done) {
+            boolean dateFormatted = false;
+            DailyFormattedDataModelBuilder builder = new DailyFormattedDataModelBuilder(date);
+            //summarize the time entries for one day
+            while(i < timeEntries.size() && ! dateFormatted) {
                 TimeEntry t = timeEntries.get(i);
                 LocalDate start = t.getStart().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                 if(start.equals(date)) {
                     builder.addTimeEntry(t);
                 }
                 else {
-                    data.add(builder.build());
                     i--;
-                    done = true;
+                    dateFormatted = true;
                 }
                 i++;
             }
+            data.add(builder.build());
         }
+        weeklyMasterData = data;
+        System.out.println(weeklyMasterData.size());
         return data;
     }
-
-    //Called when the "export to excel" button is pressed
-    public boolean buildExcelDocument() {
-        boolean exportSuccess = new ExcelWriter().generateExcelSheet();
-        System.out.println(exportSuccess);
-        return exportSuccess;
-    }
-
 }

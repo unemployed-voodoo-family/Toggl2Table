@@ -4,9 +4,9 @@ import UnemployedVoodooFamily.Logic.Session;
 
 public enum FilePath {
     USER_HOME(System.getProperty("user.home")),
-    APP_HOME(USER_HOME.getProperty() + "\\ToggleTimeSheet"),
-    SETTINGS_HOME(APP_HOME.getProperty() + "\\Settings"),
-    SAVED_WORKHOURS(SETTINGS_HOME.getProperty() + "\\hours.properties");
+    APP_HOME(USER_HOME.getProperty() + "/ToggleTimeSheet"),
+    SETTINGS_HOME(APP_HOME.getProperty() + "/Settings"),
+    SAVED_WORKHOURS(SETTINGS_HOME.getProperty() + "/hours.properties");
 
     private String property;
 

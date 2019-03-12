@@ -1,9 +1,9 @@
 package UnemployedVoodooFamily.GUI.Content;
 
 import UnemployedVoodooFamily.Data.Enums.Data;
-import UnemployedVoodooFamily.Data.MonthlyFormattedTimeData;
+import UnemployedVoodooFamily.Data.WeeklyFormattedDataModel;
 import UnemployedVoodooFamily.Data.RawTimeDataModel;
-import UnemployedVoodooFamily.Data.DailySummarizedDataModel;
+import UnemployedVoodooFamily.Data.DailyFormattedDataModel;
 import UnemployedVoodooFamily.Logic.FormattedTimeDataLogic;
 import UnemployedVoodooFamily.Logic.Listeners.DataLoadedListener;
 
@@ -17,6 +17,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.GridPane;
 
 import java.io.IOException;
 import java.net.URL;
@@ -34,7 +35,7 @@ public class TableViewController implements DataLoadedListener {
     private TableView rawData;
 
     @FXML
-    private TableView formattedData;
+    private TableView weeklyTable;
 
     @FXML
     private ToggleButton weeklyToggleBtn;
@@ -44,6 +45,12 @@ public class TableViewController implements DataLoadedListener {
 
     @FXML
     private Button exportBtn;
+
+    @FXML
+    private GridPane tableRoot;
+
+    private TableView monthlyTable;
+
 
     private final ToggleGroup timeSpanToggleGroup = new ToggleGroup();
 
@@ -61,8 +68,6 @@ public class TableViewController implements DataLoadedListener {
     // |##################################################|
 
     public void initialize() {
-        buildRawDataTable();
-        buildFormattedWeeklyTable();
         Session.getInstance().addListener(this);
         setupUIElements();
         setKeyAndClickListeners();
@@ -72,7 +77,9 @@ public class TableViewController implements DataLoadedListener {
      * Sets up the UI elements
      */
     private void setupUIElements() {
-        buildFormattedDataTable();
+        buildFormattedMonthlyTable();
+        buildFormattedWeeklyTable();
+        buildRawDataTable();
         weeklyToggleBtn.setToggleGroup(timeSpanToggleGroup);
         monthlyToggleBtn.setToggleGroup(timeSpanToggleGroup);
         weeklyToggleBtn.setSelected(true);
@@ -82,19 +89,20 @@ public class TableViewController implements DataLoadedListener {
      * Sets input actions on UI elements
      */
     private void setKeyAndClickListeners() {
-        exportBtn.setOnAction(event ->  {
+        exportBtn.setOnAction(event -> {
             formattedTimeDataLogic.exportToExcelDocument();
         });
 
 
         formattedDataTab.setOnSelectionChanged(event -> {
             if(formattedDataTab.isSelected()) {
-                buildFormattedDataTable();
+                buildWeeklyTable();
             }
         });
 
-        weeklyToggleBtn.setOnAction((ActionEvent e) -> buildFormattedDataTable());
-        monthlyToggleBtn.setOnAction((ActionEvent e) -> buildFormattedDataTable());
+
+        weeklyToggleBtn.setOnAction((ActionEvent e) -> switchTableView(weeklyTable));
+        monthlyToggleBtn.setOnAction((ActionEvent e) -> switchTableView(monthlyTable));
     }
 
     // |##################################################|
@@ -140,8 +148,9 @@ public class TableViewController implements DataLoadedListener {
         rawData.getItems().setAll(getObservableRawData());
     }
 
-    private void setWeeklyTableData() {
-        formattedData.getItems().setAll(getObservableWeeklyData());
+    private void setFormattedTableData() {
+        weeklyTable.getItems().setAll(getObservableWeeklyData());
+        monthlyTable.getItems().setAll(getObservableMonthlyData());
     }
 
     /**
@@ -160,14 +169,12 @@ public class TableViewController implements DataLoadedListener {
      * Builds the table for the formatted table tab. Builds either weekly or monthly depending on which is selected by
      * the toggle buttons
      */
-    private void buildFormattedDataTable() {
-        //Check which button is active and build corresponding table
-        if(weeklyToggleBtn.isSelected()) {
-            buildFormattedWeeklyTable();
-        }
-        else if(monthlyToggleBtn.isSelected()) {
-            buildFormattedMonthlyTable();
-        }
+    private void buildWeeklyTable() {
+        buildFormattedWeeklyTable();
+    }
+
+    private void buildMonthlyTable() {
+        buildFormattedMonthlyTable();
     }
 
     /**
@@ -176,29 +183,28 @@ public class TableViewController implements DataLoadedListener {
     @SuppressWarnings("Duplicates")
     private void buildFormattedWeeklyTable() {
         //Clears the already existing data in the table
-        clearTable(formattedData);
+        clearTable(weeklyTable);
 
         //Create all columns necessary
-        TableColumn<DailySummarizedDataModel, String> weekDayCol = new TableColumn<>("Week Day");
+        TableColumn<DailyFormattedDataModel, String> weekDayCol = new TableColumn<>("Week Day");
         weekDayCol.setCellValueFactory(new PropertyValueFactory<>("weekDay"));
         weekDayCol.setSortable(false);
 
-        TableColumn<DailySummarizedDataModel, String> workedHoursCol = new TableColumn<>("Worked Hours");
+        TableColumn<DailyFormattedDataModel, String> workedHoursCol = new TableColumn<>("Worked Hours");
         workedHoursCol.setCellValueFactory(new PropertyValueFactory<>("workedHours"));
         workedHoursCol.setSortable(false);
 
-        TableColumn<DailySummarizedDataModel, String> supposedHoursCol = new TableColumn<>("Supposed Hours");
+        TableColumn<DailyFormattedDataModel, String> supposedHoursCol = new TableColumn<>("Supposed Hours");
         supposedHoursCol.setCellValueFactory(new PropertyValueFactory<>("supposedHours"));
         supposedHoursCol.setSortable(false);
 
-        TableColumn<DailySummarizedDataModel, String> overtimeCol = new TableColumn<>("Overtime");
+        TableColumn<DailyFormattedDataModel, String> overtimeCol = new TableColumn<>("Overtime");
         overtimeCol.setCellValueFactory(new PropertyValueFactory<>("overtime"));
         overtimeCol.setSortable(false);
 
         //Adds the columns to the table and updates it
-        formattedData.getColumns().addAll(weekDayCol, workedHoursCol,
-                                          supposedHoursCol, overtimeCol);
-        formattedData.setEditable(false);
+        weeklyTable.getColumns().addAll(weekDayCol, workedHoursCol, supposedHoursCol, overtimeCol);
+        weeklyTable.setEditable(false);
     }
 
     /**
@@ -207,40 +213,37 @@ public class TableViewController implements DataLoadedListener {
     @SuppressWarnings("Duplicates")
     private void buildFormattedMonthlyTable() {
         //Clears the already existing data in the table
-        clearTable(formattedData);
+        this.monthlyTable = new TableView();
+        clearTable(weeklyTable);
 
         //Create all columns necessary
-        TableColumn<MonthlyFormattedTimeData, String> monthCol = new TableColumn<>("Month");
-        monthCol.setCellValueFactory(new PropertyValueFactory<>("month"));
-        monthCol.setSortable(false);
 
-        TableColumn<MonthlyFormattedTimeData, String> weekNumbCol = new TableColumn<>("Week Number");
+        TableColumn<WeeklyFormattedDataModel, String> weekNumbCol = new TableColumn<>("Week Number");
         weekNumbCol.setCellValueFactory(new PropertyValueFactory<>("weekNumber"));
         weekNumbCol.setSortable(false);
 
-        TableColumn<MonthlyFormattedTimeData, String> workedHoursCol = new TableColumn<>("Worked Hours");
+        TableColumn<WeeklyFormattedDataModel, String> workedHoursCol = new TableColumn<>("Worked Hours");
         workedHoursCol.setCellValueFactory(new PropertyValueFactory<>("workedHours"));
         workedHoursCol.setSortable(false);
 
-        TableColumn<MonthlyFormattedTimeData, String> supposedHoursCol = new TableColumn<>("Supposed Hours");
+        TableColumn<WeeklyFormattedDataModel, String> supposedHoursCol = new TableColumn<>("Supposed Hours");
         supposedHoursCol.setCellValueFactory(new PropertyValueFactory<>("supposedHours"));
         supposedHoursCol.setSortable(false);
 
-        TableColumn<MonthlyFormattedTimeData, String> overtimeCol = new TableColumn<>("Overtime");
+        TableColumn<WeeklyFormattedDataModel, String> overtimeCol = new TableColumn<>("Overtime");
         overtimeCol.setCellValueFactory(new PropertyValueFactory<>("overtime"));
         overtimeCol.setSortable(false);
 
         //Adds the columns to the table and updates it
-        formattedData.getColumns().addAll(monthCol, weekNumbCol, workedHoursCol, supposedHoursCol, overtimeCol);
-        formattedData.getItems().setAll(getObservableMonthlyData());
-        formattedData.setEditable(false);
+        monthlyTable.getColumns().addAll(weekNumbCol, workedHoursCol, supposedHoursCol, overtimeCol);
+        monthlyTable.setEditable(false);
     }
 
     /**
      * Creates an observable list containing WeeklyTimeDataModel objects
      * @return an ObservableList containing WeeklyTimeDatModel objects
      */
-    private ObservableList<DailySummarizedDataModel> getObservableWeeklyData() {
+    private ObservableList<DailyFormattedDataModel> getObservableWeeklyData() {
         return formattedTimeDataLogic.buildObservableWeeklyTimeData();
     }
 
@@ -248,15 +251,8 @@ public class TableViewController implements DataLoadedListener {
      * Creates an observable list containing MonthlyTimeDataModel objects
      * @return an ObservableList containing MonthlyTimeDatModel objects
      */
-    private ObservableList<MonthlyFormattedTimeData> getObservableMonthlyData() {
-        ObservableList<MonthlyFormattedTimeData> observableList = FXCollections.observableArrayList();
-
-        //TODO: - Remove the two lines below when formatted data import is implemented
-        //      - Make FormattedTimeDataLogic return a list of the required information
-        //This is here for testing purposes only
-        observableList.add(new MonthlyFormattedTimeData("January", "1", "40", "37.5", "" + (40 - 37.5)));
-
-        return observableList;
+    private ObservableList<WeeklyFormattedDataModel> getObservableMonthlyData() {
+        return formattedTimeDataLogic.buildObservableMonthlyTimeData();
     }
 
     // |##################################################|
@@ -272,6 +268,17 @@ public class TableViewController implements DataLoadedListener {
         table.getItems().clear();
     }
 
+    private void switchTableView(Node content) {
+        ObservableList<Node> children = tableRoot.getChildren();
+        if(children.isEmpty()) {
+            children.addAll(content);
+        }
+        else if(! children.contains(content)) {
+            children.clear();
+            children.addAll(content);
+        }
+    }
+
 
     /**
      * Set newly loaded data to the tables, only when
@@ -283,7 +290,7 @@ public class TableViewController implements DataLoadedListener {
         loadedData.add(e);
         //check if necassary data is loaded
         if(loadedData.containsAll(EnumSet.of(Data.TIME_ENTRIES))) {
-            setWeeklyTableData();
+            setFormattedTableData();
             if(loadedData.containsAll(EnumSet.of(Data.TIME_ENTRIES, Data.PROJECTS, Data.TASKS))) {
                 setRawDataTableData();
                 loadedData = EnumSet.noneOf(Data.class); //empty the set, readying it for next

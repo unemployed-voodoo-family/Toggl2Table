@@ -1,45 +1,37 @@
 package UnemployedVoodooFamily.Data;
 
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
-public class MonthlyFormattedTimeData {
+public class WeeklyFormattedDataModel {
 
-    private SimpleStringProperty month;
-    private SimpleStringProperty weekNumber;
-    private SimpleStringProperty workedHours;
-    private SimpleStringProperty supposedHours;
-    private SimpleStringProperty overtime;
+    private SimpleIntegerProperty weekNumber;
+    private SimpleDoubleProperty workedHours;
+    private SimpleDoubleProperty supposedHours;
+    private SimpleDoubleProperty overtime;
 
     /**
      * Creates a MonthlyTimeDataModel object
      * Used to structure data for the corresponding TableView
-     * @param month String with month
      * @param weekNumber String with week number
      * @param workedHours String with worked hours
      * @param supposedHours String with supposed work hours
      * @param overtime String with the amount of overtime
      */
-    public MonthlyFormattedTimeData(String month, String weekNumber, String workedHours, String supposedHours, String overtime) {
-        this.month = new SimpleStringProperty(month);
-        this.weekNumber = new SimpleStringProperty(weekNumber);
-        this.workedHours = new SimpleStringProperty(workedHours);
-        this.supposedHours = new SimpleStringProperty(supposedHours);
-        this.overtime = new SimpleStringProperty(overtime);
+    public WeeklyFormattedDataModel(int weekNumber, Double workedHours, Double supposedHours, Double overtime) {
+        this.weekNumber = new SimpleIntegerProperty(weekNumber);
+        this.workedHours = new SimpleDoubleProperty(workedHours);
+        this.supposedHours = new SimpleDoubleProperty(supposedHours);
+        this.overtime = new SimpleDoubleProperty(overtime);
     }
 
-    /**
-     * Returns the month as a string
-     * @return the month as a string
-     */
-    public String getMonth() {
-        return month.get();
-    }
 
     /**
      * Returns the week number as a string
      * @return the week number as a string
      */
-    public String getWeekNumber() {
+    public Integer getWeekNumber() {
         return weekNumber.get();
     }
 
@@ -47,7 +39,7 @@ public class MonthlyFormattedTimeData {
      * Returns the amount of hours worked as a string
      * @return the amount of hours worked as a string
      */
-    public String getWorkedHours() {
+    public Double getWorkedHours() {
         return workedHours.get();
     }
 
@@ -55,7 +47,7 @@ public class MonthlyFormattedTimeData {
      * Returns the supposed amount of hours worked as a string
      * @return the supposed amount of hours worked as a string
      */
-    public String getSupposedHours() {
+    public Double getSupposedHours() {
         return supposedHours.get();
     }
 
@@ -63,7 +55,7 @@ public class MonthlyFormattedTimeData {
      * Returns the amount of overtime worked
      * @return the amount of overtime worked
      */
-    public String getOvertime() {
+    public Double getOvertime() {
         return overtime.get();
     }
 
