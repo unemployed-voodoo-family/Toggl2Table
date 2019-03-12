@@ -1,19 +1,18 @@
 package UnemployedVoodooFamily.Data;
 
-import UnemployedVoodooFamily.Enums.WeekDay;
 import org.apache.commons.lang3.StringUtils;
 
-import java.time.LocalDate;
+import java.time.*;
 
 public class MonthlySheetRowEntry {
 
     private int weekNumber;
-    private WeekDay weekDay;
+    private DayOfWeek weekDay;
     private String date;
     private double supposedWorkHours;
     private double actualWorkedHours;
 
-    public MonthlySheetRowEntry(int weekNumber, WeekDay weekDay, LocalDate date, double supposedWorkHours,
+    public MonthlySheetRowEntry(int weekNumber, DayOfWeek weekDay, LocalDate date, double supposedWorkHours,
                                 double actualWorkedHours) {
         this.weekNumber = weekNumber;
         this.weekDay = weekDay;
