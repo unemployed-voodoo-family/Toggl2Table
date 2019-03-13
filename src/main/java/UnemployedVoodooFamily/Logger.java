@@ -1,21 +1,14 @@
 package UnemployedVoodooFamily;
 
-import ch.simas.jtoggl.TimeEntry;
+import UnemployedVoodooFamily.Data.Enums.FilePath;
 import com.google.gson.*;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.sql.Time;
-import java.time.Instant;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
-import java.util.Date;
 
 public class Logger {
     private static Logger logger = new Logger();
@@ -24,13 +17,10 @@ public class Logger {
         return logger;
     }
 
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
-    private static final String TIME_ENTRY_FILE = "time-entries";
-    private final String USER_HOME = System.getProperty("user.dir");
-    private final String LOGS_HOME = USER_HOME + "\\TogglTimeSheet\\logs\\";
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy-HH-mm");
 
     private Logger() {
-        File theDir = new File(LOGS_HOME);
+        /*File theDir = new File(FilePath.LOGS_HOME.getProperty());
 
         // if the directory does not exist, create it
         if (!theDir.exists()) {
@@ -47,12 +37,12 @@ public class Logger {
             if(result) {
                 System.out.println("DIR created");
             }
-        }
+        }*/
     }
 
-    public void log(Collection<?> dataset) {
+    public void dumpCollection(Collection<?> dataset, String name) {
         File file = null;
-        file = new File(LOGS_HOME + LocalDateTime.now().format(formatter) + "-" + "collection-log.json");
+        file = new File(FilePath.LOGS_HOME.getProperty() + File.separator + LocalDateTime.now().format(formatter) + "." + name + "-dump.json");
         try {
             file.getParentFile().mkdirs();
             file.createNewFile();

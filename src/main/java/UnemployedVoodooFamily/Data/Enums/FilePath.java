@@ -6,6 +6,7 @@ public enum FilePath {
     USER_HOME(System.getProperty("user.home")),
     APP_HOME(USER_HOME.getProperty() + "/ToggleTimeSheet"),
     SETTINGS_HOME(APP_HOME.getProperty() + "/Settings"),
+    LOGS_HOME(APP_HOME.getProperty() + "/logs"),
     SAVED_WORKHOURS(SETTINGS_HOME.getProperty() + "/hours.properties");
 
     private String property;

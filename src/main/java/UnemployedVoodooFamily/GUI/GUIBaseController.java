@@ -1,7 +1,9 @@
 package UnemployedVoodooFamily.GUI;
 
+import UnemployedVoodooFamily.Data.Enums.FilePath;
 import UnemployedVoodooFamily.GUI.Content.SettingsController;
 import UnemployedVoodooFamily.GUI.Content.TableViewController;
+import UnemployedVoodooFamily.Logger;
 import UnemployedVoodooFamily.Logic.Listeners.DataLoadedListener;
 import UnemployedVoodooFamily.Logic.Session;
 import javafx.collections.ObservableList;
@@ -12,12 +14,15 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
+import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -52,9 +57,14 @@ public class GUIBaseController {
     @FXML
     private AnchorPane contentRoot;
 
+    @FXML
+    private MenuItem dumpDataMenuItem;
+
+    @FXML
+    private MenuItem viewDataMenuItem;
+
     private Node settings;
     private Node table;
-
 
 
     @FXML
@@ -93,12 +103,34 @@ public class GUIBaseController {
 
         settingsNavBtn.setOnAction(event -> switchContentView(settings));
         tableNavBtn.setOnAction(event -> switchContentView(table));
+        dumpDataMenuItem.setOnAction(event -> dumpData());
+        viewDataMenuItem.setOnAction(event -> {
+            try {
+                Desktop.getDesktop().open(new File(FilePath.LOGS_HOME.getProperty()));
+            }
+            catch(IOException e) {
+                e.printStackTrace();
+            }
+            catch(IllegalArgumentException e) {
+                //could not find path
+            }
+        });
     }
 
-    public void refreshRawData(){
-        Session instance = Session.getInstance();
-        Thread t = new Thread(() -> instance.refreshTimeData());
+    public void refreshRawData() {
+        Session session = Session.getInstance();
+        Thread t = new Thread(session :: refreshTimeData);
         t.start();
+    }
+
+    private void dumpData() {
+        Logger logger = Logger.getInstance();
+        Session session = Session.getInstance();
+        logger.dumpCollection(session.getProjects(), "projects");
+        logger.dumpCollection(session.getTasks(), "tasks");
+        logger.dumpCollection(session.getTimeEntries(), "timeentries");
+        logger.dumpCollection(session.getWorkspaces(), "workspaces");
+        logger.dumpCollection(session.getWorkHours().entrySet(), "workhours");
     }
 
     /**
