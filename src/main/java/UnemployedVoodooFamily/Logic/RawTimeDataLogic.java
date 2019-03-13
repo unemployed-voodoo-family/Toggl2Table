@@ -35,19 +35,13 @@ public class RawTimeDataLogic {
 
             String description = timeEntry.getDescription();
             LocalDateTime start = timeEntry.getStart().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-            LocalDateTime stop;
-            String stopDate = "ongoing";
-            String stopTime = "ongoing";
-            String durationStr = "ongoing";
-            long duration = timeEntry.getDuration();
-            if(timeEntry.getStop() != null) {
-                stop = timeEntry.getStop().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-                stopDate = stop.toLocalDate().format(dateFormatter);
-                stopTime = stop.toLocalTime().toString();
-                durationStr = LocalTime.MIN.plusSeconds(duration).format(DateTimeFormatter.ISO_LOCAL_TIME);
-            }
+            LocalDateTime stop = timeEntry.getStop().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
             String startDate = start.toLocalDate().format(dateFormatter);
+            String stopDate = stop.toLocalDate().format(dateFormatter);
             String startTime = start.toLocalTime().toString();
+            String stopTime = stop.toLocalTime().toString();
+            long duration = timeEntry.getDuration();
+            String durationStr = LocalTime.MIN.plusSeconds(duration).format(DateTimeFormatter.ISO_LOCAL_TIME);
             Long pid = timeEntry.getPid();
             String projectName = "";
             for(Project project: projects) {
