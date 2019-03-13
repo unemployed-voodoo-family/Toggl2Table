@@ -18,8 +18,8 @@ import java.util.*;
 
 public class RawTimeDataLogic {
     // and is responsible for handling raw time data
-    private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-
+    private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd. LLLL yyyy");
+    private ObservableList<RawTimeDataModel> masterData;
     /**
      * Build an observable list with RawTimeDataModel, using time entries imported from Toggl.
      * @return the ObservableList
@@ -32,7 +32,6 @@ public class RawTimeDataLogic {
 
         while(it.hasNext()) {
             TimeEntry timeEntry = it.next();
-
             String description = timeEntry.getDescription();
             LocalDateTime start = timeEntry.getStart().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
             LocalDateTime stop = timeEntry.getStop().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
@@ -55,6 +54,15 @@ public class RawTimeDataLogic {
                                                               stopTime, String.valueOf(durationStr));
             data.add(dataModel);
         }
+        masterData = data;
         return data;
+    }
+
+    public String getDataStartTime() {
+        return masterData.get(0).getStartDate();
+    }
+
+    public String getDataEndTime() {
+        return masterData.get(masterData.size()-1).getEndDate();
     }
 }

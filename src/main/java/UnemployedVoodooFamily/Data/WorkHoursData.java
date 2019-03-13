@@ -7,7 +7,8 @@ import java.time.format.DateTimeFormatter;
 
 public class WorkHoursData{
 
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd. LLLL yyyy");
     private SimpleObjectProperty<String> from;
     private SimpleObjectProperty<String> to;
     private SimpleObjectProperty<Double> hours;
