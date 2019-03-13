@@ -112,6 +112,7 @@ public class Session {
     }
 
     public Properties getWorkHours() {
+        this.workHours = propsLogic.loadProps(FilePath.getCurrentUserWorkhours());
         return workHours;
     }
 }

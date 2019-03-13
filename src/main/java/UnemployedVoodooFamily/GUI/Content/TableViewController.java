@@ -272,7 +272,7 @@ public class TableViewController implements DataLoadedListener {
      * @return an ObservableList containing WeeklyTimeDatModel objects
      */
     private ObservableList<DailyFormattedDataModel> getObservableWeeklyData() {
-        return formattedTimeDataLogic.buildObservableWeeklyTimeData();
+        return formattedTimeDataLogic.buildObservableWeeklyTimeData(Session.getInstance().getTimeEntries());
     }
 
     /**

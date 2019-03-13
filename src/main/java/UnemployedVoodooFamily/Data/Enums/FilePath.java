@@ -1,6 +1,7 @@
 package UnemployedVoodooFamily.Data.Enums;
 
 import UnemployedVoodooFamily.Logic.Session;
+import ch.simas.jtoggl.User;
 
 import java.io.File;
 
@@ -22,7 +23,12 @@ public enum FilePath {
     }
 
     public static String getCurrentUserWorkhours() {
-        return SETTINGS_HOME.getPath() + File.separator + Session.getInstance().getUser().getId() + "-hours.properties";
+        Session session = Session.getInstance();
+        User user;
+        if((user = session.getUser()) != null) {
+            return SETTINGS_HOME.getPath() + File.separator + user.getId() + "-hours.properties";
+        }
+        return SETTINGS_HOME.getPath() + File.separator + "test-hours.properties";
     }
 
 }
