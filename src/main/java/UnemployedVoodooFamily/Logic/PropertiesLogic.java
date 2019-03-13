@@ -34,7 +34,6 @@ public class PropertiesLogic {
     }
 
     private File getFile(String path) {
-        URL resourceUrl = getClass().getResource(path);
         File file = null;
         try {
             file = new File(path);
