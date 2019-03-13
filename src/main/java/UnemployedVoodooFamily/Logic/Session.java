@@ -104,7 +104,7 @@ public class Session {
     }
 
     public void refreshTimeData() {
-        propsLogic.loadProps(FilePath.SAVED_WORKHOURS.getProperty());
+        propsLogic.loadProps(FilePath.SAVED_WORKHOURS.getPath());
         this.refreshTimeEntries();
         this.refreshProjects();
         this.refreshWorkspaces();

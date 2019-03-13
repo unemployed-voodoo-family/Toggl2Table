@@ -1,19 +1,24 @@
 package UnemployedVoodooFamily.Logic;
 
-import UnemployedVoodooFamily.Data.WeeklyFormattedDataModel;
 import UnemployedVoodooFamily.Data.DailyFormattedDataModel;
 import UnemployedVoodooFamily.Data.DailyFormattedDataModelBuilder;
+import UnemployedVoodooFamily.Data.WeeklyFormattedDataModel;
 import UnemployedVoodooFamily.Data.WeeklyFormattedDataModelBuilder;
 import ch.simas.jtoggl.TimeEntry;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.time.*;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 import java.time.temporal.TemporalField;
 import java.time.temporal.WeekFields;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 
 public class FormattedTimeDataLogic {
     private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd. LLLL yyyy");

@@ -3,10 +3,7 @@ package UnemployedVoodooFamily.Data;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 
 public class DailyFormattedDataModel {
 

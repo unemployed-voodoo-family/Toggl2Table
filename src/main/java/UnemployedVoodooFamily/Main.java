@@ -1,12 +1,10 @@
 package UnemployedVoodooFamily;
 
 import UnemployedVoodooFamily.Data.Enums.FilePath;
-import ch.simas.jtoggl.JToggl;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -46,8 +44,8 @@ public class Main extends Application {
      */
     @Override
     public void start(Stage primaryStage) throws Exception {
-        createDirsIfNotExists(FilePath.SETTINGS_HOME.getProperty());
-        createDirsIfNotExists(FilePath.LOGS_HOME.getProperty());
+        createDirsIfNotExists(FilePath.SETTINGS_HOME.getPath());
+        createDirsIfNotExists(FilePath.LOGS_HOME.getPath());
         URL r = getClass().getClassLoader().getResource("login.fxml");
         Parent root = FXMLLoader.load(r);
         Scene scene = new Scene(root);

@@ -4,7 +4,6 @@ import UnemployedVoodooFamily.Data.Enums.FilePath;
 import UnemployedVoodooFamily.GUI.Content.SettingsController;
 import UnemployedVoodooFamily.GUI.Content.TableViewController;
 import UnemployedVoodooFamily.Logger;
-import UnemployedVoodooFamily.Logic.Listeners.DataLoadedListener;
 import UnemployedVoodooFamily.Logic.Session;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -16,7 +15,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -25,8 +25,6 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 public class GUIBaseController {
 
@@ -106,7 +104,7 @@ public class GUIBaseController {
         dumpDataMenuItem.setOnAction(event -> dumpData());
         viewDataMenuItem.setOnAction(event -> {
             try {
-                Desktop.getDesktop().open(new File(FilePath.LOGS_HOME.getProperty()));
+                Desktop.getDesktop().open(new File(FilePath.LOGS_HOME.getPath()));
             }
             catch(IOException e) {
                 e.printStackTrace();

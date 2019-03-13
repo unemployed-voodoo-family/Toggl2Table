@@ -1,20 +1,17 @@
 package UnemployedVoodooFamily.Logic;
 
-import UnemployedVoodooFamily.Data.DateRange;
 import UnemployedVoodooFamily.Data.RawTimeDataModel;
-import ch.simas.jtoggl.JToggl;
 import ch.simas.jtoggl.Project;
 import ch.simas.jtoggl.TimeEntry;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import org.apache.http.impl.cookie.DateUtils;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Iterator;
+import java.util.List;
 
 public class RawTimeDataLogic {
     // and is responsible for handling raw time data

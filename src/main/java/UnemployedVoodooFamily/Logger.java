@@ -1,7 +1,8 @@
 package UnemployedVoodooFamily;
 
 import UnemployedVoodooFamily.Data.Enums.FilePath;
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -20,7 +21,7 @@ public class Logger {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy-HH-mm");
 
     private Logger() {
-        /*File theDir = new File(FilePath.LOGS_HOME.getProperty());
+        /*File theDir = new File(FilePath.LOGS_HOME.getPath());
 
         // if the directory does not exist, create it
         if (!theDir.exists()) {
@@ -42,7 +43,7 @@ public class Logger {
 
     public void dumpCollection(Collection<?> dataset, String name) {
         File file = null;
-        file = new File(FilePath.LOGS_HOME.getProperty() + File.separator + LocalDateTime.now().format(formatter) + "." + name + "-dump.json");
+        file = new File(FilePath.LOGS_HOME.getPath() + File.separator + LocalDateTime.now().format(formatter) + "." + name + "-dump.json");
         try {
             file.getParentFile().mkdirs();
             file.createNewFile();

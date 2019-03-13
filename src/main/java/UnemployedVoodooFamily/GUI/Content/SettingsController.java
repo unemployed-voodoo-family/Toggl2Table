@@ -1,16 +1,13 @@
 package UnemployedVoodooFamily.GUI.Content;
 
 import UnemployedVoodooFamily.Logic.SettingsLogic;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 
-import java.io.*;
-import java.net.URISyntaxException;
+import java.io.IOException;
 import java.net.URL;
 
 public class SettingsController {

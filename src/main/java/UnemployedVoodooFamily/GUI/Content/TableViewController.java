@@ -1,18 +1,14 @@
 package UnemployedVoodooFamily.GUI.Content;
 
-import UnemployedVoodooFamily.Data.Enums.Data;
-import UnemployedVoodooFamily.Data.WeeklyFormattedDataModel;
-import UnemployedVoodooFamily.Data.RawTimeDataModel;
-import UnemployedVoodooFamily.Data.DateRange;
-import UnemployedVoodooFamily.Logger;
 import UnemployedVoodooFamily.Data.DailyFormattedDataModel;
+import UnemployedVoodooFamily.Data.Enums.Data;
+import UnemployedVoodooFamily.Data.RawTimeDataModel;
+import UnemployedVoodooFamily.Data.WeeklyFormattedDataModel;
 import UnemployedVoodooFamily.Logic.FormattedTimeDataLogic;
 import UnemployedVoodooFamily.Logic.Listeners.DataLoadedListener;
-
 import UnemployedVoodooFamily.Logic.RawTimeDataLogic;
 import UnemployedVoodooFamily.Logic.Session;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -20,13 +16,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.*;
+import java.util.EnumSet;
 
 public class TableViewController implements DataLoadedListener {
 
