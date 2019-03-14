@@ -10,20 +10,24 @@ import UnemployedVoodooFamily.Logic.Listeners.DataLoadedListener;
 import UnemployedVoodooFamily.Logic.RawTimeDataLogic;
 import UnemployedVoodooFamily.Logic.Session;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 import java.io.IOException;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.*;
 
 public class TableViewController implements DataLoadedListener {
@@ -221,17 +225,43 @@ public class TableViewController implements DataLoadedListener {
         weekDayCol.setCellValueFactory(new PropertyValueFactory<>("weekDay"));
         weekDayCol.setSortable(false);
 
-        TableColumn<DailyFormattedDataModel, String> workedHoursCol = new TableColumn<>("Worked Hours");
+        TableColumn<DailyFormattedDataModel, Double> workedHoursCol = new TableColumn<>("Worked Hours");
         workedHoursCol.setCellValueFactory(new PropertyValueFactory<>("workedHours"));
         workedHoursCol.setSortable(false);
+        workedHoursCol.setCellFactory(col -> setDailyDoubleFormatter());
 
-        TableColumn<DailyFormattedDataModel, String> supposedHoursCol = new TableColumn<>("Supposed Hours");
+        TableColumn<DailyFormattedDataModel, Double> supposedHoursCol = new TableColumn<>("Supposed Hours");
         supposedHoursCol.setCellValueFactory(new PropertyValueFactory<>("supposedHours"));
         supposedHoursCol.setSortable(false);
+        supposedHoursCol.setCellFactory(col -> setDailyDoubleFormatter());
 
-        TableColumn<DailyFormattedDataModel, String> overtimeCol = new TableColumn<>("Overtime");
+        TableColumn<DailyFormattedDataModel, Double> overtimeCol = new TableColumn<>("Overtime");
         overtimeCol.setCellValueFactory(new PropertyValueFactory<>("overtime"));
         overtimeCol.setSortable(false);
+        DecimalFormat df = new DecimalFormat("#0.00 ");
+        overtimeCol.setCellFactory(col -> new TableCell<DailyFormattedDataModel, Double>() {
+            @Override
+            protected void updateItem(Double item, boolean empty) {
+                super.updateItem(item, empty);
+                if(empty || item == null) {
+                    setText(null);
+                    setGraphic(null);
+                }
+                else {
+                    setText(df.format(item));
+                    setFont(Font.font(Font.getDefault().getName(), FontWeight.BOLD, Font.getDefault().getSize()));
+                    if(item < 0.0) {
+                        setTextFill(Color.RED); // or use setStyle(String)
+                    }
+                    else if(item > 0.0) {
+                        setTextFill(Color.GREEN); // or use setStyle(String)
+                    }
+                    else {
+                        setTextFill(Color.BLACK);
+                    }
+                }
+            }
+        });
 
         //Adds the columns to the table and updates it
         weeklyTable.getColumns().addAll(weekDayCol, workedHoursCol, supposedHoursCol, overtimeCol);
@@ -244,30 +274,91 @@ public class TableViewController implements DataLoadedListener {
     @SuppressWarnings("Duplicates")
     private void buildFormattedMonthlyTable() {
         //Clears the already existing data in the table
+
         this.monthlyTable = new TableView();
         clearTable(weeklyTable);
 
         //Create all columns necessary
 
-        TableColumn<WeeklyFormattedDataModel, String> weekNumbCol = new TableColumn<>("Week Number");
+        TableColumn<WeeklyFormattedDataModel, Integer> weekNumbCol = new TableColumn<>("Week Number");
         weekNumbCol.setCellValueFactory(new PropertyValueFactory<>("weekNumber"));
         weekNumbCol.setSortable(false);
 
-        TableColumn<WeeklyFormattedDataModel, String> workedHoursCol = new TableColumn<>("Worked Hours");
+        TableColumn<WeeklyFormattedDataModel, Double> workedHoursCol = new TableColumn<>("Worked Hours");
         workedHoursCol.setCellValueFactory(new PropertyValueFactory<>("workedHours"));
         workedHoursCol.setSortable(false);
+        workedHoursCol.setCellFactory(col -> setWeeklyDoubleFormatter());
 
-        TableColumn<WeeklyFormattedDataModel, String> supposedHoursCol = new TableColumn<>("Supposed Hours");
+        TableColumn<WeeklyFormattedDataModel, Double> supposedHoursCol = new TableColumn<>("Supposed Hours");
         supposedHoursCol.setCellValueFactory(new PropertyValueFactory<>("supposedHours"));
         supposedHoursCol.setSortable(false);
+        supposedHoursCol.setCellFactory(col -> setWeeklyDoubleFormatter());
 
-        TableColumn<WeeklyFormattedDataModel, String> overtimeCol = new TableColumn<>("Overtime");
+        TableColumn<WeeklyFormattedDataModel, Double> overtimeCol = new TableColumn<>("Overtime");
         overtimeCol.setCellValueFactory(new PropertyValueFactory<>("overtime"));
         overtimeCol.setSortable(false);
 
+        DecimalFormat df = new DecimalFormat("#0.00 ");
+        overtimeCol.setCellFactory(col -> new TableCell<WeeklyFormattedDataModel, Double>() {
+            @Override
+            protected void updateItem(Double item, boolean empty) {
+                super.updateItem(item, empty);
+                if(empty || item == null) {
+                    setText(null);
+                    setGraphic(null);
+                }
+                else {
+                    setText(df.format(item));
+                    setFont(Font.font(Font.getDefault().getName(), FontWeight.BOLD, Font.getDefault().getSize()));
+                    if(item < 0.0) {
+                        setTextFill(Color.RED); // or use setStyle(String)
+                    }
+                    else if(item > 0.0) {
+                        setTextFill(Color.GREEN); // or use setStyle(String)
+                    }
+                    else {
+                        setTextFill(Color.BLACK);
+                    }
+                }
+            }
+        });
         //Adds the columns to the table and updates it
         monthlyTable.getColumns().addAll(weekNumbCol, workedHoursCol, supposedHoursCol, overtimeCol);
         monthlyTable.setEditable(false);
+    }
+
+    private TableCell<WeeklyFormattedDataModel, Double> setWeeklyDoubleFormatter() {
+        DecimalFormat df = new DecimalFormat("#0.00 ");
+        return new TableCell<WeeklyFormattedDataModel, Double>() {
+            @Override
+            protected void updateItem(Double item, boolean empty) {
+                super.updateItem(item, empty);
+                if(empty || item == null) {
+                    setText(null);
+                    setGraphic(null);
+                }
+                else {
+                    setText(df.format(item));
+                }
+            }
+        };
+    }
+
+    private TableCell<DailyFormattedDataModel, Double> setDailyDoubleFormatter() {
+        DecimalFormat df = new DecimalFormat("#0.00 ");
+        return new TableCell<DailyFormattedDataModel, Double>() {
+            @Override
+            protected void updateItem(Double item, boolean empty) {
+                super.updateItem(item, empty);
+                if(empty || item == null) {
+                    setText(null);
+                    setGraphic(null);
+                }
+                else {
+                    setText(df.format(item));
+                }
+            }
+        };
     }
 
     /**
