@@ -68,7 +68,7 @@ public class LoginLogic {
 
         try {
             output = new FileOutputStream("/home/emival/ToggleTimeSheet/credentials.properties");
-            prop.setProperty();
+            prop.setProperty(securePassword);
         }
         catch(IOException e) {
             e.printStackTrace();
