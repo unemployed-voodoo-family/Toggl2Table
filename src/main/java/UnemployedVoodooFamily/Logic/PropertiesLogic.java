@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Properties;
 
@@ -35,7 +34,6 @@ public class PropertiesLogic {
     }
 
     private File getFile(String path) {
-        URL resourceUrl = getClass().getResource(path);
         File file = null;
         try {
             file = new File(path);

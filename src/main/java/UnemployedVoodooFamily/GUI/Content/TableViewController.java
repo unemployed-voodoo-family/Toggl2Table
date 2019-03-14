@@ -1,12 +1,11 @@
 package UnemployedVoodooFamily.GUI.Content;
 
-import UnemployedVoodooFamily.Data.Enums.Data;
-import UnemployedVoodooFamily.Data.WeeklyFormattedDataModel;
-import UnemployedVoodooFamily.Data.RawTimeDataModel;
 import UnemployedVoodooFamily.Data.DailyFormattedDataModel;
+import UnemployedVoodooFamily.Data.Enums.Data;
+import UnemployedVoodooFamily.Data.RawTimeDataModel;
+import UnemployedVoodooFamily.Data.WeeklyFormattedDataModel;
 import UnemployedVoodooFamily.Logic.FormattedTimeDataLogic;
 import UnemployedVoodooFamily.Logic.Listeners.DataLoadedListener;
-
 import UnemployedVoodooFamily.Logic.RawTimeDataLogic;
 import UnemployedVoodooFamily.Logic.Session;
 import javafx.application.Platform;
@@ -366,7 +365,7 @@ public class TableViewController implements DataLoadedListener {
      * @return an ObservableList containing WeeklyTimeDatModel objects
      */
     private ObservableList<DailyFormattedDataModel> getObservableWeeklyData() {
-        return formattedTimeDataLogic.buildObservableWeeklyTimeData();
+        return formattedTimeDataLogic.buildObservableWeeklyTimeData(Session.getInstance().getTimeEntries());
     }
 
     /**

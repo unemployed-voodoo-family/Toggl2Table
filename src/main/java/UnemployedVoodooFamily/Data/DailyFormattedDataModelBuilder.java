@@ -6,7 +6,9 @@ import ch.simas.jtoggl.TimeEntry;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 
 public class DailyFormattedDataModelBuilder {
     private String weekDay;
@@ -55,7 +57,7 @@ public class DailyFormattedDataModelBuilder {
                 return Double.parseDouble(workHours.getProperty(key));
             }
         }
-        return 7.75; //TODO: get default value from somewhere
+        return 7.5; //TODO: get default value from somewhere
     }
 
     private Double sumDurations() {
