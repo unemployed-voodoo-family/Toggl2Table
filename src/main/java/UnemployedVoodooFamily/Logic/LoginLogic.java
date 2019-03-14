@@ -2,9 +2,7 @@ package UnemployedVoodooFamily.Logic;
 
 import UnemployedVoodooFamily.GUI.GUIBaseController;
 import ch.simas.jtoggl.JToggl;
-import ch.simas.jtoggl.User;
 import javafx.application.Platform;
-
 
 import java.io.IOException;
 
