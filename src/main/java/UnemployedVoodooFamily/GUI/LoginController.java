@@ -3,10 +3,7 @@ package UnemployedVoodooFamily.GUI;
 import UnemployedVoodooFamily.Logic.LoginLogic;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 
@@ -15,7 +12,7 @@ public class LoginController {
     @FXML
     private Button submitBtn;
     @FXML
-    private ImageView bufferImg;
+    private ProgressIndicator bufferImg;
     @FXML
     private TextField emailField;
     @FXML
@@ -28,6 +25,7 @@ public class LoginController {
     private boolean loginInProgress;
 
     public void initialize() {
+        bufferImg.setVisible(false);
         setKeyAndClickListeners();
     }
 
