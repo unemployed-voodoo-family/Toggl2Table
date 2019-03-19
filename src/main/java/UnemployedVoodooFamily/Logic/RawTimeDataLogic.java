@@ -16,7 +16,8 @@ import java.util.List;
 public class RawTimeDataLogic {
     // and is responsible for handling raw time data
     private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd. LLLL yyyy");
-    private ObservableList<RawTimeDataModel> masterData;
+    private static ObservableList<RawTimeDataModel> masterData;
+    private ObservableList<RawTimeDataModel> filteredData;
     /**
      * Build an observable list with RawTimeDataModel, using time entries imported from Toggl.
      * @return the ObservableList
