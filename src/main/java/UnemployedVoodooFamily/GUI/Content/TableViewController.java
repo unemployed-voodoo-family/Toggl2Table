@@ -62,6 +62,11 @@ public class TableViewController implements DataLoadedListener {
     @FXML
     private Pane summaryRoot;
 
+    @FXML
+    private Spinner yearSpinner;
+    @FXML
+    private Spinner timePeriodSpinner;
+
     private Node weeklySummary;
     private Node monthlySummary;
 
@@ -106,6 +111,8 @@ public class TableViewController implements DataLoadedListener {
         weeklyToggleBtn.setToggleGroup(timeSpanToggleGroup);
         monthlyToggleBtn.setToggleGroup(timeSpanToggleGroup);
         weeklyToggleBtn.setSelected(true);
+        yearSpinner.getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
+        timePeriodSpinner.getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
     }
 
     /**

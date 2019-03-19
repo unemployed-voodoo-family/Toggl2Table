@@ -1,13 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.text.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import java.lang.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-
-<HBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UnemployedVoodooFamily.GUI.Content.TableViewController">
+<HBox xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UnemployedVoodooFamily.GUI.Content.TableViewController">
    <children>
       <TabPane prefHeight="636.0" prefWidth="644.0">
          <tabs>
@@ -82,10 +93,11 @@
                   <GridPane>
                     <columnConstraints>
                       <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
+                        <ColumnConstraints />
                     </columnConstraints>
                     <rowConstraints>
-                        <RowConstraints maxHeight="80.0" minHeight="80.0" prefHeight="80.0" vgrow="ALWAYS" />
-                      <RowConstraints maxHeight="704.0" minHeight="374.0" prefHeight="704.0" vgrow="ALWAYS" />
+                        <RowConstraints maxHeight="105.0" minHeight="80.0" prefHeight="105.0" vgrow="ALWAYS" />
+                      <RowConstraints maxHeight="704.0" minHeight="374.0" prefHeight="458.0" vgrow="ALWAYS" />
                         <RowConstraints maxHeight="521.0" minHeight="44.0" prefHeight="44.0" vgrow="ALWAYS" />
                     </rowConstraints>
                      <children>
@@ -105,29 +117,63 @@
                               </TableView>
                            </children>
                         </GridPane>
-                        <Pane fx:id="summaryRoot" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" />
-                        <GridPane GridPane.rowIndex="2">
-                           <columnConstraints>
-                              <ColumnConstraints hgrow="SOMETIMES" minWidth="80.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                           </columnConstraints>
-                           <rowConstraints>
-                              <RowConstraints minHeight="30.0" vgrow="SOMETIMES" />
-                           </rowConstraints>
+                        <GridPane>
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="317.0" minWidth="10.0" prefWidth="191.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="453.0" minWidth="10.0" prefWidth="453.0" />
+                              <ColumnConstraints />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
                            <children>
-                              <ToggleButton fx:id="weeklyToggleBtn" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="44.0" prefWidth="211.0" text="Weekly" textAlignment="CENTER" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
-                                 <opaqueInsets>
-                                    <Insets />
-                                 </opaqueInsets>
-                                 <GridPane.margin>
-                                    <Insets right="1.0" />
-                                 </GridPane.margin>
-                              </ToggleButton>
-                              <ToggleButton fx:id="monthlyToggleBtn" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Monthly" textAlignment="CENTER" GridPane.columnIndex="1">
-                                 <GridPane.margin>
-                                    <Insets left="1.0" />
-                                 </GridPane.margin>
-                              </ToggleButton>
+                              <Pane fx:id="summaryRoot" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2" />
+                              <GridPane prefHeight="105.0" prefWidth="226.0">
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+                                    <GridPane>
+                                      <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                      </columnConstraints>
+                                      <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                      </rowConstraints>
+                                       <children>
+                                          <ToggleButton fx:id="weeklyToggleBtn" maxHeight="30.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="30.0" prefWidth="211.0" text="Weekly" textAlignment="CENTER">
+                                             <opaqueInsets>
+                                                <Insets />
+                                             </opaqueInsets>
+                                             <GridPane.margin>
+                                                <Insets left="2.0" right="1.0" top="2.0" />
+                                             </GridPane.margin>
+                                          </ToggleButton>
+                                          <ToggleButton fx:id="monthlyToggleBtn" maxHeight="30.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="30.0" prefWidth="187.0" text="Monthly" textAlignment="CENTER" GridPane.columnIndex="1">
+                                             <GridPane.margin>
+                                                <Insets left="1.0" right="2.0" top="2.0" />
+                                             </GridPane.margin>
+                                          </ToggleButton>
+                                       </children>
+                                    </GridPane>
+                                    <Spinner fx:id="timePeriodSpinner" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                                       <GridPane.margin>
+                                          <Insets left="2.0" />
+                                       </GridPane.margin>
+                                    </Spinner>
+                                    <Spinner fx:id="yearSpinner" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2">
+                                       <GridPane.margin>
+                                          <Insets left="2.0" />
+                                       </GridPane.margin>
+                                    </Spinner>
+                                 </children>
+                              </GridPane>
                            </children>
                         </GridPane>
                      </children>
