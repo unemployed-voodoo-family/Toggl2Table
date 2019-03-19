@@ -96,6 +96,14 @@ public class DateRange {
         return new DateRange(LocalDate.parse(dates[0], formatter), LocalDate.parse(dates[1], formatter), formatter);
     }
 
+    public boolean contains(LocalDate date) {
+        boolean contains = false;
+        if(isAfterOrEqual(date, from) && isBeforeOrEqual(date, to)) {
+            contains = true;
+        }
+        return contains;
+    }
+
     @Override
     public String toString() {
         return this.from.format(formatter) + " - " + this.to.format(formatter);

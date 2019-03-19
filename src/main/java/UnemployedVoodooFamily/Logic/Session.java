@@ -1,43 +1,60 @@
 package UnemployedVoodooFamily.Logic;
 
-import ch.simas.jtoggl.JToggl;
-import ch.simas.jtoggl.Project;
-import ch.simas.jtoggl.TimeEntry;
-import ch.simas.jtoggl.User;
+import UnemployedVoodooFamily.Data.Enums.Data;
+import UnemployedVoodooFamily.Data.Enums.FilePath;
+import UnemployedVoodooFamily.Logic.Listeners.DataLoadedListener;
+import ch.simas.jtoggl.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 public class Session {
 
-    private JToggl jToggl = null;
+    private static JToggl jToggl = null;
     private List<TimeEntry> timeEntries;
     private List<Project> projects;
+    private List<Workspace> workspaces;
+    private List<Task> tasks;
     private User user;
 
-    private static Session ourInstance = new Session();
+    private Properties workHours;
+    private PropertiesLogic propsLogic;
 
-    public static Session getInstance() {
-        return ourInstance;
-    }
+    private static Session togglSession = new Session();
+
+    private List<DataLoadedListener> listeners = new ArrayList<>();
 
     private Session() {
+        this.propsLogic = new PropertiesLogic();
     }
 
-    public void setSession(JToggl jToggl) {
-        if(this.jToggl == null) {
-            this.jToggl = jToggl;
-            refreshData();
+    synchronized public static Session getInstance() {
+        return togglSession;
+    }
+
+    public void setSession(JToggl newSession) {
+        if(jToggl == null) {
+            jToggl = newSession;
+            refreshUser();
+            this.workHours = propsLogic.loadProps(FilePath.getCurrentUserWorkhours());
         }
         else {
             //already logged in!
         }
     }
 
-    public JToggl getSession() {
-        return this.jToggl;
+    public void addListener(DataLoadedListener listener) {
+        listeners.add(listener);
     }
 
-    public void terminateSession() {
+    public void notifyDataLoaded(Data e) {
+        for(DataLoadedListener l: listeners) {
+            l.dataLoaded(e);
+        }
+    }
+
+    public static void terminateSession() {
         jToggl = null;
     }
 
@@ -49,13 +66,53 @@ public class Session {
         return projects;
     }
 
+    public List<Workspace> getWorkspaces() {
+        return workspaces;
+    }
+
+    public List<Task> getTasks() {
+        return tasks;
+    }
+
     public User getUser() {
         return user;
     }
 
-    public void refreshData() {
-        this.user = jToggl.getCurrentUser();
-        this.timeEntries = jToggl.getTimeEntries();
-        this.projects = jToggl.getProjects();
+    public void refreshUser() {
+        user = jToggl.getCurrentUser();
+        this.notifyDataLoaded(Data.USER);
+    }
+
+    public void refreshTimeEntries() {
+        timeEntries = jToggl.getTimeEntries();
+        this.notifyDataLoaded(Data.TIME_ENTRIES);
+    }
+
+    public void refreshProjects() {
+        projects = jToggl.getProjects();
+        this.notifyDataLoaded(Data.PROJECTS);
+    }
+
+    public void refreshWorkspaces() {
+        workspaces = jToggl.getWorkspaces();
+        this.notifyDataLoaded(Data.WORKSPACES);
+    }
+
+    public void refreshTasks() {
+        tasks = jToggl.getTasks();
+        this.notifyDataLoaded(Data.TASKS);
+    }
+
+    public void refreshTimeData() {
+        propsLogic.loadProps(FilePath.getCurrentUserWorkhours());
+        this.refreshTimeEntries();
+        this.refreshProjects();
+        this.refreshWorkspaces();
+        this.refreshTasks();
+    }
+
+    public Properties getWorkHours() {
+        this.workHours = propsLogic.loadProps(FilePath.getCurrentUserWorkhours());
+        return workHours;
     }
 }

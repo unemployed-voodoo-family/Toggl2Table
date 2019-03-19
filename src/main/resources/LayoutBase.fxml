@@ -45,6 +45,9 @@
         </Menu>
         <Menu mnemonicParsing="false" text="Help">
           <items>
+                  <MenuItem fx:id="dumpDataMenuItem" mnemonicParsing="false" text="Dump loaded Toggl data" />
+                  <MenuItem fx:id="viewDataMenuItem" mnemonicParsing="false" text="View Data In Explorer" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem mnemonicParsing="false" text="About MyHelloApp" />
           </items>
         </Menu>
@@ -61,21 +64,36 @@
          <children>
             <VBox maxHeight="1.7976931348623157E308" prefHeight="200.0" prefWidth="100.0">
                <children>
-                  <HBox prefHeight="68.0" prefWidth="165.0">
+                  <Pane prefHeight="20.0" prefWidth="165.0">
                      <children>
-                        <ImageView fx:id="avatarView" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true">
+                        <Label fx:id="userNameLabel" layoutX="72.0" layoutY="3.0" prefHeight="27.0" prefWidth="97.0" text="User Name" />
+                     </children>
+                  </Pane>
+                  <GridPane>
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="77.0" minWidth="10.0" prefWidth="64.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="101.0" minWidth="10.0" prefWidth="101.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <ImageView fx:id="avatarView" fitHeight="67.0" fitWidth="65.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@icons/icons8-user-filled-96.png" />
                            </image></ImageView>
-                        <Label fx:id="userNameLabel" text="User Name" />
+                        <Pane prefHeight="67.0" prefWidth="120.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                           <children>
+                              <ImageView fx:id="refreshBtn" fitHeight="29.0" fitWidth="43.0" layoutX="58.0" layoutY="-13.0" onMouseClicked="#refreshRawData" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@icons/refresh-512xy.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </Pane>
                      </children>
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
-                     <padding>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                     </padding>
-                  </HBox>
+                  </GridPane>
                   <Button fx:id="tableNavBtn" mnemonicParsing="false" prefHeight="31.0" prefWidth="342.0" text="Table View" />
                   <Button fx:id="settingsNavBtn" mnemonicParsing="false" prefHeight="31.0" prefWidth="240.0" text="Settings" />
                </children>

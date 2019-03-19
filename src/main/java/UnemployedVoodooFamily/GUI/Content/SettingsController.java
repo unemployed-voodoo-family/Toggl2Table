@@ -1,16 +1,13 @@
 package UnemployedVoodooFamily.GUI.Content;
 
 import UnemployedVoodooFamily.Logic.SettingsLogic;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 
-import java.io.*;
-import java.net.URISyntaxException;
+import java.io.IOException;
 import java.net.URL;
 
 public class SettingsController {
@@ -71,14 +68,13 @@ public class SettingsController {
     @SuppressWarnings("Duplicates")
     /**
      * Set key and click listeners
-     */
-    private void setKeyAndClickListeners() {
+     */ private void setKeyAndClickListeners() {
         confirmHoursBtn.setOnAction(event -> trySetWorkHours());
         viewHoursBtn.setOnAction(event -> toggleViewHoursList());
 
         hoursField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             hoursField.getStyleClass().remove("error");
-            if(!newValue) {
+            if(! newValue) {
                 if(! hoursField.getText().matches("[0-9]|1[0-9]|2[0-4]|[0-9]\\.[0-9]|1[0-9]\\.[0-9]|2[0-3]\\.[0-9]")) {
                     hoursField.setText("");
                     hoursField.getStyleClass().add("error");
@@ -86,33 +82,27 @@ public class SettingsController {
             }
         });
 
-        hoursFromField.focusedProperty().addListener(new ChangeListener<Boolean>()  {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                if(newValue)    {
-                   hoursFromField.getStyleClass().remove("error");
-                }
-                else if(hoursFromField.getValue() == null)  {
-                    hoursFromField.getStyleClass().add("error");
-                }
-                else if(oldValue)   {
-                    hoursFromField.getStyleClass().remove("error");
-                }
+        hoursFromField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue) {
+                hoursFromField.getStyleClass().remove("error");
+            }
+            else if(hoursFromField.getValue() == null) {
+                hoursFromField.getStyleClass().add("error");
+            }
+            else if(oldValue) {
+                hoursFromField.getStyleClass().remove("error");
             }
         });
 
-        hoursToField.focusedProperty().addListener(new ChangeListener<Boolean>()  {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                if(newValue)    {
-                    hoursToField.getStyleClass().remove("error");
-                }
-                else if(hoursToField.getValue() == null)  {
-                    hoursToField.getStyleClass().add("error");
-                }
-                else if(oldValue)   {
-                    hoursToField.getStyleClass().remove("error");
-                }
+        hoursToField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue) {
+                hoursToField.getStyleClass().remove("error");
+            }
+            else if(hoursToField.getValue() == null) {
+                hoursToField.getStyleClass().add("error");
+            }
+            else if(oldValue) {
+                hoursToField.getStyleClass().remove("error");
             }
         });
     }
@@ -143,46 +133,38 @@ public class SettingsController {
      * Sets work hours if fields are not empty
      */
     private void trySetWorkHours() {
-        try {
-            boolean success = false;
-            if(hoursFromField.getValue() == null) {
-                hoursFromField.getStyleClass().add("error");
-                showWorkHourInputErrorMessage("From date not specified");
-            }
-            else if(hoursToField.getValue() == null) {
-                hoursToField.getStyleClass().add("error");
-                showWorkHourInputErrorMessage("To date not specified");
-            }
-            else if(hoursField.getText().equals("")) {
-                hoursField.getStyleClass().add("error");
-                showWorkHourInputErrorMessage("Amount of work hours not specified");
-            }
-            else if(hoursFromField.getValue().isAfter(hoursToField.getValue())) {
-                hoursFromField.getStyleClass().add("error");
-                hoursToField.getStyleClass().add("error");
-                showWorkHourInputErrorMessage("\"From\" date cannot come before \"to\" date");
-            }
-            else {
-                success = true;
-            }
-            if(success) {
-                logic.setWorkHours(hoursFromField.getValue(), hoursToField.getValue(), hoursField.getText());
-                if(hoursView.isVisible()) {
-                    logic.populateHoursTable(hoursView);
-                }
-                clearWorkHourInputFields();
-            }
+        boolean success = false;
+        if(hoursFromField.getValue() == null) {
+            hoursFromField.getStyleClass().add("error");
+            showWorkHourInputErrorMessage("From date not specified");
         }
-        catch(URISyntaxException e) {
-            //path not found
-            e.printStackTrace();
+        else if(hoursToField.getValue() == null) {
+            hoursToField.getStyleClass().add("error");
+            showWorkHourInputErrorMessage("To date not specified");
         }
-        catch(IOException e) {
-            e.printStackTrace();
+        else if(hoursField.getText().equals("")) {
+            hoursField.getStyleClass().add("error");
+            showWorkHourInputErrorMessage("Amount of work hours not specified");
         }
+        else if(hoursFromField.getValue().isAfter(hoursToField.getValue())) {
+            hoursFromField.getStyleClass().add("error");
+            hoursToField.getStyleClass().add("error");
+            showWorkHourInputErrorMessage("\"From\" date cannot come before \"to\" date");
+        }
+        else {
+            success = true;
+        }
+        if(success) {
+            logic.setWorkHours(hoursFromField.getValue(), hoursToField.getValue(), hoursField.getText());
+            if(hoursView.isVisible()) {
+                logic.populateHoursTable(hoursView);
+            }
+            clearWorkHourInputFields();
+        }
+
     }
 
-    private void showWorkHourInputErrorMessage(String errorMessage)    {
+    private void showWorkHourInputErrorMessage(String errorMessage) {
         inputFeedbackLabel.getStyleClass().add("error");
         inputFeedbackLabel.setText(errorMessage);
     }

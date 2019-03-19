@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.scene.image.*?>
 <?import java.lang.*?>
 <?import javafx.geometry.*?>
@@ -35,22 +36,40 @@
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
         </columnConstraints>
         <rowConstraints>
-          <RowConstraints maxHeight="90.0" minHeight="90.0" prefHeight="90.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="315.0" minHeight="10.0" prefHeight="278.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="90.0" minHeight="90.0" prefHeight="90.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="90.0" minHeight="10.0" prefHeight="90.0" vgrow="SOMETIMES" />
+          <RowConstraints vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="90.0" minHeight="10.0" prefHeight="90.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
             <VBox prefHeight="228.0" prefWidth="276.0" spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <children>
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                           <children>
+                              <Label text="Sign in with" textFill="#000000b2" />
+                              <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@icons/toggl.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </VBox>
+                     </children>
+                     <padding>
+                        <Insets bottom="25.0" />
+                     </padding>
+                  </HBox>
                   <Label text="Email" />
                   <TextField fx:id="emailField" onKeyPressed="#buttonPressedListener" />
                   <Label text="Password" />
                   <PasswordField fx:id="passwordField" onKeyPressed="#buttonPressedListener" />
-                  <HBox alignment="TOP_RIGHT" prefHeight="30.0" prefWidth="276.0">
+                  <HBox alignment="TOP_RIGHT" prefHeight="30.0" prefWidth="274.0">
                      <children>
                         <Hyperlink onKeyPressed="#buttonPressedListener" text="Forgot password?" />
                      </children>
                   </HBox>
+                  <Label fx:id="wrongCredentials" alignment="CENTER" prefHeight="15.0" prefWidth="272.0" />
                   <CheckBox fx:id="RememberEmailCheck" mnemonicParsing="false" onKeyPressed="#buttonPressedListener" text="Remember email" />
                   <CheckBox fx:id="RememberPasswordCheck" mnemonicParsing="false" onKeyPressed="#buttonPressedListener" text="Remember password" />
                   <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0">
@@ -63,21 +82,11 @@
                   <Insets />
                </GridPane.margin>
             </VBox>
-            <VBox GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <HBox alignment="CENTER" prefHeight="44.0" prefWidth="276.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <children>
-                  <Pane prefHeight="200.0" prefWidth="200.0" />
-                  <HBox GridPane.columnIndex="1" GridPane.rowIndex="2">
-                     <children>
-                        <Pane prefHeight="180.0" prefWidth="71.0" />
-                        <ImageView fx:id="bufferImg" fitHeight="180.0" fitWidth="238.0" pickOnBounds="true" preserveRatio="true" visible="false">
-                           <image>
-                              <Image url="@icons/ajax-loader.gif" />
-                           </image>
-                        </ImageView>
-                     </children>
-                  </HBox>
+                  <ProgressIndicator fx:id="bufferImg" />
                </children>
-            </VBox>
+            </HBox>
          </children>
       </GridPane>
    </children>

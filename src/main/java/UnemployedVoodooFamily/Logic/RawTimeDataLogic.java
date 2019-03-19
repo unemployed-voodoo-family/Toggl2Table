@@ -1,38 +1,34 @@
 package UnemployedVoodooFamily.Logic;
 
-import UnemployedVoodooFamily.Data.DateRange;
 import UnemployedVoodooFamily.Data.RawTimeDataModel;
-import ch.simas.jtoggl.JToggl;
 import ch.simas.jtoggl.Project;
 import ch.simas.jtoggl.TimeEntry;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import org.apache.http.impl.cookie.DateUtils;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Iterator;
+import java.util.List;
 
 public class RawTimeDataLogic {
     // and is responsible for handling raw time data
-    private JToggl jToggl = Session.getInstance().getSession();
-    private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-
+    private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd. LLLL yyyy");
+    private ObservableList<RawTimeDataModel> masterData;
     /**
      * Build an observable list with RawTimeDataModel, using time entries imported from Toggl.
      * @return the ObservableList
      */
     public ObservableList<RawTimeDataModel> buildObservableRawTimeData() {
+        Session session = Session.getInstance();
         ObservableList<RawTimeDataModel> data = FXCollections.observableArrayList();
-        Iterator<TimeEntry> it = jToggl.getTimeEntries().iterator();
-        List<Project> projects = jToggl.getProjects();
+        Iterator<TimeEntry> it = session.getTimeEntries().iterator();
+        List<Project> projects = session.getProjects();
 
         while(it.hasNext()) {
             TimeEntry timeEntry = it.next();
-
             String description = timeEntry.getDescription();
             LocalDateTime start = timeEntry.getStart().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
             LocalDateTime stop = timeEntry.getStop().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
@@ -55,6 +51,15 @@ public class RawTimeDataLogic {
                                                               stopTime, String.valueOf(durationStr));
             data.add(dataModel);
         }
+        masterData = data;
         return data;
+    }
+
+    public String getDataStartTime() {
+        return masterData.get(0).getStartDate();
+    }
+
+    public String getDataEndTime() {
+        return masterData.get(masterData.size()-1).getEndDate();
     }
 }

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<TabPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UnemployedVoodooFamily.GUI.Content.TableViewController">
+<TabPane prefHeight="636.0" prefWidth="644.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UnemployedVoodooFamily.GUI.Content.TableViewController">
    <tabs>
       <Tab fx:id="rawDataTab" closable="false" text="Raw time data">
          <content>
@@ -17,6 +18,48 @@
                         <TableColumn prefWidth="75.0" text="C2" />
                      </columns>
                   </TableView>
+                  <GridPane GridPane.columnIndex="1">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Label text="Raw Data">
+                                 <font>
+                                    <Font size="36.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1">
+                           <children>
+                              <Label fx:id="rawStartDate">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
+                              <Label text="  -  ">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="rawEndDate">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                     </children>
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </padding>
+                  </GridPane>
                </children>
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="3.0" prefWidth="3.0" />
@@ -24,8 +67,8 @@
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="3.0" prefWidth="3.0" />
                </columnConstraints>
                <rowConstraints>
-                  <RowConstraints maxHeight="-Infinity" minHeight="3.0" prefHeight="3.0" vgrow="SOMETIMES" />
-                  <RowConstraints vgrow="ALWAYS" />
+                  <RowConstraints maxHeight="80.0" minHeight="80.0" prefHeight="80.0" vgrow="ALWAYS" />
+                  <RowConstraints maxHeight="499.0" minHeight="485.0" prefHeight="492.0" vgrow="ALWAYS" />
                   <RowConstraints maxHeight="-Infinity" minHeight="3.0" prefHeight="3.0" vgrow="SOMETIMES" />
                </rowConstraints>
             </GridPane>
@@ -39,10 +82,11 @@
                 <ColumnConstraints hgrow="ALWAYS" maxWidth="-Infinity" minWidth="150.0" prefWidth="180.0" />
               </columnConstraints>
               <rowConstraints>
-                <RowConstraints vgrow="ALWAYS" />
+                  <RowConstraints maxHeight="80.0" minHeight="80.0" prefHeight="80.0" vgrow="ALWAYS" />
+                <RowConstraints maxHeight="502.0" minHeight="374.0" prefHeight="476.0" vgrow="ALWAYS" />
               </rowConstraints>
                <children>
-                  <VBox GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+                  <VBox GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
                      <children>
                         <Separator prefWidth="200.0">
                            <padding>
@@ -84,25 +128,21 @@
                               <Insets bottom="10.0" top="10.0" />
                            </padding>
                         </Separator>
-                        <Button mnemonicParsing="false" text="Export to excel" />
+                        <Button fx:id="exportBtn" mnemonicParsing="false" text="Export to excel" />
                      </children>
                      <padding>
                         <Insets left="5.0" right="5.0" />
                      </padding>
                   </VBox>
-                  <GridPane GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+                  <GridPane fx:id="tableRoot" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
                     <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="3.0" prefWidth="3.0" />
                       <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="3.0" prefWidth="3.0" />
                     </columnConstraints>
                     <rowConstraints>
-                      <RowConstraints maxHeight="-Infinity" minHeight="3.0" prefHeight="3.0" vgrow="SOMETIMES" />
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
-                      <RowConstraints maxHeight="-Infinity" minHeight="3.0" prefHeight="3.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <TableView fx:id="formattedData" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
+                        <TableView fx:id="weeklyTable" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                           <columns>
                             <TableColumn prefWidth="75.0" text="C1" />
                             <TableColumn prefWidth="75.0" text="C2" />
@@ -110,6 +150,19 @@
                         </TableView>
                      </children>
                   </GridPane>
+                  <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1">
+                     <children>
+                        <Label fx:id="weekNumLabel">
+                           <font>
+                              <Font size="24.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets left="5.0" right="5.0" />
+                     </padding>
+                  </HBox>
+                  <Pane fx:id="summaryRoot" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" />
                </children>
             </GridPane>
          </content>
