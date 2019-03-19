@@ -1,11 +1,14 @@
 package UnemployedVoodooFamily.GUI;
 
+import UnemployedVoodooFamily.Data.Enums.FilePath;
 import UnemployedVoodooFamily.Logic.LoginLogic;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
+import java.util.Properties;
+
 
 public class LoginController {
 
@@ -18,11 +21,16 @@ public class LoginController {
     @FXML
     private PasswordField passwordField;
     @FXML
+    private CheckBox RememberPasswordCheck;
+    @FXML
     private Label wrongCredentials;
 
     private LoginLogic loginLogic = new LoginLogic();
     private boolean isLoggedIn;
     private boolean loginInProgress;
+    private PropertiesLogic propertiesLogic = new PropertiesLogic();
+
+    public LoginController() {}
 
     public void initialize() {
         bufferImg.setVisible(false);
@@ -33,12 +41,17 @@ public class LoginController {
         submitBtn.setOnAction(event -> loginWithCredentials());
     }
 
-    public void loginWithCredentials() {
+    private void loginWithCredentials() {
+        boolean rememberUsername = RememberPasswordCheck.isSelected();
+        boolean rememberPassword = RememberPasswordCheck.isSelected();
+        if(rememberUsername || rememberPassword) {
+            fillRememberedCredentials();
+        }
         loginInProgress = true;
         submitBtn.setDisable(true);
         Thread loginCredThread = new Thread(() -> {
             bufferImg.setVisible(true);
-            isLoggedIn = loginLogic.attemptAuthentication(emailField.getText(), passwordField.getText());
+            isLoggedIn = loginLogic.attemptAuthentication(emailField.getText(), passwordField.getText(), rememberUsername, rememberPassword);
             bufferImg.setVisible(false);
             Platform.runLater(() -> {
                 loginInProgress = false;
@@ -67,8 +80,11 @@ public class LoginController {
         wrongCredentials.getStyleClass().add("error");
     }
 
-    private void disableSubmit() {
-
+    private void fillRememberedCredentials() {
+        String filepath = FilePath.USER_HOME.getProperty();
+        Properties prop = propertiesLogic.loadProps(filepath);
+        emailField.setText(prop.getProperty("username"));
+        passwordField.setText("password");
     }
 }
 
