@@ -17,9 +17,9 @@ import static UnemployedVoodooFamily.Utils.PasswordUtils.generateSecurePassword;
 
 public class LoginLogic {
 
-    private JToggl jToggl;
+    private PropertiesLogic propertiesLogic = new PropertiesLogic();
 
-    public boolean attemptAuthentication(String username, String password, boolean rememberPassword) {
+    public boolean attemptAuthentication(String username, String password, boolean rememberUsername, boolean rememberPassword) {
         // Run this thread to avoid UnemployedVoodooFamily.GUI freezing
         Session session = Session.getInstance();
         boolean loggedIn = false;
@@ -35,10 +35,18 @@ public class LoginLogic {
             }));
             togglThread.start();
             loggedIn = true;
-            if(rememberPassword){
+            if(rememberUsername && rememberPassword) {
                 String salt = PasswordUtils.getSalt(30);
                 String securePassword = PasswordUtils.generateSecurePassword(password, salt);
-                saveEncryptedPassword(securePassword);
+                saveUsernameAndPassword(username, securePassword);
+            }
+            else if(!rememberUsername && rememberPassword) {
+                String salt = PasswordUtils.getSalt(30);
+                String securePassword = PasswordUtils.generateSecurePassword(password, salt);
+                saveUsernameAndPassword(null, securePassword);
+            }
+            else if(rememberUsername && !rememberPassword) {
+                saveUsernameAndPassword(username, null);
             }
             Thread timeDataThread = new Thread(() -> Session.getInstance().refreshTimeData());
             timeDataThread.start();
@@ -62,13 +70,14 @@ public class LoginLogic {
         generateSecurePassword(password, PasswordUtils.getSalt(passwordLength));
     }
 
-    private void saveEncryptedPassword(String securePassword) {
-        Properties prop = new Properties();
+    private void saveUsernameAndPassword(String username, String securePassword) {
         OutputStream output = null;
-
+        String filepath = FilePath.USER_HOME.getProperty();
+        Properties prop = propertiesLogic.loadProps(filepath);
+        prop.setProperty("username", username);
+        prop.setProperty("password", securePassword);
         try {
-            output = new FileOutputStream("/home/emival/ToggleTimeSheet/credentials.properties");
-            prop.setProperty(securePassword);
+            prop.store(output, null);
         }
         catch(IOException e) {
             e.printStackTrace();
