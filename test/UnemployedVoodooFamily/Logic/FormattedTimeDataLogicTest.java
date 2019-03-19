@@ -1,4 +1,4 @@
-package UnemployedVoodooFamily.Logic;
+    package UnemployedVoodooFamily.Logic;
 
 import UnemployedVoodooFamily.Data.DailyFormattedDataModel;
 import ch.simas.jtoggl.TimeEntry;
