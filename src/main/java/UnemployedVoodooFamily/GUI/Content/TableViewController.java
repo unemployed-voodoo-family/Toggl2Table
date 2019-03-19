@@ -61,6 +61,12 @@ public class TableViewController implements DataLoadedListener {
     private Label rawEndDate;
     @FXML
     private Pane summaryRoot;
+    @FXML
+    private ComboBox projectCB;
+    @FXML
+    private ComboBox workspaceCB;
+    @FXML
+    private ComboBox orgCB;
 
     private Node weeklySummary;
     private Node monthlySummary;

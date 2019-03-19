@@ -138,11 +138,41 @@
       </TabPane>
       <VBox>
          <children>
-            <ComboBox prefWidth="150.0" promptText="Projects" />
-            <ComboBox layoutX="10.0" layoutY="15.0" prefWidth="150.0" promptText="Workspaces" />
-            <ComboBox layoutX="160.0" layoutY="15.0" prefWidth="150.0" promptText="Organizations" />
-            <Button fx:id="exportBtn" mnemonicParsing="false" text="Export to excel" />
+            <Label text="Filter by" textFill="#000000b3">
+               <VBox.margin>
+                  <Insets bottom="5.0" top="85.0" />
+               </VBox.margin>
+            </Label>
+            <ComboBox fx:id="projectCB" prefWidth="150.0" promptText="Projects">
+               <VBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </VBox.margin>
+            </ComboBox>
+            <ComboBox fx:id="workspaceCB" layoutX="10.0" layoutY="15.0" prefWidth="150.0" promptText="Workspaces">
+               <VBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </VBox.margin>
+            </ComboBox>
+            <ComboBox fx:id="orgCB" layoutX="160.0" layoutY="15.0" prefWidth="150.0" promptText="Organizations">
+               <VBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </VBox.margin>
+            </ComboBox>
+            <Separator prefWidth="200.0">
+               <VBox.margin>
+                  <Insets bottom="20.0" top="10.0" />
+               </VBox.margin>
+            </Separator>
+            <Label text="Export" textFill="#000000b3" />
+            <Button fx:id="exportBtn" mnemonicParsing="false" text="Export to excel">
+               <VBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </VBox.margin>
+            </Button>
          </children>
+         <HBox.margin>
+            <Insets left="5.0" right="5.0" />
+         </HBox.margin>
       </VBox>
    </children>
 </HBox>
