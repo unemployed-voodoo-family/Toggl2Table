@@ -181,9 +181,11 @@ public class TableViewController implements DataLoadedListener {
 
     private void setRawDataTableData() {
         rawData.getItems().setAll(getObservableRawData());
+        String endTime = rawTimeDataLogic.getDataEndTime();
+        String startTime = rawTimeDataLogic.getDataStartTime();
         Platform.runLater(() -> {
-            rawEndDate.setText(rawTimeDataLogic.getDataEndTime());
-            rawStartDate.setText(rawTimeDataLogic.getDataStartTime());
+            rawEndDate.setText(endTime);
+            rawStartDate.setText(startTime);
         });
 
     }
