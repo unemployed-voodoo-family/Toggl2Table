@@ -131,7 +131,13 @@ public class FormattedTimeDataLogic {
                 }
                 i++;
             }
-            data.add(builder.build());
+
+            DailyFormattedDataModel databBuild = builder.build();
+            if((databBuild.getWeekDay().equals("SUNDAY")) || (databBuild.getWeekDay().equals("SATURDAY"))) {
+            }
+            else{
+                data.add(databBuild);
+            }
         }
         weeklyMasterData = data;
         return data;
