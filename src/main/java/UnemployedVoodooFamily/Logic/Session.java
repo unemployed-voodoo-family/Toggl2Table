@@ -5,9 +5,8 @@ import UnemployedVoodooFamily.Data.Enums.FilePath;
 import UnemployedVoodooFamily.Logic.Listeners.DataLoadedListener;
 import ch.simas.jtoggl.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import java.time.LocalDate;
+import java.util.*;
 
 public class Session {
 
@@ -84,7 +83,12 @@ public class Session {
     }
 
     public void refreshTimeEntries() {
-        timeEntries = jToggl.getTimeEntries();
+        Calendar cal = Calendar.getInstance();
+        cal.set(2019, Calendar.JANUARY, 1);
+        Date start = cal.getTime();
+        cal.set(2019, Calendar.DECEMBER, 31); //TODO: this is a temporary fix
+        Date end = cal.getTime();
+        timeEntries = jToggl.getTimeEntries(start, end);
         this.notifyDataLoaded(Data.TIME_ENTRIES);
     }
 
