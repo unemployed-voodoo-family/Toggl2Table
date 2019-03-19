@@ -23,6 +23,7 @@ public class DailyFormattedDataModel {
      */
     public DailyFormattedDataModel(String weekDay, Double workedHours, Double supposedHours,
                                    Double overtime, LocalDate day) {
+
         this.weekDay = new SimpleStringProperty(weekDay);
         this.workedHours = new SimpleDoubleProperty(workedHours);
         this.supposedHours = new SimpleDoubleProperty(supposedHours);

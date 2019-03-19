@@ -61,6 +61,6 @@ public class RawTimeDataLogic {
     }
 
     public String getDataEndTime() {
-        return masterData.get(masterData.size()-1).getEndDate();
+        return masterData.get(masterData.size() - 1).getEndDate();
     }
 }
