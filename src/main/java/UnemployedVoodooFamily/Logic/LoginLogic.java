@@ -4,14 +4,11 @@ import UnemployedVoodooFamily.Data.Enums.FilePath;
 import UnemployedVoodooFamily.GUI.GUIBaseController;
 import UnemployedVoodooFamily.Utils.PasswordUtils;
 import ch.simas.jtoggl.JToggl;
-import ch.simas.jtoggl.User;
 import javafx.application.Platform;
 import javafx.scene.control.PasswordField;
-import java.io.OutputStream;
-
-
 import java.io.*;
 import java.util.Properties;
+
 
 import static UnemployedVoodooFamily.Utils.PasswordUtils.generateSecurePassword;
 

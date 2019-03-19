@@ -1,15 +1,8 @@
 package UnemployedVoodooFamily.Data;
 
-import UnemployedVoodooFamily.Logic.Session;
-import ch.simas.jtoggl.TimeEntry;
-import javafx.beans.property.SimpleStringProperty;
-
 import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalField;
-import java.time.temporal.WeekFields;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Builder for tthe WeeklyFormattedDataModel

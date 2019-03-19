@@ -2,17 +2,11 @@ package UnemployedVoodooFamily.GUI;
 
 import UnemployedVoodooFamily.Data.Enums.FilePath;
 import UnemployedVoodooFamily.Logic.LoginLogic;
-import UnemployedVoodooFamily.Logic.PropertiesLogic;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
-import javafx.scene.control.CheckBox;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
-import javafx.application.Platform;
-
 import java.util.Properties;
 
 
@@ -21,7 +15,7 @@ public class LoginController {
     @FXML
     private Button submitBtn;
     @FXML
-    private ImageView bufferImg;
+    private ProgressIndicator bufferImg;
     @FXML
     private TextField emailField;
     @FXML
@@ -39,6 +33,7 @@ public class LoginController {
     public LoginController() {}
 
     public void initialize() {
+        bufferImg.setVisible(false);
         setKeyAndClickListeners();
     }
 

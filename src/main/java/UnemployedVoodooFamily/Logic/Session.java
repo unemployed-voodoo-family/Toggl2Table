@@ -4,6 +4,7 @@ import UnemployedVoodooFamily.Data.Enums.Data;
 import UnemployedVoodooFamily.Data.Enums.FilePath;
 import UnemployedVoodooFamily.Logic.Listeners.DataLoadedListener;
 import ch.simas.jtoggl.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -103,6 +104,7 @@ public class Session {
     }
 
     public void refreshTimeData() {
+        propsLogic.loadProps(FilePath.getCurrentUserWorkhours());
         this.refreshTimeEntries();
         this.refreshProjects();
         this.refreshWorkspaces();
@@ -110,6 +112,7 @@ public class Session {
     }
 
     public Properties getWorkHours() {
+        this.workHours = propsLogic.loadProps(FilePath.getCurrentUserWorkhours());
         return workHours;
     }
 }

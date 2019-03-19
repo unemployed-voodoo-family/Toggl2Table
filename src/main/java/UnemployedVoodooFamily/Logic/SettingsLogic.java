@@ -1,20 +1,15 @@
 package UnemployedVoodooFamily.Logic;
 
-import UnemployedVoodooFamily.Data.WorkHoursData;
 import UnemployedVoodooFamily.Data.DateRange;
 import UnemployedVoodooFamily.Data.Enums.FilePath;
-
+import UnemployedVoodooFamily.Data.WorkHoursData;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -46,7 +41,7 @@ public class SettingsLogic {
         Double hours = Double.valueOf(hoursStr);
 
         //load props file
-        System.out.println(FilePath.SAVED_WORKHOURS.getProperty());
+        System.out.println(FilePath.SAVED_WORKHOURS.getPath());
         props = propsLogic.loadProps(FilePath.getCurrentUserWorkhours());
 
         DateRange range = new DateRange(fromDate, toDate, DATE_FORMAT);

@@ -45,6 +45,9 @@
         </Menu>
         <Menu mnemonicParsing="false" text="Help">
           <items>
+                  <MenuItem fx:id="dumpDataMenuItem" mnemonicParsing="false" text="Dump loaded Toggl data" />
+                  <MenuItem fx:id="viewDataMenuItem" mnemonicParsing="false" text="View Data In Explorer" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem mnemonicParsing="false" text="About MyHelloApp" />
           </items>
         </Menu>
