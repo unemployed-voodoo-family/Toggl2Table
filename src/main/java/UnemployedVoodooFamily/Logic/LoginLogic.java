@@ -45,6 +45,9 @@ public class LoginLogic {
             else if(rememberUsername && !rememberPassword) {
                 saveUsernameAndPassword(username, null);
             }
+            else {
+                saveUsernameAndPassword(null, null);
+            }
             Thread timeDataThread = new Thread(() -> Session.getInstance().refreshTimeData());
             timeDataThread.start();
             togglThread.join();
@@ -69,10 +72,12 @@ public class LoginLogic {
 
     private void saveUsernameAndPassword(String username, String securePassword) {
         OutputStream output = null;
-        String filepath = FilePath.USER_HOME.getProperty();
+        String filepath = FilePath.APP_HOME.getPath() + "/credentials.properties";
+        System.out.println(filepath);
         Properties prop = propertiesLogic.loadProps(filepath);
         prop.setProperty("username", username);
         prop.setProperty("password", securePassword);
+       // output = new FileOutputStream();
         try {
             prop.store(output, null);
         }

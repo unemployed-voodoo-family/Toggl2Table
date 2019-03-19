@@ -2,10 +2,10 @@ package UnemployedVoodooFamily.GUI;
 
 import UnemployedVoodooFamily.Data.Enums.FilePath;
 import UnemployedVoodooFamily.Logic.LoginLogic;
+import UnemployedVoodooFamily.Logic.PropertiesLogic;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import java.util.Properties;
 
@@ -20,6 +20,8 @@ public class LoginController {
     private TextField emailField;
     @FXML
     private PasswordField passwordField;
+    @FXML
+    private CheckBox RememberEmailCheck;
     @FXML
     private CheckBox RememberPasswordCheck;
     @FXML
@@ -42,11 +44,8 @@ public class LoginController {
     }
 
     private void loginWithCredentials() {
-        boolean rememberUsername = RememberPasswordCheck.isSelected();
+        boolean rememberUsername = RememberEmailCheck.isSelected();
         boolean rememberPassword = RememberPasswordCheck.isSelected();
-        if(rememberUsername || rememberPassword) {
-            fillRememberedCredentials();
-        }
         loginInProgress = true;
         submitBtn.setDisable(true);
         Thread loginCredThread = new Thread(() -> {
@@ -81,10 +80,16 @@ public class LoginController {
     }
 
     private void fillRememberedCredentials() {
-        String filepath = FilePath.USER_HOME.getProperty();
-        Properties prop = propertiesLogic.loadProps(filepath);
+        String filepath = FilePath.APP_HOME.getPath();
+        Properties prop = propertiesLogic.loadProps(filepath + "/credentials.properties");
         emailField.setText(prop.getProperty("username"));
         passwordField.setText("password");
+        if(!emailField.getText().isEmpty()) {
+            RememberEmailCheck.setSelected(true);
+        }
+        if(!passwordField.getText().isEmpty()) {
+            RememberPasswordCheck.setSelected(true);
+        }
     }
 }
 
