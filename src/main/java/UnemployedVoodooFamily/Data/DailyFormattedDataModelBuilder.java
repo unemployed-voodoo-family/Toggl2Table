@@ -67,8 +67,4 @@ public class DailyFormattedDataModelBuilder {
         }
         return workedSeconds;
     }
-
-    public String getWeekDay(){
-        return this.weekDay;
-    }
 }
