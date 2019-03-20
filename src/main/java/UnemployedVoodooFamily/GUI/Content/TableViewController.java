@@ -8,7 +8,12 @@ import UnemployedVoodooFamily.Logic.FormattedTimeDataLogic;
 import UnemployedVoodooFamily.Logic.Listeners.DataLoadedListener;
 import UnemployedVoodooFamily.Logic.RawTimeDataLogic;
 import UnemployedVoodooFamily.Logic.Session;
+import ch.simas.jtoggl.Project;
+import ch.simas.jtoggl.Workspace;
+import com.sun.javafx.scene.control.skin.MenuButtonSkin;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -20,14 +25,18 @@ import javafx.scene.control.Label;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.util.Callback;
+import org.controlsfx.control.CheckComboBox;
 
 import java.io.IOException;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.*;
+import java.util.List;
 
 public class TableViewController implements DataLoadedListener {
 
@@ -61,16 +70,16 @@ public class TableViewController implements DataLoadedListener {
     private Label rawEndDate;
     @FXML
     private Pane summaryRoot;
+
     @FXML
-    private ComboBox projectCB;
+    private VBox filterBox;
     @FXML
-    private ComboBox workspaceCB;
+    private MenuButton projectFilterBtn;
     @FXML
-    private ComboBox orgCB;
+    private MenuButton workspaceFilterBtn;
 
     private Node weeklySummary;
     private Node monthlySummary;
-
     private TableView monthlyTable;
 
 
@@ -79,6 +88,9 @@ public class TableViewController implements DataLoadedListener {
     private RawTimeDataLogic rawTimeDataLogic = new RawTimeDataLogic();
     private FormattedTimeDataLogic formattedTimeDataLogic = new FormattedTimeDataLogic();
     private EnumSet<Data> loadedData = EnumSet.noneOf(Data.class);
+
+    private Set<Object> filterOptions = new HashSet<>();
+
 
     public Node loadFXML() throws IOException {
         URL r = getClass().getClassLoader().getResource("Table.fxml");
@@ -106,6 +118,7 @@ public class TableViewController implements DataLoadedListener {
         catch(IOException e) {
             e.printStackTrace();
         }
+
         buildFormattedMonthlyTable();
         buildFormattedWeeklyTable();
         buildRawDataTable();
@@ -419,6 +432,62 @@ public class TableViewController implements DataLoadedListener {
         }
     }
 
+    private void setFilterOptions() {
+        Session session = Session.getInstance();
+
+        buildFilterButton(projectFilterBtn);
+        buildFilterButton(workspaceFilterBtn);
+
+        session.getProjects().forEach((project -> projectFilterBtn.getItems().add(new CheckMenuObject(project, project.getName()))));
+        session.getWorkspaces().forEach((project -> workspaceFilterBtn.getItems().add(new CheckMenuObject(project, project.getName()))));
+    }
+
+    private void buildFilterButton(MenuButton button) {
+        MenuItem selectAll = new MenuItem("Select all");
+        MenuItem deselectAll = new MenuItem("Deselect all");
+        selectAll.setStyle("-fx-font-weight: bold;");
+        deselectAll.setStyle("-fx-font-weight: bold;");
+        button.getItems().add(selectAll);
+        button.getItems().add(deselectAll);
+        button.getItems().add(new SeparatorMenuItem());
+    }
+
+
+    private <T> void addFilterOption(T t) {
+        filterOptions.add(t);
+        System.out.println("Added" + filterOptions);
+    }
+
+    private <T> void removeFilterOption(T t) {
+        filterOptions.remove(t);
+        System.out.println("Removed" + filterOptions);
+    }
+
+    /**
+     * Inner class to create a menu-item with a check box and an object attached to it.
+     */
+    class CheckMenuObject extends CustomMenuItem {
+        private Object object;
+        public CheckMenuObject(Object object, String name) {
+            super();
+            this.object = object;
+            setHideOnClick(false);
+            CheckBox cb = new CheckBox(name);
+            setGraphic(cb);
+            setContent(cb);
+            cb.selectedProperty().addListener((observable, oldValue, newValue) -> {
+                if(newValue) {
+                    addFilterOption(object);
+                }
+                else {
+                    removeFilterOption(object);
+                }
+            });
+            cb.setSelected(true);
+
+        }
+    }
+
 
     /**
      * Set newly loaded data to the tables, only when
@@ -433,6 +502,7 @@ public class TableViewController implements DataLoadedListener {
             setFormattedTableData();
             if(loadedData.containsAll(EnumSet.of(Data.TIME_ENTRIES, Data.PROJECTS, Data.TASKS))) {
                 setRawDataTableData();
+                setFilterOptions();
                 loadedData = EnumSet.noneOf(Data.class); //empty the set, readying it for next
             }
         }

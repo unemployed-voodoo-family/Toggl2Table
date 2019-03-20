@@ -6,6 +6,8 @@ import UnemployedVoodooFamily.Utils.PasswordUtils;
 import ch.simas.jtoggl.JToggl;
 import javafx.application.Platform;
 import javafx.scene.control.PasswordField;
+import javafx.scene.text.Text;
+
 import java.io.*;
 import java.util.Properties;
 
@@ -32,6 +34,7 @@ public class LoginLogic {
             }));
             togglThread.start();
             loggedIn = true;
+
             if(rememberUsername && rememberPassword) {
                 String salt = PasswordUtils.getSalt(30);
                 String securePassword = PasswordUtils.generateSecurePassword(password, salt);
@@ -69,7 +72,7 @@ public class LoginLogic {
 
     private void saveUsernameAndPassword(String username, String securePassword) {
         OutputStream output = null;
-        String filepath = FilePath.USER_HOME.getProperty();
+        String filepath = FilePath.USER_HOME.getPath();
         Properties prop = propertiesLogic.loadProps(filepath);
         prop.setProperty("username", username);
         prop.setProperty("password", securePassword);
