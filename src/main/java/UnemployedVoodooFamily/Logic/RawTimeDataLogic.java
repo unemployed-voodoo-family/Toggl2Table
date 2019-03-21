@@ -104,4 +104,8 @@ public class RawTimeDataLogic {
         }
         return null;
     }
+
+    public List<TimeEntry> getFilteredTimeEntries() {
+        return this.filteredList;
+    }
 }

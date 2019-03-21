@@ -106,6 +106,7 @@ public class TableViewController implements DataLoadedListener {
      */
     private void setupUIElements() {
 
+
         try {
             this.weeklySummary = new WeeklySummaryViewController().loadFXML();
             this.monthlySummary = new MonthlySummaryViewController().loadFXML();
@@ -120,6 +121,9 @@ public class TableViewController implements DataLoadedListener {
         weeklyToggleBtn.setToggleGroup(timeSpanToggleGroup);
         monthlyToggleBtn.setToggleGroup(timeSpanToggleGroup);
         weeklyToggleBtn.setSelected(true);
+
+        initializeFilterButton(projectFilterBtn);
+        initializeFilterButton(workspaceFilterBtn);
     }
 
     /**
@@ -151,6 +155,7 @@ public class TableViewController implements DataLoadedListener {
 
     private void applyFilters() {
         setRawDataTableData();
+        setFormattedTableData();
     }
 
     // |##################################################|
@@ -369,6 +374,9 @@ public class TableViewController implements DataLoadedListener {
      * @return an ObservableList containing WeeklyTimeDatModel objects
      */
     private ObservableList<DailyFormattedDataModel> getObservableWeeklyData() {
+        if(rawTimeDataLogic.getFilteredTimeEntries() != null) {
+            return formattedTimeDataLogic.buildObservableWeeklyTimeData(rawTimeDataLogic.getFilteredTimeEntries());
+        }
         return formattedTimeDataLogic.buildObservableWeeklyTimeData(Session.getInstance().getTimeEntries());
     }
 
@@ -409,14 +417,23 @@ public class TableViewController implements DataLoadedListener {
      */
     private void setFilterOptions() {
         Session session = Session.getInstance();
-
-        initializeFilterButton(projectFilterBtn);
-        initializeFilterButton(workspaceFilterBtn);
+        clearCheckMenuObjects(projectFilterBtn);
+        clearCheckMenuObjects(workspaceFilterBtn);
 
         session.getProjects()
                .forEach((project -> projectFilterBtn.getItems().add(new CheckMenuObject(project, project.getName()))));
         session.getWorkspaces().forEach(
                 (project -> workspaceFilterBtn.getItems().add(new CheckMenuObject(project, project.getName()))));
+    }
+
+    private void clearCheckMenuObjects(MenuButton button) {
+        Iterator<MenuItem> it = button.getItems().iterator();
+        while(it.hasNext()) {
+            MenuItem item = it.next();
+            if(item instanceof CheckMenuObject) {
+                it.remove();
+            }
+        }
     }
 
 
@@ -426,13 +443,30 @@ public class TableViewController implements DataLoadedListener {
      * @param button the MenuButton to initialize
      */
     private void initializeFilterButton(MenuButton button) {
-        MenuItem selectAll = new MenuItem("Select all");
-        MenuItem deselectAll = new MenuItem("Deselect all");
+        MenuItem selectAll = new CustomMenuItem(new Label("Select all"));
+        MenuItem deselectAll = new CustomMenuItem(new Label("Deselect all"));
+        ((CustomMenuItem) selectAll).setHideOnClick(false);
+        ((CustomMenuItem) deselectAll).setHideOnClick(false);
+        selectAll.setOnAction(event -> toggleAllCheckboxes(button, true));
+        deselectAll.setOnAction(event -> toggleAllCheckboxes(button, false));
         selectAll.setStyle("-fx-font-weight: bold;");
         deselectAll.setStyle("-fx-font-weight: bold;");
         button.getItems().add(selectAll);
         button.getItems().add(deselectAll);
         button.getItems().add(new SeparatorMenuItem());
+    }
+
+    private void toggleAllCheckboxes(MenuButton button, boolean value) {
+        List<MenuItem> items = button.getItems();
+
+        for(MenuItem item : items) {
+            if(item instanceof CheckMenuObject) {
+                Node content = ((CheckMenuObject) item).getContent();
+                if(content instanceof CheckBox) {
+                   ((CheckBox) content).setSelected(value);
+                }
+            }
+        }
     }
 
     //add generic object to filter options set
@@ -482,13 +516,11 @@ public class TableViewController implements DataLoadedListener {
     public void dataLoaded(Data e) {
         loadedData.add(e);
         //check if necassary data is loaded
-        if(loadedData.containsAll(EnumSet.of(Data.TIME_ENTRIES))) {
-            setFormattedTableData();
             if(loadedData.containsAll(EnumSet.of(Data.TIME_ENTRIES, Data.PROJECTS, Data.TASKS, Data.WORKSPACES))) {
                 setRawDataTableData();
                 setFilterOptions();
+                setFormattedTableData();
                 loadedData = EnumSet.noneOf(Data.class); //empty the set, readying it for next
-            }
         }
 
     }
