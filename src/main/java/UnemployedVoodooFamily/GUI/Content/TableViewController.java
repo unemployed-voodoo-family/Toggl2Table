@@ -69,6 +69,8 @@ public class TableViewController implements DataLoadedListener {
     private MenuButton projectFilterBtn;
     @FXML
     private MenuButton workspaceFilterBtn;
+    @FXML
+    private Button applyFilterBtn;
 
     private Node weeklySummary;
     private Node monthlySummary;
@@ -124,9 +126,10 @@ public class TableViewController implements DataLoadedListener {
      * Sets input actions on UI elements
      */
     private void setKeyAndClickListeners() {
-        exportBtn.setOnAction(event -> {
-            formattedTimeDataLogic.exportToExcelDocument();
-        });
+
+        applyFilterBtn.setOnAction(event -> applyFilters());
+
+        exportBtn.setOnAction(event -> formattedTimeDataLogic.exportToExcelDocument());
 
 
         formattedDataTab.setOnSelectionChanged(event -> {
@@ -144,6 +147,10 @@ public class TableViewController implements DataLoadedListener {
             switchView(tableRoot, monthlyTable);
             switchView(summaryRoot, monthlySummary);
         });
+    }
+
+    private void applyFilters() {
+        setRawDataTableData();
     }
 
     // |##################################################|
@@ -206,7 +213,7 @@ public class TableViewController implements DataLoadedListener {
      * @return an ObservableList containing RawTimeDatModel objects
      */
     private ObservableList<RawTimeDataModel> getObservableRawData() {
-        return rawTimeDataLogic.buildObservableRawTimeData();
+        return rawTimeDataLogic.buildObservableRawTimeData(filterOptions);
     }
 
     // |##################################################|
@@ -403,8 +410,8 @@ public class TableViewController implements DataLoadedListener {
     private void setFilterOptions() {
         Session session = Session.getInstance();
 
-        buildFilterButton(projectFilterBtn);
-        buildFilterButton(workspaceFilterBtn);
+        initializeFilterButton(projectFilterBtn);
+        initializeFilterButton(workspaceFilterBtn);
 
         session.getProjects()
                .forEach((project -> projectFilterBtn.getItems().add(new CheckMenuObject(project, project.getName()))));
@@ -418,7 +425,7 @@ public class TableViewController implements DataLoadedListener {
      * including "select all" and "deselect buttons"
      * @param button the MenuButton to initialize
      */
-    private void buildFilterButton(MenuButton button) {
+    private void initializeFilterButton(MenuButton button) {
         MenuItem selectAll = new MenuItem("Select all");
         MenuItem deselectAll = new MenuItem("Deselect all");
         selectAll.setStyle("-fx-font-weight: bold;");
@@ -453,14 +460,15 @@ public class TableViewController implements DataLoadedListener {
             setContent(cb);
             cb.selectedProperty().addListener((observable, oldValue, newValue) -> {
                 if(newValue) {
-                    addFilterOption(object);
+                    removeFilterOption(object);
+
                 }
                 else {
-                    removeFilterOption(object);
+                    addFilterOption(object);
+
                 }
             });
             cb.setSelected(true);
-
         }
     }
 
