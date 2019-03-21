@@ -20,6 +20,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -62,9 +63,17 @@ public class TableViewController implements DataLoadedListener {
     @FXML
     private Pane summaryRoot;
 
+    @FXML
+    private VBox filterBox;
+    @FXML
+    private MenuButton projectFilterBtn;
+    @FXML
+    private MenuButton workspaceFilterBtn;
+    @FXML
+    private Button applyFilterBtn;
+
     private Node weeklySummary;
     private Node monthlySummary;
-
     private TableView monthlyTable;
 
 
@@ -73,6 +82,9 @@ public class TableViewController implements DataLoadedListener {
     private RawTimeDataLogic rawTimeDataLogic = new RawTimeDataLogic();
     private FormattedTimeDataLogic formattedTimeDataLogic = new FormattedTimeDataLogic();
     private EnumSet<Data> loadedData = EnumSet.noneOf(Data.class);
+
+    private Set<Object> filterOptions = new HashSet<>();
+
 
     public Node loadFXML() throws IOException {
         URL r = getClass().getClassLoader().getResource("Table.fxml");
@@ -93,6 +105,8 @@ public class TableViewController implements DataLoadedListener {
      * Sets up the UI elements
      */
     private void setupUIElements() {
+
+
         try {
             this.weeklySummary = new WeeklySummaryViewController().loadFXML();
             this.monthlySummary = new MonthlySummaryViewController().loadFXML();
@@ -100,21 +114,26 @@ public class TableViewController implements DataLoadedListener {
         catch(IOException e) {
             e.printStackTrace();
         }
+
         buildFormattedMonthlyTable();
         buildFormattedWeeklyTable();
         buildRawDataTable();
         weeklyToggleBtn.setToggleGroup(timeSpanToggleGroup);
         monthlyToggleBtn.setToggleGroup(timeSpanToggleGroup);
         weeklyToggleBtn.setSelected(true);
+
+        initializeFilterButton(projectFilterBtn);
+        initializeFilterButton(workspaceFilterBtn);
     }
 
     /**
      * Sets input actions on UI elements
      */
     private void setKeyAndClickListeners() {
-        exportBtn.setOnAction(event -> {
-            formattedTimeDataLogic.exportToExcelDocument();
-        });
+
+        applyFilterBtn.setOnAction(event -> applyFilters());
+
+        exportBtn.setOnAction(event -> formattedTimeDataLogic.exportToExcelDocument());
 
 
         formattedDataTab.setOnSelectionChanged(event -> {
@@ -125,13 +144,18 @@ public class TableViewController implements DataLoadedListener {
 
 
         weeklyToggleBtn.setOnAction((ActionEvent e) -> {
-            switchTableView(weeklyTable);
-            switchSummaryView(weeklySummary);
+            switchView(tableRoot, weeklyTable);
+            switchView(summaryRoot, weeklySummary);
         });
         monthlyToggleBtn.setOnAction((ActionEvent e) -> {
-            switchTableView(monthlyTable);
-            switchSummaryView(monthlySummary);
+            switchView(tableRoot, monthlyTable);
+            switchView(summaryRoot, monthlySummary);
         });
+    }
+
+    private void applyFilters() {
+        setRawDataTableData();
+        setFormattedTableData();
     }
 
     // |##################################################|
@@ -194,7 +218,7 @@ public class TableViewController implements DataLoadedListener {
      * @return an ObservableList containing RawTimeDatModel objects
      */
     private ObservableList<RawTimeDataModel> getObservableRawData() {
-        return rawTimeDataLogic.buildObservableRawTimeData();
+        return rawTimeDataLogic.buildObservableRawTimeData(filterOptions);
     }
 
     // |##################################################|
@@ -229,12 +253,12 @@ public class TableViewController implements DataLoadedListener {
         TableColumn<DailyFormattedDataModel, Double> workedHoursCol = new TableColumn<>("Worked Hours");
         workedHoursCol.setCellValueFactory(new PropertyValueFactory<>("workedHours"));
         workedHoursCol.setSortable(false);
-        workedHoursCol.setCellFactory(col -> setDailyDoubleFormatter());
+        workedHoursCol.setCellFactory(col -> setDoubleFormatter());
 
         TableColumn<DailyFormattedDataModel, Double> supposedHoursCol = new TableColumn<>("Supposed Hours");
         supposedHoursCol.setCellValueFactory(new PropertyValueFactory<>("supposedHours"));
         supposedHoursCol.setSortable(false);
-        supposedHoursCol.setCellFactory(col -> setDailyDoubleFormatter());
+        supposedHoursCol.setCellFactory(col -> setDoubleFormatter());
 
         TableColumn<DailyFormattedDataModel, Double> overtimeCol = new TableColumn<>("Overtime");
         overtimeCol.setCellValueFactory(new PropertyValueFactory<>("overtime"));
@@ -288,12 +312,12 @@ public class TableViewController implements DataLoadedListener {
         TableColumn<WeeklyFormattedDataModel, Double> workedHoursCol = new TableColumn<>("Worked Hours");
         workedHoursCol.setCellValueFactory(new PropertyValueFactory<>("workedHours"));
         workedHoursCol.setSortable(false);
-        workedHoursCol.setCellFactory(col -> setWeeklyDoubleFormatter());
+        workedHoursCol.setCellFactory(col -> setDoubleFormatter());
 
         TableColumn<WeeklyFormattedDataModel, Double> supposedHoursCol = new TableColumn<>("Supposed Hours");
         supposedHoursCol.setCellValueFactory(new PropertyValueFactory<>("supposedHours"));
         supposedHoursCol.setSortable(false);
-        supposedHoursCol.setCellFactory(col -> setWeeklyDoubleFormatter());
+        supposedHoursCol.setCellFactory(col -> setDoubleFormatter());
 
         TableColumn<WeeklyFormattedDataModel, Double> overtimeCol = new TableColumn<>("Overtime");
         overtimeCol.setCellValueFactory(new PropertyValueFactory<>("overtime"));
@@ -328,26 +352,9 @@ public class TableViewController implements DataLoadedListener {
         monthlyTable.setEditable(false);
     }
 
-    private TableCell<WeeklyFormattedDataModel, Double> setWeeklyDoubleFormatter() {
+    private <T> TableCell<T, Double> setDoubleFormatter() {
         DecimalFormat df = new DecimalFormat("#0.00 ");
-        return new TableCell<WeeklyFormattedDataModel, Double>() {
-            @Override
-            protected void updateItem(Double item, boolean empty) {
-                super.updateItem(item, empty);
-                if(empty || item == null) {
-                    setText(null);
-                    setGraphic(null);
-                }
-                else {
-                    setText(df.format(item));
-                }
-            }
-        };
-    }
-
-    private TableCell<DailyFormattedDataModel, Double> setDailyDoubleFormatter() {
-        DecimalFormat df = new DecimalFormat("#0.00 ");
-        return new TableCell<DailyFormattedDataModel, Double>() {
+        return new TableCell<T, Double>() {
             @Override
             protected void updateItem(Double item, boolean empty) {
                 super.updateItem(item, empty);
@@ -367,6 +374,9 @@ public class TableViewController implements DataLoadedListener {
      * @return an ObservableList containing WeeklyTimeDatModel objects
      */
     private ObservableList<DailyFormattedDataModel> getObservableWeeklyData() {
+        if(rawTimeDataLogic.getFilteredTimeEntries() != null) {
+            return formattedTimeDataLogic.buildObservableWeeklyTimeData(rawTimeDataLogic.getFilteredTimeEntries());
+        }
         return formattedTimeDataLogic.buildObservableWeeklyTimeData(Session.getInstance().getTimeEntries());
     }
 
@@ -391,8 +401,8 @@ public class TableViewController implements DataLoadedListener {
         table.getItems().clear();
     }
 
-    private void switchTableView(Node content) {
-        ObservableList<Node> children = tableRoot.getChildren();
+    private <T extends Pane> void switchView(T root, Node content) {
+        ObservableList<Node> children = root.getChildren();
         if(children.isEmpty()) {
             children.addAll(content);
         }
@@ -402,14 +412,97 @@ public class TableViewController implements DataLoadedListener {
         }
     }
 
-    private void switchSummaryView(Node content) {
-        ObservableList<Node> children = summaryRoot.getChildren();
-        if(children.isEmpty()) {
-            children.addAll(content);
+    /**
+     * fill all filter buttons with the necessary buttons and data
+     */
+    private void setFilterOptions() {
+        Session session = Session.getInstance();
+        clearCheckMenuObjects(projectFilterBtn);
+        clearCheckMenuObjects(workspaceFilterBtn);
+
+        session.getProjects()
+               .forEach((project -> projectFilterBtn.getItems().add(new CheckMenuObject(project, project.getName()))));
+        session.getWorkspaces().forEach(
+                (project -> workspaceFilterBtn.getItems().add(new CheckMenuObject(project, project.getName()))));
+    }
+
+    private void clearCheckMenuObjects(MenuButton button) {
+        Iterator<MenuItem> it = button.getItems().iterator();
+        while(it.hasNext()) {
+            MenuItem item = it.next();
+            if(item instanceof CheckMenuObject) {
+                it.remove();
+            }
         }
-        else if(! children.contains(content)) {
-            children.clear();
-            children.addAll(content);
+    }
+
+
+    /**
+     * Initialize a button with all items common for filter buttons,
+     * including "select all" and "deselect buttons"
+     * @param button the MenuButton to initialize
+     */
+    private void initializeFilterButton(MenuButton button) {
+        MenuItem selectAll = new CustomMenuItem(new Label("Select all"));
+        MenuItem deselectAll = new CustomMenuItem(new Label("Deselect all"));
+        ((CustomMenuItem) selectAll).setHideOnClick(false);
+        ((CustomMenuItem) deselectAll).setHideOnClick(false);
+        selectAll.setOnAction(event -> toggleAllCheckboxes(button, true));
+        deselectAll.setOnAction(event -> toggleAllCheckboxes(button, false));
+        selectAll.setStyle("-fx-font-weight: bold;");
+        deselectAll.setStyle("-fx-font-weight: bold;");
+        button.getItems().add(selectAll);
+        button.getItems().add(deselectAll);
+        button.getItems().add(new SeparatorMenuItem());
+    }
+
+    private void toggleAllCheckboxes(MenuButton button, boolean value) {
+        List<MenuItem> items = button.getItems();
+
+        for(MenuItem item : items) {
+            if(item instanceof CheckMenuObject) {
+                Node content = ((CheckMenuObject) item).getContent();
+                if(content instanceof CheckBox) {
+                   ((CheckBox) content).setSelected(value);
+                }
+            }
+        }
+    }
+
+    //add generic object to filter options set
+    private <T> void addFilterOption(T t) {
+        filterOptions.add(t);
+    }
+
+    //remove generic object from filter options set
+    private <T> void removeFilterOption(T t) {
+        filterOptions.remove(t);
+    }
+
+    /**
+     * Inner class to create a menu-item with a check box and an object attached to it.
+     */
+    class CheckMenuObject extends CustomMenuItem {
+        private Object object;
+
+        public CheckMenuObject(Object object, String name) {
+            super();
+            this.object = object;
+            setHideOnClick(false);
+            CheckBox cb = new CheckBox(name);
+            setGraphic(cb);
+            setContent(cb);
+            cb.selectedProperty().addListener((observable, oldValue, newValue) -> {
+                if(newValue) {
+                    removeFilterOption(object);
+
+                }
+                else {
+                    addFilterOption(object);
+
+                }
+            });
+            cb.setSelected(true);
         }
     }
 
@@ -423,12 +516,11 @@ public class TableViewController implements DataLoadedListener {
     public void dataLoaded(Data e) {
         loadedData.add(e);
         //check if necassary data is loaded
-        if(loadedData.containsAll(EnumSet.of(Data.TIME_ENTRIES))) {
-            setFormattedTableData();
-            if(loadedData.containsAll(EnumSet.of(Data.TIME_ENTRIES, Data.PROJECTS, Data.TASKS))) {
+            if(loadedData.containsAll(EnumSet.of(Data.TIME_ENTRIES, Data.PROJECTS, Data.TASKS, Data.WORKSPACES))) {
                 setRawDataTableData();
+                setFilterOptions();
+                setFormattedTableData();
                 loadedData = EnumSet.noneOf(Data.class); //empty the set, readying it for next
-            }
         }
 
     }

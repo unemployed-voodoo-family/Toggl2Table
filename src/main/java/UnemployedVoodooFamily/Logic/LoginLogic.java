@@ -30,6 +30,7 @@ public class LoginLogic {
             }));
             togglThread.start();
             loggedIn = true;
+
             rememberWhich(username, password, rememberUsername, rememberPassword);
             Thread timeDataThread = new Thread(() -> Session.getInstance().refreshTimeData());
             timeDataThread.start();
@@ -49,6 +50,7 @@ public class LoginLogic {
 
 
     private void saveUsernameAndPassword(String username, String securePassword) {
+
         OutputStream output;
         String filepath = FilePath.APP_HOME.getPath() + "/credentials.properties";
         System.out.println(filepath);

@@ -86,6 +86,7 @@ public class LoginController {
     }
 
     private void fillRememberedCredentials() {
+
         String filepath = FilePath.APP_HOME.getPath() + "/credentials.properties";
         Properties prop = propertiesLogic.loadProps(filepath);
         String securePassword = prop.getProperty("password");
