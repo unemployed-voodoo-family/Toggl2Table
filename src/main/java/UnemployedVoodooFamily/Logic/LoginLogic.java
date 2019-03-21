@@ -9,7 +9,6 @@ import java.io.*;
 import java.util.Properties;
 
 
-import static UnemployedVoodooFamily.Utils.PasswordUtils.generateSecurePassword;
 
 public class LoginLogic {
 
@@ -38,7 +37,6 @@ public class LoginLogic {
             timeDataThread.join();
         }
         catch(RuntimeException e) {
-            //Forbidden!
             Session.getInstance().terminateSession();
         }
         catch(InterruptedException e) {
@@ -49,13 +47,9 @@ public class LoginLogic {
         return loggedIn;
     }
 
-    private static void verifyProvidedPassword(String password) {
-        int passwordLength = password.length();
-        generateSecurePassword(password, PasswordUtils.getSalt(passwordLength));
-    }
 
     private void saveUsernameAndPassword(String username, String securePassword) {
-        OutputStream output = null;
+        OutputStream output;
         String filepath = FilePath.APP_HOME.getPath() + "/credentials.properties";
         System.out.println(filepath);
         Properties prop = propertiesLogic.loadProps(filepath);
@@ -72,13 +66,11 @@ public class LoginLogic {
 
     private void rememberWhich(String username, String password, boolean rememberUsername, boolean rememberPassword) {
         if(rememberUsername && rememberPassword) {
-            String salt = PasswordUtils.getSalt(30);
-            String securePassword = PasswordUtils.generateSecurePassword(password, salt);
+            String securePassword = PasswordUtils.generateSecurePassword(password);
             saveUsernameAndPassword(username, securePassword);
         }
         else if(!rememberUsername && rememberPassword) {
-            String salt = PasswordUtils.getSalt(30);
-            String securePassword = PasswordUtils.generateSecurePassword(password, salt);
+            String securePassword = PasswordUtils.generateSecurePassword(password);
             saveUsernameAndPassword("", securePassword);
         }
         else if(rememberUsername && !rememberPassword) {
