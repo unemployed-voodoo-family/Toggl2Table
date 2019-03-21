@@ -8,7 +8,9 @@ import UnemployedVoodooFamily.Logic.FormattedTimeDataLogic;
 import UnemployedVoodooFamily.Logic.Listeners.DataLoadedListener;
 import UnemployedVoodooFamily.Logic.RawTimeDataLogic;
 import UnemployedVoodooFamily.Logic.Session;
+import ch.simas.jtoggl.Project;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -23,6 +25,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import org.apache.poi.ss.formula.functions.T;
+import org.controlsfx.control.CheckComboBox;
 
 import java.io.IOException;
 import java.net.URL;
@@ -62,11 +66,11 @@ public class TableViewController implements DataLoadedListener {
     @FXML
     private Pane summaryRoot;
     @FXML
-    private ComboBox projectCB;
+    private Control projectCB;
     @FXML
-    private ComboBox workspaceCB;
+    private Control workspaceCB;
     @FXML
-    private ComboBox orgCB;
+    private Control orgCB;
 
     private Node weeklySummary;
     private Node monthlySummary;
@@ -99,6 +103,8 @@ public class TableViewController implements DataLoadedListener {
      * Sets up the UI elements
      */
     private void setupUIElements() {
+
+        projectCB = new CheckComboBox<Project>();
         try {
             this.weeklySummary = new WeeklySummaryViewController().loadFXML();
             this.monthlySummary = new MonthlySummaryViewController().loadFXML();
@@ -235,12 +241,12 @@ public class TableViewController implements DataLoadedListener {
         TableColumn<DailyFormattedDataModel, Double> workedHoursCol = new TableColumn<>("Worked Hours");
         workedHoursCol.setCellValueFactory(new PropertyValueFactory<>("workedHours"));
         workedHoursCol.setSortable(false);
-        workedHoursCol.setCellFactory(col -> setDailyDoubleFormatter());
+        workedHoursCol.setCellFactory(col -> setDoubleFormatter());
 
         TableColumn<DailyFormattedDataModel, Double> supposedHoursCol = new TableColumn<>("Supposed Hours");
         supposedHoursCol.setCellValueFactory(new PropertyValueFactory<>("supposedHours"));
         supposedHoursCol.setSortable(false);
-        supposedHoursCol.setCellFactory(col -> setDailyDoubleFormatter());
+        supposedHoursCol.setCellFactory(col -> setDoubleFormatter());
 
         TableColumn<DailyFormattedDataModel, Double> overtimeCol = new TableColumn<>("Overtime");
         overtimeCol.setCellValueFactory(new PropertyValueFactory<>("overtime"));
@@ -294,12 +300,12 @@ public class TableViewController implements DataLoadedListener {
         TableColumn<WeeklyFormattedDataModel, Double> workedHoursCol = new TableColumn<>("Worked Hours");
         workedHoursCol.setCellValueFactory(new PropertyValueFactory<>("workedHours"));
         workedHoursCol.setSortable(false);
-        workedHoursCol.setCellFactory(col -> setWeeklyDoubleFormatter());
+        workedHoursCol.setCellFactory(col -> setDoubleFormatter());
 
         TableColumn<WeeklyFormattedDataModel, Double> supposedHoursCol = new TableColumn<>("Supposed Hours");
         supposedHoursCol.setCellValueFactory(new PropertyValueFactory<>("supposedHours"));
         supposedHoursCol.setSortable(false);
-        supposedHoursCol.setCellFactory(col -> setWeeklyDoubleFormatter());
+        supposedHoursCol.setCellFactory(col -> setDoubleFormatter());
 
         TableColumn<WeeklyFormattedDataModel, Double> overtimeCol = new TableColumn<>("Overtime");
         overtimeCol.setCellValueFactory(new PropertyValueFactory<>("overtime"));
@@ -334,26 +340,9 @@ public class TableViewController implements DataLoadedListener {
         monthlyTable.setEditable(false);
     }
 
-    private TableCell<WeeklyFormattedDataModel, Double> setWeeklyDoubleFormatter() {
+    private <T> TableCell<T, Double> setDoubleFormatter() {
         DecimalFormat df = new DecimalFormat("#0.00 ");
-        return new TableCell<WeeklyFormattedDataModel, Double>() {
-            @Override
-            protected void updateItem(Double item, boolean empty) {
-                super.updateItem(item, empty);
-                if(empty || item == null) {
-                    setText(null);
-                    setGraphic(null);
-                }
-                else {
-                    setText(df.format(item));
-                }
-            }
-        };
-    }
-
-    private TableCell<DailyFormattedDataModel, Double> setDailyDoubleFormatter() {
-        DecimalFormat df = new DecimalFormat("#0.00 ");
-        return new TableCell<DailyFormattedDataModel, Double>() {
+        return new TableCell<T, Double>() {
             @Override
             protected void updateItem(Double item, boolean empty) {
                 super.updateItem(item, empty);
@@ -419,6 +408,17 @@ public class TableViewController implements DataLoadedListener {
         }
     }
 
+    private void setFilterButtonsData() {
+        Session session = Session.getInstance();
+        ObservableList<CheckMenuItem> projects = FXCollections.observableArrayList();
+        ObservableList<CheckMenuItem> workspaces = FXCollections.observableArrayList();
+        ObservableList<CheckMenuItem> organizations = FXCollections.observableArrayList();
+        session.getProjects().forEach(project -> projects.add(new CheckMenuItem(project.getName())));
+        session.getWorkspaces().forEach(workspace -> workspaces.add(new CheckMenuItem(workspace.getName())));
+        /*(CheckComboBox) projectCB.getItems().setAll(projects);
+        (CheckComboBox) workspaceCB.getItems().setAll(workspaces);*/
+    }
+
 
     /**
      * Set newly loaded data to the tables, only when
@@ -431,8 +431,9 @@ public class TableViewController implements DataLoadedListener {
         //check if necassary data is loaded
         if(loadedData.containsAll(EnumSet.of(Data.TIME_ENTRIES))) {
             setFormattedTableData();
-            if(loadedData.containsAll(EnumSet.of(Data.TIME_ENTRIES, Data.PROJECTS, Data.TASKS))) {
+            if(loadedData.containsAll(EnumSet.of(Data.TIME_ENTRIES, Data.PROJECTS, Data.TASKS, Data.WORKSPACES))) {
                 setRawDataTableData();
+                setFilterButtonsData();
                 loadedData = EnumSet.noneOf(Data.class); //empty the set, readying it for next
             }
         }

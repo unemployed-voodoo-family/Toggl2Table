@@ -2,6 +2,7 @@ package UnemployedVoodooFamily.GUI;
 
 import UnemployedVoodooFamily.Data.Enums.FilePath;
 import UnemployedVoodooFamily.Logic.LoginLogic;
+import UnemployedVoodooFamily.Logic.PropertiesLogic;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -81,7 +82,7 @@ public class LoginController {
     }
 
     private void fillRememberedCredentials() {
-        String filepath = FilePath.USER_HOME.getProperty();
+        String filepath = FilePath.USER_HOME.getPath();
         Properties prop = propertiesLogic.loadProps(filepath);
         emailField.setText(prop.getProperty("username"));
         passwordField.setText("password");
