@@ -8,12 +8,7 @@ import UnemployedVoodooFamily.Logic.FormattedTimeDataLogic;
 import UnemployedVoodooFamily.Logic.Listeners.DataLoadedListener;
 import UnemployedVoodooFamily.Logic.RawTimeDataLogic;
 import UnemployedVoodooFamily.Logic.Session;
-import ch.simas.jtoggl.Project;
-import ch.simas.jtoggl.Workspace;
-import com.sun.javafx.scene.control.skin.MenuButtonSkin;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -29,14 +24,11 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.util.Callback;
-import org.controlsfx.control.CheckComboBox;
 
 import java.io.IOException;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.*;
-import java.util.List;
 
 public class TableViewController implements DataLoadedListener {
 
@@ -112,7 +104,6 @@ public class TableViewController implements DataLoadedListener {
      */
     private void setupUIElements() {
 
-        projectCB = new CheckComboBox<Project>();
         try {
             this.weeklySummary = new WeeklySummaryViewController().loadFXML();
             this.monthlySummary = new MonthlySummaryViewController().loadFXML();
@@ -146,12 +137,12 @@ public class TableViewController implements DataLoadedListener {
 
 
         weeklyToggleBtn.setOnAction((ActionEvent e) -> {
-            switchTableView(weeklyTable);
-            switchSummaryView(weeklySummary);
+            switchView(tableRoot, weeklyTable);
+            switchView(summaryRoot, weeklySummary);
         });
         monthlyToggleBtn.setOnAction((ActionEvent e) -> {
-            switchTableView(monthlyTable);
-            switchSummaryView(monthlySummary);
+            switchView(tableRoot, monthlyTable);
+            switchView(summaryRoot, monthlySummary);
         });
     }
 
@@ -395,8 +386,8 @@ public class TableViewController implements DataLoadedListener {
         table.getItems().clear();
     }
 
-    private void switchTableView(Node content) {
-        ObservableList<Node> children = tableRoot.getChildren();
+    private <T extends Pane> void switchView(T root, Node content) {
+        ObservableList<Node> children = root.getChildren();
         if(children.isEmpty()) {
             children.addAll(content);
         }
@@ -406,27 +397,27 @@ public class TableViewController implements DataLoadedListener {
         }
     }
 
-    private void switchSummaryView(Node content) {
-        ObservableList<Node> children = summaryRoot.getChildren();
-        if(children.isEmpty()) {
-            children.addAll(content);
-        }
-        else if(! children.contains(content)) {
-            children.clear();
-            children.addAll(content);
-        }
-    }
-
+    /**
+     * fill all filter buttons with the necessary buttons and data
+     */
     private void setFilterOptions() {
         Session session = Session.getInstance();
 
         buildFilterButton(projectFilterBtn);
         buildFilterButton(workspaceFilterBtn);
 
-        session.getProjects().forEach((project -> projectFilterBtn.getItems().add(new CheckMenuObject(project, project.getName()))));
-        session.getWorkspaces().forEach((project -> workspaceFilterBtn.getItems().add(new CheckMenuObject(project, project.getName()))));
+        session.getProjects()
+               .forEach((project -> projectFilterBtn.getItems().add(new CheckMenuObject(project, project.getName()))));
+        session.getWorkspaces().forEach(
+                (project -> workspaceFilterBtn.getItems().add(new CheckMenuObject(project, project.getName()))));
     }
 
+
+    /**
+     * Initialize a button with all items common for filter buttons,
+     * including "select all" and "deselect buttons"
+     * @param button the MenuButton to initialize
+     */
     private void buildFilterButton(MenuButton button) {
         MenuItem selectAll = new MenuItem("Select all");
         MenuItem deselectAll = new MenuItem("Deselect all");
@@ -437,15 +428,14 @@ public class TableViewController implements DataLoadedListener {
         button.getItems().add(new SeparatorMenuItem());
     }
 
-
+    //add generic object to filter options set
     private <T> void addFilterOption(T t) {
         filterOptions.add(t);
-        System.out.println("Added" + filterOptions);
     }
 
+    //remove generic object from filter options set
     private <T> void removeFilterOption(T t) {
         filterOptions.remove(t);
-        System.out.println("Removed" + filterOptions);
     }
 
     /**
@@ -453,6 +443,7 @@ public class TableViewController implements DataLoadedListener {
      */
     class CheckMenuObject extends CustomMenuItem {
         private Object object;
+
         public CheckMenuObject(Object object, String name) {
             super();
             this.object = object;
