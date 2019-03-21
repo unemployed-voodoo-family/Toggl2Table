@@ -3,10 +3,10 @@ package UnemployedVoodooFamily.GUI;
 import UnemployedVoodooFamily.Data.Enums.FilePath;
 import UnemployedVoodooFamily.Logic.LoginLogic;
 import UnemployedVoodooFamily.Logic.PropertiesLogic;
+import UnemployedVoodooFamily.Utils.PasswordUtils;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import java.util.Properties;
 
@@ -22,6 +22,8 @@ public class LoginController {
     @FXML
     private PasswordField passwordField;
     @FXML
+    private CheckBox RememberEmailCheck;
+    @FXML
     private CheckBox RememberPasswordCheck;
     @FXML
     private Label wrongCredentials;
@@ -36,6 +38,7 @@ public class LoginController {
     public void initialize() {
         bufferImg.setVisible(false);
         setKeyAndClickListeners();
+        fillRememberedCredentials();
     }
 
     private void setKeyAndClickListeners() {
@@ -43,13 +46,12 @@ public class LoginController {
     }
 
     private void loginWithCredentials() {
-        boolean rememberUsername = RememberPasswordCheck.isSelected();
+        boolean rememberUsername = RememberEmailCheck.isSelected();
         boolean rememberPassword = RememberPasswordCheck.isSelected();
-        if(rememberUsername || rememberPassword) {
-            fillRememberedCredentials();
-        }
         loginInProgress = true;
         submitBtn.setDisable(true);
+        RememberEmailCheck.setDisable(true);
+        RememberPasswordCheck.setDisable(true);
         Thread loginCredThread = new Thread(() -> {
             bufferImg.setVisible(true);
             isLoggedIn = loginLogic.attemptAuthentication(emailField.getText(), passwordField.getText(), rememberUsername, rememberPassword);
@@ -57,6 +59,8 @@ public class LoginController {
             Platform.runLater(() -> {
                 loginInProgress = false;
                 submitBtn.setDisable(false);
+                RememberEmailCheck.setDisable(false);
+                RememberPasswordCheck.setDisable(false);
                 if(!isLoggedIn) {
                     showWrongCredentialsError("Wrong email or password");
                     emailField.getStyleClass().add("error");
@@ -82,10 +86,20 @@ public class LoginController {
     }
 
     private void fillRememberedCredentials() {
-        String filepath = FilePath.USER_HOME.getPath();
+
+        String filepath = FilePath.APP_HOME.getPath() + "/credentials.properties";
         Properties prop = propertiesLogic.loadProps(filepath);
+        String securePassword = prop.getProperty("password");
+        String decodedPassword = PasswordUtils.decodeSecurePassword(securePassword);
         emailField.setText(prop.getProperty("username"));
-        passwordField.setText("password");
+        passwordField.setText(decodedPassword);
+
+        if(!emailField.getText().equals("")) {
+            RememberEmailCheck.setSelected(true);
+        }
+        if(!decodedPassword.equals("")) {
+            RememberPasswordCheck.setSelected(true);
+        }
     }
 }
 
