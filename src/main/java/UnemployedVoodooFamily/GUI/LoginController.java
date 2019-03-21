@@ -3,12 +3,11 @@ package UnemployedVoodooFamily.GUI;
 import UnemployedVoodooFamily.Data.Enums.FilePath;
 import UnemployedVoodooFamily.Logic.LoginLogic;
 import UnemployedVoodooFamily.Logic.PropertiesLogic;
+import UnemployedVoodooFamily.Utils.PasswordUtils;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
-
-import java.io.*;
 import java.util.Properties;
 
 
@@ -89,12 +88,15 @@ public class LoginController {
     private void fillRememberedCredentials() {
         String filepath = FilePath.APP_HOME.getPath() + "/credentials.properties";
         Properties prop = propertiesLogic.loadProps(filepath);
+        String securePassword = prop.getProperty("password");
+        String decodedPassword = PasswordUtils.decodeSecurePassword(securePassword);
         emailField.setText(prop.getProperty("username"));
-        passwordField.setText(prop.getProperty("password"));
-        if(emailField.getText().equals("")) {
+        passwordField.setText(decodedPassword);
+
+        if(!emailField.getText().equals("")) {
             RememberEmailCheck.setSelected(true);
         }
-        if(passwordField.getText().equals("")) {
+        if(!decodedPassword.equals("")) {
             RememberPasswordCheck.setSelected(true);
         }
     }
