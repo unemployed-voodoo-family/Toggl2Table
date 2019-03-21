@@ -7,6 +7,8 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
+
+import java.io.*;
 import java.util.Properties;
 
 
@@ -37,6 +39,7 @@ public class LoginController {
     public void initialize() {
         bufferImg.setVisible(false);
         setKeyAndClickListeners();
+        fillRememberedCredentials();
     }
 
     private void setKeyAndClickListeners() {
@@ -48,6 +51,8 @@ public class LoginController {
         boolean rememberPassword = RememberPasswordCheck.isSelected();
         loginInProgress = true;
         submitBtn.setDisable(true);
+        RememberEmailCheck.setDisable(true);
+        RememberPasswordCheck.setDisable(true);
         Thread loginCredThread = new Thread(() -> {
             bufferImg.setVisible(true);
             isLoggedIn = loginLogic.attemptAuthentication(emailField.getText(), passwordField.getText(), rememberUsername, rememberPassword);
@@ -55,6 +60,8 @@ public class LoginController {
             Platform.runLater(() -> {
                 loginInProgress = false;
                 submitBtn.setDisable(false);
+                RememberEmailCheck.setDisable(false);
+                RememberPasswordCheck.setDisable(false);
                 if(!isLoggedIn) {
                     showWrongCredentialsError("Wrong email or password");
                     emailField.getStyleClass().add("error");
@@ -80,14 +87,14 @@ public class LoginController {
     }
 
     private void fillRememberedCredentials() {
-        String filepath = FilePath.APP_HOME.getPath();
-        Properties prop = propertiesLogic.loadProps(filepath + "/credentials.properties");
+        String filepath = FilePath.APP_HOME.getPath() + "/credentials.properties";
+        Properties prop = propertiesLogic.loadProps(filepath);
         emailField.setText(prop.getProperty("username"));
-        passwordField.setText("password");
-        if(!emailField.getText().isEmpty()) {
+        passwordField.setText(prop.getProperty("password"));
+        if(emailField.getText().equals("")) {
             RememberEmailCheck.setSelected(true);
         }
-        if(!passwordField.getText().isEmpty()) {
+        if(passwordField.getText().equals("")) {
             RememberPasswordCheck.setSelected(true);
         }
     }

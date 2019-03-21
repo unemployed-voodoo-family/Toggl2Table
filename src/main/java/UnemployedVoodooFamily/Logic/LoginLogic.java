@@ -5,7 +5,6 @@ import UnemployedVoodooFamily.GUI.GUIBaseController;
 import UnemployedVoodooFamily.Utils.PasswordUtils;
 import ch.simas.jtoggl.JToggl;
 import javafx.application.Platform;
-import javafx.scene.control.PasswordField;
 import java.io.*;
 import java.util.Properties;
 
@@ -32,22 +31,7 @@ public class LoginLogic {
             }));
             togglThread.start();
             loggedIn = true;
-            if(rememberUsername && rememberPassword) {
-                String salt = PasswordUtils.getSalt(30);
-                String securePassword = PasswordUtils.generateSecurePassword(password, salt);
-                saveUsernameAndPassword(username, securePassword);
-            }
-            else if(!rememberUsername && rememberPassword) {
-                String salt = PasswordUtils.getSalt(30);
-                String securePassword = PasswordUtils.generateSecurePassword(password, salt);
-                saveUsernameAndPassword(null, securePassword);
-            }
-            else if(rememberUsername && !rememberPassword) {
-                saveUsernameAndPassword(username, null);
-            }
-            else {
-                saveUsernameAndPassword(null, null);
-            }
+            rememberWhich(username, password, rememberUsername, rememberPassword);
             Thread timeDataThread = new Thread(() -> Session.getInstance().refreshTimeData());
             timeDataThread.start();
             togglThread.join();
@@ -77,12 +61,31 @@ public class LoginLogic {
         Properties prop = propertiesLogic.loadProps(filepath);
         prop.setProperty("username", username);
         prop.setProperty("password", securePassword);
-       // output = new FileOutputStream();
         try {
+            output = new FileOutputStream(filepath);
             prop.store(output, null);
         }
         catch(IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void rememberWhich(String username, String password, boolean rememberUsername, boolean rememberPassword) {
+        if(rememberUsername && rememberPassword) {
+            String salt = PasswordUtils.getSalt(30);
+            String securePassword = PasswordUtils.generateSecurePassword(password, salt);
+            saveUsernameAndPassword(username, securePassword);
+        }
+        else if(!rememberUsername && rememberPassword) {
+            String salt = PasswordUtils.getSalt(30);
+            String securePassword = PasswordUtils.generateSecurePassword(password, salt);
+            saveUsernameAndPassword("", securePassword);
+        }
+        else if(rememberUsername && !rememberPassword) {
+            saveUsernameAndPassword(username, "");
+        }
+        else {
+            saveUsernameAndPassword("", "");
         }
     }
 }
