@@ -1,11 +1,20 @@
 package UnemployedVoodooFamily.GUI;
 
+import UnemployedVoodooFamily.Data.Enums.Data;
 import UnemployedVoodooFamily.Data.Enums.FilePath;
 import UnemployedVoodooFamily.GUI.Content.SettingsController;
 import UnemployedVoodooFamily.GUI.Content.TableViewController;
 import UnemployedVoodooFamily.Logger;
+import UnemployedVoodooFamily.Logic.Listeners.DataLoadListener;
 import UnemployedVoodooFamily.Logic.Session;
+import javafx.application.Platform;
+import javafx.beans.binding.StringBinding;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableStringValue;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -17,8 +26,10 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.awt.*;
@@ -61,6 +72,12 @@ public class GUIBaseController {
     @FXML
     private MenuItem viewDataMenuItem;
 
+    @FXML
+    private HBox progressBox;
+
+    @FXML
+    private Text progressMessage;
+
     private Node settings;
     private Node table;
 
@@ -79,6 +96,7 @@ public class GUIBaseController {
     public void initialize() {
         setKeyAndClickListeners();
         loadContent();
+        refreshData();
     }
 
     /**
@@ -115,10 +133,29 @@ public class GUIBaseController {
         });
     }
 
-    public void refreshRawData() {
-        Session session = Session.getInstance();
-        Thread t = new Thread(session :: refreshTimeData);
-        t.start();
+
+    public void refreshData() {
+        progressBox.setVisible(true);
+
+        Thread t = new Thread(() -> {
+
+            String prefix = "Fetching ";
+            StringBuilder sb = new StringBuilder();
+            sb.append("(1/5) ");
+
+            Session session = Session.getInstance();
+            Platform.runLater(() -> progressMessage.setText(sb + prefix + "work hours"));
+            session.refreshWorkHours();
+            Platform.runLater(() -> progressMessage.setText(sb.replace(1, 2, "2") + prefix + "time entries"));
+            session.refreshTimeEntries();
+            Platform.runLater(() -> progressMessage.setText(sb.replace(1, 2, "3") + prefix + "workspaces"));
+            session.refreshWorkspaces();
+            Platform.runLater(() -> progressMessage.setText(sb.replace(1, 2, "4") + prefix + "projects"));
+            session.refreshProjects();
+            Platform.runLater(() -> progressMessage.setText(sb.replace(1, 2, "5") + prefix + "tasks"));
+            session.refreshTasks();
+            Platform.runLater(() -> progressBox.setVisible(false));
+        }); t.start();
     }
 
     private void dumpData() {

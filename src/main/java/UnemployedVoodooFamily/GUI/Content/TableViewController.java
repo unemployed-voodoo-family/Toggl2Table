@@ -5,7 +5,7 @@ import UnemployedVoodooFamily.Data.Enums.Data;
 import UnemployedVoodooFamily.Data.RawTimeDataModel;
 import UnemployedVoodooFamily.Data.WeeklyFormattedDataModel;
 import UnemployedVoodooFamily.Logic.FormattedTimeDataLogic;
-import UnemployedVoodooFamily.Logic.Listeners.DataLoadedListener;
+import UnemployedVoodooFamily.Logic.Listeners.DataLoadListener;
 import UnemployedVoodooFamily.Logic.RawTimeDataLogic;
 import UnemployedVoodooFamily.Logic.Session;
 import javafx.application.Platform;
@@ -30,7 +30,7 @@ import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.*;
 
-public class TableViewController implements DataLoadedListener {
+public class TableViewController implements DataLoadListener {
 
     @FXML
     private Tab rawDataTab;
@@ -96,6 +96,7 @@ public class TableViewController implements DataLoadedListener {
     // |##################################################|
 
     public void initialize() {
+
         Session.getInstance().addListener(this);
         setupUIElements();
         setKeyAndClickListeners();
@@ -516,12 +517,11 @@ public class TableViewController implements DataLoadedListener {
     public void dataLoaded(Data e) {
         loadedData.add(e);
         //check if necassary data is loaded
-            if(loadedData.containsAll(EnumSet.of(Data.TIME_ENTRIES, Data.PROJECTS, Data.TASKS, Data.WORKSPACES))) {
+            if(loadedData.containsAll(EnumSet.of(Data.TIME_ENTRIES, Data.PROJECTS, Data.TASKS, Data.WORKSPACES, Data.WORKHOURS))) {
+                loadedData = EnumSet.noneOf(Data.class); //empty the set, readying it for next
                 setRawDataTableData();
                 setFilterOptions();
                 setFormattedTableData();
-                loadedData = EnumSet.noneOf(Data.class); //empty the set, readying it for next
         }
-
     }
 }
