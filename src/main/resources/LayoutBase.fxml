@@ -9,6 +9,7 @@
 <?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -16,9 +17,9 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
 <VBox maxHeight="1.7976931348623157E308" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UnemployedVoodooFamily.GUI.GUIBaseController">
@@ -67,52 +68,18 @@
     </MenuBar>
       <GridPane fx:id="appRoot" prefHeight="673.0" prefWidth="1126.0" VBox.vgrow="ALWAYS">
         <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="165.0" minWidth="165.0" prefWidth="165.0" />
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="300.0" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
         </rowConstraints>
          <children>
-            <VBox maxHeight="1.7976931348623157E308" prefHeight="200.0" prefWidth="100.0">
-               <children>
-                  <Pane prefHeight="20.0" prefWidth="165.0">
-                     <children>
-                        <Label fx:id="userNameLabel" layoutX="72.0" layoutY="3.0" prefHeight="27.0" prefWidth="97.0" text="User Name" />
-                     </children>
-                  </Pane>
-                  <GridPane>
-                    <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="77.0" minWidth="10.0" prefWidth="64.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="101.0" minWidth="10.0" prefWidth="101.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
-                     <children>
-                        <ImageView fx:id="avatarView" fitHeight="67.0" fitWidth="65.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@icons/icons8-user-filled-96.png" />
-                           </image></ImageView>
-                        <Pane prefHeight="67.0" prefWidth="120.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                           <children>
-                              <ImageView fx:id="refreshBtn" fitHeight="29.0" fitWidth="43.0" layoutX="58.0" layoutY="-13.0" onMouseClicked="#refreshData" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@icons/refresh-512xy.png" />
-                                 </image>
-                              </ImageView>
-                           </children>
-                        </Pane>
-                     </children>
-                  </GridPane>
-                  <Button fx:id="tableNavBtn" mnemonicParsing="false" prefHeight="31.0" prefWidth="342.0" text="Table View" />
-                  <Button fx:id="settingsNavBtn" mnemonicParsing="false" prefHeight="31.0" prefWidth="240.0" text="Settings" />
-               </children>
-            </VBox>
-            <BorderPane GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+            <BorderPane GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
                <center>
-                  <AnchorPane fx:id="contentRoot" BorderPane.alignment="CENTER" />
+                  <AnchorPane fx:id="contentRoot">
+                     <BorderPane.margin>
+                        <Insets left="15.0" />
+                     </BorderPane.margin></AnchorPane>
                </center>
                <bottom>
                   <VBox prefWidth="1115.0" BorderPane.alignment="CENTER">
@@ -133,6 +100,72 @@
                      </children>
                   </VBox>
                </bottom>
+               <left>
+                  <HBox maxWidth="170.0" minWidth="170.0" prefHeight="670.0" prefWidth="170.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <VBox id="navbar" fx:id="navbar" maxHeight="1.7976931348623157E308" prefHeight="670.0" prefWidth="216.0">
+                           <children>
+                              <HBox fx:id="toolBar" alignment="CENTER_LEFT" prefHeight="18.0" prefWidth="164.0">
+                                 <children>
+                                    <Button fx:id="refreshBtn" minWidth="37.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="37.0">
+                                       <graphic>
+                                          <ImageView fitHeight="34.0" fitWidth="29.0" onMouseClicked="#refreshData" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@icons/baseline_refresh_black_18dp.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                    </Button>
+                                    <VBox alignment="CENTER_LEFT" prefHeight="37.0" prefWidth="130.0">
+                                       <children>
+                                          <Label text="Last fetched" textFill="#0000009a" />
+                                          <Label fx:id="lastFetchedLabel" text="15:14 04.08.2019" textFill="#00000099" />
+                                       </children>
+                                       <HBox.margin>
+                                          <Insets left="3.0" />
+                                       </HBox.margin>
+                                    </VBox>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="10.0" left="10.0" right="5.0" top="10.0" />
+                                 </padding>
+                              </HBox>
+                              <ToggleButton fx:id="profileNavBtn" alignment="CENTER_LEFT" maxHeight="50.0" minHeight="50.0" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="50.0" prefWidth="227.0" text="User Name">
+                                 <graphic>
+                                    <ImageView fx:id="avatarView" fitHeight="37.0" fitWidth="37.0" nodeOrientation="RIGHT_TO_LEFT" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@icons/icons8-user-filled-96.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                                 <font>
+                                    <Font name="System Bold" size="13.0" />
+                                 </font>
+                              </ToggleButton>
+                              <ToggleButton fx:id="tableNavBtn" alignment="CENTER_LEFT" maxHeight="50.0" minHeight="50.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="227.0" text="Table View">
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin>
+                                 <font>
+                                    <Font name="System Bold" size="13.0" />
+                                 </font>
+                                 <graphic>
+                                    <ImageView fitHeight="37.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true" />
+                                 </graphic>
+                              </ToggleButton>
+                              <ToggleButton fx:id="settingsNavBtn" alignment="CENTER_LEFT" maxHeight="50.0" minHeight="50.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="227.0" text="Settings">
+                                 <font>
+                                    <Font name="System Bold" size="13.0" />
+                                 </font>
+                                 <graphic>
+                                    <ImageView fitHeight="37.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true" />
+                                 </graphic>
+                              </ToggleButton>
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+               </left>
             </BorderPane>
          </children>
       </GridPane>

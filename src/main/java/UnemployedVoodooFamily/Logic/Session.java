@@ -92,7 +92,6 @@ public class Session {
     public void refreshUser() {
         this.user = jToggl.getCurrentUser();
         this.notifyDataLoaded(Data.USER);
-
     }
 
     public void refreshProjects() {

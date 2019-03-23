@@ -20,6 +20,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
@@ -27,6 +28,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -36,6 +38,8 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class GUIBaseController {
 
@@ -49,10 +53,13 @@ public class GUIBaseController {
     private Label userNameLabel;
 
     @FXML
-    private Button tableNavBtn;
+    private ToggleButton tableNavBtn;
 
     @FXML
-    private Button settingsNavBtn;
+    private ToggleButton settingsNavBtn;
+
+    @FXML
+    private ToggleButton profileNavBtn;
 
     @FXML
     private Font x3;
@@ -61,7 +68,7 @@ public class GUIBaseController {
     private Color x4;
 
     @FXML
-    private ImageView refreshBtn;
+    private Button refreshBtn;
 
     @FXML
     private AnchorPane contentRoot;
@@ -78,8 +85,13 @@ public class GUIBaseController {
     @FXML
     private Text progressMessage;
 
+    @FXML
+    private Label lastFetchedLabel;
+
     private Node settings;
     private Node table;
+
+    private ToggleGroup navButtons = new ToggleGroup();
 
 
     @FXML
@@ -94,6 +106,10 @@ public class GUIBaseController {
     }
 
     public void initialize() {
+        settingsNavBtn.setToggleGroup(navButtons);
+        tableNavBtn.setToggleGroup(navButtons);
+        profileNavBtn.setToggleGroup(navButtons);
+        profileNavBtn.setGraphic(avatarView);
         setKeyAndClickListeners();
         loadContent();
         refreshData();
@@ -117,6 +133,7 @@ public class GUIBaseController {
      */
     private void setKeyAndClickListeners() {
 
+        refreshBtn.setOnAction(event -> refreshData());
         settingsNavBtn.setOnAction(event -> switchContentView(settings));
         tableNavBtn.setOnAction(event -> switchContentView(table));
         dumpDataMenuItem.setOnAction(event -> dumpData());
@@ -136,6 +153,7 @@ public class GUIBaseController {
 
     public void refreshData() {
         progressBox.setVisible(true);
+        DateTimeFormatter d = DateTimeFormatter.ofPattern("HH:mm dd.MM.yyyy");
 
         Thread t = new Thread(() -> {
 
@@ -154,8 +172,12 @@ public class GUIBaseController {
             session.refreshProjects();
             Platform.runLater(() -> progressMessage.setText(sb.replace(1, 2, "5") + prefix + "tasks"));
             session.refreshTasks();
-            Platform.runLater(() -> progressBox.setVisible(false));
-        }); t.start();
+            Platform.runLater(() -> {
+                progressBox.setVisible(false);
+                lastFetchedLabel.setText(LocalDateTime.now().format(d));
+            });
+        });
+        t.start();
     }
 
     private void dumpData() {
