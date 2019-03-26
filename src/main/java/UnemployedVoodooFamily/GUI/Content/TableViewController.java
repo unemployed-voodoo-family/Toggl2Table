@@ -9,6 +9,7 @@ import UnemployedVoodooFamily.Logic.Listeners.DataLoadListener;
 import UnemployedVoodooFamily.Logic.RawTimeDataLogic;
 import UnemployedVoodooFamily.Logic.Session;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -22,6 +23,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.net.URL;
@@ -76,18 +78,28 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     private Spinner yearSpinner;
     @FXML
     private Spinner timePeriodSpinner;
+
+    @FXML
     private Content weeklySummary;
+    @FXML
     private Content monthlySummary;
 
+    @FXML
     private TableView monthlyTable;
+    @FXML
     private TableView weeklyTable;
 
+    @FXML
+    private Label yearSpinnerLabel;
+    @FXML
+    private Label timePeriodSpinnerLabel;
 
     private final ToggleGroup timeSpanToggleGroup = new ToggleGroup();
 
     private RawTimeDataLogic rawTimeDataLogic = new RawTimeDataLogic();
     private FormattedTimeDataLogic formattedTimeDataLogic = new FormattedTimeDataLogic();
     private EnumSet<Data> loadedData = EnumSet.noneOf(Data.class);
+    private ObservableList<String> monthsList;
 
     private Set<Object> filterOptions = new HashSet<>();
 
@@ -131,11 +143,18 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
 
         //TODO Change these later
         yearSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(2000, LocalDate.now().getYear(), LocalDate.now().getYear()));
-        //Fix so it swap between month and week, and also uses the total amount of weeks in a year
+
         timePeriodSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 52, 11));
+        timePeriodSpinnerLabel.setText("Week");
+
 
         initializeFilterButton(projectFilterBtn);
         initializeFilterButton(workspaceFilterBtn);
+
+        monthsList = FXCollections.observableArrayList();
+        for(Month m : Month.values())   {
+            monthsList.add(StringUtils.capitalize(m.toString().toLowerCase()));
+        }
     }
 
     /**
@@ -150,10 +169,15 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         weeklyToggleBtn.setOnAction((ActionEvent e) -> {
             switchView(tableRoot, weeklyTable);
             switchView(summaryRoot, weeklySummary);
+            //Fix so it swap between month and week, and also uses the total amount of weeks in a year
+            timePeriodSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 52, 11));
+            timePeriodSpinnerLabel.setText("Week");
         });
         monthlyToggleBtn.setOnAction((ActionEvent e) -> {
             switchView(tableRoot, monthlyTable);
             switchView(summaryRoot, monthlySummary);
+            timePeriodSpinner.setValueFactory(new SpinnerValueFactory.ListSpinnerValueFactory<String>(monthsList));
+            timePeriodSpinnerLabel.setText("Month");
         });
     }
 
