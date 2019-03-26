@@ -6,6 +6,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
@@ -19,10 +20,11 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<HBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UnemployedVoodooFamily.GUI.Content.TableViewController">
+<HBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" fx:id="root" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UnemployedVoodooFamily.GUI.Content.TableViewController">
    <children>
-      <TabPane HBox.hgrow="ALWAYS">
+      <TabPane fx:id="tableTabPane" HBox.hgrow="ALWAYS">
          <tabs>
             <Tab fx:id="rawDataTab" closable="false" text="Raw time data">
                <content>
@@ -31,7 +33,7 @@
                         <TableView fx:id="rawData" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
                            <columns>
                               <TableColumn prefWidth="75.0" text="C1" />
-                              <TableColumn prefWidth="75.0" text="C2" />
+                              <TableColumn prefWidth="122.0" text="C2" />
                            </columns>
                         </TableView>
                         <GridPane>
@@ -45,14 +47,14 @@
                            <children>
                               <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
                                  <children>
-                                    <Label text="Raw Data">
+                                    <Text stroke="#00aeff" strokeLineCap="BUTT" strokeType="INSIDE" strokeWidth="0.0" text="Raw Data">
                                        <font>
-                                          <Font size="36.0" />
+                                          <Font size="24.0" />
                                        </font>
-                                    </Label>
+                                    </Text>
                                  </children>
                               </HBox>
-                              <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1">
+                              <HBox alignment="CENTER_RIGHT" prefHeight="60.0" prefWidth="347.0" GridPane.columnIndex="1">
                                  <children>
                                     <Label fx:id="rawStartDate">
                                        <font>
@@ -181,6 +183,7 @@
                               </Separator>
                            </children>
                         </GridPane>
+                        <AnchorPane fx:id="summaryRoot" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" />
                      </children>
                   </GridPane>
                </content>
@@ -189,11 +192,48 @@
       </TabPane>
       <VBox maxWidth="220.0" prefWidth="220.0">
          <children>
-            <ComboBox prefWidth="150.0" promptText="Projects" />
-            <ComboBox layoutX="10.0" layoutY="15.0" prefWidth="150.0" promptText="Workspaces" />
-            <ComboBox layoutX="160.0" layoutY="15.0" prefWidth="150.0" promptText="Organizations" />
-            <Button fx:id="exportBtn" mnemonicParsing="false" text="Export to excel" />
+            <Label text="Filter by" textFill="#000000b3">
+               <VBox.margin>
+                  <Insets bottom="5.0" top="40.0" />
+               </VBox.margin>
+            </Label>
+            <MenuButton fx:id="projectFilterBtn" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Project">
+               <VBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </VBox.margin>
+            </MenuButton>
+            <MenuButton fx:id="workspaceFilterBtn" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Workspace">
+               <VBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </VBox.margin>
+            </MenuButton>
+            <HBox alignment="BOTTOM_RIGHT" prefWidth="200.0">
+               <children>
+                  <Button fx:id="applyFilterBtn" mnemonicParsing="false" text="Apply">
+                     <HBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+               <padding>
+                  <Insets bottom="10.0" top="10.0" />
+               </padding>
+            </HBox>
+            <Separator prefWidth="200.0">
+               <VBox.margin>
+                  <Insets bottom="20.0" top="10.0" />
+               </VBox.margin>
+            </Separator>
+            <Label text="Export" textFill="#000000b3" />
+            <Button fx:id="exportBtn" mnemonicParsing="false" text="Export to excel">
+               <VBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </VBox.margin>
+            </Button>
          </children>
+         <HBox.margin>
+            <Insets left="5.0" right="5.0" />
+         </HBox.margin>
       </VBox>
    </children>
    <padding>

@@ -1,5 +1,16 @@
-body {
+.root {
     -fx-font-family: Roboto, Arial;
+}
+
+.table-view {
+    -fx-border-color: #ffffff;
+
+}
+
+.table-view *.filler,.table-view *.column-header  {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #646464;
+    -fx-border-width: 0 0 1 0;
 }
 
 .settingsHeader {
@@ -14,7 +25,7 @@ body {
 
 /*######## BUTTONS ########*/
 
-.button {
+.button, .toggle-button {
     -fx-background-radius: 0;
     -fx-border-radius: 0;
     -fx-background-color: #f1f1f1;
@@ -22,15 +33,42 @@ body {
     -fx-text-fill: #444444;
 }
 
-.button:hover   {
+.button:hover, .toggle-button:hover {
     -fx-border-color: #2091d2;
 }
 
-.button:pressed {
+.button:pressed,.toggle-button:pressed, .toggle-button:selected {
     -fx-background-color: #2091d2;
     -fx-border-color: #2091d2;
-    -fx-text-fill: #ffffff;
+    -fx-text-fill: #ffff;
 }
+
+#navbar > .toggle-button {
+    -fx-background-color: #e6e6ea;
+    -fx-border-color: #e6e6ea;
+}
+
+#navbar > .toggle-button:hover, #toolBar > .button:hover {
+    -fx-background-color: #b4c5e4;
+    -fx-border-color: #b4c5e4;
+    -fx-border-radius: 2;
+}
+
+#navbar > .toggle-button:selected, #toolBar > .button:pressed {
+    -fx-background-color: #2091d2;
+    -fx-border-color: #2091d2;
+    -fx-text-fill: #ffff;
+}
+
+#toolBar > .button {
+    -fx-background-color: #e6e6ea;
+    -fx-border-color: #e6e6ea;
+}
+
+#navbar {
+    -fx-background-color: #e6e6ea;
+}
+
 
 /*######## TABS ########*/
 

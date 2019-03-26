@@ -1,30 +1,45 @@
 package UnemployedVoodooFamily.GUI;
 
+import UnemployedVoodooFamily.Data.Enums.Data;
 import UnemployedVoodooFamily.Data.Enums.FilePath;
 import UnemployedVoodooFamily.GUI.Content.SettingsController;
 import UnemployedVoodooFamily.GUI.Content.TableViewController;
 import UnemployedVoodooFamily.Logger;
+import UnemployedVoodooFamily.Logic.Listeners.DataLoadListener;
 import UnemployedVoodooFamily.Logic.Session;
+import javafx.application.Platform;
+import javafx.beans.binding.StringBinding;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableStringValue;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class GUIBaseController {
 
@@ -38,10 +53,13 @@ public class GUIBaseController {
     private Label userNameLabel;
 
     @FXML
-    private Button tableNavBtn;
+    private ToggleButton tableNavBtn;
 
     @FXML
-    private Button settingsNavBtn;
+    private ToggleButton settingsNavBtn;
+
+    @FXML
+    private ToggleButton profileNavBtn;
 
     @FXML
     private Font x3;
@@ -50,7 +68,7 @@ public class GUIBaseController {
     private Color x4;
 
     @FXML
-    private ImageView refreshBtn;
+    private Button refreshBtn;
 
     @FXML
     private AnchorPane contentRoot;
@@ -61,8 +79,19 @@ public class GUIBaseController {
     @FXML
     private MenuItem viewDataMenuItem;
 
+    @FXML
+    private HBox progressBox;
+
+    @FXML
+    private Text progressMessage;
+
+    @FXML
+    private Label lastFetchedLabel;
+
     private Node settings;
     private Node table;
+
+    private ToggleGroup navButtons = new ToggleGroup();
 
 
     @FXML
@@ -77,8 +106,13 @@ public class GUIBaseController {
     }
 
     public void initialize() {
+        settingsNavBtn.setToggleGroup(navButtons);
+        tableNavBtn.setToggleGroup(navButtons);
+        profileNavBtn.setToggleGroup(navButtons);
+        profileNavBtn.setGraphic(avatarView);
         setKeyAndClickListeners();
         loadContent();
+        refreshData();
     }
 
     /**
@@ -99,6 +133,7 @@ public class GUIBaseController {
      */
     private void setKeyAndClickListeners() {
 
+        refreshBtn.setOnAction(event -> refreshData());
         settingsNavBtn.setOnAction(event -> switchContentView(settings));
         tableNavBtn.setOnAction(event -> switchContentView(table));
         dumpDataMenuItem.setOnAction(event -> dumpData());
@@ -115,9 +150,33 @@ public class GUIBaseController {
         });
     }
 
-    public void refreshRawData() {
-        Session session = Session.getInstance();
-        Thread t = new Thread(session :: refreshTimeData);
+
+    public void refreshData() {
+        progressBox.setVisible(true);
+        DateTimeFormatter d = DateTimeFormatter.ofPattern("HH:mm dd.MM.yyyy");
+
+        Thread t = new Thread(() -> {
+
+            String prefix = "Fetching ";
+            StringBuilder sb = new StringBuilder();
+            sb.append("(1/5) ");
+
+            Session session = Session.getInstance();
+            Platform.runLater(() -> progressMessage.setText(sb + prefix + "work hours"));
+            session.refreshWorkHours();
+            Platform.runLater(() -> progressMessage.setText(sb.replace(1, 2, "2") + prefix + "time entries"));
+            session.refreshTimeEntries();
+            Platform.runLater(() -> progressMessage.setText(sb.replace(1, 2, "3") + prefix + "workspaces"));
+            session.refreshWorkspaces();
+            Platform.runLater(() -> progressMessage.setText(sb.replace(1, 2, "4") + prefix + "projects"));
+            session.refreshProjects();
+            Platform.runLater(() -> progressMessage.setText(sb.replace(1, 2, "5") + prefix + "tasks"));
+            session.refreshTasks();
+            Platform.runLater(() -> {
+                progressBox.setVisible(false);
+                lastFetchedLabel.setText(LocalDateTime.now().format(d));
+            });
+        });
         t.start();
     }
 

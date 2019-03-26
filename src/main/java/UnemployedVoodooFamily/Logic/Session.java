@@ -2,12 +2,10 @@ package UnemployedVoodooFamily.Logic;
 
 import UnemployedVoodooFamily.Data.Enums.Data;
 import UnemployedVoodooFamily.Data.Enums.FilePath;
-import UnemployedVoodooFamily.Logic.Listeners.DataLoadedListener;
+import UnemployedVoodooFamily.Logic.Listeners.DataLoadListener;
 import ch.simas.jtoggl.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 public class Session {
 
@@ -23,7 +21,7 @@ public class Session {
 
     private static Session togglSession = new Session();
 
-    private List<DataLoadedListener> listeners = new ArrayList<>();
+    private List<DataLoadListener> loadListeners = new ArrayList<>();
 
     private Session() {
         this.propsLogic = new PropertiesLogic();
@@ -44,12 +42,12 @@ public class Session {
         }
     }
 
-    public void addListener(DataLoadedListener listener) {
-        listeners.add(listener);
+    public void addListener(DataLoadListener listener) {
+        loadListeners.add(listener);
     }
 
     public void notifyDataLoaded(Data e) {
-        for(DataLoadedListener l: listeners) {
+        for(DataLoadListener l: loadListeners) {
             l.dataLoaded(e);
         }
     }
@@ -78,41 +76,58 @@ public class Session {
         return user;
     }
 
+
+
+    public void refreshTimeEntries() {
+        Calendar cal = Calendar.getInstance();
+        cal.set(2019, Calendar.JANUARY, 1);
+        Date start = cal.getTime();
+        cal.set(2019, Calendar.DECEMBER, 31); //TODO: this is a temporary fix
+        Date end = cal.getTime();
+        timeEntries = jToggl.getTimeEntries(start, end);
+        this.notifyDataLoaded(Data.TIME_ENTRIES);
+
+    }
+
     public void refreshUser() {
-        user = jToggl.getCurrentUser();
+        this.user = jToggl.getCurrentUser();
         this.notifyDataLoaded(Data.USER);
     }
 
-    public void refreshTimeEntries() {
-        timeEntries = jToggl.getTimeEntries();
-        this.notifyDataLoaded(Data.TIME_ENTRIES);
-    }
-
     public void refreshProjects() {
-        projects = jToggl.getProjects();
+        this.projects = jToggl.getProjects();
         this.notifyDataLoaded(Data.PROJECTS);
+
     }
 
     public void refreshWorkspaces() {
-        workspaces = jToggl.getWorkspaces();
+        this.workspaces = jToggl.getWorkspaces();
         this.notifyDataLoaded(Data.WORKSPACES);
+
     }
 
     public void refreshTasks() {
-        tasks = jToggl.getTasks();
+        this.tasks = jToggl.getTasks();
         this.notifyDataLoaded(Data.TASKS);
+
+    }
+
+    public void refreshWorkHours() {
+        this.workHours = propsLogic.loadProps(FilePath.getCurrentUserWorkhours());
+        this.notifyDataLoaded(Data.WORKHOURS);
+
+    }
+
+    public Properties getWorkHours() {
+        refreshWorkHours();
+        return workHours;
     }
 
     public void refreshTimeData() {
-        propsLogic.loadProps(FilePath.getCurrentUserWorkhours());
+        this.refreshWorkHours();
         this.refreshTimeEntries();
         this.refreshProjects();
         this.refreshWorkspaces();
         this.refreshTasks();
-    }
-
-    public Properties getWorkHours() {
-        this.workHours = propsLogic.loadProps(FilePath.getCurrentUserWorkhours());
-        return workHours;
     }
 }
