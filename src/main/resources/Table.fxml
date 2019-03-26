@@ -162,12 +162,12 @@
                                           </ToggleButton>
                                        </children>
                                     </GridPane>
-                                    <Spinner fx:id="timePeriodSpinner" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+                                    <Spinner fx:id="yearSpinner" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
                                        <GridPane.margin>
                                           <Insets left="2.0" />
                                        </GridPane.margin>
                                     </Spinner>
-                                    <Spinner fx:id="yearSpinner" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                                    <Spinner fx:id="timePeriodSpinner" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                                        <GridPane.margin>
                                           <Insets left="2.0" />
                                        </GridPane.margin>
