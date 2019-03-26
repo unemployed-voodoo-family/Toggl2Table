@@ -9,6 +9,8 @@ import UnemployedVoodooFamily.Logic.Listeners.DataLoadListener;
 import UnemployedVoodooFamily.Logic.RawTimeDataLogic;
 import UnemployedVoodooFamily.Logic.Session;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -29,6 +31,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.time.*;
+import java.time.temporal.IsoFields;
 import java.util.*;
 
 public class TableViewController<Content extends Pane> implements DataLoadListener {
@@ -77,7 +80,9 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     @FXML
     private Spinner yearSpinner;
     @FXML
-    private Spinner timePeriodSpinner;
+    private Spinner weekSpinner;
+    @FXML
+    private Spinner monthSpinner;
 
     @FXML
     private Content weeklySummary;
@@ -139,22 +144,27 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         weeklyToggleBtn.setSelected(true);
 
         yearSpinner.getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
-        timePeriodSpinner.getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
+        weekSpinner.getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
+        monthSpinner.getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
 
-        //TODO Change these later
-        yearSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(2000, LocalDate.now().getYear(), LocalDate.now().getYear()));
+        //Sets default values for the spinners
+        //Change WEEKLY in case default formatted view changes
+        yearSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(2006, LocalDate.now().getYear(), LocalDate.now().getYear()));
+        weekSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 52, formattedTimeDataLogic.getSelectedWeek()));
 
-        timePeriodSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 52, 11));
-        timePeriodSpinnerLabel.setText("Week");
-
-
-        initializeFilterButton(projectFilterBtn);
-        initializeFilterButton(workspaceFilterBtn);
-
+        //Creates a list with all months for the monthly spinner to use
         monthsList = FXCollections.observableArrayList();
         for(Month m : Month.values())   {
             monthsList.add(StringUtils.capitalize(m.toString().toLowerCase()));
         }
+        monthSpinner.setValueFactory(new SpinnerValueFactory.ListSpinnerValueFactory<String>(monthsList));
+        //Hide the Monthly spinner by default
+        updateMonthlySpinner(false);
+
+        timePeriodSpinnerLabel.setText("Week");
+
+        initializeFilterButton(projectFilterBtn);
+        initializeFilterButton(workspaceFilterBtn);
     }
 
     /**
@@ -167,17 +177,41 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         exportBtn.setOnAction(event -> formattedTimeDataLogic.exportToExcelDocument());
 
         weeklyToggleBtn.setOnAction((ActionEvent e) -> {
+            weeklyToggleBtn.setSelected(true);
             switchView(tableRoot, weeklyTable);
             switchView(summaryRoot, weeklySummary);
-            //Fix so it swap between month and week, and also uses the total amount of weeks in a year
-            timePeriodSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 52, 11));
+            updateWeeklySpinner(true);
+            updateMonthlySpinner(false);
             timePeriodSpinnerLabel.setText("Week");
         });
         monthlyToggleBtn.setOnAction((ActionEvent e) -> {
+            monthlyToggleBtn.setSelected(true);
             switchView(tableRoot, monthlyTable);
             switchView(summaryRoot, monthlySummary);
-            timePeriodSpinner.setValueFactory(new SpinnerValueFactory.ListSpinnerValueFactory<String>(monthsList));
+            updateWeeklySpinner(false);
+            updateMonthlySpinner(true);
             timePeriodSpinnerLabel.setText("Month");
+        });
+
+        yearSpinner.valueProperty().addListener(new ChangeListener<Integer>() {
+            @Override
+            public void changed(ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) {
+                formattedTimeDataLogic.setSelectedYear(newValue);
+            }
+        });
+
+        weekSpinner.valueProperty().addListener(new ChangeListener<Integer>() {
+            @Override
+            public void changed(ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) {
+                formattedTimeDataLogic.setSelectedWeek(newValue);
+            }
+        });
+
+        monthSpinner.valueProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                formattedTimeDataLogic.setSelectedMonth(Month.valueOf(newValue.toUpperCase()));
+            }
         });
     }
 
@@ -420,6 +454,16 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
      */
     private ObservableList<WeeklyFormattedDataModel> getObservableMonthlyData() {
         return formattedTimeDataLogic.buildObservableMonthlyTimeData();
+    }
+
+    private void updateWeeklySpinner(boolean show)  {
+        weekSpinner.setVisible(show);
+        weekSpinner.setDisable(!show);
+    }
+
+    private void updateMonthlySpinner(boolean show) {
+        monthSpinner.setVisible(show);
+        monthSpinner.setDisable(!show);
     }
 
     // |##################################################|

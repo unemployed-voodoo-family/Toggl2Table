@@ -167,7 +167,7 @@
                                           <Insets right="2.0" />
                                        </GridPane.margin>
                                     </Spinner>
-                                    <Spinner fx:id="timePeriodSpinner" prefHeight="25.0" prefWidth="120.0" GridPane.halignment="RIGHT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                                    <Spinner fx:id="weekSpinner" prefHeight="25.0" prefWidth="120.0" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                                        <GridPane.margin>
                                           <Insets right="2.0" />
                                        </GridPane.margin>
@@ -182,6 +182,11 @@
                                           <Insets left="2.0" right="2.0" />
                                        </GridPane.margin>
                                     </Label>
+                                    <Spinner fx:id="monthSpinner" prefHeight="25.0" prefWidth="120.0" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                                       <GridPane.margin>
+                                          <Insets right="2.0" />
+                                       </GridPane.margin>
+                                    </Spinner>
                                  </children>
                               </GridPane>
                               <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="2">

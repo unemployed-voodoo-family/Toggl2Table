@@ -34,11 +34,25 @@ public class FormattedTimeDataLogic {
     private LocalDate startDate = LocalDate.of(2019, 1, 1);
     private LocalDate endDate = LocalDate.of(2019, 12, 31);
 
+    private int selectedYear;
+    private int selectedWeek;
+    private Month selectedMonth;
+
     private static DayOfWeek LAST_DAY_OF_WEEK = DayOfWeek.SUNDAY;
     private static DayOfWeek FIRST_DAY_OF_WEEK = DayOfWeek.MONDAY;
 
 
     public FormattedTimeDataLogic() {
+        //Get current year
+        selectedYear = LocalDate.now().getYear();
+
+        //Get current week
+        LocalDate date = LocalDate.now();
+        TemporalField weekFields = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();
+        selectedWeek = date.get(weekFields);
+
+        selectedMonth = LocalDate.now().getMonth();
+
         monthsMap.put(Month.JANUARY, null);
         monthsMap.put(Month.FEBRUARY, null);
         monthsMap.put(Month.MARCH, null);
@@ -141,6 +155,33 @@ public class FormattedTimeDataLogic {
         }
         weeklyMasterData = data;
         return data;
+    }
+
+    public void setSelectedYear(int year)   {
+        this.selectedYear = year;
+        System.out.println("Selected year is: " + this.selectedYear);
+    }
+
+    public int getSelectedYear()    {
+        return this.selectedYear;
+    }
+
+    public void setSelectedWeek(int selectedWeek) {
+        this.selectedWeek = selectedWeek;
+        System.out.println("Selected week is: " + this.selectedWeek);
+    }
+
+    public int getSelectedWeek() {
+        return selectedWeek;
+    }
+
+    public void setSelectedMonth(Month selectedMonth) {
+        this.selectedMonth = selectedMonth;
+        System.out.println("Selected month: " + this.selectedMonth);
+    }
+
+    public Month getSelectedMonth() {
+        return selectedMonth;
     }
 
     public ObservableList<DailyFormattedDataModel> getWeeklyMasterData() {
