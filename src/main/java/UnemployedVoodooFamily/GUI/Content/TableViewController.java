@@ -26,7 +26,7 @@ import javafx.scene.text.FontWeight;
 import java.io.IOException;
 import java.net.URL;
 import java.text.DecimalFormat;
-import java.time.format.DateTimeFormatter;
+import java.time.*;
 import java.util.*;
 
 public class TableViewController<Content extends Pane> implements DataLoadListener {
@@ -72,6 +72,10 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     @FXML
     private HBox root;
 
+    @FXML
+    private Spinner yearSpinner;
+    @FXML
+    private Spinner timePeriodSpinner;
     private Content weeklySummary;
     private Content monthlySummary;
 
@@ -117,9 +121,18 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         buildFormattedWeeklyTable();
         buildFormattedMonthlyTable();
         buildRawDataTable();
+
         weeklyToggleBtn.setToggleGroup(timeSpanToggleGroup);
         monthlyToggleBtn.setToggleGroup(timeSpanToggleGroup);
         weeklyToggleBtn.setSelected(true);
+
+        yearSpinner.getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
+        timePeriodSpinner.getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
+
+        //TODO Change these later
+        yearSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(2000, LocalDate.now().getYear(), LocalDate.now().getYear()));
+        //Fix so it swap between month and week, and also uses the total amount of weeks in a year
+        timePeriodSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 52, 11));
 
         initializeFilterButton(projectFilterBtn);
         initializeFilterButton(workspaceFilterBtn);
