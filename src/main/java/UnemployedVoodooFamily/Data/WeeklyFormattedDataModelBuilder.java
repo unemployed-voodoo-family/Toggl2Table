@@ -56,7 +56,7 @@ public class WeeklyFormattedDataModelBuilder {
         }
         calculateAndSetHours();
         this.overtime = this.workedHours - this.supposedHours;
-        return new WeeklyFormattedDataModel(this.weekNumber, this.workedHours, this.supposedHours, this.overtime);
+        return new WeeklyFormattedDataModel(this.firstDateOfWeek, this.workedHours, this.supposedHours, this.overtime);
     }
 
     private void calculateAndSetHours() {
