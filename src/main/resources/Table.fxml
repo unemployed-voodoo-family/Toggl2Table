@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.Separator?>
@@ -38,7 +39,7 @@
                         <GridPane>
                           <columnConstraints>
                             <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
-                            <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+                            <ColumnConstraints hgrow="ALWAYS" minWidth="200.0" prefWidth="200.0" />
                           </columnConstraints>
                           <rowConstraints>
                             <RowConstraints vgrow="ALWAYS" />
@@ -55,21 +56,33 @@
                               </HBox>
                               <HBox alignment="CENTER_RIGHT" prefHeight="60.0" prefWidth="347.0" GridPane.columnIndex="1">
                                  <children>
-                                    <Label fx:id="rawStartDate">
+                                    <Label text="From:">
                                        <font>
-                                          <Font size="24.0" />
+                                          <Font size="20.0" />
                                        </font>
+                                       <HBox.margin>
+                                          <Insets right="5.0" />
+                                       </HBox.margin>
                                     </Label>
+                                    <DatePicker fx:id="rawStartDate" minHeight="-Infinity" minWidth="-Infinity" prefHeight="28.0" prefWidth="120.0" showWeekNumbers="true" />
                                     <Label text="  -  ">
                                        <font>
-                                          <Font size="24.0" />
+                                          <Font size="20.0" />
                                        </font>
                                     </Label>
-                                    <Label fx:id="rawEndDate">
+                                    <Label text="To:">
                                        <font>
-                                          <Font size="24.0" />
+                                          <Font size="20.0" />
                                        </font>
+                                       <HBox.margin>
+                                          <Insets right="5.0" />
+                                       </HBox.margin>
                                     </Label>
+                                    <DatePicker fx:id="rawEndDate" minHeight="-Infinity" minWidth="-Infinity" prefHeight="28.0" prefWidth="120.0" showWeekNumbers="true">
+                                       <HBox.margin>
+                                          <Insets right="10.0" />
+                                       </HBox.margin>
+                                    </DatePicker>
                                  </children>
                               </HBox>
                            </children>
