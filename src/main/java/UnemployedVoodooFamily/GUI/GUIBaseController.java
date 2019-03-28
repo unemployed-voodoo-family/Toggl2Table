@@ -159,7 +159,7 @@ public class GUIBaseController {
 
             String prefix = "Fetching ";
             StringBuilder sb = new StringBuilder();
-            sb.append("(1/5) ");
+            sb.append("(1/6) ");
 
             Session session = Session.getInstance();
             Platform.runLater(() -> progressMessage.setText(sb + prefix + "work hours"));
@@ -172,6 +172,8 @@ public class GUIBaseController {
             session.refreshProjects();
             Platform.runLater(() -> progressMessage.setText(sb.replace(1, 2, "5") + prefix + "tasks"));
             session.refreshTasks();
+            Platform.runLater(() -> progressMessage.setText(sb.replace(1, 2, "6") + prefix + "clients"));
+            session.refreshClient();
             Platform.runLater(() -> {
                 progressBox.setVisible(false);
                 lastFetchedLabel.setText(LocalDateTime.now().format(d));
@@ -183,10 +185,10 @@ public class GUIBaseController {
     private void dumpData() {
         Logger logger = Logger.getInstance();
         Session session = Session.getInstance();
-        logger.dumpCollection(session.getProjects(), "projects");
-        logger.dumpCollection(session.getTasks(), "tasks");
+        logger.dumpCollection(session.getProjects().values(), "projects");
+        logger.dumpCollection(session.getTasks().values(), "tasks");
         logger.dumpCollection(session.getTimeEntries(), "timeentries");
-        logger.dumpCollection(session.getWorkspaces(), "workspaces");
+        logger.dumpCollection(session.getWorkspaces().values(), "workspaces");
         logger.dumpCollection(session.getWorkHours().entrySet(), "workhours");
     }
 

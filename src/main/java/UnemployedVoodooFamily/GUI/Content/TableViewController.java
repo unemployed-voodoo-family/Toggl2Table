@@ -8,7 +8,10 @@ import UnemployedVoodooFamily.Logic.FormattedTimeDataLogic;
 import UnemployedVoodooFamily.Logic.Listeners.DataLoadListener;
 import UnemployedVoodooFamily.Logic.RawTimeDataLogic;
 import UnemployedVoodooFamily.Logic.Session;
+import ch.simas.jtoggl.Project;
+import ch.simas.jtoggl.Workspace;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -175,7 +178,6 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         startTimeCol.setCellValueFactory(new PropertyValueFactory<>("startTime"));
 
 
-
         TableColumn<RawTimeDataModel, String> endDateCol = new TableColumn<>("End Date");
         endDateCol.setCellValueFactory(new PropertyValueFactory<>("endDate"));
 
@@ -218,7 +220,8 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
      * @return an ObservableList containing RawTimeDatModel objects
      */
     private ObservableList<RawTimeDataModel> getObservableRawData() {
-        return rawTimeDataLogic.buildObservableRawTimeData(filterOptions);
+        return FXCollections.observableArrayList(
+                rawTimeDataLogic.buildRawMasterData(Session.getInstance().getTimeEntries(), filterOptions));
     }
 
     // |##################################################|
@@ -419,10 +422,14 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         clearCheckMenuObjects(projectFilterBtn);
         clearCheckMenuObjects(workspaceFilterBtn);
 
-        session.getProjects()
-               .forEach((project -> projectFilterBtn.getItems().add(new CheckMenuObject(project, project.getName()))));
-        session.getWorkspaces().forEach(
-                (project -> workspaceFilterBtn.getItems().add(new CheckMenuObject(project, project.getName()))));
+        LinkedHashMap<Long, Project> projects = (LinkedHashMap) session.getProjects();
+        for(Map.Entry<Long, Project> project: projects.entrySet()) {
+            projectFilterBtn.getItems().add(new CheckMenuObject(project, project.getValue().getName()));
+        }
+        LinkedHashMap<Long, Workspace> workspaces = (LinkedHashMap) session.getWorkspaces();
+        for(Map.Entry<Long, Workspace> workspace: workspaces.entrySet()) {
+            workspaceFilterBtn.getItems().add(new CheckMenuObject(workspace, workspace.getValue().getName()));
+        }
     }
 
     private void clearCheckMenuObjects(MenuButton button) {
@@ -516,9 +523,10 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         loadedData.add(e);
         //check if necassary data is loaded
         if(loadedData.containsAll(
-                EnumSet.of(Data.TIME_ENTRIES, Data.PROJECTS, Data.TASKS, Data.WORKSPACES, Data.WORKHOURS))) {
+                EnumSet.of(Data.TIME_ENTRIES, Data.PROJECTS, Data.TASKS, Data.WORKSPACES, Data.WORKHOURS,
+                           Data.CLIENT))) {
             loadedData = EnumSet.noneOf(Data.class); //empty the set, readying it for next
-            setRawDataTableData();
+            rawTimeDataLogic.buildRawMasterData(Session.getInstance().getTimeEntries(), filterOptions);
             setFilterOptions();
             setFormattedTableData();
         }
