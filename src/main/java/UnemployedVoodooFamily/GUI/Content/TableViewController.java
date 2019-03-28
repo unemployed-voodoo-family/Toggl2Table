@@ -665,10 +665,10 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         loadedData.add(e);
         //check if necassary data is loaded
         if(loadedData.containsAll(EnumSet.of(Data.TIME_ENTRIES, Data.PROJECTS, Data.TASKS, Data.WORKSPACES))) {
+            loadedData = EnumSet.noneOf(Data.class); //empty the set, readying it for next
             setRawDataTableData();
             setFilterOptions();
             setFormattedTableData();
-            loadedData = EnumSet.noneOf(Data.class); //empty the set, readying it for next
         }
     }
 }
