@@ -164,7 +164,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         initializeFilterButton(workspaceFilterBtn);
     }
 
-    private void setupFormattedTableUIElements()    {
+    private void setupFormattedTableUIElements() {
         weeklyToggleBtn.setToggleGroup(timeSpanToggleGroup);
         monthlyToggleBtn.setToggleGroup(timeSpanToggleGroup);
         weeklyToggleBtn.setSelected(true);
@@ -176,16 +176,20 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         int firstTogglYear = 2006;
         //Sets default values for the spinners
         //Change WEEKLY in case default formatted view changes
-        yearSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(firstTogglYear, LocalDate.now().getYear(), LocalDate.now().getYear()));
-        weekSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 52, formattedTimeDataLogic.getSelectedWeek()));
+        yearSpinner.setValueFactory(
+                new SpinnerValueFactory.IntegerSpinnerValueFactory(firstTogglYear, LocalDate.now().getYear(),
+                                                                   LocalDate.now().getYear()));
+        weekSpinner.setValueFactory(
+                new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 52, formattedTimeDataLogic.getSelectedWeek()));
 
         //Creates a list with all months for the monthly spinner to use
         ObservableList<String> monthsList = FXCollections.observableArrayList();
-        for(Month m : Month.values())   {
+        for(Month m: Month.values()) {
             monthsList.add(StringUtils.capitalize(m.toString().toLowerCase()));
         }
         monthSpinner.setValueFactory(new SpinnerValueFactory.ListSpinnerValueFactory<String>(monthsList));
-        monthSpinner.getValueFactory().setValue(StringUtils.capitalize(LocalDate.now().getMonth().toString().toLowerCase()));
+        monthSpinner.getValueFactory()
+                    .setValue(StringUtils.capitalize(LocalDate.now().getMonth().toString().toLowerCase()));
         //Hide the Monthly spinner by default
         updateMonthlySpinner(false);
 
@@ -193,16 +197,15 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
 
         //Dropdown menus for the spinners
         yearlyDropdown.setVisible(false);
-        yearlyDropdown.getItems().addAll(IntStream.rangeClosed(firstTogglYear, LocalDate.now().getYear()).boxed().collect(
-                Collectors.toList()));
+        yearlyDropdown.getItems().addAll(IntStream.rangeClosed(firstTogglYear, LocalDate.now().getYear()).boxed()
+                                                  .collect(Collectors.toList()));
         weeklyDropdown.setVisible(false);
-        weeklyDropdown.getItems().addAll(IntStream.rangeClosed(1, 52).boxed().collect(
-                Collectors.toList()));
+        weeklyDropdown.getItems().addAll(IntStream.rangeClosed(1, 52).boxed().collect(Collectors.toList()));
         monthlyDropdown.setVisible(false);
         monthlyDropdown.getItems().addAll(monthsList);
     }
 
-    private void setupRawTableUIElements()  {
+    private void setupRawTableUIElements() {
         rawStartDate.setValue(LocalDate.now().minusWeeks(1));
         rawStartDate.setDisable(true);
         rawEndDate.setValue(LocalDate.now());
@@ -212,12 +215,11 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     @SuppressWarnings("Duplicates")
     /**
      * Sets input actions on UI elements
-     */
-    private void setKeyAndClickListeners() {
+     */ private void setKeyAndClickListeners() {
 
         applyFilterBtn.setOnAction(event -> applyFilters());
 
-        exportBtn.setOnAction(new EventHandler<ActionEvent>(){
+        exportBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 formattedTimeDataLogic.exportToExcelDocument();
@@ -226,17 +228,17 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
                     double opacity = 1.00;
                     exportBtn.setDisable(true);
                     excelFeedbackLabel.setOpacity(opacity);
-                        while(opacity >= 0.00){
-                            excelFeedbackLabel.setOpacity(opacity);
-                            try {
-                                sleep(30);
-                            }
-                            catch(InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                            opacity = (opacity-0.02);
+                    while(opacity >= 0.00) {
+                        excelFeedbackLabel.setOpacity(opacity);
+                        try {
+                            sleep(30);
                         }
-                        excelFeedbackLabel.setOpacity(0.00);
+                        catch(InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        opacity = (opacity - 0.02);
+                    }
+                    excelFeedbackLabel.setOpacity(0.00);
                     exportBtn.setDisable(false);
                 });
                 t1.start();
@@ -247,36 +249,36 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
             if(newValue.isAfter(rawEndDate.getValue())) {
                 rawStartDate.getStyleClass().add("error");
             }
-            else if(!newValue.isEqual(oldValue) && !newValue.isEqual(rawTimeDataLogic.getFilteredDataStartDate()))   {
+            else if(! newValue.isEqual(oldValue) && ! newValue.isEqual(rawTimeDataLogic.getFilteredDataStartDate())) {
                 rawTimeDataLogic.setDataStartDate(rawStartDate.getValue());
-                if(!rawEndDate.getValue().isEqual(rawTimeDataLogic.getFilteredDataEndDate())) {
+                if(! rawEndDate.getValue().isEqual(rawTimeDataLogic.getFilteredDataEndDate())) {
                     rawTimeDataLogic.setDataEndDate(rawEndDate.getValue());
                 }
                 rawStartDate.getStyleClass().remove("error");
                 rawEndDate.getStyleClass().remove("error");
             }
-            else if(newValue.isEqual(rawEndDate.getValue()) || oldValue.isEqual(newValue))    {
+            else if(newValue.isEqual(rawEndDate.getValue()) || oldValue.isEqual(newValue)) {
                 rawStartDate.getStyleClass().remove("error");
                 rawEndDate.getStyleClass().remove("error");
             }
         });
 
         rawEndDate.valueProperty().addListener((observable, oldValue, newValue) -> {
-                if(newValue.isBefore(rawStartDate.getValue()))  {
-                    rawEndDate.getStyleClass().add("error");
+            if(newValue.isBefore(rawStartDate.getValue())) {
+                rawEndDate.getStyleClass().add("error");
+            }
+            else if(! newValue.isEqual(oldValue) && newValue != rawTimeDataLogic.getFilteredDataEndDate()) {
+                rawTimeDataLogic.setDataEndDate(rawEndDate.getValue());
+                if(! rawStartDate.getValue().isEqual(rawTimeDataLogic.getFilteredDataStartDate())) {
+                    rawTimeDataLogic.setDataStartDate(rawStartDate.getValue());
                 }
-                else if(!newValue.isEqual(oldValue) && newValue != rawTimeDataLogic.getFilteredDataEndDate())   {
-                    rawTimeDataLogic.setDataEndDate(rawEndDate.getValue());
-                    if(!rawStartDate.getValue().isEqual(rawTimeDataLogic.getFilteredDataStartDate())) {
-                        rawTimeDataLogic.setDataStartDate(rawStartDate.getValue());
-                    }
-                    rawStartDate.getStyleClass().remove("error");
-                    rawEndDate.getStyleClass().remove("error");
-                }
-                else if(newValue.isEqual(rawStartDate.getValue()) || oldValue.isEqual(newValue))    {
-                    rawStartDate.getStyleClass().remove("error");
-                    rawEndDate.getStyleClass().remove("error");
-                }
+                rawStartDate.getStyleClass().remove("error");
+                rawEndDate.getStyleClass().remove("error");
+            }
+            else if(newValue.isEqual(rawStartDate.getValue()) || oldValue.isEqual(newValue)) {
+                rawStartDate.getStyleClass().remove("error");
+                rawEndDate.getStyleClass().remove("error");
+            }
         });
 
         weeklyToggleBtn.setOnAction((ActionEvent e) -> {
@@ -304,7 +306,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
             yearlyDropdown.show();
             System.out.println("Year spinner clicked");
         });
-        yearlyDropdown.setOnHiding((Event e) ->    {
+        yearlyDropdown.setOnHiding((Event e) -> {
             yearSpinner.getEditor().setVisible(true);
             yearlyDropdown.setVisible(false);
             if(yearlyDropdown.getValue() != null) {
@@ -326,10 +328,10 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
             weeklyDropdown.show();
             System.out.println("Week spinner clicked");
         });
-        weeklyDropdown.setOnHiding((Event e) ->{
+        weeklyDropdown.setOnHiding((Event e) -> {
             weekSpinner.getEditor().setVisible(true);
             weeklyDropdown.setVisible(false);
-            if(weeklyDropdown.getValue() != null)  {
+            if(weeklyDropdown.getValue() != null) {
                 weekSpinner.getValueFactory().setValue(weeklyDropdown.getValue());
             }
         });
@@ -347,10 +349,10 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
             monthlyDropdown.show();
             System.out.println("Month spinner clicked");
         });
-        monthlyDropdown.setOnHiding((Event e) ->{
+        monthlyDropdown.setOnHiding((Event e) -> {
             monthSpinner.getEditor().setVisible(true);
             monthlyDropdown.setVisible(false);
-            if(monthlyDropdown.getValue() != null)  {
+            if(monthlyDropdown.getValue() != null) {
                 monthSpinner.getValueFactory().setValue(monthlyDropdown.getValue());
             }
         });
@@ -366,6 +368,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     private void applyFilters() {
         setRawDataTableData();
         setFormattedTableData();
+        setRawDataTableData();
     }
 
     // |##################################################|
@@ -378,11 +381,13 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     private void buildRawDataTable() {
         //Clears the already existing data in the table
         clearTable(rawData);
-        DecimalFormat df = new DecimalFormat("00:00:00");
 
         //Create all columns necessary
         TableColumn<RawTimeDataModel, String> projectCol = new TableColumn<>("Project");
         projectCol.setCellValueFactory(new PropertyValueFactory<>("project"));
+
+        TableColumn<RawTimeDataModel, String> clientCol = new TableColumn<>("Client");
+        clientCol.setCellValueFactory(new PropertyValueFactory<>("client"));
 
         TableColumn<RawTimeDataModel, String> descCol = new TableColumn<>("Description");
         descCol.setCellValueFactory(new PropertyValueFactory<>("description"));
@@ -392,7 +397,6 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
 
         TableColumn<RawTimeDataModel, String> startTimeCol = new TableColumn<>("Start Time");
         startTimeCol.setCellValueFactory(new PropertyValueFactory<>("startTime"));
-
 
         TableColumn<RawTimeDataModel, String> endDateCol = new TableColumn<>("End Date");
         endDateCol.setCellValueFactory(new PropertyValueFactory<>("endDate"));
@@ -412,7 +416,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         //Adds the columns to the table and updates it
         rawData.setEditable(false);
         rawData.getColumns()
-               .addAll(projectCol, descCol, startDateCol, startTimeCol, endDateCol, endTimeCol, durationCol);
+               .addAll(projectCol, clientCol, descCol, startDateCol, startTimeCol, endDateCol, endTimeCol, durationCol);
     }
 
     private void setRawDataTableData() {
@@ -430,11 +434,11 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         updateMonthlyTable();
     }
 
-    private void updateMonthlyTable()   {
+    private void updateMonthlyTable() {
         monthlyTable.getItems().setAll(getObservableMonthlyData());
     }
 
-    private void updateWeeklyTable()    {
+    private void updateWeeklyTable() {
         weeklyTable.getItems().setAll(getObservableWeeklyData());
     }
 
@@ -443,8 +447,10 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
      * @return an ObservableList containing RawTimeDatModel objects
      */
     private ObservableList<RawTimeDataModel> getObservableRawData() {
+        Session session = Session.getInstance();
         return FXCollections.observableArrayList(
-                rawTimeDataLogic.buildRawMasterData(Session.getInstance().getTimeEntries(), filterOptions));
+                rawTimeDataLogic.buildRawMasterData(session.getTimeEntries(), session.getProjects(), session.getWorkspaces(),
+                                                    session.getClients(), filterOptions));
     }
 
     // |##################################################|
@@ -600,7 +606,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         if(rawTimeDataLogic.getFilteredTimeEntries() != null) {
             return formattedTimeDataLogic.buildObservableWeeklyTimeData(rawTimeDataLogic.getFilteredTimeEntries());
         }
-        return formattedTimeDataLogic.buildObservableWeeklyTimeData(rawTimeDataLogic.getMasterTimeEntries());
+        return formattedTimeDataLogic.buildObservableWeeklyTimeData(rawTimeDataLogic.getFilteredTimeEntries());
     }
 
     /**
@@ -611,14 +617,14 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         return formattedTimeDataLogic.buildMonthlySortedData();
     }
 
-    private void updateWeeklySpinner(boolean show)  {
+    private void updateWeeklySpinner(boolean show) {
         weekSpinner.setVisible(show);
-        weekSpinner.setDisable(!show);
+        weekSpinner.setDisable(! show);
     }
 
     private void updateMonthlySpinner(boolean show) {
         monthSpinner.setVisible(show);
-        monthSpinner.setDisable(!show);
+        monthSpinner.setDisable(! show);
     }
 
     // |##################################################|
@@ -655,11 +661,11 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         clearCheckMenuObjects(projectFilterBtn);
         clearCheckMenuObjects(workspaceFilterBtn);
 
-        LinkedHashMap<Long, Project> projects = (LinkedHashMap) session.getProjects();
+        HashMap<Long, Project> projects = (HashMap<Long, Project>) session.getProjects();
         for(Map.Entry<Long, Project> project: projects.entrySet()) {
             projectFilterBtn.getItems().add(new CheckMenuObject(project, project.getValue().getName()));
         }
-        LinkedHashMap<Long, Workspace> workspaces = (LinkedHashMap) session.getWorkspaces();
+        HashMap<Long, Workspace> workspaces = (HashMap) session.getWorkspaces();
         for(Map.Entry<Long, Workspace> workspace: workspaces.entrySet()) {
             workspaceFilterBtn.getItems().add(new CheckMenuObject(workspace, workspace.getValue().getName()));
         }
@@ -757,8 +763,8 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
                 EnumSet.of(Data.TIME_ENTRIES, Data.PROJECTS, Data.TASKS, Data.WORKSPACES, Data.WORKHOURS,
                            Data.CLIENT))) {
             loadedData = EnumSet.noneOf(Data.class); //empty the set, readying it for next
-            rawTimeDataLogic.buildRawMasterData(Session.getInstance().getTimeEntries(), filterOptions);
             setFilterOptions();
+            setRawDataTableData();
             setFormattedTableData();
         }
     }

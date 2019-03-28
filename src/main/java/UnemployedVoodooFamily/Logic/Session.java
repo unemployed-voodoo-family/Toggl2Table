@@ -5,11 +5,10 @@ import UnemployedVoodooFamily.Data.Enums.FilePath;
 import UnemployedVoodooFamily.Logic.Listeners.DataLoadListener;
 import ch.simas.jtoggl.*;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
+import java.time.*;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Session {
 
@@ -21,7 +20,8 @@ public class Session {
     private Map<Long, Client> clients;
     private User user;
 
-    private ZoneOffset timeZone;
+    private ZoneId zoneId;
+    private ZoneOffset zoneOffset;
 
     private Properties workHours;
     private PropertiesLogic propsLogic;
@@ -42,6 +42,9 @@ public class Session {
         if(jToggl == null) {
             jToggl = newSession;
             refreshUser();
+            this.zoneId = ZoneId.of(user.getTimeZone());
+            zoneOffset = zoneId.getRules().getOffset(Instant.now());
+            System.out.println(zoneOffset);
             this.workHours = propsLogic.loadProps(FilePath.getCurrentUserWorkhours());
         }
         else {
@@ -87,7 +90,9 @@ public class Session {
         return user;
     }
 
-
+    public ZoneOffset getZoneOffset() {
+        return zoneOffset;
+    }
 
     public void refreshTimeEntries() {
         //TODO - Implement reports api instead.

@@ -6,6 +6,7 @@ import javafx.beans.property.SimpleStringProperty;
 public class RawTimeDataModel {
 
     private SimpleStringProperty project;
+    private SimpleStringProperty client;
     private SimpleStringProperty description;
     private SimpleStringProperty startDate;
     private SimpleStringProperty startTime;
@@ -16,17 +17,19 @@ public class RawTimeDataModel {
     /**
      * Creates a RawTimeDataModel object
      * Used to structure data for the corresponding TableView
-     * @param project String with project name
+     * @param project     String with project name
      * @param description String with description
-     * @param startDate String with start date
-     * @param startTime String with start time
-     * @param endDate String with end date
-     * @param endTime String with end time
-     * @param duration String with duration
+     * @param startDate   String with start date
+     * @param startTime   String with start time
+     * @param endDate     String with end date
+     * @param endTime     String with end time
+     * @param duration    String with duration
      */
-    public RawTimeDataModel(String project, String description, String startDate, String startTime,
+    public RawTimeDataModel(String project, String client, String description, String startDate, String startTime,
                             String endDate, String endTime, String duration) {
+
         this.project = new SimpleStringProperty(project);
+        this.client = new SimpleStringProperty(client);
         this.description = new SimpleStringProperty(description);
         this.startDate = new SimpleStringProperty(startDate);
         this.startTime = new SimpleStringProperty(startTime);
@@ -41,6 +44,18 @@ public class RawTimeDataModel {
      */
     public String getProject() {
         return project.get();
+    }
+
+    /**
+     * Returns the client name
+     * @return the client name
+     */
+    public String getClient() {
+        return client.get();
+    }
+
+    public SimpleStringProperty clientProperty() {
+        return client;
     }
 
     /**

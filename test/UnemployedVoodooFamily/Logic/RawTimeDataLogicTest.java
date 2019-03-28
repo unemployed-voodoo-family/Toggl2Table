@@ -1,6 +1,7 @@
 package UnemployedVoodooFamily.Logic;
 
 import UnemployedVoodooFamily.Data.Enums.FilePath;
+import ch.simas.jtoggl.Client;
 import ch.simas.jtoggl.Project;
 import ch.simas.jtoggl.TimeEntry;
 import ch.simas.jtoggl.Workspace;
@@ -11,6 +12,7 @@ import org.junit.Test;
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 
@@ -18,17 +20,18 @@ public class RawTimeDataLogicTest {
 
     RawTimeDataLogic logic;
 
-    List<TimeEntry> timeEntries;
-    List<Project> projects;
-    List<Workspace> workspaces;
+    Map<Long, TimeEntry> timeEntries;
+    Map<Long, Project> projects;
+    Map<Long, Workspace> workspaces;
+    Map<Long, Client> clients;
 
 
     @Before
     public void setUp() throws Exception {
         logic = new RawTimeDataLogic();
-        projects = (List<Project>) TestUtils.getTestList(FilePath.LOGS_HOME.getPath() + File.separator + "projects-dump-test.json");
+        /*projects = (List<Project>) TestUtils.getTestList(FilePath.LOGS_HOME.getPath() + File.separator + "projects-dump-test.json");
         workspaces =(List<Workspace>) TestUtils.getTestList(FilePath.LOGS_HOME.getPath() + File.separator + "workspaces-dump-test.json");
-        timeEntries = (List<TimeEntry>) TestUtils.getTestList(FilePath.LOGS_HOME.getPath() + File.separator + "timeentries-dump-test.json");
+        timeEntries = (List<TimeEntry>) TestUtils.getTestList(FilePath.LOGS_HOME.getPath() + File.separator + "timeentries-dump-test.json");*/
     }
 
     @After
@@ -38,7 +41,7 @@ public class RawTimeDataLogicTest {
     @Test
     public void buildObservableRawTimeData() {
         System.out.println(timeEntries);
-        logic.buildObservableRawTimeData(timeEntries, projects, workspaces, Collections.EMPTY_SET);
+        //logic.buildRawMasterData(timeEntries, projects, workspaces, clients, Collections.EMPTY_SET);
     }
 
     @Test
