@@ -40,10 +40,6 @@ public class DailyFormattedDataModelBuilder {
         return this;
     }
 
-    public DailyFormattedDataModelBuilder setDay(LocalDate day) {
-        return this;
-    }
-
     public DailyFormattedDataModel build() {
         Double workedSeconds = sumDurations();
         this.weekDay = this.day.getDayOfWeek();
@@ -68,9 +64,5 @@ public class DailyFormattedDataModelBuilder {
             workedSeconds += t.getDuration();
         }
         return workedSeconds;
-    }
-
-    public DayOfWeek getWeekDay(){
-        return this.weekDay;
     }
 }

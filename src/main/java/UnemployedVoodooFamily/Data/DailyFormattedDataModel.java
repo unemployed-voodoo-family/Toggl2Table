@@ -25,7 +25,7 @@ public class DailyFormattedDataModel {
      */
     public DailyFormattedDataModel(Double workedHours, Double supposedHours, LocalDate day) {
 
-        String weekDayStr = day.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.getDefault());
+        String weekDayStr = day.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.getDefault());
         this.weekDay = new SimpleStringProperty(weekDayStr);
         this.workedHours = new SimpleDoubleProperty(workedHours);
         this.supposedHours = new SimpleDoubleProperty(supposedHours);
