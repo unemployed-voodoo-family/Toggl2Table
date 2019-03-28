@@ -203,19 +203,20 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     private void setKeyAndClickListeners() {
 
         applyFilterBtn.setOnAction(event -> applyFilters());
+
         exportBtn.setOnAction(new EventHandler<ActionEvent>(){
             @Override
             public void handle(ActionEvent event) {
                 formattedTimeDataLogic.exportToExcelDocument();
 
                 Thread t1 = new Thread(() -> {
-                    exportBtn.setDisable(true);
                     double opacity = 1.00;
+                    exportBtn.setDisable(true);
                     excelFeedbackLabel.setOpacity(opacity);
                         while(opacity >= 0.00){
                             excelFeedbackLabel.setOpacity(opacity);
                             try {
-                                sleep(20);
+                                sleep(30);
                             }
                             catch(InterruptedException e) {
                                 e.printStackTrace();
