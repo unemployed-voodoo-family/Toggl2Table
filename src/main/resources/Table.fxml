@@ -188,19 +188,19 @@
                                           <Insets right="2.0" />
                                        </GridPane.margin>
                                     </Spinner>
-                                    <ComboBox fx:id="yearlyDropdown" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" prefWidth="80.0" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                                    <ComboBox fx:id="yearlyDropdown" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="0.0" prefWidth="82.0" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                                        <GridPane.margin>
-                                          <Insets right="22.0" />
+                                          <Insets bottom="25.0" right="22.0" />
                                        </GridPane.margin>
                                     </ComboBox>
-                                    <ComboBox fx:id="monthlyDropdown" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" prefWidth="80.0" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                                    <ComboBox fx:id="monthlyDropdown" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="0.0" prefWidth="82.0" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                                        <GridPane.margin>
-                                          <Insets right="22.0" />
+                                          <Insets bottom="25.0" right="22.0" />
                                        </GridPane.margin>
                                     </ComboBox>
-                                    <ComboBox fx:id="weeklyDropdown" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" prefWidth="80.0" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                                    <ComboBox fx:id="weeklyDropdown" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="0.0" prefWidth="82.0" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                                        <GridPane.margin>
-                                          <Insets right="22.0" />
+                                          <Insets bottom="25.0" right="22.0" />
                                        </GridPane.margin>
                                     </ComboBox>
                                  </children>
