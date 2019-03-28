@@ -5,8 +5,16 @@ import UnemployedVoodooFamily.Data.DailyFormattedDataModelBuilder;
 import UnemployedVoodooFamily.Data.WeeklyFormattedDataModel;
 import UnemployedVoodooFamily.Data.WeeklyFormattedDataModelBuilder;
 import ch.simas.jtoggl.TimeEntry;
+import com.sun.javafx.scene.control.skin.ComboBoxListViewSkin;
+import com.sun.javafx.scene.control.skin.ComboBoxPopupControl;
+import com.sun.javafx.scene.control.skin.ContextMenuContent;
+import com.sun.javafx.scene.control.skin.ContextMenuSkin;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.Spinner;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -65,21 +73,31 @@ public class FormattedTimeDataLogic {
 
         ObservableList<WeeklyFormattedDataModel> data = FXCollections.observableArrayList();
 
-        //iterate trough each week of the time period
+        //iterate trough each week in the time period
+        if(weeklyMasterData == null) {
+            throw new RuntimeException("Tried building monthly data with empty weekly data");
+        }
+
         int i = 0;
         for(LocalDate date = startDate; date.isBefore(endDate.plusDays(1)); date = date
                 .with(TemporalAdjusters.next(FIRST_DAY_OF_WEEK))) {
+
             boolean weekFormatted = false;
+
+            //get week number
             TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();
             int weekNumber = date.get(woy);
-            WeeklyFormattedDataModelBuilder builder = new WeeklyFormattedDataModelBuilder(weekNumber);
+
+            //builder
+            WeeklyFormattedDataModelBuilder builder = new WeeklyFormattedDataModelBuilder(date);
 
             //format each time entry in the week
             while(i < weeklyMasterData.size() && ! weekFormatted) {
-                DailyFormattedDataModel dailyData = weeklyMasterData.get(i);
 
+                DailyFormattedDataModel dailyData = weeklyMasterData.get(i);
                 int entryWeekNumber = dailyData.getDay().get(woy);
 
+                // check if entry is suitable and add it to list
                 if(entryWeekNumber == weekNumber) {
                     builder.addDailyData(dailyData);
                     if(i >= weeklyMasterData.size()) {
@@ -92,9 +110,14 @@ public class FormattedTimeDataLogic {
                 }
                 i++;
             }
-            data.add(builder.build());
+            //week formatted, build the data
+            try {
+                data.add(builder.build());
+            }
+            catch(RuntimeException e) {
+            }
         }
-        this.monthtlyMasterData = data;
+        monthtlyMasterData = data;
         return data;
     }
 
@@ -116,12 +139,16 @@ public class FormattedTimeDataLogic {
         //iterate over all the days in the given range
         int i = 0;
         for(LocalDate date = startDate; date.isBefore(endDate.plusDays(1)); date = date.plusDays(1)) {
+
             boolean dateFormatted = false;
             DailyFormattedDataModelBuilder builder = new DailyFormattedDataModelBuilder(date);
+
             //summarize the time entries for one day
             while(i < timeEntries.size() && ! dateFormatted) {
+
                 TimeEntry t = timeEntries.get(i);
                 LocalDate start = t.getStart().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
                 if(start.equals(date)) {
                     builder.addTimeEntry(t);
                 }
@@ -133,11 +160,7 @@ public class FormattedTimeDataLogic {
             }
 
             DailyFormattedDataModel databBuild = builder.build();
-            if((databBuild.getWeekDay().equals("SUNDAY")) || (databBuild.getWeekDay().equals("SATURDAY"))) {
-            }
-            else{
-                data.add(databBuild);
-            }
+            data.add(databBuild);
         }
         weeklyMasterData = data;
         return data;

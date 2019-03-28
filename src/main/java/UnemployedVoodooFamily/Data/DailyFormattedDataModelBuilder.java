@@ -4,21 +4,24 @@ import UnemployedVoodooFamily.Logic.PropertiesLogic;
 import UnemployedVoodooFamily.Logic.Session;
 import ch.simas.jtoggl.TimeEntry;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
 public class DailyFormattedDataModelBuilder {
-    private String weekDay;
+    private DayOfWeek weekDay;
     private Double workedHours;
     private Double supposedHours;
     private Double overtime;
     private LocalDate day;
     private PropertiesLogic propsLogic = new PropertiesLogic();
 
-    private List<TimeEntry> weeklyTimeEntries = new ArrayList<>();
+    private List<TimeEntry> dailyTimeEntries = new ArrayList<>();
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
     private Properties workHours = Session.getInstance().getWorkHours();
@@ -28,12 +31,12 @@ public class DailyFormattedDataModelBuilder {
     }
 
     public DailyFormattedDataModelBuilder addTimeEntry(TimeEntry timeEntry) {
-        weeklyTimeEntries.add(timeEntry);
-        return this;
-    }
-
-    public DailyFormattedDataModelBuilder setTimeEntries(List<TimeEntry> timeEntries) {
-        this.weeklyTimeEntries = timeEntries;
+        if(timeEntry != null) {
+            Date startDate = timeEntry.getStart();
+            if(startDate != null && startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().equals(day)) {
+                dailyTimeEntries.add(timeEntry);
+            }
+        }
         return this;
     }
 
@@ -43,11 +46,11 @@ public class DailyFormattedDataModelBuilder {
 
     public DailyFormattedDataModel build() {
         Double workedSeconds = sumDurations();
-        this.weekDay = this.day.getDayOfWeek().name();
+        this.weekDay = this.day.getDayOfWeek();
         this.supposedHours = findSupposedHours();
-        this.workedHours = (workedSeconds % 86400) / 3600; //TODO: round the deciaml
+        this.workedHours = (workedSeconds % 86400) / 3600;
         this.overtime = workedHours - supposedHours;
-        return new DailyFormattedDataModel(this.weekDay, this.workedHours, this.supposedHours, this.overtime, this.day);
+        return new DailyFormattedDataModel(this.workedHours, this.supposedHours, this.overtime, this.day);
     }
 
     private Double findSupposedHours() {
@@ -62,13 +65,13 @@ public class DailyFormattedDataModelBuilder {
 
     private Double sumDurations() {
         double workedSeconds = 0.0;
-        for(TimeEntry t: weeklyTimeEntries) {
+        for(TimeEntry t: dailyTimeEntries) {
             workedSeconds += t.getDuration();
         }
         return workedSeconds;
     }
 
-    public String getWeekDay(){
+    public DayOfWeek getWeekDay(){
         return this.weekDay;
     }
 }

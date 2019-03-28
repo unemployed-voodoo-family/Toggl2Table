@@ -15,6 +15,7 @@ public class Session {
     private List<Project> projects;
     private List<Workspace> workspaces;
     private List<Task> tasks;
+    private List<Client> clients;
     private User user;
 
     private Properties workHours;
@@ -106,6 +107,11 @@ public class Session {
         tasks = jToggl.getTasks();
         this.notifyDataLoaded(Data.TASKS);
     }
+
+    public void refreshClients() {
+
+    }
+
 
     public void refreshTimeData() {
         propsLogic.loadProps(FilePath.getCurrentUserWorkhours());

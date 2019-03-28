@@ -218,7 +218,11 @@ public class TableViewController implements DataLoadedListener {
      * @return an ObservableList containing RawTimeDatModel objects
      */
     private ObservableList<RawTimeDataModel> getObservableRawData() {
-        return rawTimeDataLogic.buildObservableRawTimeData(filterOptions);
+        Session session = Session.getInstance();
+
+        return rawTimeDataLogic
+                .buildObservableRawTimeData(session.getTimeEntries(), session.getProjects(), session.getWorkspaces(),
+                                            filterOptions);
     }
 
     // |##################################################|
@@ -459,11 +463,11 @@ public class TableViewController implements DataLoadedListener {
     private void toggleAllCheckboxes(MenuButton button, boolean value) {
         List<MenuItem> items = button.getItems();
 
-        for(MenuItem item : items) {
+        for(MenuItem item: items) {
             if(item instanceof CheckMenuObject) {
                 Node content = ((CheckMenuObject) item).getContent();
                 if(content instanceof CheckBox) {
-                   ((CheckBox) content).setSelected(value);
+                    ((CheckBox) content).setSelected(value);
                 }
             }
         }
@@ -495,11 +499,9 @@ public class TableViewController implements DataLoadedListener {
             cb.selectedProperty().addListener((observable, oldValue, newValue) -> {
                 if(newValue) {
                     removeFilterOption(object);
-
                 }
                 else {
                     addFilterOption(object);
-
                 }
             });
             cb.setSelected(true);
@@ -516,11 +518,11 @@ public class TableViewController implements DataLoadedListener {
     public void dataLoaded(Data e) {
         loadedData.add(e);
         //check if necassary data is loaded
-            if(loadedData.containsAll(EnumSet.of(Data.TIME_ENTRIES, Data.PROJECTS, Data.TASKS, Data.WORKSPACES))) {
-                setRawDataTableData();
-                setFilterOptions();
-                setFormattedTableData();
-                loadedData = EnumSet.noneOf(Data.class); //empty the set, readying it for next
+        if(loadedData.containsAll(EnumSet.of(Data.TIME_ENTRIES, Data.PROJECTS, Data.TASKS, Data.WORKSPACES))) {
+            setRawDataTableData();
+            setFilterOptions();
+            setFormattedTableData();
+            loadedData = EnumSet.noneOf(Data.class); //empty the set, readying it for next
         }
 
     }
