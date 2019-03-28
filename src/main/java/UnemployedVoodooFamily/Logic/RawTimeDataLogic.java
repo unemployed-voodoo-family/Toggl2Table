@@ -8,20 +8,23 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.sql.Time;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.function.Predicate;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class RawTimeDataLogic {
     // and is responsible for handling raw time data
+    //TODO replace ObservableLists with ArrayLists
     private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd. LLLL yyyy");
     private static ObservableList<RawTimeDataModel> masterData;
     private ObservableList<RawTimeDataModel> filteredData;
+
+    private LocalDate filterStartDate = LocalDate.now().minusWeeks(1);
+    private LocalDate filterEndDate = LocalDate.now();
 
     private List<TimeEntry> masterTimeEntries;
     private List<TimeEntry> filteredList;
@@ -92,18 +95,28 @@ public class RawTimeDataLogic {
         return data;
     }
 
-    public String getDataStartTime() {
+    public LocalDate getFilteredDataStartDate() {
         if(! masterData.isEmpty()) {
-            return masterData.get(0).getStartDate();
+            return filterStartDate;
         }
         return null;
     }
 
-    public String getDataEndTime() {
+    public LocalDate getFilteredDataEndDate() {
         if(! masterData.isEmpty()) {
-            return masterData.get(masterData.size() - 1).getEndDate();
+            return filterEndDate;
         }
         return null;
+    }
+
+    public void setDataStartDate(LocalDate date)    {
+        this.filterStartDate = date;
+        System.out.println("New raw start date is:" + filterStartDate.toString());
+    }
+
+    public void setDataEndDate(LocalDate date)  {
+        this.filterEndDate = date;
+        System.out.println("New raw end date is:" + filterEndDate.toString());
     }
 
     public List<TimeEntry> getFilteredTimeEntries() {
