@@ -16,10 +16,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.Spinner;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.Month;
-import java.time.ZoneId;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 import java.time.temporal.TemporalField;
@@ -83,7 +80,7 @@ public class FormattedTimeDataLogic {
      * Builds data for the monthly table using the daily formatted data
      * @return the ObservableList containing all summarized weeks
      */
-    public ObservableList<WeeklyFormattedDataModel> buildObservableMonthlyTimeData() {
+    public ObservableList<WeeklyFormattedDataModel> buildMonthlyMasterDataList() {
 
         ObservableList<WeeklyFormattedDataModel> data = FXCollections.observableArrayList();
 
@@ -134,6 +131,43 @@ public class FormattedTimeDataLogic {
         monthtlyMasterData = data;
         return data;
     }
+
+    public ObservableList<WeeklyFormattedDataModel> buildMonthlySortedData() {
+        ObservableList<WeeklyFormattedDataModel> data = FXCollections.observableArrayList();
+
+        int i = 0;
+        for(LocalDate date = LocalDate.of(selectedYear, selectedMonth.getValue(), 1);
+                date.isBefore(LocalDate.of(selectedYear, selectedMonth, YearMonth.of(selectedYear, selectedMonth).lengthOfMonth()).plusDays(1)); date = date
+                .with(TemporalAdjusters.next(FIRST_DAY_OF_WEEK))) {
+            boolean weekFormatted = false;
+            TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();
+            int weekNumber = date.get(woy);
+            WeeklyFormattedDataModelBuilder builder = new WeeklyFormattedDataModelBuilder(date);
+
+            //format each time entry in the week
+            while(i < weeklyMasterData.size() && ! weekFormatted) {
+                DailyFormattedDataModel dailyData = weeklyMasterData.get(i);
+
+                int entryWeekNumber = dailyData.getDay().get(woy);
+
+                if(entryWeekNumber == weekNumber) {
+                    builder.addDailyData(dailyData);
+                    if(i >= weeklyMasterData.size()) {
+                        weekFormatted = true;
+                    }
+                }
+                else {
+                    i--;
+                    weekFormatted = true;
+                }
+                i++;
+            }
+            data.add(builder.build());
+        }
+        this.monthtlyMasterData = data;
+        return data;
+    }
+
 
     //Called when the "export to excel" button is pressed
     public boolean exportToExcelDocument() {
