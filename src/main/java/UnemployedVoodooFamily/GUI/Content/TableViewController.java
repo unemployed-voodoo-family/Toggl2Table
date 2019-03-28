@@ -201,7 +201,9 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     }
 
     private void setupRawTableUIElements()  {
+        rawStartDate.setValue(LocalDate.now().minusWeeks(1));
         rawStartDate.setDisable(true);
+        rawEndDate.setValue(LocalDate.now());
         rawEndDate.setDisable(true);
     }
 
@@ -238,7 +240,6 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
                 t1.start();
             }
         });
-
 
         rawStartDate.valueProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue.isAfter(rawEndDate.getValue())) {
