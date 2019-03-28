@@ -30,13 +30,13 @@ public class RawTimeDataLogic {
      * Build an observable list with RawTimeDataModel, using time entries imported from Toggl.
      * @return the ObservableList
      */
-    public <T> ObservableList<RawTimeDataModel> buildObservableRawTimeData(Set<T> excludedData) {
-        Session session = Session.getInstance();
-        ObservableList<RawTimeDataModel> data = FXCollections.observableArrayList();
-        this.masterTimeEntries = session.getTimeEntries();
+    public <T> ObservableList<RawTimeDataModel> buildObservableRawTimeData(List<TimeEntry> timeEntries,
+                                                                           List<Project> projects,
+                                                                           List<Workspace> workspaces,
+                                                                           Set<T> excludedData) {
 
-        List<Project> projects = session.getProjects();
-        List<Workspace> workspaces = session.getWorkspaces();
+        ObservableList<RawTimeDataModel> data = FXCollections.observableArrayList();
+        this.masterTimeEntries = timeEntries;
 
         //fill timeentries with workspace and proejct objects
         for(TimeEntry timeEntry: masterTimeEntries) {
@@ -56,9 +56,9 @@ public class RawTimeDataLogic {
         filteredList = new ArrayList<>(masterTimeEntries);
         if(! excludedData.isEmpty()) {
             List<TimeEntry> excludedEntries;
-             excludedEntries = filteredList.stream().filter(timeEntry -> excludedData
+            excludedEntries = filteredList.stream().filter(timeEntry -> excludedData
                     .contains(timeEntry.getWorkspace()) || excludedData.contains(timeEntry.getProject()))
-                                                         .collect(Collectors.toList());
+                                          .collect(Collectors.toList());
             filteredList.removeAll(excludedEntries);
         }
 
@@ -93,15 +93,15 @@ public class RawTimeDataLogic {
     }
 
     public String getDataStartTime() {
-        if(!masterData.isEmpty()) {
+        if(! masterData.isEmpty()) {
             return masterData.get(0).getStartDate();
         }
         return null;
     }
 
     public String getDataEndTime() {
-        if(!masterData.isEmpty()) {
-            return masterData.get(masterData.size() -1).getEndDate();
+        if(! masterData.isEmpty()) {
+            return masterData.get(masterData.size() - 1).getEndDate();
         }
         return null;
     }

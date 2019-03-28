@@ -14,6 +14,7 @@ public class Session {
     private List<Project> projects;
     private List<Workspace> workspaces;
     private List<Task> tasks;
+    private List<Client> clients;
     private User user;
 
     private Properties workHours;
@@ -122,6 +123,11 @@ public class Session {
         refreshWorkHours();
         return workHours;
     }
+
+    public void refreshClients() {
+
+    }
+
 
     public void refreshTimeData() {
         this.refreshWorkHours();
