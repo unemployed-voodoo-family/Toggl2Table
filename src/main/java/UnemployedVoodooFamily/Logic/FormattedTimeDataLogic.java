@@ -142,7 +142,7 @@ public class FormattedTimeDataLogic {
             boolean weekFormatted = false;
             TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();
             int weekNumber = date.get(woy);
-            WeeklyFormattedDataModelBuilder builder = new WeeklyFormattedDataModelBuilder(weekNumber);
+            WeeklyFormattedDataModelBuilder builder = new WeeklyFormattedDataModelBuilder(date);
 
             //format each time entry in the week
             while(i < weeklyMasterData.size() && ! weekFormatted) {
