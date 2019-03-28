@@ -113,7 +113,14 @@
     -fx-background-color: #ffffff;
 }
 
+/*######## COMBO BOX ########*/
+
+.combo-box .arrow, .combo-box .arrow-button{
+    -fx-background-color: transparent;
+}
+
 /*######## DATE PICKER ########*/
+
 
 .date-picker > .text-field {
     -fx-background-radius: 0;

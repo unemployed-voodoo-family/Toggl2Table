@@ -8,12 +8,14 @@ import UnemployedVoodooFamily.Logic.FormattedTimeDataLogic;
 import UnemployedVoodooFamily.Logic.Listeners.DataLoadListener;
 import UnemployedVoodooFamily.Logic.RawTimeDataLogic;
 import UnemployedVoodooFamily.Logic.Session;
+import com.sun.istack.internal.NotNull;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -21,6 +23,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -31,8 +34,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.time.*;
-import java.time.temporal.IsoFields;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class TableViewController<Content extends Pane> implements DataLoadListener {
 
@@ -85,6 +89,14 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     private Spinner monthSpinner;
 
     @FXML
+    private ComboBox yearlyDropdown;
+    @FXML
+    private ComboBox weeklyDropdown;
+    @FXML
+    private ComboBox monthlyDropdown;
+
+
+    @FXML
     private Content weeklySummary;
     @FXML
     private Content monthlySummary;
@@ -104,7 +116,6 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     private RawTimeDataLogic rawTimeDataLogic = new RawTimeDataLogic();
     private FormattedTimeDataLogic formattedTimeDataLogic = new FormattedTimeDataLogic();
     private EnumSet<Data> loadedData = EnumSet.noneOf(Data.class);
-    private ObservableList<String> monthsList;
 
     private Set<Object> filterOptions = new HashSet<>();
 
@@ -147,13 +158,15 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         weekSpinner.getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
         monthSpinner.getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
 
+
+        int firstTogglYear = 2006;
         //Sets default values for the spinners
         //Change WEEKLY in case default formatted view changes
-        yearSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(2006, LocalDate.now().getYear(), LocalDate.now().getYear()));
+        yearSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(firstTogglYear, LocalDate.now().getYear(), LocalDate.now().getYear()));
         weekSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 52, formattedTimeDataLogic.getSelectedWeek()));
 
         //Creates a list with all months for the monthly spinner to use
-        monthsList = FXCollections.observableArrayList();
+        ObservableList<String> monthsList = FXCollections.observableArrayList();
         for(Month m : Month.values())   {
             monthsList.add(StringUtils.capitalize(m.toString().toLowerCase()));
         }
@@ -163,10 +176,21 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
 
         timePeriodSpinnerLabel.setText("Week");
 
+        //Dropdown menus for the spinners
+        yearlyDropdown.setVisible(false);
+        yearlyDropdown.getItems().addAll(IntStream.rangeClosed(firstTogglYear, LocalDate.now().getYear()).boxed().collect(
+                Collectors.toList()));
+        weeklyDropdown.setVisible(false);
+        weeklyDropdown.getItems().addAll(IntStream.rangeClosed(1, 52).boxed().collect(
+                Collectors.toList()));
+        monthlyDropdown.setVisible(false);
+        monthlyDropdown.getItems().addAll(monthsList);
+
         initializeFilterButton(projectFilterBtn);
         initializeFilterButton(workspaceFilterBtn);
     }
 
+    @SuppressWarnings("Duplicates")
     /**
      * Sets input actions on UI elements
      */
@@ -193,6 +217,20 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
             timePeriodSpinnerLabel.setText("Month");
         });
 
+        //Year Spinner + Dropdown
+        yearSpinner.getEditor().setOnMouseClicked((MouseEvent e) -> {
+            yearSpinner.getEditor().setVisible(false);
+            yearlyDropdown.setVisible(true);
+            yearlyDropdown.show();
+            System.out.println("Year spinner clicked");
+        });
+        yearlyDropdown.setOnHiding((Event e) ->    {
+            yearSpinner.getEditor().setVisible(true);
+            yearlyDropdown.setVisible(false);
+            if(yearlyDropdown.getValue() != null) {
+                yearSpinner.getValueFactory().setValue(yearlyDropdown.getValue());
+            }
+        });
         yearSpinner.valueProperty().addListener(new ChangeListener<Integer>() {
             @Override
             public void changed(ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) {
@@ -200,6 +238,20 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
             }
         });
 
+        //Week Spinner + Dropdown
+        weekSpinner.getEditor().setOnMouseClicked((MouseEvent e) -> {
+            weekSpinner.getEditor().setVisible(false);
+            weeklyDropdown.setVisible(true);
+            weeklyDropdown.show();
+            System.out.println("Week spinner clicked");
+        });
+        weeklyDropdown.setOnHiding((Event e) ->{
+            weekSpinner.getEditor().setVisible(true);
+            weeklyDropdown.setVisible(false);
+            if(weeklyDropdown.getValue() != null)  {
+                weekSpinner.getValueFactory().setValue(weeklyDropdown.getValue());
+            }
+        });
         weekSpinner.valueProperty().addListener(new ChangeListener<Integer>() {
             @Override
             public void changed(ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) {
@@ -207,6 +259,20 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
             }
         });
 
+        //Month Spinner + Dropdown
+        monthSpinner.getEditor().setOnMouseClicked((MouseEvent e) -> {
+            monthSpinner.getEditor().setVisible(false);
+            monthlyDropdown.setVisible(true);
+            monthlyDropdown.show();
+            System.out.println("Month spinner clicked");
+        });
+        monthlyDropdown.setOnHiding((Event e) ->{
+            monthSpinner.getEditor().setVisible(true);
+            monthlyDropdown.setVisible(false);
+            if(monthlyDropdown.getValue() != null)  {
+                monthSpinner.getValueFactory().setValue(monthlyDropdown.getValue());
+            }
+        });
         monthSpinner.valueProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
