@@ -8,6 +8,8 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
+
+import java.io.File;
 import java.util.Properties;
 
 
@@ -54,14 +56,16 @@ public class LoginController {
         RememberPasswordCheck.setDisable(true);
         Thread loginCredThread = new Thread(() -> {
             bufferImg.setVisible(true);
-            isLoggedIn = loginLogic.attemptAuthentication(emailField.getText(), passwordField.getText(), rememberUsername, rememberPassword);
+            isLoggedIn = loginLogic
+                    .attemptAuthentication(emailField.getText(), passwordField.getText(), rememberUsername,
+                                           rememberPassword);
             bufferImg.setVisible(false);
             Platform.runLater(() -> {
                 loginInProgress = false;
                 submitBtn.setDisable(false);
                 RememberEmailCheck.setDisable(false);
                 RememberPasswordCheck.setDisable(false);
-                if(!isLoggedIn) {
+                if(! isLoggedIn) {
                     showWrongCredentialsError("Wrong email or password");
                     emailField.getStyleClass().add("error");
                     passwordField.getStyleClass().add("error");
@@ -72,7 +76,7 @@ public class LoginController {
     }
 
     public void buttonPressedListener(KeyEvent e) {
-        if(!loginInProgress) {
+        if(! loginInProgress) {
             if(e.getCode().toString().equals("ENTER")) {
                 loginWithCredentials();
             }
@@ -87,17 +91,22 @@ public class LoginController {
 
     private void fillRememberedCredentials() {
 
-        String filepath = FilePath.APP_HOME.getPath() + "/credentials.properties";
+        String filepath = FilePath.APP_HOME.getPath() + File.separator + "credentials.properties";
         Properties prop = propertiesLogic.loadProps(filepath);
         String securePassword = prop.getProperty("password");
         String decodedPassword = PasswordUtils.decodeSecurePassword(securePassword);
-        emailField.setText(prop.getProperty("username"));
-        passwordField.setText(decodedPassword);
+        String email = prop.getProperty("username");
 
-        if(!emailField.getText().equals("")) {
+        if(email == null) {
+            email = "";
+        }
+        if(! email.isEmpty()) {
+            emailField.setText(email);
             RememberEmailCheck.setSelected(true);
         }
-        if(!decodedPassword.equals("")) {
+
+        passwordField.setText(decodedPassword);
+        if(! decodedPassword.equals("")) {
             RememberPasswordCheck.setSelected(true);
         }
     }

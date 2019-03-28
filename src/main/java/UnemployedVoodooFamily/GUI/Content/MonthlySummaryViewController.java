@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.layout.Pane;
 
 import java.io.IOException;
 import java.net.URL;
@@ -23,7 +24,7 @@ public class MonthlySummaryViewController {
         this.title = "Monthly report";
     }
 
-    public Node loadFXML() throws IOException {
+    public <T extends Pane> T loadFXML() throws IOException {
         URL r = getClass().getClassLoader().getResource("monthlyTableSummary.fxml");
         return FXMLLoader.load(r);
     }

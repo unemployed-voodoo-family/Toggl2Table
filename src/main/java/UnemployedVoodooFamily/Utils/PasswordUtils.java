@@ -7,8 +7,11 @@ public class PasswordUtils {
 
 
     public static String decodeSecurePassword(String securePassword) {
-        byte[] passwordAsBytes = Base64.getDecoder().decode(securePassword);
-        String returnvalue = new String(passwordAsBytes);
+        String returnvalue = "";
+        if(securePassword != null) {
+            byte[] passwordAsBytes = Base64.getDecoder().decode(securePassword);
+            returnvalue = new String(passwordAsBytes);
+        }
         return returnvalue;
     }
 

@@ -5,6 +5,8 @@ import UnemployedVoodooFamily.GUI.GUIBaseController;
 import UnemployedVoodooFamily.Utils.PasswordUtils;
 import ch.simas.jtoggl.JToggl;
 import javafx.application.Platform;
+import javafx.concurrent.Task;
+
 import java.io.*;
 import java.util.Properties;
 
@@ -30,12 +32,8 @@ public class LoginLogic {
             }));
             togglThread.start();
             loggedIn = true;
-
             rememberWhich(username, password, rememberUsername, rememberPassword);
-            Thread timeDataThread = new Thread(() -> Session.getInstance().refreshTimeData());
-            timeDataThread.start();
             togglThread.join();
-            timeDataThread.join();
         }
         catch(RuntimeException e) {
             Session.getInstance().terminateSession();

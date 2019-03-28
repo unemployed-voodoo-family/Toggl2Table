@@ -62,6 +62,7 @@ public class RawTimeDataLogic {
             filteredList.removeAll(excludedEntries);
         }
 
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("HH:mm:ss");
         Iterator<TimeEntry> it = filteredList.iterator();
         while(it.hasNext()) {
             TimeEntry timeEntry = it.next();
@@ -70,8 +71,8 @@ public class RawTimeDataLogic {
             LocalDateTime stop = timeEntry.getStop().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
             String startDate = start.toLocalDate().format(dateFormatter);
             String stopDate = stop.toLocalDate().format(dateFormatter);
-            String startTime = start.toLocalTime().toString();
-            String stopTime = stop.toLocalTime().toString();
+            String startTime = start.toLocalTime().format(df);
+            String stopTime = stop.toLocalTime().format(df);
             long duration = timeEntry.getDuration();
             String durationStr = LocalTime.MIN.plusSeconds(duration).format(DateTimeFormatter.ISO_LOCAL_TIME);
             Long pid = timeEntry.getPid();
@@ -84,7 +85,7 @@ public class RawTimeDataLogic {
             }
 
             RawTimeDataModel dataModel = new RawTimeDataModel(projectName, description, startDate, startTime, stopDate,
-                                                              stopTime, String.valueOf(durationStr));
+                                                              stopTime, durationStr);
             data.add(dataModel);
         }
         masterData = data;
@@ -107,5 +108,9 @@ public class RawTimeDataLogic {
 
     public List<TimeEntry> getFilteredTimeEntries() {
         return this.filteredList;
+    }
+
+    public List<TimeEntry> getMasterTimeEntries() {
+        return masterTimeEntries;
     }
 }
