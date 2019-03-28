@@ -8,7 +8,6 @@ import UnemployedVoodooFamily.Logic.FormattedTimeDataLogic;
 import UnemployedVoodooFamily.Logic.Listeners.DataLoadListener;
 import UnemployedVoodooFamily.Logic.RawTimeDataLogic;
 import UnemployedVoodooFamily.Logic.Session;
-import com.sun.istack.internal.NotNull;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -144,6 +143,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
             this.monthlySummary = new MonthlySummaryViewController().loadFXML();
         }
         catch(IOException e) {
+            System.out.println("fucky wucky");
             e.printStackTrace();
         }
         buildFormattedWeeklyTable();
@@ -171,6 +171,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
             monthsList.add(StringUtils.capitalize(m.toString().toLowerCase()));
         }
         monthSpinner.setValueFactory(new SpinnerValueFactory.ListSpinnerValueFactory<String>(monthsList));
+        monthSpinner.getValueFactory().setValue(StringUtils.capitalize(LocalDate.now().getMonth().toString().toLowerCase()));
         //Hide the Monthly spinner by default
         updateMonthlySpinner(false);
 
@@ -215,6 +216,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
             updateWeeklySpinner(false);
             updateMonthlySpinner(true);
             timePeriodSpinnerLabel.setText("Month");
+            updateMonthlyTable();
         });
 
         //Year Spinner + Dropdown
@@ -235,6 +237,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
             @Override
             public void changed(ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) {
                 formattedTimeDataLogic.setSelectedYear(newValue);
+                updateMonthlyTable();
             }
         });
 
@@ -277,6 +280,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 formattedTimeDataLogic.setSelectedMonth(Month.valueOf(newValue.toUpperCase()));
+                updateMonthlyTable();
             }
         });
     }
@@ -346,8 +350,16 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     }
 
     private void setFormattedTableData() {
-        weeklyTable.getItems().setAll(getObservableWeeklyData());
+        updateWeeklyTable();
+        updateMonthlyTable();
+    }
+
+    private void updateMonthlyTable()   {
         monthlyTable.getItems().setAll(getObservableMonthlyData());
+    }
+
+    private void updateWeeklyTable()    {
+        weeklyTable.getItems().setAll(getObservableWeeklyData());
     }
 
     /**
@@ -519,7 +531,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
      * @return an ObservableList containing MonthlyTimeDatModel objects
      */
     private ObservableList<WeeklyFormattedDataModel> getObservableMonthlyData() {
-        return formattedTimeDataLogic.buildObservableMonthlyTimeData();
+        return formattedTimeDataLogic.buildMonthlySortedData();
     }
 
     private void updateWeeklySpinner(boolean show)  {
