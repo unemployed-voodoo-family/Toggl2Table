@@ -93,6 +93,7 @@ public class GUIBaseController {
         Parent root = FXMLLoader.load(r);
         Scene scene = new Scene(root);
         scene.getStylesheets().add("styles.css");
+        newStage.setTitle("Toggl Time Sheet - Main");
         newStage.setScene(scene);
         newStage.show();
     }
