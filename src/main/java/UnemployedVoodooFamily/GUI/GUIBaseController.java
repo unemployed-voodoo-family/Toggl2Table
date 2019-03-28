@@ -116,6 +116,7 @@ public class GUIBaseController {
         try {
             settings = new SettingsController().loadFXML();
             table = new TableViewController().loadFXML();
+            profileNavBtn.setText(Session.getInstance().getUser().getFullname());
         }
         catch(IOException e) {
             e.printStackTrace();

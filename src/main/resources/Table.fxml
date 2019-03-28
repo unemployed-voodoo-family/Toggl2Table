@@ -271,6 +271,11 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </VBox.margin>
             </Button>
+            <Label fx:id="excelFeedbackLabel" opacity="0.0" prefHeight="28.0" prefWidth="219.0" text="Excel file created" textAlignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="19.0" />
+               </font>
+            </Label>
          </children>
          <HBox.margin>
             <Insets left="5.0" right="5.0" />

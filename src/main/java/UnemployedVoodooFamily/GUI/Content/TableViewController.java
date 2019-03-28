@@ -15,6 +15,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -37,6 +38,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static java.lang.Thread.sleep;
+
 public class TableViewController<Content extends Pane> implements DataLoadListener {
 
     @FXML
@@ -47,6 +50,9 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
 
     @FXML
     private TableView rawData;
+
+    @FXML
+    private Label excelFeedbackLabel;
 
     @FXML
     private ToggleButton weeklyToggleBtn;
@@ -207,7 +213,32 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
 
         applyFilterBtn.setOnAction(event -> applyFilters());
 
-        exportBtn.setOnAction(event -> formattedTimeDataLogic.exportToExcelDocument());
+        exportBtn.setOnAction(new EventHandler<ActionEvent>(){
+            @Override
+            public void handle(ActionEvent event) {
+                formattedTimeDataLogic.exportToExcelDocument();
+
+                Thread t1 = new Thread(() -> {
+                    double opacity = 1.00;
+                    exportBtn.setDisable(true);
+                    excelFeedbackLabel.setOpacity(opacity);
+                        while(opacity >= 0.00){
+                            excelFeedbackLabel.setOpacity(opacity);
+                            try {
+                                sleep(30);
+                            }
+                            catch(InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            opacity = (opacity-0.02);
+                        }
+                        excelFeedbackLabel.setOpacity(0.00);
+                    exportBtn.setDisable(false);
+                });
+                t1.start();
+            }
+        });
+
 
         rawStartDate.valueProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue.isAfter(rawEndDate.getValue())) {
