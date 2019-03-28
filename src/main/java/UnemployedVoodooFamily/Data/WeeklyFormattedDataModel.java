@@ -3,12 +3,18 @@ package UnemployedVoodooFamily.Data;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 
+import java.time.LocalDate;
+import java.time.temporal.TemporalField;
+import java.time.temporal.WeekFields;
+import java.util.Locale;
+
 public class WeeklyFormattedDataModel {
 
     private SimpleIntegerProperty weekNumber;
     private SimpleDoubleProperty workedHours;
     private SimpleDoubleProperty supposedHours;
     private SimpleDoubleProperty overtime;
+    private LocalDate firstDateOfWeek;
 
     /**
      * Creates a MonthlyTimeDataModel object
@@ -18,11 +24,15 @@ public class WeeklyFormattedDataModel {
      * @param supposedHours String with supposed work hours
      * @param overtime String with the amount of overtime
      */
-    public WeeklyFormattedDataModel(int weekNumber, Double workedHours, Double supposedHours, Double overtime) {
+    public WeeklyFormattedDataModel(LocalDate firstDateOfWeek, Double workedHours, Double supposedHours, Double overtime) {
+
+        TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();
+        int weekNumber = firstDateOfWeek.get(woy);
         this.weekNumber = new SimpleIntegerProperty(weekNumber);
         this.workedHours = new SimpleDoubleProperty(workedHours);
         this.supposedHours = new SimpleDoubleProperty(supposedHours);
         this.overtime = new SimpleDoubleProperty(overtime);
+        this.firstDateOfWeek = firstDateOfWeek;
     }
 
 

@@ -367,7 +367,11 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
      * @return an ObservableList containing RawTimeDatModel objects
      */
     private ObservableList<RawTimeDataModel> getObservableRawData() {
-        return rawTimeDataLogic.buildObservableRawTimeData(filterOptions);
+        Session session = Session.getInstance();
+
+        return rawTimeDataLogic
+                .buildObservableRawTimeData(session.getTimeEntries(), session.getProjects(), session.getWorkspaces(),
+                                            filterOptions);
     }
 
     // |##################################################|
@@ -653,11 +657,9 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
             cb.selectedProperty().addListener((observable, oldValue, newValue) -> {
                 if(newValue) {
                     removeFilterOption(object);
-
                 }
                 else {
                     addFilterOption(object);
-
                 }
             });
             cb.setSelected(true);
@@ -674,12 +676,11 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     public void dataLoaded(Data e) {
         loadedData.add(e);
         //check if necassary data is loaded
-        if(loadedData.containsAll(
-                EnumSet.of(Data.TIME_ENTRIES, Data.PROJECTS, Data.TASKS, Data.WORKSPACES, Data.WORKHOURS))) {
-            loadedData = EnumSet.noneOf(Data.class); //empty the set, readying it for next
+        if(loadedData.containsAll(EnumSet.of(Data.TIME_ENTRIES, Data.PROJECTS, Data.TASKS, Data.WORKSPACES))) {
             setRawDataTableData();
             setFilterOptions();
             setFormattedTableData();
+            loadedData = EnumSet.noneOf(Data.class); //empty the set, readying it for next
         }
     }
 }
