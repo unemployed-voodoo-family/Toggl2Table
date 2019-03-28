@@ -138,6 +138,11 @@ public class Session {
         return workHours;
     }
 
+    public void refreshClients() {
+
+    }
+
+
     public void refreshTimeData() {
         this.refreshWorkHours();
         this.refreshTimeEntries();

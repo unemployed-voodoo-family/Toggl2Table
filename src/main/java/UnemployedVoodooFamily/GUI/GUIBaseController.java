@@ -1,20 +1,12 @@
 package UnemployedVoodooFamily.GUI;
 
-import UnemployedVoodooFamily.Data.Enums.Data;
 import UnemployedVoodooFamily.Data.Enums.FilePath;
 import UnemployedVoodooFamily.GUI.Content.SettingsController;
 import UnemployedVoodooFamily.GUI.Content.TableViewController;
 import UnemployedVoodooFamily.Logger;
-import UnemployedVoodooFamily.Logic.Listeners.DataLoadListener;
 import UnemployedVoodooFamily.Logic.Session;
 import javafx.application.Platform;
-import javafx.beans.binding.StringBinding;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.beans.value.ObservableStringValue;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -28,7 +20,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -90,6 +81,7 @@ public class GUIBaseController {
 
     private Node settings;
     private Node table;
+    private Thread t1;
 
     private ToggleGroup navButtons = new ToggleGroup();
 
@@ -101,6 +93,7 @@ public class GUIBaseController {
         Parent root = FXMLLoader.load(r);
         Scene scene = new Scene(root);
         scene.getStylesheets().add("styles.css");
+        newStage.setTitle("Toggl Time Sheet - Main");
         newStage.setScene(scene);
         newStage.show();
     }
@@ -113,6 +106,7 @@ public class GUIBaseController {
         setKeyAndClickListeners();
         loadContent();
         refreshData();
+        dumpData();
     }
 
     /**
@@ -122,6 +116,7 @@ public class GUIBaseController {
         try {
             settings = new SettingsController().loadFXML();
             table = new TableViewController().loadFXML();
+            profileNavBtn.setText(Session.getInstance().getUser().getFullname());
         }
         catch(IOException e) {
             e.printStackTrace();
@@ -155,7 +150,7 @@ public class GUIBaseController {
         progressBox.setVisible(true);
         DateTimeFormatter d = DateTimeFormatter.ofPattern("HH:mm dd.MM.yyyy");
 
-        Thread t = new Thread(() -> {
+        t1 = new Thread(() -> {
 
             String prefix = "Fetching ";
             StringBuilder sb = new StringBuilder();
@@ -179,17 +174,26 @@ public class GUIBaseController {
                 lastFetchedLabel.setText(LocalDateTime.now().format(d));
             });
         });
-        t.start();
+        t1.start();
     }
 
     private void dumpData() {
-        Logger logger = Logger.getInstance();
-        Session session = Session.getInstance();
-        logger.dumpCollection(session.getProjects().values(), "projects");
-        logger.dumpCollection(session.getTasks().values(), "tasks");
-        logger.dumpCollection(session.getTimeEntries(), "timeentries");
-        logger.dumpCollection(session.getWorkspaces().values(), "workspaces");
-        logger.dumpCollection(session.getWorkHours().entrySet(), "workhours");
+        Thread t2 = new Thread(() -> {
+            try {
+                t1.join();
+                Logger logger = Logger.getInstance();
+                Session session = Session.getInstance();
+                logger.dumpCollection(session.getProjects().values(), "projects");
+                logger.dumpCollection(session.getTasks().values(), "tasks");
+                logger.dumpCollection(session.getTimeEntries(), "timeentries");
+                logger.dumpCollection(session.getWorkspaces().values(), "workspaces");
+                logger.dumpCollection(session.getWorkHours().entrySet(), "workhours");
+            }
+            catch(InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+        t2.start();
     }
 
     /**

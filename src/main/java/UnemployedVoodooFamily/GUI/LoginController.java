@@ -3,7 +3,6 @@ package UnemployedVoodooFamily.GUI;
 import UnemployedVoodooFamily.Data.Enums.FilePath;
 import UnemployedVoodooFamily.Logic.LoginLogic;
 import UnemployedVoodooFamily.Logic.PropertiesLogic;
-import UnemployedVoodooFamily.Logic.Session;
 import UnemployedVoodooFamily.Utils.PasswordUtils;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
