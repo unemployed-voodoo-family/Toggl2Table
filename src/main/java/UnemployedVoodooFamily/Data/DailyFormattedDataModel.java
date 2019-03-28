@@ -23,14 +23,13 @@ public class DailyFormattedDataModel {
      * @param supposedHours String with supposed work hours
      * @param overtime      String with overtime
      */
-    public DailyFormattedDataModel(Double workedHours, Double supposedHours,
-                                   Double overtime, LocalDate day) {
+    public DailyFormattedDataModel(Double workedHours, Double supposedHours, LocalDate day) {
 
         String weekDayStr = day.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.getDefault());
         this.weekDay = new SimpleStringProperty(weekDayStr);
         this.workedHours = new SimpleDoubleProperty(workedHours);
         this.supposedHours = new SimpleDoubleProperty(supposedHours);
-        this.overtime = new SimpleDoubleProperty(overtime);
+        this.overtime = new SimpleDoubleProperty(workedHours - supposedHours);
         this.day = day;
     }
 

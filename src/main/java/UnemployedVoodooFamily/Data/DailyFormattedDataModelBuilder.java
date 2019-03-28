@@ -49,8 +49,7 @@ public class DailyFormattedDataModelBuilder {
         this.weekDay = this.day.getDayOfWeek();
         this.supposedHours = findSupposedHours();
         this.workedHours = (workedSeconds % 86400) / 3600;
-        this.overtime = workedHours - supposedHours;
-        return new DailyFormattedDataModel(this.workedHours, this.supposedHours, this.overtime, this.day);
+        return new DailyFormattedDataModel(this.workedHours, this.supposedHours, this.day);
     }
 
     private Double findSupposedHours() {
