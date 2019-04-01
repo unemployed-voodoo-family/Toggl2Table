@@ -37,6 +37,15 @@ public class RawTimeDataModel {
         this.duration = new SimpleStringProperty(duration);
     }
 
+    public String getClient() {
+        return client.get();
+    }
+
+
+    public SimpleStringProperty clientProperty() {
+        return client;
+    }
+
     /**
      * Returns the project name
      * @return the project name
