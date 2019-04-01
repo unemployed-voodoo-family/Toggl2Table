@@ -303,6 +303,10 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         DecimalFormat df = new DecimalFormat("00:00:00");
 
         //Create all columns necessary
+
+        TableColumn<RawTimeDataModel, String> clientCol = new TableColumn<>("Client");
+        clientCol.setCellValueFactory(new PropertyValueFactory<>("client"));
+
         TableColumn<RawTimeDataModel, String> projectCol = new TableColumn<>("Project");
         projectCol.setCellValueFactory(new PropertyValueFactory<>("project"));
 

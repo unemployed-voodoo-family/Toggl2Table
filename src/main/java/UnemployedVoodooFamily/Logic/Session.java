@@ -128,6 +128,13 @@ public class Session {
 
     }
 
+    public void refreshReport() {
+        PagedResult detailedReport = jToggl.getDetailedReport((PagedReportsParameter) new PagedReportsParameter(workspace.getId(), "jtoggl-integration-test")
+                .setSince("2011-11-15")
+                .setUntil("2011-11-15")
+                .setProjectIds(Collections.singleton(project.getId())));
+    }
+
 
     public void refreshTimeData() {
         this.refreshWorkHours();

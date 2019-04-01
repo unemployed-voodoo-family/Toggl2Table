@@ -12,6 +12,7 @@ public class RawTimeDataModel {
     private SimpleStringProperty endDate;
     private SimpleStringProperty endTime;
     private SimpleStringProperty duration;
+    private SimpleStringProperty client;
 
     /**
      * Creates a RawTimeDataModel object
@@ -25,7 +26,8 @@ public class RawTimeDataModel {
      * @param duration String with duration
      */
     public RawTimeDataModel(String project, String description, String startDate, String startTime,
-                            String endDate, String endTime, String duration) {
+                            String endDate, String endTime, String duration, String client) {
+        this.client = new SimpleStringProperty(client);
         this.project = new SimpleStringProperty(project);
         this.description = new SimpleStringProperty(description);
         this.startDate = new SimpleStringProperty(startDate);

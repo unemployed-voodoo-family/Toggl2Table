@@ -30,9 +30,10 @@ public class WeeklyFormattedDataModelBuilderTest {
 
     @Test
     public void build() {
+        System.out.println(timeEntries);
         Double WORKED_HOURS = 14.5088889;
         Double STANDARD_WORK_HOURS = 7.5;
-        Double OVERTIME = WORKED_HOURS - STANDARD_WORK_HOURS;
+        Double OVERTIME = WORKED_HOURS - STANDARD_WORK_HOURS * 5;
 
 
         LocalDate localDate = LocalDate.of(2019, 01, 02);

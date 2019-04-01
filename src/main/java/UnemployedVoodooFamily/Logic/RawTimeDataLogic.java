@@ -67,6 +67,7 @@ public class RawTimeDataLogic {
         while(it.hasNext()) {
             TimeEntry timeEntry = it.next();
             String description = timeEntry.getDescription();
+            String clientName = timeEntry.getProject().getCid();
             LocalDateTime start = timeEntry.getStart().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
             LocalDateTime stop = timeEntry.getStop().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
             String startDate = start.toLocalDate().format(dateFormatter);
