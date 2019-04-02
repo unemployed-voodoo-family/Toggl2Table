@@ -14,6 +14,7 @@ public enum Data {
     TASKS,
     WORKSPACES,
     USER,
-    WORKHOURS
+    WORKHOURS,
+    CLIENT
 
 }

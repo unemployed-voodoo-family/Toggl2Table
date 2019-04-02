@@ -50,9 +50,9 @@
         </dependency>
 
         <dependency>
-            <groupId>ch.simas.jtoggl</groupId>
-            <artifactId>jtoggl-api</artifactId>
-            <version>1.1.0-SNAPSHOT</version>
+            <groupId>com.github.unemployed-voodoo-family</groupId>
+            <artifactId>jtoggl</artifactId>
+            <version>e28687d7500690175b91e67810d6d5adfbd66bd5</version>
         </dependency>
 
         <dependency>

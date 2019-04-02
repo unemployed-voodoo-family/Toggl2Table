@@ -6,6 +6,7 @@ import ch.simas.jtoggl.TimeEntry;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -32,8 +33,8 @@ public class DailyFormattedDataModelBuilder {
 
     public DailyFormattedDataModelBuilder addTimeEntry(TimeEntry timeEntry) {
         if(timeEntry != null) {
-            Date startDate = timeEntry.getStart();
-            if(startDate != null && startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().equals(day)) {
+            LocalDate startDate = timeEntry.getStart().toLocalDate();
+            if(startDate != null && startDate.equals(day)) {
                 dailyTimeEntries.add(timeEntry);
             }
         }

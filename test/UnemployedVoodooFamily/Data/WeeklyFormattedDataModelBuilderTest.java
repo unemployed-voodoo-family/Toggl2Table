@@ -32,16 +32,18 @@ public class WeeklyFormattedDataModelBuilderTest {
     public void build1() {
         Double WORKED_HOURS = 10.0;
         Double STANDARD_WORK_HOURS = 7.5;
-        Double STANDARD_WORK_HOURS_WEEK = 7.5 * 5;
-        Double OVERTIME = WORKED_HOURS - STANDARD_WORK_HOURS_WEEK;
+        Double STANDARD_WORK_HOURS_WEEK = 7.5*5;
+        Double OVERTIME = WORKED_HOURS - STANDARD_WORK_HOURS*5;
 
 
         LocalDate localDate = LocalDate.of(2019, 01, 02);
         WeeklyFormattedDataModelBuilder builder = new WeeklyFormattedDataModelBuilder(localDate);
-        builder.addDailyData(new DailyFormattedDataModel(10.0, 7.5, localDate));
+        builder.addDailyData(
+                new DailyFormattedDataModel(WORKED_HOURS, 7.5, WORKED_HOURS - STANDARD_WORK_HOURS, localDate));
+      
         WeeklyFormattedDataModel dataModel = builder.build();
         assertEquals((Integer) 1, dataModel.getWeekNumber());
-        //assertEquals(STANDARD_WORK_HOURS, dataModel.getSupposedHours());
+        assertEquals(STANDARD_WORK_HOURS_WEEK, dataModel.getSupposedHours());
         assertEquals(WORKED_HOURS, dataModel.getWorkedHours(), 0.01);
         assertEquals(OVERTIME, dataModel.getOvertime(), 0.01);
     }
