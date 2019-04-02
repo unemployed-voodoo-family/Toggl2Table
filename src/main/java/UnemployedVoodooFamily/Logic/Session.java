@@ -14,10 +14,10 @@ public class Session {
 
     private static JToggl jToggl = null;
     private List<TimeEntry> timeEntries;
-    private Map<Long, Project> projects;
-    private Map<Long, Workspace> workspaces;
-    private Map<Long, Task> tasks;
-    private Map<Long, Client> clients;
+    private LinkedHashMap<Long, Workspace> workspaces;
+    private HashMap<Long, Project> projects;
+    private HashMap<Long, Task> tasks;
+    private HashMap<Long, Client> clients;
     private User user;
 
     private ZoneId zoneId;
@@ -70,19 +70,19 @@ public class Session {
         return timeEntries;
     }
 
-    public Map<Long, Project> getProjects() {
+    public HashMap<Long, Project> getProjects() {
         return projects;
     }
 
-    public Map<Long, Workspace> getWorkspaces() {
+    public LinkedHashMap<Long, Workspace> getWorkspaces() {
         return workspaces;
     }
 
-    public Map<Long, Task> getTasks() {
+    public HashMap<Long, Task> getTasks() {
         return tasks;
     }
 
-    public Map<Long, Client> getClients() {
+    public HashMap<Long, Client> getClients() {
         return clients;
     }
 

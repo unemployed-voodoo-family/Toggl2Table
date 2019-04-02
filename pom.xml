@@ -52,7 +52,7 @@
         <dependency>
             <groupId>com.github.unemployed-voodoo-family</groupId>
             <artifactId>jtoggl</artifactId>
-            <version>e28687d7500690175b91e67810d6d5adfbd66bd5</version>
+            <version>1cd06f23e2174dbc18bf1387ee428a3ec61a2c8b</version>
         </dependency>
 
         <dependency>
