@@ -384,9 +384,6 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
 
         //Create all columns necessary
 
-        TableColumn<RawTimeDataModel, String> clientCol = new TableColumn<>("Client");
-        clientCol.setCellValueFactory(new PropertyValueFactory<>("client"));
-
         TableColumn<RawTimeDataModel, String> projectCol = new TableColumn<>("Project");
         projectCol.setCellValueFactory(new PropertyValueFactory<>("project"));
 

@@ -13,7 +13,6 @@ public class RawTimeDataModel {
     private SimpleStringProperty endDate;
     private SimpleStringProperty endTime;
     private SimpleStringProperty duration;
-    private SimpleStringProperty client;
 
     /**
      * Creates a RawTimeDataModel object
@@ -56,17 +55,6 @@ public class RawTimeDataModel {
         return project.get();
     }
 
-    /**
-     * Returns the client name
-     * @return the client name
-     */
-    public String getClient() {
-        return client.get();
-    }
-
-    public SimpleStringProperty clientProperty() {
-        return client;
-    }
 
     /**
      * Returns the description

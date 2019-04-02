@@ -39,7 +39,7 @@ public class WeeklyFormattedDataModelBuilderTest {
         LocalDate localDate = LocalDate.of(2019, 01, 02);
         WeeklyFormattedDataModelBuilder builder = new WeeklyFormattedDataModelBuilder(localDate);
         builder.addDailyData(
-                new DailyFormattedDataModel(WORKED_HOURS, 7.5, WORKED_HOURS - STANDARD_WORK_HOURS, localDate));
+                new DailyFormattedDataModel(WORKED_HOURS, 7.5, localDate));
 
         WeeklyFormattedDataModel dataModel = builder.build();
         assertEquals((Integer) 1, dataModel.getWeekNumber());
