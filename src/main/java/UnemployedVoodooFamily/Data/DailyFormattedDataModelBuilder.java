@@ -40,17 +40,12 @@ public class DailyFormattedDataModelBuilder {
         return this;
     }
 
-    public DailyFormattedDataModelBuilder setDay(LocalDate day) {
-        return this;
-    }
-
     public DailyFormattedDataModel build() {
         Double workedSeconds = sumDurations();
         this.weekDay = this.day.getDayOfWeek();
         this.supposedHours = findSupposedHours();
         this.workedHours = (workedSeconds % 86400) / 3600;
-        this.overtime = workedHours - supposedHours;
-        return new DailyFormattedDataModel(this.workedHours, this.supposedHours, this.overtime, this.day);
+        return new DailyFormattedDataModel(this.workedHours, this.supposedHours, this.day);
     }
 
     private Double findSupposedHours() {
@@ -69,9 +64,5 @@ public class DailyFormattedDataModelBuilder {
             workedSeconds += t.getDuration();
         }
         return workedSeconds;
-    }
-
-    public DayOfWeek getWeekDay(){
-        return this.weekDay;
     }
 }
