@@ -36,6 +36,7 @@ public class LoginLogic {
             togglThread.join();
         }
         catch(RuntimeException e) {
+            e.printStackTrace();
             Session.getInstance().terminateSession();
         }
         catch(InterruptedException e) {

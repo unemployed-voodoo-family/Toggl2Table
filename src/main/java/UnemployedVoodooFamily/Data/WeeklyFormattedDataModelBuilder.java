@@ -49,7 +49,6 @@ public class WeeklyFormattedDataModelBuilder {
     public WeeklyFormattedDataModel build() {
         if(weeklyTimeEntries.size() < 7) {
             for(DayOfWeek dayOfWeek: DayOfWeek.values()) {
-                System.out.println(dayOfWeek.getValue());
                 weeklyTimeEntries.putIfAbsent(dayOfWeek, new DailyFormattedDataModelBuilder(
                         firstDateOfWeek.plusDays(dayOfWeek.getValue() - 1)).build());
             }

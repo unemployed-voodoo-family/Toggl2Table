@@ -14,8 +14,11 @@ import org.junit.Test;
 
 import java.io.File;
 import java.sql.Time;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.format.TextStyle;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 
 import static org.junit.Assert.*;
@@ -23,9 +26,12 @@ import static org.junit.Assert.*;
 public class DailyFormattedDataModelBuilderTest {
     private List<TimeEntry> timeEntries;
     Double STANDARD_WORK_HOURS = 7.5;
+    Locale locale = Locale.getDefault();
+    TextStyle style = TextStyle.FULL;
 
     @Test
     public void build() {
+
         Double WORKED_HOURS = 14.5088889;
         Double OVERTIME =WORKED_HOURS - STANDARD_WORK_HOURS;
 
@@ -37,7 +43,7 @@ public class DailyFormattedDataModelBuilderTest {
         }
         DailyFormattedDataModel dataModel = builder.build();
         assertEquals(localDate, dataModel.getDay());
-        assertEquals("WEDNESDAY", dataModel.getWeekDay());
+        assertEquals(DayOfWeek.WEDNESDAY.getDisplayName(style, locale), dataModel.getWeekDay());
         assertEquals(STANDARD_WORK_HOURS, dataModel.getSupposedHours());
         assertEquals(WORKED_HOURS, dataModel.getWorkedHours(), 0.01);
         assertEquals(OVERTIME, dataModel.getOvertime(), 0.01);
@@ -51,7 +57,7 @@ public class DailyFormattedDataModelBuilderTest {
 
         DailyFormattedDataModel dataModel = builder.addTimeEntry(new TimeEntry()).build();
         assertEquals(localDate, dataModel.getDay());
-        assertEquals("WEDNESDAY", dataModel.getWeekDay());
+        assertEquals(DayOfWeek.WEDNESDAY.getDisplayName(style, locale), dataModel.getWeekDay());
         assertEquals(STANDARD_WORK_HOURS, dataModel.getSupposedHours());
         assertEquals(0, dataModel.getWorkedHours(), 0.01);
         assertEquals(-7.5, dataModel.getOvertime(), 0.01);

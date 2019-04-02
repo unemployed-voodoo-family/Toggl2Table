@@ -5,17 +5,23 @@ import UnemployedVoodooFamily.Data.Enums.FilePath;
 import UnemployedVoodooFamily.Logic.Listeners.DataLoadListener;
 import ch.simas.jtoggl.*;
 
+import java.time.*;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Session {
 
     private static JToggl jToggl = null;
     private List<TimeEntry> timeEntries;
-    private List<Project> projects;
-    private List<Workspace> workspaces;
-    private List<Task> tasks;
-    private List<Client> clients;
+    private Map<Long, Project> projects;
+    private Map<Long, Workspace> workspaces;
+    private Map<Long, Task> tasks;
+    private Map<Long, Client> clients;
     private User user;
+
+    private ZoneId zoneId;
+    private ZoneOffset zoneOffset;
 
     private Properties workHours;
     private PropertiesLogic propsLogic;
@@ -36,6 +42,9 @@ public class Session {
         if(jToggl == null) {
             jToggl = newSession;
             refreshUser();
+            this.zoneId = ZoneId.of(user.getTimeZone());
+            zoneOffset = zoneId.getRules().getOffset(Instant.now());
+            System.out.println(zoneOffset);
             this.workHours = propsLogic.loadProps(FilePath.getCurrentUserWorkhours());
         }
         else {
@@ -61,30 +70,35 @@ public class Session {
         return timeEntries;
     }
 
-    public List<Project> getProjects() {
+    public Map<Long, Project> getProjects() {
         return projects;
     }
 
-    public List<Workspace> getWorkspaces() {
+    public Map<Long, Workspace> getWorkspaces() {
         return workspaces;
     }
 
-    public List<Task> getTasks() {
+    public Map<Long, Task> getTasks() {
         return tasks;
+    }
+
+    public Map<Long, Client> getClients() {
+        return clients;
     }
 
     public User getUser() {
         return user;
     }
 
-
+    public ZoneOffset getZoneOffset() {
+        return zoneOffset;
+    }
 
     public void refreshTimeEntries() {
-        Calendar cal = Calendar.getInstance();
-        cal.set(2019, Calendar.JANUARY, 1);
-        Date start = cal.getTime();
-        cal.set(2019, Calendar.DECEMBER, 31); //TODO: this is a temporary fix
-        Date end = cal.getTime();
+        //TODO - Implement reports api instead.
+        //TODO - Get timezone from toggl user
+        OffsetDateTime start = OffsetDateTime.of(2019, 1, 1, 0,0,0,0, ZoneOffset.ofHours(1));
+        OffsetDateTime end = OffsetDateTime.of(2019, 12, 31, 0,0,0,0, ZoneOffset.ofHours(1));
         timeEntries = jToggl.getTimeEntries(start, end);
         this.notifyDataLoaded(Data.TIME_ENTRIES);
 
@@ -93,6 +107,11 @@ public class Session {
     public void refreshUser() {
         this.user = jToggl.getCurrentUser();
         this.notifyDataLoaded(Data.USER);
+    }
+
+    public void refreshClient() {
+        this.clients = jToggl.getClients();
+        this.notifyDataLoaded(Data.CLIENT);
     }
 
     public void refreshProjects() {

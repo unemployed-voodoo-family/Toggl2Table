@@ -6,6 +6,7 @@ import ch.simas.jtoggl.TimeEntry;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -32,15 +33,11 @@ public class DailyFormattedDataModelBuilder {
 
     public DailyFormattedDataModelBuilder addTimeEntry(TimeEntry timeEntry) {
         if(timeEntry != null) {
-            Date startDate = timeEntry.getStart();
-            if(startDate != null && startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().equals(day)) {
+            LocalDate startDate = timeEntry.getStart().toLocalDate();
+            if(startDate != null && startDate.equals(day)) {
                 dailyTimeEntries.add(timeEntry);
             }
         }
-        return this;
-    }
-
-    public DailyFormattedDataModelBuilder setDay(LocalDate day) {
         return this;
     }
 
@@ -49,8 +46,7 @@ public class DailyFormattedDataModelBuilder {
         this.weekDay = this.day.getDayOfWeek();
         this.supposedHours = findSupposedHours();
         this.workedHours = (workedSeconds % 86400) / 3600;
-        this.overtime = workedHours - supposedHours;
-        return new DailyFormattedDataModel(this.workedHours, this.supposedHours, this.overtime, this.day);
+        return new DailyFormattedDataModel(this.workedHours, this.supposedHours, this.day);
     }
 
     private Double findSupposedHours() {
@@ -69,9 +65,5 @@ public class DailyFormattedDataModelBuilder {
             workedSeconds += t.getDuration();
         }
         return workedSeconds;
-    }
-
-    public DayOfWeek getWeekDay(){
-        return this.weekDay;
     }
 }
