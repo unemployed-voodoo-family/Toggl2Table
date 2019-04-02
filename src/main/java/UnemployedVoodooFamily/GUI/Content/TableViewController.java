@@ -250,6 +250,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
                 if(!rawEndDate.getValue().isEqual(rawTimeDataLogic.getFilteredDataEndDate())) {
                     rawTimeDataLogic.setDataEndDate(rawEndDate.getValue());
                 }
+                setRawDataTableData();
                 rawStartDate.getStyleClass().remove("error");
                 rawEndDate.getStyleClass().remove("error");
             }
@@ -268,6 +269,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
                     if(!rawStartDate.getValue().isEqual(rawTimeDataLogic.getFilteredDataStartDate())) {
                         rawTimeDataLogic.setDataStartDate(rawStartDate.getValue());
                     }
+                    setRawDataTableData();
                     rawStartDate.getStyleClass().remove("error");
                     rawEndDate.getStyleClass().remove("error");
                 }

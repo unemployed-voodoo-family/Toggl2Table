@@ -20,7 +20,7 @@ public class RawTimeDataLogic {
     // and is responsible for handling raw time data
     //TODO replace ObservableLists with ArrayLists
     private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd. LLLL yyyy");
-    private static ObservableList<RawTimeDataModel> masterData;
+    private static List<RawTimeDataModel> masterData = new ArrayList<>();
     private ObservableList<RawTimeDataModel> filteredData;
 
     private LocalDate filterStartDate = LocalDate.now().minusWeeks(1);
@@ -72,41 +72,39 @@ public class RawTimeDataLogic {
             String description = timeEntry.getDescription();
             LocalDateTime start = timeEntry.getStart().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
             LocalDateTime stop = timeEntry.getStop().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-            String startDate = start.toLocalDate().format(dateFormatter);
-            String stopDate = stop.toLocalDate().format(dateFormatter);
-            String startTime = start.toLocalTime().format(df);
-            String stopTime = stop.toLocalTime().format(df);
-            long duration = timeEntry.getDuration();
-            String durationStr = LocalTime.MIN.plusSeconds(duration).format(DateTimeFormatter.ISO_LOCAL_TIME);
-            Long pid = timeEntry.getPid();
-            String projectName = "";
-            for(Project project: projects) {
-                if(project.getId().equals(pid)) {
-                    projectName = project.getName();
-                    break;
-                }
-            }
 
-            RawTimeDataModel dataModel = new RawTimeDataModel(projectName, description, startDate, startTime, stopDate,
-                                                              stopTime, durationStr);
-            data.add(dataModel);
+            if(start.toLocalDate().isAfter(getFilteredDataStartDate())
+                    && (stop.toLocalDate().isBefore(getFilteredDataEndDate()) || stop.toLocalDate().isEqual(getFilteredDataEndDate()))) {
+                String startDate = start.toLocalDate().format(dateFormatter);
+                String stopDate = stop.toLocalDate().format(dateFormatter);
+                String startTime = start.toLocalTime().format(df);
+                String stopTime = stop.toLocalTime().format(df);
+                long duration = timeEntry.getDuration();
+                String durationStr = LocalTime.MIN.plusSeconds(duration).format(DateTimeFormatter.ISO_LOCAL_TIME);
+                Long pid = timeEntry.getPid();
+                String projectName = "";
+                for(Project project: projects) {
+                    if(project.getId().equals(pid)) {
+                        projectName = project.getName();
+                        break;
+                    }
+                }
+
+                RawTimeDataModel dataModel = new RawTimeDataModel(projectName, description, startDate, startTime,
+                                                                  stopDate, stopTime, durationStr);
+                data.add(dataModel);
+            }
         }
         masterData = data;
         return data;
     }
 
     public LocalDate getFilteredDataStartDate() {
-        if(! masterData.isEmpty()) {
-            return filterStartDate;
-        }
-        return null;
+        return filterStartDate;
     }
 
     public LocalDate getFilteredDataEndDate() {
-        if(! masterData.isEmpty()) {
-            return filterEndDate;
-        }
-        return null;
+        return filterEndDate;
     }
 
     public void setDataStartDate(LocalDate date)    {
