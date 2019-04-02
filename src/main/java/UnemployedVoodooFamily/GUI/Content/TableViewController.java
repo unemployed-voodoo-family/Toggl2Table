@@ -234,16 +234,18 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
                    exportProgressIndicator.setVisible(true);
 
                    boolean success = formattedTimeDataLogic.exportToExcelDocument();
-                   if(success) {
-                       excelFeedbackLabel.setText("Excel document was successfully created");
-                       excelFeedbackLabel.getStyleClass().remove("error");
-                       excelFeedbackLabel.getStyleClass().add("success");
-                   }
-                   else {
-                       excelFeedbackLabel.setText("Excel document was NOT created");
-                       excelFeedbackLabel.getStyleClass().remove("success");
-                       excelFeedbackLabel.getStyleClass().add("error");
-                   }
+                   Platform.runLater(() -> {
+                       if(success) {
+                           excelFeedbackLabel.setText("Excel document was successfully created");
+                           excelFeedbackLabel.getStyleClass().remove("error");
+                           excelFeedbackLabel.getStyleClass().add("success");
+                       }
+                       else {
+                           excelFeedbackLabel.setText("Excel document was NOT created");
+                           excelFeedbackLabel.getStyleClass().remove("success");
+                           excelFeedbackLabel.getStyleClass().add("error");
+                       }
+                   });
 
            });
               t.start();

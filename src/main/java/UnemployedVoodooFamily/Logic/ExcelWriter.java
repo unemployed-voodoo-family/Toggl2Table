@@ -35,6 +35,7 @@ public class ExcelWriter {
         }
         catch(IOException e) {
             System.out.println(e.getMessage());
+            return false;
         }
         return success; //Return true if document was build correctly, false if failed
     }
