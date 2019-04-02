@@ -32,6 +32,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.formula.functions.T;
 
 import java.io.IOException;
 import java.net.URL;
@@ -227,25 +228,24 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
 
         applyFilterBtn.setOnAction(event -> applyFilters());
 
-        exportBtn.setOnAction(new EventHandler<ActionEvent>() {
-                      Thread t = new Thread(() -> {
-            @Override
-            public void handle(ActionEvent event) {
-              exportBtn.setDisable(true);
-              exportProgressIndicator.setVisible(true);
+        exportBtn.setOnAction(event ->  {
+           Thread t = new Thread(() -> {
+                   exportBtn.setDisable(true);
+                   exportProgressIndicator.setVisible(true);
 
-                boolean success = formattedTimeDataLogic.exportToExcelDocument();
-                if(success) {
-                    excelFeedbackLabel.setText("Excel document was successfully created");
-                    excelFeedbackLabel.getStyleClass().remove("error");
-                    excelFeedbackLabel.getStyleClass().add("success");
-                }
-                else {
-                    excelFeedbackLabel.setText("Excel document was NOT created");
-                    excelFeedbackLabel.getStyleClass().remove("success");
-                    excelFeedbackLabel.getStyleClass().add("error");
-                }
-              });
+                   boolean success = formattedTimeDataLogic.exportToExcelDocument();
+                   if(success) {
+                       excelFeedbackLabel.setText("Excel document was successfully created");
+                       excelFeedbackLabel.getStyleClass().remove("error");
+                       excelFeedbackLabel.getStyleClass().add("success");
+                   }
+                   else {
+                       excelFeedbackLabel.setText("Excel document was NOT created");
+                       excelFeedbackLabel.getStyleClass().remove("success");
+                       excelFeedbackLabel.getStyleClass().add("error");
+                   }
+
+           });
               t.start();
 
             Thread t1 = new Thread(() -> {
@@ -396,6 +396,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
                 updateMonthlyTable();
             }
         });
+
     }
 
     private void applyFilters() {
@@ -798,9 +799,10 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
                 EnumSet.of(Data.TIME_ENTRIES, Data.PROJECTS, Data.TASKS, Data.WORKSPACES, Data.WORKHOURS,
                            Data.CLIENT))) {
             loadedData = EnumSet.noneOf(Data.class); //empty the set, readying it for next
-            setFilterOptions();
             setRawDataTableData();
             setFormattedTableData();
+            setFilterOptions();
+
         }
     }
 }
