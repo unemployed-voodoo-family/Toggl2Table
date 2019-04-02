@@ -22,7 +22,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<HBox fx:id="root" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UnemployedVoodooFamily.GUI.Content.TableViewController">
+<HBox fx:id="root" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UnemployedVoodooFamily.GUI.Content.TableViewController">
    <children>
       <TabPane fx:id="tableTabPane" HBox.hgrow="ALWAYS">
          <tabs>
@@ -238,6 +238,11 @@
                   <Insets bottom="5.0" top="40.0" />
                </VBox.margin>
             </Label>
+            <MenuButton fx:id="clientFilterBtn" layoutX="15.0" layoutY="122.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Clients">
+               <VBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </VBox.margin>
+            </MenuButton>
             <MenuButton fx:id="projectFilterBtn" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Project">
                <VBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

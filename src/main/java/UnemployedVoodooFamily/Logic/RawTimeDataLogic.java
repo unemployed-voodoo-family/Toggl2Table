@@ -43,11 +43,16 @@ public class RawTimeDataLogic {
         filteredTimeEntries = new LinkedList<>(masterTimeEntries);
         if(excludedData != null && ! excludedData.isEmpty()) {
             List<TimeEntry> excludedEntries;
-            excludedEntries = filteredTimeEntries
-                    .stream()
-                    .filter(timeEntry -> excludedData.contains(
-                            timeEntry.getWorkspace()) || excludedData.contains(timeEntry.getProject()))
-                                                 .collect(Collectors.toList());
+            excludedEntries = filteredTimeEntries.stream().filter(timeEntry -> {
+                boolean result = false;
+                Project p = timeEntry.getProject();
+                Client c = p == null ? null : p.getClient();
+                Workspace w = timeEntry.getWorkspace();
+                result = excludedData.stream()
+                                     .anyMatch(entry -> entry.equals(w) || entry.equals(c) || entry.equals(p));
+
+                return result;
+            }).collect(Collectors.toList());
             filteredTimeEntries.removeAll(excludedEntries);
         }
 
