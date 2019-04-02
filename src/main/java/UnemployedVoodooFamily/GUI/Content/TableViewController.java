@@ -8,6 +8,7 @@ import UnemployedVoodooFamily.Logic.FormattedTimeDataLogic;
 import UnemployedVoodooFamily.Logic.Listeners.DataLoadListener;
 import UnemployedVoodooFamily.Logic.RawTimeDataLogic;
 import UnemployedVoodooFamily.Logic.Session;
+import ch.simas.jtoggl.Client;
 import ch.simas.jtoggl.Project;
 import ch.simas.jtoggl.Workspace;
 import javafx.application.Platform;
@@ -81,6 +82,8 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     private MenuButton projectFilterBtn;
     @FXML
     private MenuButton workspaceFilterBtn;
+    @FXML
+    private MenuButton clientFilterBtn;
     @FXML
     private Button applyFilterBtn;
     @FXML
@@ -160,6 +163,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         setupFormattedTableUIElements();
         setupRawTableUIElements();
 
+        initializeFilterButton(clientFilterBtn);
         initializeFilterButton(projectFilterBtn);
         initializeFilterButton(workspaceFilterBtn);
     }
@@ -370,7 +374,6 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     private void applyFilters() {
         setRawDataTableData();
         setFormattedTableData();
-        setRawDataTableData();
     }
 
     // |##################################################|
@@ -451,9 +454,11 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
      */
     private ObservableList<RawTimeDataModel> getObservableRawData() {
         Session session = Session.getInstance();
-        return FXCollections.observableArrayList(
-                rawTimeDataLogic.buildRawMasterData(session.getTimeEntries(), session.getProjects(), session.getWorkspaces(),
-                                                    session.getClients(), filterOptions));
+        return FXCollections.observableArrayList(rawTimeDataLogic.buildRawMasterData(session.getTimeEntries(),
+                                                                                     session.getProjects(),
+                                                                                     session.getWorkspaces(),
+                                                                                     session.getClients(),
+                                                                                     filterOptions));
     }
 
     // |##################################################|
@@ -662,25 +667,25 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         Session session = Session.getInstance();
         clearCheckMenuObjects(projectFilterBtn);
         clearCheckMenuObjects(workspaceFilterBtn);
+        clearCheckMenuObjects(clientFilterBtn);
 
-        HashMap<Long, Project> projects = (HashMap<Long, Project>) session.getProjects();
+        HashMap<Long, Project> projects = session.getProjects();
         for(Map.Entry<Long, Project> project: projects.entrySet()) {
-            projectFilterBtn.getItems().add(new CheckMenuObject(project, project.getValue().getName()));
+            projectFilterBtn.getItems().add(new CheckMenuObject(project.getValue(), project.getValue().getName()));
         }
-        HashMap<Long, Workspace> workspaces = (HashMap) session.getWorkspaces();
+        HashMap<Long, Workspace> workspaces = session.getWorkspaces();
         for(Map.Entry<Long, Workspace> workspace: workspaces.entrySet()) {
-            workspaceFilterBtn.getItems().add(new CheckMenuObject(workspace, workspace.getValue().getName()));
+            workspaceFilterBtn.getItems().add(new CheckMenuObject(workspace.getValue(), workspace.getValue().getName()));
+        }
+        HashMap<Long, Client> clients = session.getClients();
+        System.out.println(clients.toString());
+        for(Map.Entry<Long, Client> client: clients.entrySet()) {
+            clientFilterBtn.getItems().add(new CheckMenuObject(client.getValue(), client.getValue().getName()));
         }
     }
 
     private void clearCheckMenuObjects(MenuButton button) {
-        Iterator<MenuItem> it = button.getItems().iterator();
-        while(it.hasNext()) {
-            MenuItem item = it.next();
-            if(item instanceof CheckMenuObject) {
-                it.remove();
-            }
-        }
+        button.getItems().removeIf(item -> item instanceof CheckMenuObject);
     }
 
 
