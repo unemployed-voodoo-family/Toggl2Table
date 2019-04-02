@@ -52,7 +52,6 @@ public class ExcelWriter {
         FileOutputStream fileOut = new FileOutputStream("Time Report.xlsx");
         workbook.write(fileOut);
         fileOut.close();
-
         workbook.close();
     }
 

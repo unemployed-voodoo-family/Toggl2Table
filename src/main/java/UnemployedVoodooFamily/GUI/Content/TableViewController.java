@@ -49,6 +49,9 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     private Tab rawDataTab;
 
     @FXML
+    private ProgressIndicator exportProgressIndicator;
+
+    @FXML
     private Tab formattedDataTab;
 
     @FXML
@@ -166,6 +169,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         initializeFilterButton(clientFilterBtn);
         initializeFilterButton(projectFilterBtn);
         initializeFilterButton(workspaceFilterBtn);
+
     }
 
     private void setupFormattedTableUIElements() {
@@ -223,30 +227,40 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
 
         applyFilterBtn.setOnAction(event -> applyFilters());
 
-        exportBtn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
+        exportBtn.setOnAction(event -> {
+        exportBtn.setDisable(true);
+            Thread t = new Thread(() -> {
+                exportProgressIndicator.setVisible(true);
                 formattedTimeDataLogic.exportToExcelDocument();
+            });
+            t.start();
 
-                Thread t1 = new Thread(() -> {
-                    double opacity = 1.00;
-                    exportBtn.setDisable(true);
+            Thread t1 = new Thread(() -> {
+                try {
+                    t.join();
+                }
+                catch(InterruptedException e) {
+                    e.printStackTrace();
+                }
+                exportProgressIndicator.setVisible(false);
+                exportBtn.setDisable(false);
+                double opacity = 1.00;
+                exportBtn.setDisable(true);
+                excelFeedbackLabel.setOpacity(opacity);
+                while(opacity >= 0.00) {
                     excelFeedbackLabel.setOpacity(opacity);
-                    while(opacity >= 0.00) {
-                        excelFeedbackLabel.setOpacity(opacity);
-                        try {
-                            sleep(30);
-                        }
-                        catch(InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        opacity = (opacity - 0.02);
+                    try {
+                        sleep(30);
                     }
-                    excelFeedbackLabel.setOpacity(0.00);
-                    exportBtn.setDisable(false);
-                });
-                t1.start();
-            }
+                    catch(InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    opacity = (opacity - 0.02);
+                }
+                excelFeedbackLabel.setOpacity(0.00);
+                exportBtn.setDisable(false);
+            });
+            t1.start();
         });
 
         rawStartDate.valueProperty().addListener((observable, oldValue, newValue) -> {
@@ -675,7 +689,8 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         }
         HashMap<Long, Workspace> workspaces = session.getWorkspaces();
         for(Map.Entry<Long, Workspace> workspace: workspaces.entrySet()) {
-            workspaceFilterBtn.getItems().add(new CheckMenuObject(workspace.getValue(), workspace.getValue().getName()));
+            workspaceFilterBtn.getItems()
+                              .add(new CheckMenuObject(workspace.getValue(), workspace.getValue().getName()));
         }
         HashMap<Long, Client> clients = session.getClients();
         System.out.println(clients.toString());
