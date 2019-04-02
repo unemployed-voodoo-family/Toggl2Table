@@ -61,19 +61,21 @@ public class RawTimeDataLogic {
             TimeEntry timeEntry = it.next();
             String description = timeEntry.getDescription();
             OffsetDateTime start = timeEntry.getStart().withOffsetSameInstant(zoneOffset);
-            OffsetDateTime stop = timeEntry.getStop().withOffsetSameInstant(zoneOffset);
+            OffsetDateTime stop;
+            if(null != timeEntry.getStop()) {
+                stop = timeEntry.getStop().withOffsetSameInstant(zoneOffset);
+            }
+            else {
+                stop = OffsetDateTime.now();
+            }
 
             if((start.toLocalDate().isAfter(getFilteredDataStartDate()) || start.toLocalDate().isEqual(getFilteredDataStartDate()))
                 && (stop.toLocalDate().isBefore(getFilteredDataEndDate()) || stop.toLocalDate().isEqual(getFilteredDataEndDate()))){
                 String startDate = start.toLocalDate().format(dateFormatter);
                 String startTime = start.toLocalTime().format(durationFormatter);
 
-                String stopDate = "";
-                String stopTime = "";
-                if(stop != null) {
-                    stopTime = stop.toLocalTime().format(durationFormatter);
-                    stopDate = stop.toLocalDate().format(dateFormatter);
-                }
+                String stopDate = stop.toLocalTime().format(durationFormatter);
+                String stopTime = stop.toLocalDate().format(dateFormatter);
 
                 long duration = timeEntry.getDuration();
                 String durationStr = LocalTime.MIN.plusSeconds(duration).format(DateTimeFormatter.ISO_LOCAL_TIME);
