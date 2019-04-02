@@ -226,7 +226,18 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         exportBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                formattedTimeDataLogic.exportToExcelDocument();
+
+                boolean success = formattedTimeDataLogic.exportToExcelDocument();
+                if(success) {
+                    excelFeedbackLabel.setText("Excel document was successfully created");
+                    excelFeedbackLabel.getStyleClass().remove("error");
+                    excelFeedbackLabel.getStyleClass().add("success");
+                }
+                else {
+                    excelFeedbackLabel.setText("Excel document was NOT created");
+                    excelFeedbackLabel.getStyleClass().remove("success");
+                    excelFeedbackLabel.getStyleClass().add("error");
+                }
 
                 Thread t1 = new Thread(() -> {
                     double opacity = 1.00;
@@ -410,7 +421,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         TableColumn<RawTimeDataModel, String> endTimeCol = new TableColumn<>("End Time");
         endTimeCol.setCellValueFactory(new PropertyValueFactory<>("endTime"));
 
-        TableColumn<RawTimeDataModel, String> durationCol = new TableColumn<>("Duration");
+        TableColumn<RawTimeDataModel, String> durationCol = new TableColumn<>("Duration (HH:mm:ss)");
         durationCol.setCellValueFactory(new PropertyValueFactory<>("duration"));
 
         projectCol.setPrefWidth(120);
