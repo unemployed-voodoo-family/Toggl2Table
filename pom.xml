@@ -35,10 +35,24 @@
     </repositories>
 
     <dependencies>
+
+        <!-- https://mvnrepository.com/artifact/org.controlsfx/controlsfx -->
         <dependency>
-            <groupId>ch.simas.jtoggl</groupId>
-            <artifactId>jtoggl-api</artifactId>
-            <version>1.1.0-SNAPSHOT</version>
+            <groupId>org.controlsfx</groupId>
+            <artifactId>controlsfx</artifactId>
+            <version>8.40.14</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.controlsfx</groupId>
+            <artifactId>controlsfx</artifactId>
+            <version>8.40.14</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.unemployed-voodoo-family</groupId>
+            <artifactId>jtoggl</artifactId>
+            <version>1cd06f23e2174dbc18bf1387ee428a3ec61a2c8b</version>
         </dependency>
 
         <dependency>
@@ -53,6 +67,16 @@
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
             <version>3.17</version>
+        </dependency>
+        <dependency>
+            <groupId>org.testfx</groupId>
+            <artifactId>testfx-core</artifactId>
+            <version>4.0.15-alpha</version>
+        </dependency>
+        <dependency>
+            <groupId>org.testfx</groupId>
+            <artifactId>testfx-junit</artifactId>
+            <version>4.0.15-alpha</version>
         </dependency>
     </dependencies>
 

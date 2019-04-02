@@ -51,10 +51,11 @@ public class Main extends Application {
         Scene scene = new Scene(root);
         scene.getStylesheets().add("styles.css");
         //scene.getStylesheets().add("styles/style.css");
-        primaryStage.setTitle("Toggle Time Sheet - Login");
+        primaryStage.setTitle("Toggl Time Sheet - Login");
         primaryStage.setScene(scene);
         //Image anotherIcon = new Image();
         //primaryStage.getIcons().add(anotherIcon);
         primaryStage.show();
+        primaryStage.toFront();
     }
 }

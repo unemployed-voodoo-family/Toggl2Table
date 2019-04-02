@@ -35,6 +35,7 @@ public class ExcelWriter {
         }
         catch(IOException e) {
             System.out.println(e.getMessage());
+            return false;
         }
         return success; //Return true if document was build correctly, false if failed
     }
@@ -52,7 +53,6 @@ public class ExcelWriter {
         FileOutputStream fileOut = new FileOutputStream("Time Report.xlsx");
         workbook.write(fileOut);
         fileOut.close();
-
         workbook.close();
     }
 

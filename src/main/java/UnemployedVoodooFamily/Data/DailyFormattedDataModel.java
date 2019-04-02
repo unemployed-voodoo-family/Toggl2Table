@@ -3,7 +3,10 @@ package UnemployedVoodooFamily.Data;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.format.TextStyle;
+import java.util.Locale;
 
 public class DailyFormattedDataModel {
 
@@ -16,17 +19,17 @@ public class DailyFormattedDataModel {
     /**
      * Creates a WeeklyTimeDataModel object
      * Used to structure data for the corresponding TableView
-     * @param weekDay       String with weekday
      * @param workedHours   String with hours worked
      * @param supposedHours String with supposed work hours
      * @param overtime      String with overtime
      */
-    public DailyFormattedDataModel(String weekDay, Double workedHours, Double supposedHours,
-                                   Double overtime, LocalDate day) {
-        this.weekDay = new SimpleStringProperty(weekDay);
+    public DailyFormattedDataModel(Double workedHours, Double supposedHours, LocalDate day) {
+
+        String weekDayStr = day.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.getDefault());
+        this.weekDay = new SimpleStringProperty(weekDayStr);
         this.workedHours = new SimpleDoubleProperty(workedHours);
         this.supposedHours = new SimpleDoubleProperty(supposedHours);
-        this.overtime = new SimpleDoubleProperty(overtime);
+        this.overtime = new SimpleDoubleProperty(workedHours - supposedHours);
         this.day = day;
     }
 
