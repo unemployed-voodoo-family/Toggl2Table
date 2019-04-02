@@ -78,7 +78,7 @@ public class RawTimeDataLogic {
                 projectName = project.getName();
                 Client client = project.getClient();
                 if(client != null) {
-                    client.getName();
+                    clientStr = client.getName();
                 }
             }
 
