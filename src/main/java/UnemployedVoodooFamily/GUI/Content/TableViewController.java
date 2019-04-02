@@ -513,7 +513,6 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         supposedHoursCol.setPrefWidth(120);
         overtimeCol.setPrefWidth(120);
         weekDayCol.setPrefWidth(90);
-        System.out.println("done");
         //Adds the columns to the table and updates it
         this.weeklyTable.getColumns().addAll(weekDayCol, workedHoursCol, supposedHoursCol, overtimeCol);
         this.weeklyTable.setEditable(false);

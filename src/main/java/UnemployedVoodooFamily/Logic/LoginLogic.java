@@ -52,7 +52,6 @@ public class LoginLogic {
 
         OutputStream output;
         String filepath = FilePath.APP_HOME.getPath() + "/credentials.properties";
-        System.out.println(filepath);
         Properties prop = propertiesLogic.loadProps(filepath);
         prop.setProperty("username", username);
         prop.setProperty("password", securePassword);

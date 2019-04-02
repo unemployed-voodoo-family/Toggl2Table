@@ -44,7 +44,6 @@ public class Session {
             refreshUser();
             this.zoneId = ZoneId.of(user.getTimeZone());
             zoneOffset = zoneId.getRules().getOffset(Instant.now());
-            System.out.println(zoneOffset);
             this.workHours = propsLogic.loadProps(FilePath.getCurrentUserWorkhours());
         }
         else {

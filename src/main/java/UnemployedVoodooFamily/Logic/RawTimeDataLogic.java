@@ -32,7 +32,6 @@ public class RawTimeDataLogic {
                                                          Map<Long, Workspace> workspaces, Map<Long, Client> clients,
                                                          Set<T> excludedData) {
 
-        //System.out.println(ZoneOffset.of(user.getTimeZone()));
         List<RawTimeDataModel> data = new ArrayList<>();
         this.masterTimeEntries = timeEntries;
 
