@@ -58,33 +58,37 @@ public class RawTimeDataLogic {
             String description = timeEntry.getDescription();
             OffsetDateTime start = timeEntry.getStart().withOffsetSameInstant(zoneOffset);
             OffsetDateTime stop = timeEntry.getStop().withOffsetSameInstant(zoneOffset);
-            String startDate = start.toLocalDate().format(dateFormatter);
-            String startTime = start.toLocalTime().format(durationFormatter);
 
-            String stopDate = "";
-            String stopTime = "";
-            if(stop != null) {
-                stopTime = stop.toLocalTime().format(durationFormatter);
-                stopDate = stop.toLocalDate().format(dateFormatter);
-            }
+            if((start.toLocalDate().isAfter(getFilteredDataStartDate()) || start.toLocalDate().isEqual(getFilteredDataStartDate()))
+                && (stop.toLocalDate().isBefore(getFilteredDataEndDate()) || stop.toLocalDate().isEqual(getFilteredDataEndDate()))){
+                String startDate = start.toLocalDate().format(dateFormatter);
+                String startTime = start.toLocalTime().format(durationFormatter);
 
-            long duration = timeEntry.getDuration();
-            String durationStr = LocalTime.MIN.plusSeconds(duration).format(DateTimeFormatter.ISO_LOCAL_TIME);
-
-            Project project = timeEntry.getProject();
-            String projectName = "";
-            String clientStr = "";
-            if(project != null) {
-                projectName = project.getName();
-                Client client = project.getClient();
-                if(client != null) {
-                    clientStr = client.getName();
+                String stopDate = "";
+                String stopTime = "";
+                if(stop != null) {
+                    stopTime = stop.toLocalTime().format(durationFormatter);
+                    stopDate = stop.toLocalDate().format(dateFormatter);
                 }
-            }
 
-            RawTimeDataModel dataModel = new RawTimeDataModel(projectName, clientStr, description, startDate, startTime,
-                                                              stopDate, stopTime, durationStr);
-            data.add(dataModel);
+                long duration = timeEntry.getDuration();
+                String durationStr = LocalTime.MIN.plusSeconds(duration).format(DateTimeFormatter.ISO_LOCAL_TIME);
+
+                Project project = timeEntry.getProject();
+                String projectName = "";
+                String clientStr = "";
+                if(project != null) {
+                    projectName = project.getName();
+                    Client client = project.getClient();
+                    if(client != null) {
+                        clientStr = client.getName();
+                    }
+                }
+
+                RawTimeDataModel dataModel = new RawTimeDataModel(projectName, clientStr, description, startDate,
+                                                                  startTime, stopDate, stopTime, durationStr);
+                data.add(dataModel);
+            }
         }
         return data;
     }
