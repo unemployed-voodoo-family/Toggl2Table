@@ -175,3 +175,7 @@
 .label.error    {
     -fx-text-fill: #ff2530;
 }
+
+.label.success   {
+    -fx-text-fill: #49ba29;
+}

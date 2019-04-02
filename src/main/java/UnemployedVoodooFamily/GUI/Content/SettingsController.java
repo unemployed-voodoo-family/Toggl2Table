@@ -51,18 +51,9 @@ public class SettingsController {
 
     public void initialize() {
         this.logic = new SettingsLogic();
-        initilizeFields();
-        hoursView.setVisible(false);
+        this.hoursView.setVisible(false);
+        toggleViewHoursList();
         setKeyAndClickListeners();
-    }
-
-    private void initilizeFields() {
-        //allow only number input in hoursField
-        hoursField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if(! newValue.matches("\\d{0,9}([\\.]\\d{0,9})?")) {
-                hoursField.setText(oldValue);
-            }
-        });
     }
 
     @SuppressWarnings("Duplicates")
@@ -75,7 +66,7 @@ public class SettingsController {
         hoursField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             hoursField.getStyleClass().remove("error");
             if(! newValue) {
-                if(! hoursField.getText().matches("[0-9]|1[0-9]|2[0-4]|[0-9]\\.[0-9]|1[0-9]\\.[0-9]|2[0-3]\\.[0-9]")) {
+                if(! hoursField.getText().matches("[0-1]?[0-9](\\.[0-9][0-9]?)?|2[0-3](\\.[0-9][0-9]?)?|24(\\.[0][0]?)?")) {
                     hoursField.setText("");
                     hoursField.getStyleClass().add("error");
                 }
@@ -160,13 +151,21 @@ public class SettingsController {
                 logic.populateHoursTable(hoursView);
             }
             clearWorkHourInputFields();
+            showWorkHoursInputSuccess();
         }
 
     }
 
     private void showWorkHourInputErrorMessage(String errorMessage) {
+        inputFeedbackLabel.getStyleClass().remove("success");
         inputFeedbackLabel.getStyleClass().add("error");
         inputFeedbackLabel.setText(errorMessage);
+    }
+
+    private void showWorkHoursInputSuccess()    {
+        inputFeedbackLabel.getStyleClass().remove("error");
+        inputFeedbackLabel.getStyleClass().add("success");
+        inputFeedbackLabel.setText("Work hours added");
     }
 
     private void clearWorkHourInputFields() {
