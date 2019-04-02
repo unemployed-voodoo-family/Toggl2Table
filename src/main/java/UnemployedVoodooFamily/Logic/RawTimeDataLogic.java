@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 public class RawTimeDataLogic {
     // and is responsible for handling raw time data
     //TODO replace ObservableLists with ArrayLists
-    private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd. LLL yyyy");
+    private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MMM-dd");
 
     private LocalDate filterStartDate = LocalDate.now().minusWeeks(1);
     private LocalDate filterEndDate = LocalDate.now();
@@ -55,7 +55,7 @@ public class RawTimeDataLogic {
             filteredTimeEntries.removeAll(excludedEntries);
         }
 
-        DateTimeFormatter durationFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        DateTimeFormatter durationFormatter = DateTimeFormatter.ofPattern("HH:mm");
         Iterator<TimeEntry> it = filteredTimeEntries.iterator();
         while(it.hasNext()) {
             TimeEntry timeEntry = it.next();

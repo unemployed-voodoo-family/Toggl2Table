@@ -56,5 +56,6 @@ public class Main extends Application {
         //Image anotherIcon = new Image();
         //primaryStage.getIcons().add(anotherIcon);
         primaryStage.show();
+        primaryStage.toFront();
     }
 }

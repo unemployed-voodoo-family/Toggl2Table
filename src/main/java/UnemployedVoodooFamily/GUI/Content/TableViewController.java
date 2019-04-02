@@ -227,13 +227,26 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
 
         applyFilterBtn.setOnAction(event -> applyFilters());
 
-        exportBtn.setOnAction(event -> {
-        exportBtn.setDisable(true);
-            Thread t = new Thread(() -> {
-                exportProgressIndicator.setVisible(true);
-                formattedTimeDataLogic.exportToExcelDocument();
-            });
-            t.start();
+        exportBtn.setOnAction(new EventHandler<ActionEvent>() {
+                      Thread t = new Thread(() -> {
+            @Override
+            public void handle(ActionEvent event) {
+              exportBtn.setDisable(true);
+              exportProgressIndicator.setVisible(true);
+
+                boolean success = formattedTimeDataLogic.exportToExcelDocument();
+                if(success) {
+                    excelFeedbackLabel.setText("Excel document was successfully created");
+                    excelFeedbackLabel.getStyleClass().remove("error");
+                    excelFeedbackLabel.getStyleClass().add("success");
+                }
+                else {
+                    excelFeedbackLabel.setText("Excel document was NOT created");
+                    excelFeedbackLabel.getStyleClass().remove("success");
+                    excelFeedbackLabel.getStyleClass().add("error");
+                }
+              });
+              t.start();
 
             Thread t1 = new Thread(() -> {
                 try {
@@ -424,7 +437,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         TableColumn<RawTimeDataModel, String> endTimeCol = new TableColumn<>("End Time");
         endTimeCol.setCellValueFactory(new PropertyValueFactory<>("endTime"));
 
-        TableColumn<RawTimeDataModel, String> durationCol = new TableColumn<>("Duration");
+        TableColumn<RawTimeDataModel, String> durationCol = new TableColumn<>("Duration (HH:mm:ss)");
         durationCol.setCellValueFactory(new PropertyValueFactory<>("duration"));
 
         projectCol.setPrefWidth(120);

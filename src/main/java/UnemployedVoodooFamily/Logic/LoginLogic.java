@@ -17,11 +17,11 @@ public class LoginLogic {
     private PropertiesLogic propertiesLogic = new PropertiesLogic();
 
     public boolean attemptAuthentication(String username, String password, boolean rememberUsername, boolean rememberPassword) {
-        // Run this thread to avoid UnemployedVoodooFamily.GUI freezing
         Session session = Session.getInstance();
         boolean loggedIn = false;
         try {
             session.setSession(new JToggl(username, password));
+            // Run this thread to avoid UnemployedVoodooFamily.GUI from freezing
             Thread togglThread = new Thread(() -> Platform.runLater(() -> {
                 try {
                     new GUIBaseController().start();
@@ -48,8 +48,8 @@ public class LoginLogic {
     }
 
 
-    private void saveUsernameAndPassword(String username, String securePassword) {
-
+    private boolean saveUsernameAndPassword(String username, String securePassword) {
+        boolean storeSuccessful = false;
         OutputStream output;
         String filepath = FilePath.APP_HOME.getPath() + "/credentials.properties";
         Properties prop = propertiesLogic.loadProps(filepath);
@@ -58,10 +58,12 @@ public class LoginLogic {
         try {
             output = new FileOutputStream(filepath);
             prop.store(output, null);
+            storeSuccessful = true;
         }
         catch(IOException e) {
             e.printStackTrace();
         }
+        return storeSuccessful;
     }
 
     private void rememberWhich(String username, String password, boolean rememberUsername, boolean rememberPassword) {
