@@ -19,7 +19,7 @@ public class WeeklyFormattedDataModel {
     /**
      * Creates a MonthlyTimeDataModel object
      * Used to structure data for the corresponding TableView
-     * @param weekNumber String with week number
+     * @param firstDateOfWeek First date of the week being formatted
      * @param workedHours String with worked hours
      * @param supposedHours String with supposed work hours
      * @param overtime String with the amount of overtime
