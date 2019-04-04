@@ -1,7 +1,7 @@
 package testGUI;
 
 import UnemployedVoodooFamily.Data.Enums.FilePath;
-import UnemployedVoodooFamily.Logic.PropertiesLogic;
+import UnemployedVoodooFamily.Logic.FileLogic;
 import UnemployedVoodooFamily.Utils.PasswordUtils;
 import com.sun.javafx.stage.StageHelper;
 import javafx.fxml.FXMLLoader;
@@ -70,7 +70,7 @@ public class LoginLogicGUITest extends ApplicationTest {
     @Test
     public void testRememberCredentials() {
         boolean rememberedCredentials;
-        PropertiesLogic propertiesLogic = new PropertiesLogic();
+        FileLogic fileLogic = new FileLogic();
         String apiToken = "a5f128064022cf3f6da6d4dab8bd7bd3";
         String password = "api_token";
         doubleClickOn("#emailField");
@@ -82,7 +82,7 @@ public class LoginLogicGUITest extends ApplicationTest {
         clickOn("#submitBtn");
         sleep(10000);
         String filepath = FilePath.APP_HOME.getPath() + "/credentials.properties";
-        Properties prop = propertiesLogic.loadProps(filepath);
+        Properties prop = fileLogic.loadProps(filepath);
         String savedUsername = prop.getProperty("username");
         String savedPassword = PasswordUtils.decodeSecurePassword(prop.getProperty("password"));
         if(savedUsername.equals(apiToken) && savedPassword.equals(password)) {

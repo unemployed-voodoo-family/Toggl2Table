@@ -42,4 +42,20 @@ public class WorkHours {
     public DateRange getRange() {
         return DateRange.of(this.from, this.to);
     }
+
+    public void setFrom(LocalDate from) {
+        this.from = from;
+    }
+
+    public void setTo(LocalDate to) {
+        this.to = to;
+    }
+
+    public void setHours(Double hours) {
+        this.hours = hours;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
 }

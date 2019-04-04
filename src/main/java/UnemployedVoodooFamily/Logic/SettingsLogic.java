@@ -4,14 +4,11 @@ import UnemployedVoodooFamily.Data.DateRange;
 import UnemployedVoodooFamily.Data.Enums.FilePath;
 import UnemployedVoodooFamily.Data.WorkHours;
 import UnemployedVoodooFamily.Data.WorkHoursData;
-import com.google.gson.JsonObject;
-import com.sun.corba.se.spi.orbutil.threadpool.Work;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
@@ -24,7 +21,7 @@ import java.util.*;
 public class SettingsLogic {
 
     private Properties props = new Properties();
-    private PropertiesLogic propsLogic = new PropertiesLogic();
+    private FileLogic propsLogic = new FileLogic();
     private String path;
     private List<WorkHours> workHours;
 
@@ -39,6 +36,7 @@ public class SettingsLogic {
         this.workHours = propsLogic.loadJson(path);
         this.path = path;
     }
+
     /**
      * Writes the specified work hours to the "hours.properties" file.
      * @param fromDate the start of the period
@@ -47,8 +45,7 @@ public class SettingsLogic {
      * @throws URISyntaxException
      * @throws IOException
      */
-    public void setWorkHours(LocalDate fromDate, LocalDate toDate,
-                             String hoursStr){
+    public void setWorkHours(LocalDate fromDate, LocalDate toDate, String hoursStr) {
 
         this.workHours = propsLogic.loadJson(path);
         Double hours = Double.valueOf(hoursStr);
@@ -77,7 +74,7 @@ public class SettingsLogic {
             this.workHours = new ArrayList<>();
         }
         if(! this.workHours.isEmpty()) {
-            Iterator<WorkHours> it = this.workHours.iterator();
+            ListIterator<WorkHours> it = this.workHours.listIterator();
             while(it.hasNext()) {
                 WorkHours next = it.next();
                 Double value = next.getHours();
@@ -85,6 +82,18 @@ public class SettingsLogic {
                 DateRange oldRange = next.getRange();
                 DateRange newRange = wh.getRange();
                 boolean keyChanged = false;
+
+                // if the new value is inside another value, split it
+                if(oldRange.isEncapsulating(newRange) && ! value.equals(newValue)) {
+                    it.remove();
+                    WorkHours wh1 = new WorkHours(oldRange.getFrom(), newRange.getFrom().minusDays(1), value,
+                                                  next.getComment());
+                    WorkHours wh2 = new WorkHours(newRange.getTo().plusDays(1), oldRange.getTo(), value,
+                                                  next.getComment());
+                    it.add(wh1);
+                    it.add(wh2);
+                    continue;
+                }
 
                 //if new "from" value overrides old "to" value
                 if(newRange.fromValueinRange(oldRange)) {
@@ -96,6 +105,7 @@ public class SettingsLogic {
                         keyChanged = true;
                     }
                 }
+                //check if values can be combined
                 LocalDate fromValue = newRange.getFrom();
                 if(newValue.equals(value) && fromValue.minusDays(1).equals(oldRange.getTo())) {
                     newRange.setFrom(oldRange.getFrom());
@@ -111,15 +121,17 @@ public class SettingsLogic {
                         keyChanged = true;
                     }
                 }
+
+                // check if entries can be combined
                 LocalDate toValue = newRange.getTo();
                 if(newValue.equals(value) && toValue.plusDays(1).equals(oldRange.getFrom())) {
                     newRange.setTo(oldRange.getTo());
                 }
 
-                //if another value was changed, change it
+                //if a value in the list was changed, save the changes
                 if(keyChanged) {
                     it.remove();
-                    this.workHours.add(new WorkHours(oldRange.getFrom(), oldRange.getTo(), value));
+                    it.add(new WorkHours(oldRange.getFrom(), oldRange.getTo(), value));
                 }
 
                 //if values are illogical or overwritten by the new value, remove
@@ -127,10 +139,12 @@ public class SettingsLogic {
                         .getFrom().isAfter(oldRange.getTo())) {
                     it.remove();
                 }
+                wh.setFrom(newRange.getFrom());
+                wh.setTo(newRange.getTo());
             }
             // after checking against the other
             // entries, put the new entry
-            this.workHours.add(wh);
+            it.add(wh);
         }
         else {
             // There are no other values in the list,
@@ -152,29 +166,28 @@ public class SettingsLogic {
 
         //load props file
         props = propsLogic.loadProps(FilePath.getCurrentUserWorkhours());
-        Set<String> periods = props.stringPropertyNames();
+        propsLogic.loadJson(path);
 
         ObservableList<WorkHoursData> data = FXCollections.observableArrayList();
-        Iterator<String> it = sortWorkHoursData(periods).iterator();
+        Iterator<WorkHours> it = sortWorkHoursData(propsLogic.loadJson(path)).iterator();
 
         while(it.hasNext()) {
-            String key = it.next();
-            String value = props.getProperty(key);
-            DateRange range = DateRange.ofString(key, DATE_FORMAT);
-            data.add(new WorkHoursData(range.getFrom(), range.getTo(), Double.valueOf(value)));
+            WorkHours next = it.next();
+            Double hours = next.getHours();
+            data.add(new WorkHoursData(next.getFrom(), next.getTo(), hours));
         }
         table.getItems().clear();
         table.getItems().addAll(data);
     }
 
-    private List<String> sortWorkHoursData(Set<String> data) {
-        List<String> dataSorted = new ArrayList<>(data);
-        dataSorted.sort((o1, o2) -> {
-            LocalDate d1 = DateRange.ofString(o1, DATE_FORMAT).getFrom();
-            LocalDate d2 = DateRange.ofString(o2, DATE_FORMAT).getFrom();
+    private List<WorkHours> sortWorkHoursData(List<WorkHours> data) {
+
+        data.sort((o1, o2) -> {
+            LocalDate d1 = o1.getFrom();
+            LocalDate d2 = o2.getFrom();
             return d1.compareTo(d2);
         });
-        return dataSorted;
+        return data;
     }
 
 }

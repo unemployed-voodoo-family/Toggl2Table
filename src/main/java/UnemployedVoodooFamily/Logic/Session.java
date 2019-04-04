@@ -7,8 +7,6 @@ import ch.simas.jtoggl.*;
 
 import java.time.*;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Session {
 
@@ -24,14 +22,14 @@ public class Session {
     private ZoneOffset zoneOffset;
 
     private Properties workHours;
-    private PropertiesLogic propsLogic;
+    private FileLogic propsLogic;
 
     private static Session togglSession = new Session();
 
     private List<DataLoadListener> loadListeners = new ArrayList<>();
 
     private Session() {
-        this.propsLogic = new PropertiesLogic();
+        this.propsLogic = new FileLogic();
     }
 
     synchronized public static Session getInstance() {

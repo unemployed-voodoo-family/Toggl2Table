@@ -104,8 +104,8 @@ public class DateRange {
     }
 
     public static DateRange of(LocalDate from, LocalDate to) {
-        DateTimeFormatter d = DateTimeFormatter.ISO_LOCAL_TIME;
-        return new DateRange(from, to, d);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        return new DateRange(from, to, formatter);
     }
 
     @Override
