@@ -42,6 +42,7 @@ public class RawTimeDataLogic {
         filteredTimeEntries = new LinkedList<>(masterTimeEntries);
         if(excludedData != null && ! excludedData.isEmpty()) {
             List<TimeEntry> excludedEntries;
+
             excludedEntries = filteredTimeEntries.stream().filter(timeEntry -> {
                 boolean result = false;
                 Project p = timeEntry.getProject();
@@ -52,6 +53,7 @@ public class RawTimeDataLogic {
 
                 return result;
             }).collect(Collectors.toList());
+
             filteredTimeEntries.removeAll(excludedEntries);
         }
 
