@@ -3,18 +3,18 @@ package UnemployedVoodooFamily.Data;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.TextStyle;
 import java.util.Locale;
 
 public class DailyFormattedDataModel {
 
-    private LocalDate day;
-    private SimpleStringProperty weekDay;
+    private LocalDate date;
+    private SimpleStringProperty weekday;
     private SimpleDoubleProperty workedHours;
     private SimpleDoubleProperty supposedHours;
-    private SimpleDoubleProperty overtime;
+    private SimpleDoubleProperty extraTime;
+    private SimpleStringProperty note = new SimpleStringProperty("");
 
     /**
      * Creates a WeeklyTimeDataModel object
@@ -22,49 +22,64 @@ public class DailyFormattedDataModel {
      * @param workedHours   String with hours worked
      * @param supposedHours String with supposed work hours
      */
-    public DailyFormattedDataModel(Double workedHours, Double supposedHours, LocalDate day) {
+    public DailyFormattedDataModel(Double workedHours, Double supposedHours, LocalDate date, String note) {
 
-        String weekDayStr = day.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.getDefault());
-        this.weekDay = new SimpleStringProperty(weekDayStr);
+        String weekDayStr = date.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.getDefault());
+        this.weekday = new SimpleStringProperty(weekDayStr);
         this.workedHours = new SimpleDoubleProperty(workedHours);
         this.supposedHours = new SimpleDoubleProperty(supposedHours);
-        this.overtime = new SimpleDoubleProperty(workedHours - supposedHours);
-        this.day = day;
+        this.extraTime = new SimpleDoubleProperty(workedHours - supposedHours);
+        if(null != note)    {
+            this.note = new SimpleStringProperty(note);
+        }
+        this.date = date;
     }
 
     /**
      * Returns the weekday
      * @return the weekday
      */
-    public String getWeekDay() {
-        return weekDay.get();
+    public String getWeekday() {
+        return this.weekday.get();
     }
 
     /**
-     * Returns the amount worked as a string
-     * @return the amount worked as a string
+     * Returns the amount worked
+     * @return the amount worked
      */
     public Double getWorkedHours() {
-        return workedHours.get();
+        return this.workedHours.get();
     }
 
     /**
-     * Returns the supposed amount worked as a string
-     * @return the supposed amount worked as a string
+     * Returns the supposed amount worked
+     * @return the supposed amount worked
      */
     public Double getSupposedHours() {
-        return supposedHours.get();
+        return this.supposedHours.get();
     }
 
     /**
-     * Returns the amount of overtime worked as a string
-     * @return the amount of overtime worked as a string
+     * Returns the amount of extraTime
+     * @return the amount of extraTime
      */
-    public Double getOvertime() {
-        return overtime.get();
+    public Double getExtraTime() {
+        return this.extraTime.get();
     }
 
-    public LocalDate getDay() {
-        return day;
+    /**
+     * Returns the date
+     * @return the date
+     */
+    public LocalDate getDate() {
+        return this.date;
+    }
+
+    /**
+     * Returns the written note as a string
+     * @return the written note as a string
+     */
+    public String getNote() {
+        return this.note.get();
     }
 }

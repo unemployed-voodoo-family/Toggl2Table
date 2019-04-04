@@ -41,7 +41,7 @@ public class WeeklyFormattedDataModelBuilder {
     }
 
     public WeeklyFormattedDataModelBuilder addDailyData(DailyFormattedDataModel dailyDataModel) {
-        weeklyTimeEntries.put(dailyDataModel.getDay().getDayOfWeek(), dailyDataModel);
+        weeklyTimeEntries.put(dailyDataModel.getDate().getDayOfWeek(), dailyDataModel);
         return this;
     }
 
@@ -63,14 +63,14 @@ public class WeeklyFormattedDataModelBuilder {
         this.weekday = LocalDate.now().getDayOfWeek();
         this.note = "Fucky wucky";
 
-        return new WeeklyFormattedDataModel(this.firstDateOfWeek, this.workedHours, this.supposedHours, this.extraTime, this.date, this.weekday, this.note);
+        return new WeeklyFormattedDataModel(this.workedHours, this.supposedHours, this.date, this.note);
     }
 
     private void calculateAndSetHours() {
         this.supposedHours = 0.0;
         this.workedHours = 0.0;
         for(DailyFormattedDataModel entry: weeklyTimeEntries.values()) {
-            DayOfWeek day = entry.getDay().getDayOfWeek();
+            DayOfWeek day = entry.getDate().getDayOfWeek();
             if(day.equals(DayOfWeek.SUNDAY) || day.equals(DayOfWeek.SATURDAY)) {
             }
             else {

@@ -5,16 +5,8 @@ import UnemployedVoodooFamily.Data.DailyFormattedDataModelBuilder;
 import UnemployedVoodooFamily.Data.WeeklyFormattedDataModel;
 import UnemployedVoodooFamily.Data.WeeklyFormattedDataModelBuilder;
 import ch.simas.jtoggl.TimeEntry;
-import com.sun.javafx.scene.control.skin.ComboBoxListViewSkin;
-import com.sun.javafx.scene.control.skin.ComboBoxPopupControl;
-import com.sun.javafx.scene.control.skin.ContextMenuContent;
-import com.sun.javafx.scene.control.skin.ContextMenuSkin;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.Spinner;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -106,7 +98,7 @@ public class FormattedTimeDataLogic {
             while(i < weeklyMasterData.size() && ! weekFormatted) {
 
                 DailyFormattedDataModel dailyData = weeklyMasterData.get(i);
-                int entryWeekNumber = dailyData.getDay().get(woy);
+                int entryWeekNumber = dailyData.getDate().get(woy);
 
                 // check if entry is suitable and add it to list
                 if(entryWeekNumber == weekNumber) {
@@ -148,7 +140,7 @@ public class FormattedTimeDataLogic {
             while(i < weeklyMasterData.size() && ! weekFormatted) {
                 DailyFormattedDataModel dailyData = weeklyMasterData.get(i);
 
-                int entryWeekNumber = dailyData.getDay().get(woy);
+                int entryWeekNumber = dailyData.getDate().get(woy);
 
                 if(entryWeekNumber == weekNumber) {
                     builder.addDailyData(dailyData);

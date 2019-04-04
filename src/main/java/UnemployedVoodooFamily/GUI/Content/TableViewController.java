@@ -430,7 +430,6 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
 
         TableColumn<RawTimeDataModel, String> startDateCol = new TableColumn<>("Start Date");
         startDateCol.setCellValueFactory(new PropertyValueFactory<>("startDate"));
-        startDateCol.getStyleClass().add("right");
 
         TableColumn<RawTimeDataModel, String> startTimeCol = new TableColumn<>("Start Time");
         startTimeCol.setCellValueFactory(new PropertyValueFactory<>("startTime"));
@@ -438,7 +437,6 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
 
         TableColumn<RawTimeDataModel, String> endDateCol = new TableColumn<>("End Date");
         endDateCol.setCellValueFactory(new PropertyValueFactory<>("endDate"));
-        endDateCol.getStyleClass().add("right");
 
         TableColumn<RawTimeDataModel, String> endTimeCol = new TableColumn<>("End Time");
         endTimeCol.setCellValueFactory(new PropertyValueFactory<>("endTime"));
@@ -505,24 +503,35 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
 
         this.weeklyTable = new TableView();
         //Create all columns necessary
-        TableColumn<DailyFormattedDataModel, String> weekDayCol = new TableColumn<>("Week Day");
-        weekDayCol.setCellValueFactory(new PropertyValueFactory<>("weekDay"));
-        weekDayCol.setSortable(false);
+        TableColumn<DailyFormattedDataModel, String> weekdayCol = new TableColumn<>("Week Day");
+        weekdayCol.setCellValueFactory(new PropertyValueFactory<>("weekday"));
+        weekdayCol.setSortable(false);
+
+        TableColumn<DailyFormattedDataModel, String> dateCol = new TableColumn<>("Date");
+        dateCol.setCellValueFactory(new PropertyValueFactory<>("date"));
+        dateCol.setSortable(false);
 
         TableColumn<DailyFormattedDataModel, Double> workedHoursCol = new TableColumn<>("Worked Hours");
         workedHoursCol.setCellValueFactory(new PropertyValueFactory<>("workedHours"));
         workedHoursCol.setSortable(false);
+        workedHoursCol.getStyleClass().add("right");
         workedHoursCol.setCellFactory(col -> setDoubleFormatter(df));
 
-        TableColumn<DailyFormattedDataModel, Double> supposedHoursCol = new TableColumn<>("Supposed Hours");
+        TableColumn<DailyFormattedDataModel, Double> supposedHoursCol = new TableColumn<>("Supposed work hours");
         supposedHoursCol.setCellValueFactory(new PropertyValueFactory<>("supposedHours"));
         supposedHoursCol.setSortable(false);
+        supposedHoursCol.getStyleClass().add("right");
         supposedHoursCol.setCellFactory(col -> setDoubleFormatter(df));
 
-        TableColumn<DailyFormattedDataModel, Double> overtimeCol = new TableColumn<>("Overtime");
-        overtimeCol.setCellValueFactory(new PropertyValueFactory<>("overtime"));
-        overtimeCol.setSortable(false);
-        overtimeCol.setCellFactory(col -> new TableCell<DailyFormattedDataModel, Double>() {
+        TableColumn<DailyFormattedDataModel, String> noteCol = new TableColumn<>("Notes");
+        noteCol.setCellValueFactory(new PropertyValueFactory<>("note"));
+        noteCol.setSortable(false);
+
+        TableColumn<DailyFormattedDataModel, Double> extraTimeCol = new TableColumn<>("+/- Hours");
+        extraTimeCol.setCellValueFactory(new PropertyValueFactory<>("extraTime"));
+        extraTimeCol.setSortable(false);
+        extraTimeCol.getStyleClass().add("right");
+        extraTimeCol.setCellFactory(col -> new TableCell<DailyFormattedDataModel, Double>() {
             @Override
             protected void updateItem(Double item, boolean empty) {
                 super.updateItem(item, empty);
@@ -546,11 +555,10 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
             }
         });
         workedHoursCol.setPrefWidth(120);
-        supposedHoursCol.setPrefWidth(120);
-        overtimeCol.setPrefWidth(120);
-        weekDayCol.setPrefWidth(90);
+        supposedHoursCol.setPrefWidth(140);
+        extraTimeCol.setPrefWidth(90);
         //Adds the columns to the table and updates it
-        this.weeklyTable.getColumns().addAll(weekDayCol, workedHoursCol, supposedHoursCol, overtimeCol);
+        this.weeklyTable.getColumns().addAll(weekdayCol, dateCol, supposedHoursCol, workedHoursCol, extraTimeCol, noteCol);
         this.weeklyTable.setEditable(false);
 
         //must be called, or else the table won't appear

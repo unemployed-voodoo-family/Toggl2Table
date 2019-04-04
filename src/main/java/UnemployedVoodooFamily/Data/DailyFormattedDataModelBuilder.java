@@ -6,11 +6,8 @@ import ch.simas.jtoggl.TimeEntry;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.OffsetDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -20,6 +17,7 @@ public class DailyFormattedDataModelBuilder {
     private Double supposedHours;
     private Double overtime;
     private LocalDate day;
+    private String note = "oppsie woopsie";
     private PropertiesLogic propsLogic = new PropertiesLogic();
 
     private List<TimeEntry> dailyTimeEntries = new ArrayList<>();
@@ -46,7 +44,7 @@ public class DailyFormattedDataModelBuilder {
         this.weekDay = this.day.getDayOfWeek();
         this.supposedHours = findSupposedHours();
         this.workedHours = (workedSeconds % 86400) / 3600;
-        return new DailyFormattedDataModel(this.workedHours, this.supposedHours, this.day);
+        return new DailyFormattedDataModel(this.workedHours, this.supposedHours, this.day, this.note);
     }
 
     private Double findSupposedHours() {
