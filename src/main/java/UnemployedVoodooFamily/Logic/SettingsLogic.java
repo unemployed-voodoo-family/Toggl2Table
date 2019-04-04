@@ -2,12 +2,16 @@ package UnemployedVoodooFamily.Logic;
 
 import UnemployedVoodooFamily.Data.DateRange;
 import UnemployedVoodooFamily.Data.Enums.FilePath;
+import UnemployedVoodooFamily.Data.WorkHours;
 import UnemployedVoodooFamily.Data.WorkHoursData;
+import com.google.gson.JsonObject;
+import com.sun.corba.se.spi.orbutil.threadpool.Work;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
@@ -20,14 +24,21 @@ import java.util.*;
 public class SettingsLogic {
 
     private Properties props = new Properties();
-    //private static final String HOURS_PATH = "/Settings/hours.properties";
+    private PropertiesLogic propsLogic = new PropertiesLogic();
+    private String path;
+    private List<WorkHours> workHours;
+
     private static DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-    PropertiesLogic propsLogic = new PropertiesLogic();
 
     private TableColumn<WorkHoursData, String> fromCol;
     private TableColumn<WorkHoursData, String> toCol;
     private TableColumn<WorkHoursData, Double> hoursCol;
 
+
+    public SettingsLogic(String path) {
+        this.workHours = propsLogic.loadJson(path);
+        this.path = path;
+    }
     /**
      * Writes the specified work hours to the "hours.properties" file.
      * @param fromDate the start of the period
@@ -38,15 +49,16 @@ public class SettingsLogic {
      */
     public void setWorkHours(LocalDate fromDate, LocalDate toDate,
                              String hoursStr){
+
+        this.workHours = propsLogic.loadJson(path);
         Double hours = Double.valueOf(hoursStr);
+        WorkHours wh = new WorkHours(fromDate, toDate, hours);
+        fixHoursOverlap(wh);
+        propsLogic.saveJson(path, workHours);
+    }
 
-        //load props file
-        props = propsLogic.loadProps(FilePath.getCurrentUserWorkhours());
-
-        DateRange range = new DateRange(fromDate, toDate, DATE_FORMAT);
-        fixHoursOverlap(props, range, hours);
-        propsLogic.saveProps(FilePath.getCurrentUserWorkhours(), props);
-
+    public List<WorkHours> getWorkHours() {
+        return this.workHours;
     }
 
     /**
@@ -57,19 +69,23 @@ public class SettingsLogic {
      * @param newRange the DateRange entered by the user
      * @param newValue the work hours entered by the user
      */
-    private void fixHoursOverlap(Properties props, DateRange newRange, Double newValue) {
+    private void fixHoursOverlap(WorkHours wh) {
 
         //TODO: Check if user input is logical
         //TODO: sort stored properties properly
-        Set<String> hours = props.stringPropertyNames();
-        if(! hours.isEmpty()) {
-            Iterator<String> it = hours.iterator();
+        if(this.workHours == null) {
+            this.workHours = new ArrayList<>();
+        }
+        if(! this.workHours.isEmpty()) {
+            Iterator<WorkHours> it = this.workHours.iterator();
             while(it.hasNext()) {
-                String key = it.next();
-                String valueStr = props.getProperty(key);
-                Double value = Double.parseDouble(valueStr);
+                WorkHours next = it.next();
+                Double value = next.getHours();
+                Double newValue = wh.getHours();
+                DateRange oldRange = next.getRange();
+                DateRange newRange = wh.getRange();
                 boolean keyChanged = false;
-                DateRange oldRange = DateRange.ofString(key, DATE_FORMAT);
+
                 //if new "from" value overrides old "to" value
                 if(newRange.fromValueinRange(oldRange)) {
                     if(newValue.equals(value)) {
@@ -102,24 +118,24 @@ public class SettingsLogic {
 
                 //if another value was changed, change it
                 if(keyChanged) {
-                    props.remove(key);
-                    props.put(oldRange.toString(), valueStr);
+                    it.remove();
+                    this.workHours.add(new WorkHours(oldRange.getFrom(), oldRange.getTo(), value));
                 }
 
                 //if values are illogical or overwritten by the new value, remove
                 if(newRange.isEncapsulating(oldRange) || oldRange.getFrom().equals(oldRange.getTo()) || oldRange
                         .getFrom().isAfter(oldRange.getTo())) {
-                    props.remove(key);
+                    it.remove();
                 }
             }
             // after checking against the other
             // entries, put the new entry
-            props.put(newRange.toString(), newValue.toString());
+            this.workHours.add(wh);
         }
         else {
             // There are no other values in the list,
             // and the new value can just be added
-            props.put(newRange.toString(), newValue.toString());
+            this.workHours.add(wh);
         }
     }
 
