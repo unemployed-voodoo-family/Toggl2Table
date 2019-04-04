@@ -7,11 +7,15 @@ import ch.simas.jtoggl.TimeEntry;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.IsoFields;
+import java.time.temporal.TemporalAdjuster;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-public class DailyFormattedDataModelBuilder {
+public class WeeklyFormattedDataListFactory {
+    /*
     private DayOfWeek weekDay;
     private Double workedHours;
     private Double supposedHours;
@@ -25,11 +29,39 @@ public class DailyFormattedDataModelBuilder {
 
     private Properties workHours = Session.getInstance().getWorkHours();
 
-    public DailyFormattedDataModelBuilder(LocalDate day) {
+     */
+
+    private ArrayList<DailyFormattedDataModel> weeklyList;
+
+    public List<DailyFormattedDataModel> buildWeeklyDataList(List<TimeEntry> timeEntries, int weekNumber, int year)   {
+        weeklyList = new ArrayList<>();
+        setupWeeklyList(weekNumber, year);
+        populateWeeklyList();
+        int weeklyEntries = 0;
+        return weeklyList;
+    }
+
+    private void setupWeeklyList(int weekNumber, int year)    {
+        LocalDate weeksFirstDate = LocalDate.ofYearDay(year, 50)
+                                            .with(IsoFields.WEEK_OF_WEEK_BASED_YEAR, weekNumber)
+                                            .with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+
+        for(DayOfWeek weekday : DayOfWeek.values()) {
+            LocalDate date = weeksFirstDate.plusDays(weekday.getValue()-1);
+            weeklyList.add(new DailyFormattedDataModel(0.00,0.00, date, ""));
+        }
+    }
+
+    private void populateWeeklyList()   {
+
+    }
+
+    /*
+    public WeeklyFormattedDataListFactory(LocalDate day) {
         this.day = day;
     }
 
-    public DailyFormattedDataModelBuilder addTimeEntry(TimeEntry timeEntry) {
+    public WeeklyFormattedDataListFactory addTimeEntry(TimeEntry timeEntry) {
         if(timeEntry != null) {
             LocalDate startDate = timeEntry.getStart().toLocalDate();
             if(startDate != null && startDate.equals(day)) {
@@ -64,4 +96,6 @@ public class DailyFormattedDataModelBuilder {
         }
         return workedSeconds;
     }
+
+     */
 }

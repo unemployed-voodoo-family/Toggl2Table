@@ -9,11 +9,11 @@ import java.time.temporal.WeekFields;
 import java.util.*;
 
 /**
- * Builder for tthe WeeklyFormattedDataModel
+ * Builder for tthe ExtendedDailyFormattedDataModel
  * Builds the summary for one week for use in the monthly table
  * Assumes all supplied data is from the same week.
  */
-public class WeeklyFormattedDataModelBuilder {
+public class MonthlyFormattedDataListFactory {
 
     private int weekNumber;
     private Double workedHours;
@@ -33,26 +33,28 @@ public class WeeklyFormattedDataModelBuilder {
     private Map<DayOfWeek, DailyFormattedDataModel> weeklyTimeEntries = new HashMap<>();
 
 
-    public WeeklyFormattedDataModelBuilder(LocalDate firstDateOfWeek) {
+    public MonthlyFormattedDataListFactory(LocalDate firstDateOfWeek) {
         TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();
         int weekNumber = firstDateOfWeek.get(woy);
         this.firstDateOfWeek = firstDateOfWeek;
         this.weekNumber = weekNumber;
     }
 
-    public WeeklyFormattedDataModelBuilder addDailyData(DailyFormattedDataModel dailyDataModel) {
+    public MonthlyFormattedDataListFactory addDailyData(DailyFormattedDataModel dailyDataModel) {
         weeklyTimeEntries.put(dailyDataModel.getDate().getDayOfWeek(), dailyDataModel);
         return this;
     }
 
-    public WeeklyFormattedDataModel build() {
+    public ExtendedDailyFormattedDataModel build() {
 
+        /*
         if(weeklyTimeEntries.size() < 7) {
             for(DayOfWeek dayOfWeek: DayOfWeek.values()) {
-                weeklyTimeEntries.putIfAbsent(dayOfWeek, new DailyFormattedDataModelBuilder(
+                weeklyTimeEntries.putIfAbsent(dayOfWeek, new WeeklyFormattedDataListFactory(
                         firstDateOfWeek.plusDays(dayOfWeek.getValue() - 1)).build());
             }
         }
+        */
 
         calculateAndSetHours();
         this.extraTime = this.workedHours - this.supposedHours;
@@ -63,7 +65,7 @@ public class WeeklyFormattedDataModelBuilder {
         this.weekday = LocalDate.now().getDayOfWeek();
         this.note = "Fucky wucky";
 
-        return new WeeklyFormattedDataModel(this.workedHours, this.supposedHours, this.date, this.note);
+        return new ExtendedDailyFormattedDataModel(this.workedHours, this.supposedHours, this.date, this.note);
     }
 
     private void calculateAndSetHours() {

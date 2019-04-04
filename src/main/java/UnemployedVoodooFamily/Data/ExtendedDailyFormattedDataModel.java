@@ -7,7 +7,7 @@ import java.time.temporal.TemporalField;
 import java.time.temporal.WeekFields;
 import java.util.Locale;
 
-public class WeeklyFormattedDataModel extends DailyFormattedDataModel {
+public class ExtendedDailyFormattedDataModel extends DailyFormattedDataModel {
 
     private SimpleIntegerProperty weekNumber;
 
@@ -17,7 +17,7 @@ public class WeeklyFormattedDataModel extends DailyFormattedDataModel {
      * @param workedHours String with worked hours
      * @param supposedHours String with supposed work hours
      */
-    public WeeklyFormattedDataModel(Double workedHours, Double supposedHours, LocalDate date, String note) {
+    public ExtendedDailyFormattedDataModel(Double workedHours, Double supposedHours, LocalDate date, String note) {
 
         super(workedHours, supposedHours, date, note);
 
