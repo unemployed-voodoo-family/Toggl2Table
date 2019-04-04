@@ -10,6 +10,7 @@ import java.io.*;
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
@@ -99,7 +100,7 @@ public class FileLogic {
         catch(IOException e) {
             e.printStackTrace();
         }
-        return list;
+        return list == null ? new ArrayList<>() : list;
     }
 
     public void saveJson(String path, Collection<?> dataset) {
