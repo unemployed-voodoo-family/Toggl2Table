@@ -1,18 +1,13 @@
 package UnemployedVoodooFamily.Data;
 
-import UnemployedVoodooFamily.Logic.PropertiesLogic;
-import UnemployedVoodooFamily.Logic.Session;
 import ch.simas.jtoggl.TimeEntry;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.IsoFields;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 public class WeeklyFormattedDataListFactory {
 

@@ -1,85 +1,59 @@
 package UnemployedVoodooFamily.Data;
 
-import UnemployedVoodooFamily.Logic.PropertiesLogic;
+import ch.simas.jtoggl.TimeEntry;
+import javafx.beans.property.SimpleIntegerProperty;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.Month;
+import java.time.YearMonth;
 import java.time.temporal.TemporalField;
 import java.time.temporal.WeekFields;
 import java.util.*;
 
 /**
- * Builder for tthe ExtendedDailyFormattedDataModel
+ * Builder for the ExtendedDailyFormattedDataModel
  * Builds the summary for one week for use in the monthly table
  * Assumes all supplied data is from the same week.
  */
 public class MonthlyFormattedDataListFactory {
 
-    private int weekNumber;
-    private Double workedHours;
-    private Double supposedHours;
-    private Double extraTime;
-    private DayOfWeek weekday;
-    private String note;
-    private LocalDate date;
-    private LocalDate firstDateOfWeek;
+    private ArrayList<ExtendedDailyFormattedDataModel> monthlyList;
 
-    private Integer year;
+    public List<ExtendedDailyFormattedDataModel> buildMonthlyDataList(List<TimeEntry> timeEntries, Month month, int year)   {
+        monthlyList = new ArrayList<>();
 
-    private final Double STANDARD_WORK_HOURS = 7.5;
-
-    PropertiesLogic propertiesLogic = new PropertiesLogic();
-
-    private Map<DayOfWeek, DailyFormattedDataModel> weeklyTimeEntries = new HashMap<>();
-
-
-    public MonthlyFormattedDataListFactory(LocalDate firstDateOfWeek) {
+        LocalDate monthStart = LocalDate.of(year, month, 1);
+        LocalDate monthEnd = LocalDate.of(year, month, YearMonth.of(year, month).atEndOfMonth().getDayOfMonth());
         TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();
-        int weekNumber = firstDateOfWeek.get(woy);
-        this.firstDateOfWeek = firstDateOfWeek;
-        this.weekNumber = weekNumber;
-    }
 
-    public MonthlyFormattedDataListFactory addDailyData(DailyFormattedDataModel dailyDataModel) {
-        weeklyTimeEntries.put(dailyDataModel.getDate().getDayOfWeek(), dailyDataModel);
-        return this;
-    }
+        int previousWeekNumber = 0;
+        int currentWeekNumber;
 
-    public ExtendedDailyFormattedDataModel build() {
+        for (LocalDate d = monthStart; !d.isAfter(monthEnd); d = d.plusDays(1)) {
+            currentWeekNumber = d.get(woy);
+            double workedHours = 0;
 
-        /*
-        if(weeklyTimeEntries.size() < 7) {
-            for(DayOfWeek dayOfWeek: DayOfWeek.values()) {
-                weeklyTimeEntries.putIfAbsent(dayOfWeek, new WeeklyFormattedDataListFactory(
-                        firstDateOfWeek.plusDays(dayOfWeek.getValue() - 1)).build());
+            if(!timeEntries.isEmpty())  {
+                for(TimeEntry t : timeEntries)  {
+                    //Check if there is a timer running and ignore it if it is
+                    if(null != t.getStop()) {
+                        if(t.getStart().toLocalDate().isEqual(d) && t.getStop().toLocalDate().isEqual(d)) {
+                            workedHours += ((double)t.getDuration() % 86400) / 3600;
+                        }
+                    }
+                }
             }
-        }
-        */
 
-        calculateAndSetHours();
-        this.extraTime = this.workedHours - this.supposedHours;
-
-
-        //TODO Change these dummy values later to reflect the actual values
-        this.date = LocalDate.now();
-        this.weekday = LocalDate.now().getDayOfWeek();
-        this.note = "Fucky wucky";
-
-        return new ExtendedDailyFormattedDataModel(this.workedHours, this.supposedHours, this.date, this.note);
-    }
-
-    private void calculateAndSetHours() {
-        this.supposedHours = 0.0;
-        this.workedHours = 0.0;
-        for(DailyFormattedDataModel entry: weeklyTimeEntries.values()) {
-            DayOfWeek day = entry.getDate().getDayOfWeek();
-            if(day.equals(DayOfWeek.SUNDAY) || day.equals(DayOfWeek.SATURDAY)) {
+            if(currentWeekNumber != previousWeekNumber) {
+                monthlyList.add(new ExtendedDailyFormattedDataModel(workedHours, 7.5, d, currentWeekNumber,"yay"));
             }
             else {
-                this.supposedHours += entry.getSupposedHours();
+                monthlyList.add(new ExtendedDailyFormattedDataModel(workedHours, 7.5, d, 0,"yay"));
             }
-            this.workedHours += entry.getWorkedHours();
+            previousWeekNumber = currentWeekNumber;
         }
-            //TODO: Exclude holidays
+
+        return monthlyList;
     }
+
 }

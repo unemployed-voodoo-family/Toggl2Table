@@ -1,15 +1,12 @@
 package UnemployedVoodooFamily.Data;
 
-import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 
 import java.time.LocalDate;
-import java.time.temporal.TemporalField;
-import java.time.temporal.WeekFields;
-import java.util.Locale;
 
 public class ExtendedDailyFormattedDataModel extends DailyFormattedDataModel {
 
-    private SimpleIntegerProperty weekNumber;
+    private SimpleStringProperty weekNumber;
 
     /**
      * Creates a MonthlyTimeDataModel object
@@ -17,12 +14,16 @@ public class ExtendedDailyFormattedDataModel extends DailyFormattedDataModel {
      * @param workedHours String with worked hours
      * @param supposedHours String with supposed work hours
      */
-    public ExtendedDailyFormattedDataModel(Double workedHours, Double supposedHours, LocalDate date, String note) {
+    public ExtendedDailyFormattedDataModel(Double workedHours, Double supposedHours, LocalDate date, int weekNumber, String note) {
 
         super(workedHours, supposedHours, date, note);
 
-        TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();
-        this.weekNumber = new SimpleIntegerProperty(getDate().get(woy));
+        if(weekNumber <= 0) {
+            this.weekNumber = new SimpleStringProperty("");
+        }
+        else {
+            this.weekNumber = new SimpleStringProperty(String.valueOf(weekNumber));
+        }
     }
 
 
@@ -30,8 +31,13 @@ public class ExtendedDailyFormattedDataModel extends DailyFormattedDataModel {
      * Returns the week number
      * @return the week number
      */
-    public Integer getWeekNumber() {
-        return weekNumber.get();
+    public String getWeekNumber() {
+        if(weekNumber.get().equals("")) {
+            return weekNumber.get();
+        }
+        else {
+            return "Week " + weekNumber.get();
+        }
     }
 
 }

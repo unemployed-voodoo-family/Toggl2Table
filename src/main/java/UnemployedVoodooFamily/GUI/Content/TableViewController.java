@@ -665,9 +665,13 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
      */
     private ObservableList<DailyFormattedDataModel> getObservableWeeklyData() {
         if(rawTimeDataLogic.getFilteredTimeEntries() != null) {
-            return formattedTimeDataLogic.buildObservableWeeklyTimeData(rawTimeDataLogic.getFilteredTimeEntries(), Integer.parseInt(weekSpinner.getEditor().getText()), Integer.parseInt(yearSpinner.getEditor().getText()));
+            return formattedTimeDataLogic.buildObservableWeeklyTimeData(rawTimeDataLogic.getFilteredTimeEntries(),
+                                                                        Integer.parseInt(weekSpinner.getEditor().getText()),
+                                                                        Integer.parseInt(yearSpinner.getEditor().getText()));
         }
-        return formattedTimeDataLogic.buildObservableWeeklyTimeData(rawTimeDataLogic.getFilteredTimeEntries(), Integer.parseInt(weekSpinner.getEditor().getText()), Integer.parseInt(yearSpinner.getEditor().getText()));
+        return formattedTimeDataLogic.buildObservableWeeklyTimeData(rawTimeDataLogic.getFilteredTimeEntries(),
+                                                                    Integer.parseInt(weekSpinner.getEditor().getText()),
+                                                                    Integer.parseInt(yearSpinner.getEditor().getText()));
     }
 
     /**
@@ -675,7 +679,13 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
      * @return an ObservableList containing MonthlyTimeDatModel objects
      */
     private ObservableList<ExtendedDailyFormattedDataModel> getObservableMonthlyData() {
-        return formattedTimeDataLogic.buildMonthlySortedData();
+        Month month = Month.valueOf(monthSpinner.getEditor().getText().toUpperCase());
+        if(rawTimeDataLogic.getFilteredTimeEntries() != null) {
+            return formattedTimeDataLogic.buildMonthlySortedData(rawTimeDataLogic.getFilteredTimeEntries(), month,
+                                                                 Integer.parseInt(yearSpinner.getEditor().getText()));
+        }
+        return formattedTimeDataLogic.buildMonthlySortedData(rawTimeDataLogic.getFilteredTimeEntries(), month,
+                                                             Integer.parseInt(yearSpinner.getEditor().getText()));
     }
 
     private void updateWeeklySpinner(boolean show) {
