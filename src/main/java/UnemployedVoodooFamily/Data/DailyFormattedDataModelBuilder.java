@@ -1,16 +1,14 @@
 package UnemployedVoodooFamily.Data;
 
-import UnemployedVoodooFamily.Logic.PropertiesLogic;
+import UnemployedVoodooFamily.Data.Enums.FilePath;
+import UnemployedVoodooFamily.Logic.FileLogic;
 import UnemployedVoodooFamily.Logic.Session;
 import ch.simas.jtoggl.TimeEntry;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.OffsetDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -20,12 +18,12 @@ public class DailyFormattedDataModelBuilder {
     private Double supposedHours;
     private Double overtime;
     private LocalDate day;
-    private PropertiesLogic propsLogic = new PropertiesLogic();
+    private FileLogic propsLogic = new FileLogic();
 
     private List<TimeEntry> dailyTimeEntries = new ArrayList<>();
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
-    private Properties workHours = Session.getInstance().getWorkHours();
+    private List<WorkHours> workHours = propsLogic.loadJson(FilePath.getCurrentUserWorkhours());
 
     public DailyFormattedDataModelBuilder(LocalDate day) {
         this.day = day;
@@ -51,9 +49,9 @@ public class DailyFormattedDataModelBuilder {
 
     private Double findSupposedHours() {
         this.supposedHours = 0.0;
-        for(String key: workHours.stringPropertyNames()) {
-            if(DateRange.ofString(key, formatter).contains(this.day)) {
-                return Double.parseDouble(workHours.getProperty(key));
+        for(WorkHours key: workHours) {
+            if(DateRange.of(key.getFrom(), key.getTo()).contains(this.day)) {
+                return key.getHours();
             }
         }
         return 7.5; //TODO: get default value from somewhere

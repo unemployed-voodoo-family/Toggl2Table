@@ -63,7 +63,7 @@ public class RawTimeDataLogic {
             TimeEntry timeEntry = it.next();
             String description = timeEntry.getDescription();
             OffsetDateTime start = timeEntry.getStart().withOffsetSameInstant(zoneOffset);
-            OffsetDateTime stop;
+                OffsetDateTime stop;
             if(null != timeEntry.getStop()) {
                 stop = timeEntry.getStop().withOffsetSameInstant(zoneOffset);
             }

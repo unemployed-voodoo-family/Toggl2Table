@@ -2,6 +2,7 @@ package UnemployedVoodooFamily.Logic;
 
 import UnemployedVoodooFamily.Data.DateRange;
 import UnemployedVoodooFamily.Data.Enums.FilePath;
+import UnemployedVoodooFamily.Data.WorkHours;
 import UnemployedVoodooFamily.Data.WorkHoursData;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -21,13 +22,21 @@ import java.util.*;
 public class SettingsLogic {
 
     private Properties props = new Properties();
-    //private static final String HOURS_PATH = "/Settings/hours.properties";
+    private FileLogic propsLogic = new FileLogic();
+    private String path;
+    private List<WorkHours> workHours;
+
     private static DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-    PropertiesLogic propsLogic = new PropertiesLogic();
 
     private TableColumn<WorkHoursData, String> fromCol;
     private TableColumn<WorkHoursData, String> toCol;
     private TableColumn<WorkHoursData, Double> hoursCol;
+
+
+    public SettingsLogic(String path) {
+        this.workHours = propsLogic.loadJson(path);
+        this.path = path;
+    }
 
     /**
      * Writes the specified work hours to the "hours.properties" file.
@@ -37,17 +46,17 @@ public class SettingsLogic {
      * @throws URISyntaxException
      * @throws IOException
      */
-    public void setWorkHours(LocalDate fromDate, LocalDate toDate,
-                             String hoursStr){
+    public void setWorkHours(LocalDate fromDate, LocalDate toDate, String hoursStr) {
+
+        this.workHours = propsLogic.loadJson(path);
         Double hours = Double.valueOf(hoursStr);
+        WorkHours wh = new WorkHours(fromDate, toDate, hours);
+        fixHoursOverlap(wh);
+        propsLogic.saveJson(path, workHours);
+    }
 
-        //load props file
-        props = propsLogic.loadProps(FilePath.getCurrentUserWorkhours());
-
-        DateRange range = new DateRange(fromDate, toDate, DATE_FORMAT);
-        fixHoursOverlap(props, range, hours);
-        propsLogic.saveProps(FilePath.getCurrentUserWorkhours(), props);
-
+    public List<WorkHours> getWorkHours() {
+        return this.workHours;
     }
 
     /**
@@ -58,19 +67,35 @@ public class SettingsLogic {
      * @param newRange the DateRange entered by the user
      * @param newValue the work hours entered by the user
      */
-    private void fixHoursOverlap(Properties props, DateRange newRange, Double newValue) {
+    private void fixHoursOverlap(WorkHours wh) {
 
         //TODO: Check if user input is logical
         //TODO: sort stored properties properly
-        Set<String> hours = props.stringPropertyNames();
-        if(! hours.isEmpty()) {
-            Iterator<String> it = hours.iterator();
+        if(this.workHours == null) {
+            this.workHours = new ArrayList<>();
+        }
+        if(! this.workHours.isEmpty()) {
+            ListIterator<WorkHours> it = this.workHours.listIterator();
             while(it.hasNext()) {
-                String key = it.next();
-                String valueStr = props.getProperty(key);
-                Double value = Double.parseDouble(valueStr);
+                WorkHours next = it.next();
+                Double value = next.getHours();
+                Double newValue = wh.getHours();
+                DateRange oldRange = next.getRange();
+                DateRange newRange = wh.getRange();
                 boolean keyChanged = false;
-                DateRange oldRange = DateRange.ofString(key, DATE_FORMAT);
+
+                // if the new value is inside another value, split it
+                if(oldRange.isEncapsulating(newRange) && ! value.equals(newValue)) {
+                    it.remove();
+                    WorkHours wh1 = new WorkHours(oldRange.getFrom(), newRange.getFrom().minusDays(1), value,
+                                                  next.getComment());
+                    WorkHours wh2 = new WorkHours(newRange.getTo().plusDays(1), oldRange.getTo(), value,
+                                                  next.getComment());
+                    it.add(wh1);
+                    it.add(wh2);
+                    continue;
+                }
+
                 //if new "from" value overrides old "to" value
                 if(newRange.fromValueinRange(oldRange)) {
                     if(newValue.equals(value)) {
@@ -81,6 +106,7 @@ public class SettingsLogic {
                         keyChanged = true;
                     }
                 }
+                //check if values can be combined
                 LocalDate fromValue = newRange.getFrom();
                 if(newValue.equals(value) && fromValue.minusDays(1).equals(oldRange.getTo())) {
                     newRange.setFrom(oldRange.getFrom());
@@ -96,31 +122,35 @@ public class SettingsLogic {
                         keyChanged = true;
                     }
                 }
+
+                // check if entries can be combined
                 LocalDate toValue = newRange.getTo();
                 if(newValue.equals(value) && toValue.plusDays(1).equals(oldRange.getFrom())) {
                     newRange.setTo(oldRange.getTo());
                 }
 
-                //if another value was changed, change it
+                //if a value in the list was changed, save the changes
                 if(keyChanged) {
-                    props.remove(key);
-                    props.put(oldRange.toString(), valueStr);
+                    it.remove();
+                    it.add(new WorkHours(oldRange.getFrom(), oldRange.getTo(), value));
                 }
 
                 //if values are illogical or overwritten by the new value, remove
                 if(newRange.isEncapsulating(oldRange) || oldRange.getFrom().equals(oldRange.getTo()) || oldRange
                         .getFrom().isAfter(oldRange.getTo())) {
-                    props.remove(key);
+                    it.remove();
                 }
+                wh.setFrom(newRange.getFrom());
+                wh.setTo(newRange.getTo());
             }
             // after checking against the other
             // entries, put the new entry
-            props.put(newRange.toString(), newValue.toString());
+            it.add(wh);
         }
         else {
             // There are no other values in the list,
             // and the new value can just be added
-            props.put(newRange.toString(), newValue.toString());
+            this.workHours.add(wh);
         }
     }
 
@@ -137,29 +167,28 @@ public class SettingsLogic {
 
         //load props file
         props = propsLogic.loadProps(FilePath.getCurrentUserWorkhours());
-        Set<String> periods = props.stringPropertyNames();
+        propsLogic.loadJson(path);
 
         ObservableList<WorkHoursData> data = FXCollections.observableArrayList();
-        Iterator<String> it = sortWorkHoursData(periods).iterator();
+        Iterator<WorkHours> it = sortWorkHoursData(propsLogic.loadJson(path)).iterator();
 
         while(it.hasNext()) {
-            String key = it.next();
-            String value = props.getProperty(key);
-            DateRange range = DateRange.ofString(key, DATE_FORMAT);
-            data.add(new WorkHoursData(range.getFrom(), range.getTo(), Double.valueOf(value)));
+            WorkHours next = it.next();
+            Double hours = next.getHours();
+            data.add(new WorkHoursData(next.getFrom(), next.getTo(), hours));
         }
         table.getItems().clear();
         table.getItems().addAll(data);
     }
 
-    private List<String> sortWorkHoursData(Set<String> data) {
-        List<String> dataSorted = new ArrayList<>(data);
-        dataSorted.sort((o1, o2) -> {
-            LocalDate d1 = DateRange.ofString(o1, DATE_FORMAT).getFrom();
-            LocalDate d2 = DateRange.ofString(o2, DATE_FORMAT).getFrom();
+    private List<WorkHours> sortWorkHoursData(List<WorkHours> data) {
+
+        data.sort((o1, o2) -> {
+            LocalDate d1 = o1.getFrom();
+            LocalDate d2 = o2.getFrom();
             return d1.compareTo(d2);
         });
-        return dataSorted;
+        return data;
     }
 
     public void deleteStoredData(FilePath directory){

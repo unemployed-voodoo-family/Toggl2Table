@@ -14,7 +14,7 @@ public class DateRangeTest {
 
     LocalDate date1 = LocalDate.of(2019, 1, 1);
     LocalDate date2 = LocalDate.of(2019, 1, 31);
-    DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_TIME;
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
     DateRange range = new DateRange(date1, date2, formatter);
 

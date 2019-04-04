@@ -54,7 +54,7 @@ public class SettingsController {
     }
 
     public void initialize() {
-        this.logic = new SettingsLogic();
+        this.logic = new SettingsLogic(FilePath.getCurrentUserWorkhours());
         this.hoursView.setVisible(false);
         toggleViewHoursList();
         setKeyAndClickListeners();
@@ -154,9 +154,11 @@ public class SettingsController {
         }
         if(success) {
             logic.setWorkHours(hoursFromField.getValue(), hoursToField.getValue(), hoursField.getText());
+
             if(hoursView.isVisible()) {
                 logic.populateHoursTable(hoursView);
             }
+
             clearWorkHourInputFields();
             showWorkHoursInputSuccess();
         }

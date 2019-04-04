@@ -1,13 +1,9 @@
 package UnemployedVoodooFamily.Data;
 
-import UnemployedVoodooFamily.Data.Enums.FilePath;
-import UnemployedVoodooFamily.Logic.PropertiesLogic;
-import UnemployedVoodooFamily.Logic.Session;
+import UnemployedVoodooFamily.Logic.FileLogic;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.Year;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalField;
 import java.time.temporal.WeekFields;
 import java.util.*;
@@ -29,7 +25,7 @@ public class WeeklyFormattedDataModelBuilder {
 
     private final Double STANDARD_WORK_HOURS = 7.5;
 
-    PropertiesLogic propertiesLogic = new PropertiesLogic();
+    FileLogic fileLogic = new FileLogic();
 
     private Map<DayOfWeek, DailyFormattedDataModel> weeklyTimeEntries = new HashMap<>();
 

@@ -8,7 +8,6 @@ import java.time.format.DateTimeFormatter;
  * Includes helper methods to comapare with other DateRanges
  */
 public class DateRange {
-    private static final int STANDARD_YEAR = 2000;
     private DateTimeFormatter formatter;
     private LocalDate from;
     private LocalDate to;
@@ -102,6 +101,11 @@ public class DateRange {
             contains = true;
         }
         return contains;
+    }
+
+    public static DateRange of(LocalDate from, LocalDate to) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        return new DateRange(from, to, formatter);
     }
 
     @Override
