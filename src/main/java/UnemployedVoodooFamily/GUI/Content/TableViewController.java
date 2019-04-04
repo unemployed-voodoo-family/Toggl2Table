@@ -125,6 +125,9 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     @FXML
     private Label timePeriodSpinnerLabel;
 
+    @FXML
+    private Tooltip errorTooltip;
+
     private final ToggleGroup timeSpanToggleGroup = new ToggleGroup();
 
     private RawTimeDataLogic rawTimeDataLogic = new RawTimeDataLogic();
@@ -226,6 +229,8 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
      * Sets input actions on UI elements
      */ private void setKeyAndClickListeners() {
 
+
+        bindTooltip(excelFeedbackLabel, errorTooltip);
         applyFilterBtn.setOnAction(event -> applyFilters());
 
         exportBtn.setOnAction(event -> {
@@ -238,16 +243,21 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
                 try {
                     success = formattedTimeDataLogic.exportToExcelDocument();
                     Platform.runLater(() -> {
+                        excelFeedbackLabel.setVisible(true);
                         excelFeedbackLabel.setText("Excel document was successfully created");
                         excelFeedbackLabel.getStyleClass().remove("error");
                         excelFeedbackLabel.getStyleClass().add("success");
+                        errorTooltip.setOpacity(0);
                     });
                 }
                 catch(IOException e) {
                     Platform.runLater(() -> {
-                        excelFeedbackLabel.setText("Error creating excel file: " + "\n" + e.getMessage());
+                        excelFeedbackLabel.setVisible(true);
+                        excelFeedbackLabel.setText("Error creating excel file");
+                        errorTooltip.setText(e.getMessage());
                         excelFeedbackLabel.getStyleClass().remove("success");
                         excelFeedbackLabel.getStyleClass().add("error");
+                        errorTooltip.setOpacity(.9);
                     });
                 }
             });
@@ -262,21 +272,21 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
                 }
                 exportProgressIndicator.setVisible(false);
                 exportBtn.setDisable(false);
-                double opacity = 1.00;
-                exportBtn.setDisable(true);
+
+                /*double opacity = 1.00;
+
                 excelFeedbackLabel.setOpacity(opacity);
                 while(opacity >= 0.00) {
                     excelFeedbackLabel.setOpacity(opacity);
                     try {
-                        sleep(30);
+                        sleep(3000);
                     }
                     catch(InterruptedException e) {
                         e.printStackTrace();
                     }
                     opacity = (opacity - 0.02);
                 }
-                excelFeedbackLabel.setOpacity(0.00);
-                exportBtn.setDisable(false);
+                excelFeedbackLabel.setOpacity(0.00);*/
             });
             t1.start();
         });
@@ -402,6 +412,30 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
             }
         });
 
+    }
+
+    /**
+     * Thank you Mr. Messier
+     * https://stackoverflow.com/questions/26854301/how-to-control-the-javafx-tooltips-delay
+     * @param node
+     * @param tooltip
+     */
+    public static void bindTooltip(final Node node, final Tooltip tooltip) {
+        node.setOnMouseEntered(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                // +15 moves the tooltip 15 pixels below the mouse cursor;
+                // if you don't change the y coordinate of the tooltip, you
+                // will see constant screen flicker
+                tooltip.show(node, event.getScreenX(), event.getScreenY() + 15);
+            }
+        });
+        node.setOnMouseExited(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                tooltip.hide();
+            }
+        });
     }
 
     private void applyFilters() {

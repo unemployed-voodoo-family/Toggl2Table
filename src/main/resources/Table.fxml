@@ -14,6 +14,9 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -274,7 +277,10 @@
             <Label text="Export" textFill="#000000b3" />
             <HBox prefWidth="200.0">
                <children>
-                  <Button fx:id="exportBtn" mnemonicParsing="false" text="Export to excel" />
+                  <Button fx:id="exportBtn" mnemonicParsing="false" text="Export to excel">
+                     <tooltip>
+                        <Tooltip text="Empty Tooltip" />
+                     </tooltip></Button>
                   <ProgressIndicator fx:id="exportProgressIndicator" minHeight="-Infinity" prefHeight="0.0" prefWidth="32.0" visible="false">
                      <HBox.margin>
                         <Insets left="15.0" />
@@ -282,10 +288,24 @@
                   </ProgressIndicator>
                </children>
             </HBox>
-            <Label fx:id="excelFeedbackLabel" opacity="0.0" prefHeight="121.0" prefWidth="219.0" text="Excel file created" wrapText="true">
-               <font>
-                  <Font name="System Bold" size="15.0" />
-               </font>
+            <Label fx:id="excelFeedbackLabel" prefHeight="30.0" text="Label" visible="false" wrapText="true">
+               <graphic>
+                  <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@icons/baseline_error_black_24dp.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <tooltip>
+                  <Tooltip fx:id="errorTooltip" opacity="0.8">
+                     <font>
+                        <Font size="17.0" />
+                     </font>
+                  </Tooltip>
+               </tooltip>
+               <VBox.margin>
+                  <Insets bottom="5.0" top="5.0" />
+               </VBox.margin>
             </Label>
          </children>
          <HBox.margin>
