@@ -78,7 +78,8 @@ public class RawTimeDataLogic {
                 String stopTime = stop.toLocalDate().format(dateFormatter);
 
                 long duration = timeEntry.getDuration();
-                String durationStr = LocalTime.MIN.plusSeconds(duration).format(DateTimeFormatter.ISO_LOCAL_TIME);
+                String durationStr = LocalTime.MIN.plusSeconds(duration).format(DateTimeFormatter.ofPattern("HH")) + "H "
+                        + LocalTime.MIN.plusSeconds(duration).format(DateTimeFormatter.ofPattern("mm")) + "m";
 
                 Project project = timeEntry.getProject();
                 String projectName = "";
