@@ -6,6 +6,7 @@
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.Tab?>
@@ -22,7 +23,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<HBox fx:id="root" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UnemployedVoodooFamily.GUI.Content.TableViewController">
+<HBox fx:id="root" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UnemployedVoodooFamily.GUI.Content.TableViewController">
    <children>
       <TabPane fx:id="tableTabPane" HBox.hgrow="ALWAYS">
          <tabs>
@@ -38,8 +39,8 @@
                         </TableView>
                         <GridPane>
                           <columnConstraints>
-                            <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
-                            <ColumnConstraints hgrow="ALWAYS" minWidth="200.0" prefWidth="200.0" />
+                            <ColumnConstraints hgrow="ALWAYS" maxWidth="264.0" minWidth="10.0" prefWidth="157.0" />
+                            <ColumnConstraints hgrow="ALWAYS" minWidth="200.0" prefWidth="481.0" />
                           </columnConstraints>
                           <rowConstraints>
                             <RowConstraints vgrow="ALWAYS" />
@@ -56,7 +57,7 @@
                               </HBox>
                               <HBox alignment="CENTER_RIGHT" prefHeight="60.0" prefWidth="347.0" GridPane.columnIndex="1">
                                  <children>
-                                    <Label text="From:">
+                                    <Label text="From ">
                                        <font>
                                           <Font size="20.0" />
                                        </font>
@@ -64,13 +65,13 @@
                                           <Insets right="5.0" />
                                        </HBox.margin>
                                     </Label>
-                                    <DatePicker fx:id="rawStartDate" minHeight="-Infinity" minWidth="-Infinity" prefHeight="28.0" prefWidth="120.0" showWeekNumbers="true" />
+                                    <DatePicker fx:id="rawStartDate" minHeight="-Infinity" minWidth="-Infinity" prefWidth="160.0" showWeekNumbers="true" />
                                     <Label text="  -  ">
                                        <font>
                                           <Font size="20.0" />
                                        </font>
                                     </Label>
-                                    <Label text="To:">
+                                    <Label text="To ">
                                        <font>
                                           <Font size="20.0" />
                                        </font>
@@ -78,7 +79,7 @@
                                           <Insets right="5.0" />
                                        </HBox.margin>
                                     </Label>
-                                    <DatePicker fx:id="rawEndDate" minHeight="-Infinity" minWidth="-Infinity" prefHeight="28.0" prefWidth="120.0" showWeekNumbers="true">
+                                    <DatePicker fx:id="rawEndDate" minHeight="-Infinity" minWidth="-Infinity" prefWidth="160.0" showWeekNumbers="true">
                                        <HBox.margin>
                                           <Insets right="10.0" />
                                        </HBox.margin>
@@ -238,6 +239,11 @@
                   <Insets bottom="5.0" top="40.0" />
                </VBox.margin>
             </Label>
+            <MenuButton fx:id="clientFilterBtn" layoutX="15.0" layoutY="122.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Clients">
+               <VBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </VBox.margin>
+            </MenuButton>
             <MenuButton fx:id="projectFilterBtn" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Project">
                <VBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -266,11 +272,16 @@
                </VBox.margin>
             </Separator>
             <Label text="Export" textFill="#000000b3" />
-            <Button fx:id="exportBtn" mnemonicParsing="false" text="Export to excel">
-               <VBox.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </VBox.margin>
-            </Button>
+            <HBox prefWidth="200.0">
+               <children>
+                  <Button fx:id="exportBtn" mnemonicParsing="false" text="Export to excel" />
+                  <ProgressIndicator fx:id="exportProgressIndicator" minHeight="-Infinity" prefHeight="0.0" prefWidth="32.0" visible="false">
+                     <HBox.margin>
+                        <Insets left="15.0" />
+                     </HBox.margin>
+                  </ProgressIndicator>
+               </children>
+            </HBox>
             <Label fx:id="excelFeedbackLabel" opacity="0.0" prefHeight="28.0" prefWidth="219.0" text="Excel file created" textAlignment="CENTER">
                <font>
                   <Font name="System Bold" size="19.0" />

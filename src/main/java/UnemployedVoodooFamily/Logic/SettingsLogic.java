@@ -41,7 +41,6 @@ public class SettingsLogic {
         Double hours = Double.valueOf(hoursStr);
 
         //load props file
-        System.out.println(FilePath.SAVED_WORKHOURS.getPath());
         props = propsLogic.loadProps(FilePath.getCurrentUserWorkhours());
 
         DateRange range = new DateRange(fromDate, toDate, DATE_FORMAT);
@@ -70,7 +69,6 @@ public class SettingsLogic {
                 String valueStr = props.getProperty(key);
                 Double value = Double.parseDouble(valueStr);
                 boolean keyChanged = false;
-                System.out.println();
                 DateRange oldRange = DateRange.ofString(key, DATE_FORMAT);
                 //if new "from" value overrides old "to" value
                 if(newRange.fromValueinRange(oldRange)) {
@@ -123,7 +121,6 @@ public class SettingsLogic {
             // and the new value can just be added
             props.put(newRange.toString(), newValue.toString());
         }
-        System.out.println(props.stringPropertyNames().toString());
     }
 
     public void populateHoursTable(TableView table) {

@@ -8,6 +8,7 @@ import UnemployedVoodooFamily.Logic.FormattedTimeDataLogic;
 import UnemployedVoodooFamily.Logic.Listeners.DataLoadListener;
 import UnemployedVoodooFamily.Logic.RawTimeDataLogic;
 import UnemployedVoodooFamily.Logic.Session;
+import ch.simas.jtoggl.Client;
 import ch.simas.jtoggl.Project;
 import ch.simas.jtoggl.Workspace;
 import javafx.application.Platform;
@@ -31,6 +32,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.formula.functions.T;
 
 import java.io.IOException;
 import java.net.URL;
@@ -46,6 +48,9 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
 
     @FXML
     private Tab rawDataTab;
+
+    @FXML
+    private ProgressIndicator exportProgressIndicator;
 
     @FXML
     private Tab formattedDataTab;
@@ -81,6 +86,8 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     private MenuButton projectFilterBtn;
     @FXML
     private MenuButton workspaceFilterBtn;
+    @FXML
+    private MenuButton clientFilterBtn;
     @FXML
     private Button applyFilterBtn;
     @FXML
@@ -160,8 +167,10 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         setupFormattedTableUIElements();
         setupRawTableUIElements();
 
+        initializeFilterButton(clientFilterBtn);
         initializeFilterButton(projectFilterBtn);
         initializeFilterButton(workspaceFilterBtn);
+
     }
 
     private void setupFormattedTableUIElements() {
@@ -219,30 +228,54 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
 
         applyFilterBtn.setOnAction(event -> applyFilters());
 
-        exportBtn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                formattedTimeDataLogic.exportToExcelDocument();
+        exportBtn.setOnAction(event ->  {
+           Thread t = new Thread(() -> {
+                   exportBtn.setDisable(true);
+                   exportProgressIndicator.setVisible(true);
 
-                Thread t1 = new Thread(() -> {
-                    double opacity = 1.00;
-                    exportBtn.setDisable(true);
+                   boolean success = formattedTimeDataLogic.exportToExcelDocument();
+                   Platform.runLater(() -> {
+                       if(success) {
+                           excelFeedbackLabel.setText("Excel document was successfully created");
+                           excelFeedbackLabel.getStyleClass().remove("error");
+                           excelFeedbackLabel.getStyleClass().add("success");
+                       }
+                       else {
+                           excelFeedbackLabel.setText("Excel document was NOT created");
+                           excelFeedbackLabel.getStyleClass().remove("success");
+                           excelFeedbackLabel.getStyleClass().add("error");
+                       }
+                   });
+
+           });
+              t.start();
+
+            Thread t1 = new Thread(() -> {
+                try {
+                    t.join();
+                }
+                catch(InterruptedException e) {
+                    e.printStackTrace();
+                }
+                exportProgressIndicator.setVisible(false);
+                exportBtn.setDisable(false);
+                double opacity = 1.00;
+                exportBtn.setDisable(true);
+                excelFeedbackLabel.setOpacity(opacity);
+                while(opacity >= 0.00) {
                     excelFeedbackLabel.setOpacity(opacity);
-                    while(opacity >= 0.00) {
-                        excelFeedbackLabel.setOpacity(opacity);
-                        try {
-                            sleep(30);
-                        }
-                        catch(InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        opacity = (opacity - 0.02);
+                    try {
+                        sleep(30);
                     }
-                    excelFeedbackLabel.setOpacity(0.00);
-                    exportBtn.setDisable(false);
-                });
-                t1.start();
-            }
+                    catch(InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    opacity = (opacity - 0.02);
+                }
+                excelFeedbackLabel.setOpacity(0.00);
+                exportBtn.setDisable(false);
+            });
+            t1.start();
         });
 
         rawStartDate.valueProperty().addListener((observable, oldValue, newValue) -> {
@@ -254,6 +287,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
                 if(! rawEndDate.getValue().isEqual(rawTimeDataLogic.getFilteredDataEndDate())) {
                     rawTimeDataLogic.setDataEndDate(rawEndDate.getValue());
                 }
+                setRawDataTableData();
                 rawStartDate.getStyleClass().remove("error");
                 rawEndDate.getStyleClass().remove("error");
             }
@@ -272,6 +306,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
                 if(! rawStartDate.getValue().isEqual(rawTimeDataLogic.getFilteredDataStartDate())) {
                     rawTimeDataLogic.setDataStartDate(rawStartDate.getValue());
                 }
+                setRawDataTableData();
                 rawStartDate.getStyleClass().remove("error");
                 rawEndDate.getStyleClass().remove("error");
             }
@@ -363,12 +398,12 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
                 updateMonthlyTable();
             }
         });
+
     }
 
     private void applyFilters() {
         setRawDataTableData();
         setFormattedTableData();
-        setRawDataTableData();
     }
 
     // |##################################################|
@@ -405,7 +440,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         TableColumn<RawTimeDataModel, String> endTimeCol = new TableColumn<>("End Time");
         endTimeCol.setCellValueFactory(new PropertyValueFactory<>("endTime"));
 
-        TableColumn<RawTimeDataModel, String> durationCol = new TableColumn<>("Duration");
+        TableColumn<RawTimeDataModel, String> durationCol = new TableColumn<>("Duration (HH:mm:ss)");
         durationCol.setCellValueFactory(new PropertyValueFactory<>("duration"));
 
         projectCol.setPrefWidth(120);
@@ -449,9 +484,11 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
      */
     private ObservableList<RawTimeDataModel> getObservableRawData() {
         Session session = Session.getInstance();
-        return FXCollections.observableArrayList(
-                rawTimeDataLogic.buildRawMasterData(session.getTimeEntries(), session.getProjects(), session.getWorkspaces(),
-                                                    session.getClients(), filterOptions));
+        return FXCollections.observableArrayList(rawTimeDataLogic.buildRawMasterData(session.getTimeEntries(),
+                                                                                     session.getProjects(),
+                                                                                     session.getWorkspaces(),
+                                                                                     session.getClients(),
+                                                                                     filterOptions));
     }
 
     // |##################################################|
@@ -511,7 +548,6 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         supposedHoursCol.setPrefWidth(120);
         overtimeCol.setPrefWidth(120);
         weekDayCol.setPrefWidth(90);
-        System.out.println("done");
         //Adds the columns to the table and updates it
         this.weeklyTable.getColumns().addAll(weekDayCol, workedHoursCol, supposedHoursCol, overtimeCol);
         this.weeklyTable.setEditable(false);
@@ -661,25 +697,26 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         Session session = Session.getInstance();
         clearCheckMenuObjects(projectFilterBtn);
         clearCheckMenuObjects(workspaceFilterBtn);
+        clearCheckMenuObjects(clientFilterBtn);
 
-        HashMap<Long, Project> projects = (HashMap<Long, Project>) session.getProjects();
+        HashMap<Long, Project> projects = session.getProjects();
         for(Map.Entry<Long, Project> project: projects.entrySet()) {
-            projectFilterBtn.getItems().add(new CheckMenuObject(project, project.getValue().getName()));
+            projectFilterBtn.getItems().add(new CheckMenuObject(project.getValue(), project.getValue().getName()));
         }
-        HashMap<Long, Workspace> workspaces = (HashMap) session.getWorkspaces();
+        HashMap<Long, Workspace> workspaces = session.getWorkspaces();
         for(Map.Entry<Long, Workspace> workspace: workspaces.entrySet()) {
-            workspaceFilterBtn.getItems().add(new CheckMenuObject(workspace, workspace.getValue().getName()));
+            workspaceFilterBtn.getItems()
+                              .add(new CheckMenuObject(workspace.getValue(), workspace.getValue().getName()));
+        }
+        HashMap<Long, Client> clients = session.getClients();
+        System.out.println(clients.toString());
+        for(Map.Entry<Long, Client> client: clients.entrySet()) {
+            clientFilterBtn.getItems().add(new CheckMenuObject(client.getValue(), client.getValue().getName()));
         }
     }
 
     private void clearCheckMenuObjects(MenuButton button) {
-        Iterator<MenuItem> it = button.getItems().iterator();
-        while(it.hasNext()) {
-            MenuItem item = it.next();
-            if(item instanceof CheckMenuObject) {
-                it.remove();
-            }
-        }
+        button.getItems().removeIf(item -> item instanceof CheckMenuObject);
     }
 
 
@@ -764,9 +801,10 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
                 EnumSet.of(Data.TIME_ENTRIES, Data.PROJECTS, Data.TASKS, Data.WORKSPACES, Data.WORKHOURS,
                            Data.CLIENT))) {
             loadedData = EnumSet.noneOf(Data.class); //empty the set, readying it for next
-            setFilterOptions();
             setRawDataTableData();
             setFormattedTableData();
+            setFilterOptions();
+
         }
     }
 }

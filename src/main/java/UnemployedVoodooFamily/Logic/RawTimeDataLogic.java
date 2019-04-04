@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 public class RawTimeDataLogic {
     // and is responsible for handling raw time data
     //TODO replace ObservableLists with ArrayLists
-    private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd. LLL yyyy");
+    private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MMM-dd");
 
     private LocalDate filterStartDate = LocalDate.now().minusWeeks(1);
     private LocalDate filterEndDate = LocalDate.now();
@@ -32,7 +32,6 @@ public class RawTimeDataLogic {
                                                          Map<Long, Workspace> workspaces, Map<Long, Client> clients,
                                                          Set<T> excludedData) {
 
-        //System.out.println(ZoneOffset.of(user.getTimeZone()));
         List<RawTimeDataModel> data = new ArrayList<>();
         this.masterTimeEntries = timeEntries;
 
@@ -43,48 +42,61 @@ public class RawTimeDataLogic {
         filteredTimeEntries = new LinkedList<>(masterTimeEntries);
         if(excludedData != null && ! excludedData.isEmpty()) {
             List<TimeEntry> excludedEntries;
-            excludedEntries = filteredTimeEntries
-                    .stream()
-                    .filter(timeEntry -> excludedData.contains(
-                            timeEntry.getWorkspace()) || excludedData.contains(timeEntry.getProject()))
-                    .collect(Collectors.toList());
+
+            excludedEntries = filteredTimeEntries.stream().filter(timeEntry -> {
+                boolean result = false;
+                Project p = timeEntry.getProject();
+                Client c = p == null ? null : p.getClient();
+                Workspace w = timeEntry.getWorkspace();
+                result = excludedData.stream()
+                                     .anyMatch(entry -> entry.equals(w) || entry.equals(c) || entry.equals(p));
+
+                return result;
+            }).collect(Collectors.toList());
+
             filteredTimeEntries.removeAll(excludedEntries);
         }
 
-        DateTimeFormatter durationFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        DateTimeFormatter durationFormatter = DateTimeFormatter.ofPattern("HH:mm");
         Iterator<TimeEntry> it = filteredTimeEntries.iterator();
         while(it.hasNext()) {
             TimeEntry timeEntry = it.next();
             String description = timeEntry.getDescription();
             OffsetDateTime start = timeEntry.getStart().withOffsetSameInstant(zoneOffset);
-            OffsetDateTime stop = timeEntry.getStop().withOffsetSameInstant(zoneOffset);
-            String startDate = start.toLocalDate().format(dateFormatter);
-            String startTime = start.toLocalTime().format(durationFormatter);
-
-            String stopDate = "";
-            String stopTime = "";
-            if(stop != null) {
-                stopTime = stop.toLocalTime().format(durationFormatter);
-                stopDate = stop.toLocalDate().format(dateFormatter);
+            OffsetDateTime stop;
+            if(null != timeEntry.getStop()) {
+                stop = timeEntry.getStop().withOffsetSameInstant(zoneOffset);
+            }
+            else {
+                stop = OffsetDateTime.now();
             }
 
-            long duration = timeEntry.getDuration();
-            String durationStr = LocalTime.MIN.plusSeconds(duration).format(DateTimeFormatter.ISO_LOCAL_TIME);
+            if((start.toLocalDate().isAfter(getFilteredDataStartDate()) || start.toLocalDate().isEqual(getFilteredDataStartDate()))
+                && (stop.toLocalDate().isBefore(getFilteredDataEndDate()) || stop.toLocalDate().isEqual(getFilteredDataEndDate()))){
+                String startDate = start.toLocalDate().format(dateFormatter);
+                String startTime = start.toLocalTime().format(durationFormatter);
 
-            Project project = timeEntry.getProject();
-            String projectName = "";
-            String clientStr = "";
-            if(project != null) {
-                projectName = project.getName();
-                Client client = project.getClient();
-                if(client != null) {
-                    clientStr = client.getName();
+                String stopDate = stop.toLocalTime().format(durationFormatter);
+                String stopTime = stop.toLocalDate().format(dateFormatter);
+
+                long duration = timeEntry.getDuration();
+                String durationStr = LocalTime.MIN.plusSeconds(duration).format(DateTimeFormatter.ISO_LOCAL_TIME);
+
+                Project project = timeEntry.getProject();
+                String projectName = "";
+                String clientStr = "";
+                if(project != null) {
+                    projectName = project.getName();
+                    Client client = project.getClient();
+                    if(client != null) {
+                        clientStr = client.getName();
+                    }
                 }
-            }
 
-            RawTimeDataModel dataModel = new RawTimeDataModel(projectName, clientStr, description, startDate, startTime,
-                                                              stopDate, stopTime, durationStr);
-            data.add(dataModel);
+                RawTimeDataModel dataModel = new RawTimeDataModel(projectName, clientStr, description, startDate,
+                                                                  startTime, stopDate, stopTime, durationStr);
+                data.add(dataModel);
+            }
         }
         return data;
     }

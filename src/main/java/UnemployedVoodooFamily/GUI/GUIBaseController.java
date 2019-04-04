@@ -123,6 +123,7 @@ public class GUIBaseController {
         loadContent();
         refreshData();
         dumpData();
+        tableNavBtn.fire();
     }
 
     /**
