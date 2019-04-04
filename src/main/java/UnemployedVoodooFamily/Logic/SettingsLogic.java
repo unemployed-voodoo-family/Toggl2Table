@@ -8,6 +8,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
@@ -161,4 +162,13 @@ public class SettingsLogic {
         return dataSorted;
     }
 
+    public void deleteStoredData(FilePath directory){
+        File directoryPath = new File(directory.getPath());
+
+        for(File file: directoryPath.listFiles()){
+            if (!file.isDirectory()){
+                file.delete();
+            }
+        }
+    }
 }

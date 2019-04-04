@@ -1,5 +1,6 @@
 package UnemployedVoodooFamily.GUI.Content;
 
+import UnemployedVoodooFamily.Data.Enums.FilePath;
 import UnemployedVoodooFamily.Logic.SettingsLogic;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -37,6 +38,9 @@ public class SettingsController {
     @FXML
     private Label inputFeedbackLabel;
 
+    @FXML
+    private Button deleteDataBtn;
+
     private SettingsLogic logic;
 
     /**
@@ -62,6 +66,7 @@ public class SettingsController {
      */ private void setKeyAndClickListeners() {
         confirmHoursBtn.setOnAction(event -> trySetWorkHours());
         viewHoursBtn.setOnAction(event -> toggleViewHoursList());
+        deleteDataBtn.setOnAction(event -> logic.deleteStoredData(FilePath.LOGS_HOME));
 
         hoursField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             hoursField.getStyleClass().remove("error");
@@ -96,6 +101,8 @@ public class SettingsController {
                 hoursToField.getStyleClass().remove("error");
             }
         });
+
+        //deleteDataBtn.getStyleClass().add("delete");
     }
 
     /**

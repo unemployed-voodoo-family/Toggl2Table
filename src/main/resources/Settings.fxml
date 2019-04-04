@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="631.0" prefWidth="925.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UnemployedVoodooFamily.GUI.Content.SettingsController">
+<ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="631.0" prefWidth="925.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UnemployedVoodooFamily.GUI.Content.SettingsController">
    <content>
       <GridPane prefHeight="605.0" prefWidth="805.0">
          <columnConstraints>
@@ -112,6 +112,8 @@
                           <rowConstraints>
                             <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
                             <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
                               <Label text="UnemployedVoodooFamily.Data path" GridPane.rowIndex="1" />
@@ -125,6 +127,12 @@
                                  <children>
                                     <TextField fx:id="dataPathField" prefHeight="31.0" />
                                     <Button fx:id="dataPathBtn" mnemonicParsing="false" prefHeight="31.0" prefWidth="105.0" text="Change" />
+                                 </children>
+                              </HBox>
+                              <Label text="Delete stored data" GridPane.rowIndex="2" />
+                              <HBox alignment="TOP_RIGHT" prefHeight="31.0" prefWidth="202.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                 <children>
+                                    <Button fx:id="deleteDataBtn" mnemonicParsing="false" prefHeight="31.0" prefWidth="72.0" text="Delete" />
                                  </children>
                               </HBox>
                            </children>

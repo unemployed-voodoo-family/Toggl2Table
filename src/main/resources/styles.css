@@ -184,3 +184,7 @@
 .label.success   {
     -fx-text-fill: #49ba29;
 }
+
+.button.delete   {
+    -fx-background-color: RED;
+}
