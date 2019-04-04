@@ -47,7 +47,7 @@ public class RawTimeDataLogic {
                     .stream()
                     .filter(timeEntry -> excludedData.contains(
                             timeEntry.getWorkspace()) || excludedData.contains(timeEntry.getProject()))
-                                                 .collect(Collectors.toList());
+                    .collect(Collectors.toList());
             filteredTimeEntries.removeAll(excludedEntries);
         }
 

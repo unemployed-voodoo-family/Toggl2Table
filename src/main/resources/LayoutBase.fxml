@@ -109,7 +109,7 @@
                                  <children>
                                     <Button fx:id="refreshBtn" minWidth="37.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="37.0">
                                        <graphic>
-                                          <ImageView fitHeight="34.0" fitWidth="29.0" onMouseClicked="#refreshData" pickOnBounds="true" preserveRatio="true">
+                                          <ImageView fx:id="refreshIcon" fitHeight="34.0" fitWidth="29.0" onMouseClicked="#refreshData" pickOnBounds="true" preserveRatio="true">
                                              <image>
                                                 <Image url="@icons/baseline_refresh_black_18dp.png" />
                                              </image>

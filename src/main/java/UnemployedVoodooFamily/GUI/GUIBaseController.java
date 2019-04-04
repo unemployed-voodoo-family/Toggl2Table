@@ -5,7 +5,9 @@ import UnemployedVoodooFamily.GUI.Content.SettingsController;
 import UnemployedVoodooFamily.GUI.Content.TableViewController;
 import UnemployedVoodooFamily.Logger;
 import UnemployedVoodooFamily.Logic.Session;
+import javafx.animation.RotateTransition;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -24,6 +26,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+import org.apache.commons.lang3.ObjectUtils;
 
 import java.awt.*;
 import java.io.File;
@@ -31,6 +35,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import static java.lang.Thread.sleep;
 
 public class GUIBaseController {
 
@@ -62,6 +69,11 @@ public class GUIBaseController {
     private Button refreshBtn;
 
     @FXML
+    private ImageView refreshIcon;
+
+    private RotateTransition rotateTransition;
+
+    @FXML
     private AnchorPane contentRoot;
 
     @FXML
@@ -83,6 +95,8 @@ public class GUIBaseController {
     private Node table;
     private Thread t1;
 
+    private AtomicBoolean active;
+
     private ToggleGroup navButtons = new ToggleGroup();
 
 
@@ -103,6 +117,8 @@ public class GUIBaseController {
         tableNavBtn.setToggleGroup(navButtons);
         profileNavBtn.setToggleGroup(navButtons);
         profileNavBtn.setGraphic(avatarView);
+        active = new AtomicBoolean(false);
+        rotateSettings();
         setKeyAndClickListeners();
         loadContent();
         refreshData();
@@ -128,7 +144,10 @@ public class GUIBaseController {
      */
     private void setKeyAndClickListeners() {
 
-        refreshBtn.setOnAction(event -> refreshData());
+        refreshBtn.setOnAction(event -> {
+            spinRefreshBtn(true);
+            refreshData();
+        });
         settingsNavBtn.setOnAction(event -> switchContentView(settings));
         tableNavBtn.setOnAction(event -> switchContentView(table));
         dumpDataMenuItem.setOnAction(event -> dumpData());
@@ -155,7 +174,6 @@ public class GUIBaseController {
             String prefix = "Fetching ";
             StringBuilder sb = new StringBuilder();
             sb.append("(1/6) ");
-
             Session session = Session.getInstance();
             Platform.runLater(() -> progressMessage.setText(sb + prefix + "work hours"));
             session.refreshWorkHours();
@@ -171,6 +189,7 @@ public class GUIBaseController {
             session.refreshClient();
             Platform.runLater(() -> {
                 progressBox.setVisible(false);
+                spinRefreshBtn(false);
                 lastFetchedLabel.setText(LocalDateTime.now().format(d));
             });
         });
@@ -209,5 +228,30 @@ public class GUIBaseController {
             children.clear();
             children.addAll(content);
         }
+    }
+
+    private void spinRefreshBtn(boolean spinning) {
+        active.set(spinning);
+        Thread t3 = new Thread(() -> {
+
+            while(active.get()) {
+                try {
+                    rotateTransition.play();
+                }
+                catch(NullPointerException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        if(active.get()) {
+            t3.start();
+        }
+    }
+
+    private void rotateSettings() {
+        rotateTransition = new RotateTransition(Duration.seconds(1.50), refreshIcon);
+        rotateTransition.setFromAngle(0);
+        rotateTransition.setToAngle(360);
+        rotateTransition.setCycleCount(1);
     }
 }

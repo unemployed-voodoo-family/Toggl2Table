@@ -163,6 +163,11 @@
     -fx-text-fill: #444444;
 }
 
+. button .image-view.spin {
+    -fx-animation: spin 2s linear infinite;
+
+}
+
 .text-field.error   {
     -fx-border-color: #ff2530;
     -fx-focus-color: #ff2530;
