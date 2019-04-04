@@ -16,6 +16,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.Spinner;
 
+import java.io.IOException;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
@@ -170,7 +171,7 @@ public class FormattedTimeDataLogic {
 
 
     //Called when the "export to excel" button is pressed
-    public boolean exportToExcelDocument() {
+    public boolean exportToExcelDocument() throws IOException {
         ExcelExportHandler exportHandler = new ExcelExportHandler();
         return exportHandler.makeExcelDocument();
     }

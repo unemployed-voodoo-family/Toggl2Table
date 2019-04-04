@@ -282,9 +282,9 @@
                   </ProgressIndicator>
                </children>
             </HBox>
-            <Label fx:id="excelFeedbackLabel" opacity="0.0" prefHeight="28.0" prefWidth="219.0" text="Excel file created" textAlignment="CENTER">
+            <Label fx:id="excelFeedbackLabel" opacity="0.0" prefHeight="121.0" prefWidth="219.0" text="Excel file created" wrapText="true">
                <font>
-                  <Font name="System Bold" size="19.0" />
+                  <Font name="System Bold" size="15.0" />
                </font>
             </Label>
          </children>

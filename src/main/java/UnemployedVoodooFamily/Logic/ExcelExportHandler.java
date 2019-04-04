@@ -3,6 +3,7 @@ package UnemployedVoodooFamily.Logic;
 import UnemployedVoodooFamily.Data.MonthlySheetRowEntry;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.IOException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.Month;
@@ -23,7 +24,7 @@ public class ExcelExportHandler {
         }
     }
 
-    public boolean makeExcelDocument() {
+    public boolean makeExcelDocument() throws IOException {
         generateDummyLists(); //Remove this later, dummy
         boolean exportSuccess = excelWriter.generateExcelSheet(monthlyDataLists);
         if(exportSuccess)   {

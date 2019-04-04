@@ -228,27 +228,30 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
 
         applyFilterBtn.setOnAction(event -> applyFilters());
 
-        exportBtn.setOnAction(event ->  {
-           Thread t = new Thread(() -> {
-                   exportBtn.setDisable(true);
-                   exportProgressIndicator.setVisible(true);
+        exportBtn.setOnAction(event -> {
+            Thread t = new Thread(() -> {
+                exportBtn.setDisable(true);
+                exportProgressIndicator.setVisible(true);
 
-                   boolean success = formattedTimeDataLogic.exportToExcelDocument();
-                   Platform.runLater(() -> {
-                       if(success) {
-                           excelFeedbackLabel.setText("Excel document was successfully created");
-                           excelFeedbackLabel.getStyleClass().remove("error");
-                           excelFeedbackLabel.getStyleClass().add("success");
-                       }
-                       else {
-                           excelFeedbackLabel.setText("Excel document was NOT created");
-                           excelFeedbackLabel.getStyleClass().remove("success");
-                           excelFeedbackLabel.getStyleClass().add("error");
-                       }
-                   });
-
-           });
-              t.start();
+                boolean success = false;
+                String errorMsg = "";
+                try {
+                    success = formattedTimeDataLogic.exportToExcelDocument();
+                    Platform.runLater(() -> {
+                        excelFeedbackLabel.setText("Excel document was successfully created");
+                        excelFeedbackLabel.getStyleClass().remove("error");
+                        excelFeedbackLabel.getStyleClass().add("success");
+                    });
+                }
+                catch(IOException e) {
+                    Platform.runLater(() -> {
+                        excelFeedbackLabel.setText("Error creating excel file: " + "\n" + e.getMessage());
+                        excelFeedbackLabel.getStyleClass().remove("success");
+                        excelFeedbackLabel.getStyleClass().add("error");
+                    });
+                }
+            });
+            t.start();
 
             Thread t1 = new Thread(() -> {
                 try {

@@ -27,16 +27,10 @@ public class ExcelWriter {
         setupStandardRowFormatting();
     }
 
-    public boolean generateExcelSheet(HashMap<String, ArrayList> monthLists) {
+    public boolean generateExcelSheet(HashMap<String, ArrayList> monthLists) throws IOException {
         boolean success = false;
-        try {
-            buildWorkbook(monthLists);
-            success = true;
-        }
-        catch(IOException e) {
-            System.out.println(e.getMessage());
-            return false;
-        }
+        buildWorkbook(monthLists);
+        success = true;
         return success; //Return true if document was build correctly, false if failed
     }
 
@@ -76,7 +70,7 @@ public class ExcelWriter {
             Row row = sheet.createRow(rowNumber++);
             row.createCell(0);
             if(previousRowWeek != m.getWeekNumber()) {
-                alternateStyle = !alternateStyle;
+                alternateStyle = ! alternateStyle;
                 previousRowWeek = m.getWeekNumber();
                 row.getCell(0).setCellValue("Week " + m.getWeekNumber());
             }
