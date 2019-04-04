@@ -74,8 +74,8 @@ public class RawTimeDataLogic {
                 String startDate = start.toLocalDate().format(dateFormatter);
                 String startTime = start.toLocalTime().format(durationFormatter);
 
-                String stopDate = stop.toLocalTime().format(durationFormatter);
-                String stopTime = stop.toLocalDate().format(dateFormatter);
+                String stopDate = stop.toLocalDate().format(dateFormatter);
+                String stopTime = stop.toLocalTime().format(durationFormatter);
 
                 long duration = timeEntry.getDuration();
                 String durationStr = LocalTime.MIN.plusSeconds(duration).format(DateTimeFormatter.ofPattern("HH")) + "H "

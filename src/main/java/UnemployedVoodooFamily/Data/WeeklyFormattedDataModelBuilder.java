@@ -1,13 +1,9 @@
 package UnemployedVoodooFamily.Data;
 
-import UnemployedVoodooFamily.Data.Enums.FilePath;
 import UnemployedVoodooFamily.Logic.PropertiesLogic;
-import UnemployedVoodooFamily.Logic.Session;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.Year;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalField;
 import java.time.temporal.WeekFields;
 import java.util.*;
@@ -22,7 +18,10 @@ public class WeeklyFormattedDataModelBuilder {
     private int weekNumber;
     private Double workedHours;
     private Double supposedHours;
-    private Double overtime;
+    private Double extraTime;
+    private DayOfWeek weekday;
+    private String note;
+    private LocalDate date;
     private LocalDate firstDateOfWeek;
 
     private Integer year;
@@ -47,15 +46,24 @@ public class WeeklyFormattedDataModelBuilder {
     }
 
     public WeeklyFormattedDataModel build() {
+
         if(weeklyTimeEntries.size() < 7) {
             for(DayOfWeek dayOfWeek: DayOfWeek.values()) {
                 weeklyTimeEntries.putIfAbsent(dayOfWeek, new DailyFormattedDataModelBuilder(
                         firstDateOfWeek.plusDays(dayOfWeek.getValue() - 1)).build());
             }
         }
+
         calculateAndSetHours();
-        this.overtime = this.workedHours - this.supposedHours;
-        return new WeeklyFormattedDataModel(this.firstDateOfWeek, this.workedHours, this.supposedHours, this.overtime);
+        this.extraTime = this.workedHours - this.supposedHours;
+
+
+        //TODO Change these dummy values later to reflect the actual values
+        this.date = LocalDate.now();
+        this.weekday = LocalDate.now().getDayOfWeek();
+        this.note = "Fucky wucky";
+
+        return new WeeklyFormattedDataModel(this.firstDateOfWeek, this.workedHours, this.supposedHours, this.extraTime, this.date, this.weekday, this.note);
     }
 
     private void calculateAndSetHours() {
@@ -69,7 +77,7 @@ public class WeeklyFormattedDataModelBuilder {
                 this.supposedHours += entry.getSupposedHours();
             }
             this.workedHours += entry.getWorkedHours();
-            //TODO: Exclude holidays
         }
+            //TODO: Exclude holidays
     }
 }

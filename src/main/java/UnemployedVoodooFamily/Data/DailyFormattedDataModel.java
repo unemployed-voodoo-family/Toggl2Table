@@ -21,7 +21,6 @@ public class DailyFormattedDataModel {
      * Used to structure data for the corresponding TableView
      * @param workedHours   String with hours worked
      * @param supposedHours String with supposed work hours
-     * @param overtime      String with overtime
      */
     public DailyFormattedDataModel(Double workedHours, Double supposedHours, LocalDate day) {
 

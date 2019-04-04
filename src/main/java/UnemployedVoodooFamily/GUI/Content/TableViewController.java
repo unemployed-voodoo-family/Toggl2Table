@@ -430,18 +430,23 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
 
         TableColumn<RawTimeDataModel, String> startDateCol = new TableColumn<>("Start Date");
         startDateCol.setCellValueFactory(new PropertyValueFactory<>("startDate"));
+        startDateCol.getStyleClass().add("right");
 
         TableColumn<RawTimeDataModel, String> startTimeCol = new TableColumn<>("Start Time");
         startTimeCol.setCellValueFactory(new PropertyValueFactory<>("startTime"));
+        startTimeCol.getStyleClass().add("right");
 
         TableColumn<RawTimeDataModel, String> endDateCol = new TableColumn<>("End Date");
         endDateCol.setCellValueFactory(new PropertyValueFactory<>("endDate"));
+        endDateCol.getStyleClass().add("right");
 
         TableColumn<RawTimeDataModel, String> endTimeCol = new TableColumn<>("End Time");
         endTimeCol.setCellValueFactory(new PropertyValueFactory<>("endTime"));
+        endTimeCol.getStyleClass().add("right");
 
         TableColumn<RawTimeDataModel, String> durationCol = new TableColumn<>("Duration");
         durationCol.setCellValueFactory(new PropertyValueFactory<>("duration"));
+        durationCol.getStyleClass().add("right");
 
         projectCol.setPrefWidth(120);
         descCol.setPrefWidth(120);
@@ -570,29 +575,32 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         weekNumbCol.setSortable(false);
 
         TableColumn<WeeklyFormattedDataModel, Integer> weekdayCol = new TableColumn<>("Weekday");
-        weekdayCol.setCellValueFactory(new PropertyValueFactory<>("weekNumber"));
+        weekdayCol.setCellValueFactory(new PropertyValueFactory<>("weekday"));
         weekdayCol.setSortable(false);
 
         TableColumn<WeeklyFormattedDataModel, Integer> dateCol = new TableColumn<>("Date");
-        dateCol.setCellValueFactory(new PropertyValueFactory<>("weekNumber"));
+        dateCol.setCellValueFactory(new PropertyValueFactory<>("date"));
         dateCol.setSortable(false);
 
         TableColumn<WeeklyFormattedDataModel, Double> workedHoursCol = new TableColumn<>("Hours worked");
         workedHoursCol.setCellValueFactory(new PropertyValueFactory<>("workedHours"));
         workedHoursCol.setSortable(false);
+        workedHoursCol.getStyleClass().add("right");
         workedHoursCol.setCellFactory(col -> setDoubleFormatter(df));
 
         TableColumn<WeeklyFormattedDataModel, Double> supposedHoursCol = new TableColumn<>("Supposed work hours");
         supposedHoursCol.setCellValueFactory(new PropertyValueFactory<>("supposedHours"));
         supposedHoursCol.setSortable(false);
+        supposedHoursCol.getStyleClass().add("right");
         supposedHoursCol.setCellFactory(col -> setDoubleFormatter(df));
 
         TableColumn<WeeklyFormattedDataModel, Double> extraTimeCol = new TableColumn<>("+/- Hours");
-        extraTimeCol.setCellValueFactory(new PropertyValueFactory<>("overtime"));
+        extraTimeCol.setCellValueFactory(new PropertyValueFactory<>("extraTime"));
         extraTimeCol.setSortable(false);
+        extraTimeCol.getStyleClass().add("right");
 
         TableColumn<WeeklyFormattedDataModel, Double> noteCol = new TableColumn<>("Notes");
-        noteCol.setCellValueFactory(new PropertyValueFactory<>("overtime"));
+        noteCol.setCellValueFactory(new PropertyValueFactory<>("note"));
         noteCol.setSortable(false);
 
         extraTimeCol.setCellFactory(col -> new TableCell<WeeklyFormattedDataModel, Double>() {
