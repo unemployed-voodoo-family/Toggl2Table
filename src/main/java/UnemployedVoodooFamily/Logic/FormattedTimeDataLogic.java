@@ -1,20 +1,12 @@
 package UnemployedVoodooFamily.Logic;
 
 import UnemployedVoodooFamily.Data.DailyFormattedDataModel;
-import UnemployedVoodooFamily.Data.DailyFormattedDataModelBuilder;
-import UnemployedVoodooFamily.Data.WeeklyFormattedDataModel;
-import UnemployedVoodooFamily.Data.WeeklyFormattedDataModelBuilder;
+import UnemployedVoodooFamily.Data.WeeklyFormattedDataListFactory;
+import UnemployedVoodooFamily.Data.ExtendedDailyFormattedDataModel;
+import UnemployedVoodooFamily.Data.MonthlyFormattedDataListFactory;
 import ch.simas.jtoggl.TimeEntry;
-import com.sun.javafx.scene.control.skin.ComboBoxListViewSkin;
-import com.sun.javafx.scene.control.skin.ComboBoxPopupControl;
-import com.sun.javafx.scene.control.skin.ContextMenuContent;
-import com.sun.javafx.scene.control.skin.ContextMenuSkin;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.Spinner;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -28,10 +20,10 @@ import java.util.Locale;
 public class FormattedTimeDataLogic {
 
     private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd. LLLL yyyy");
-    private static HashMap<Month, ObservableList<WeeklyFormattedDataModel>> monthsMap = new HashMap<>();
+    private static HashMap<Month, ObservableList<ExtendedDailyFormattedDataModel>> monthsMap = new HashMap<>();
 
-    private static ObservableList<DailyFormattedDataModel> weeklyMasterData;
-    private static ObservableList<WeeklyFormattedDataModel> monthtlyMasterData;
+    private static List<DailyFormattedDataModel> weeklyMasterData;
+    private static List<ExtendedDailyFormattedDataModel> monthlyMasterData;
 
     // The time range of the fetched toggl data
     // current values are temporary
@@ -80,9 +72,10 @@ public class FormattedTimeDataLogic {
      * Builds data for the monthly table using the daily formatted data
      * @return the ObservableList containing all summarized weeks
      */
-    public ObservableList<WeeklyFormattedDataModel> buildMonthlyMasterDataList() {
+    /*
+    public ObservableList<ExtendedDailyFormattedDataModel> buildMonthlyMasterDataList() {
 
-        ObservableList<WeeklyFormattedDataModel> data = FXCollections.observableArrayList();
+        ObservableList<ExtendedDailyFormattedDataModel> data = FXCollections.observableArrayList();
 
         //iterate trough each week in the time period
         if(weeklyMasterData == null) {
@@ -100,13 +93,13 @@ public class FormattedTimeDataLogic {
             int weekNumber = date.get(woy);
 
             //builder
-            WeeklyFormattedDataModelBuilder builder = new WeeklyFormattedDataModelBuilder(date);
+            MonthlyFormattedDataListFactory builder = new MonthlyFormattedDataListFactory(date);
 
             //format each time entry in the week
             while(i < weeklyMasterData.size() && ! weekFormatted) {
 
                 DailyFormattedDataModel dailyData = weeklyMasterData.get(i);
-                int entryWeekNumber = dailyData.getDay().get(woy);
+                int entryWeekNumber = dailyData.getDate().get(woy);
 
                 // check if entry is suitable and add it to list
                 if(entryWeekNumber == weekNumber) {
@@ -131,40 +124,12 @@ public class FormattedTimeDataLogic {
         monthtlyMasterData = data;
         return data;
     }
+     */
 
-    public ObservableList<WeeklyFormattedDataModel> buildMonthlySortedData() {
-        ObservableList<WeeklyFormattedDataModel> data = FXCollections.observableArrayList();
-
-        int i = 0;
-        for(LocalDate date = LocalDate.of(selectedYear, selectedMonth.getValue(), 1);
-                date.isBefore(LocalDate.of(selectedYear, selectedMonth, YearMonth.of(selectedYear, selectedMonth).lengthOfMonth()).plusDays(1)); date = date
-                .with(TemporalAdjusters.next(FIRST_DAY_OF_WEEK))) {
-            boolean weekFormatted = false;
-            TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();
-            int weekNumber = date.get(woy);
-            WeeklyFormattedDataModelBuilder builder = new WeeklyFormattedDataModelBuilder(date);
-
-            //format each time entry in the week
-            while(i < weeklyMasterData.size() && ! weekFormatted) {
-                DailyFormattedDataModel dailyData = weeklyMasterData.get(i);
-
-                int entryWeekNumber = dailyData.getDay().get(woy);
-
-                if(entryWeekNumber == weekNumber) {
-                    builder.addDailyData(dailyData);
-                    if(i >= weeklyMasterData.size()) {
-                        weekFormatted = true;
-                    }
-                }
-                else {
-                    i--;
-                    weekFormatted = true;
-                }
-                i++;
-            }
-            data.add(builder.build());
-        }
-        this.monthtlyMasterData = data;
+    public ObservableList<ExtendedDailyFormattedDataModel> buildMonthlySortedData(List<TimeEntry> monthlyEntries, Month month, int year) {
+        ObservableList<ExtendedDailyFormattedDataModel> data;
+        monthlyMasterData = new MonthlyFormattedDataListFactory().buildMonthlyDataList(monthlyEntries, month, year);
+        data = FXCollections.observableArrayList(monthlyMasterData);
         return data;
     }
 
@@ -179,17 +144,18 @@ public class FormattedTimeDataLogic {
      * Builds daily formatted data for use in the weekly table
      * @return the ObservableList containing each summarized day
      */
-    public ObservableList<DailyFormattedDataModel> buildObservableWeeklyTimeData(List<TimeEntry> timeEntries) {
+    public ObservableList<DailyFormattedDataModel> buildObservableWeeklyTimeData(List<TimeEntry> timeEntries, int week, int year) {
 
-        ObservableList<DailyFormattedDataModel> data = FXCollections.observableArrayList();
+        ObservableList<DailyFormattedDataModel> data;
         //TODO: implement date filtering
 
+        /*
         //iterate over all the days in the given range
         int i = 0;
         for(LocalDate date = startDate; date.isBefore(endDate.plusDays(1)); date = date.plusDays(1)) {
 
             boolean dateFormatted = false;
-            DailyFormattedDataModelBuilder builder = new DailyFormattedDataModelBuilder(date);
+            WeeklyFormattedDataListFactory builder = new WeeklyFormattedDataListFactory(date);
 
             //summarize the time entries for one day
             while(i < timeEntries.size() && ! dateFormatted) {
@@ -210,7 +176,10 @@ public class FormattedTimeDataLogic {
             DailyFormattedDataModel databBuild = builder.build();
             data.add(databBuild);
         }
-        weeklyMasterData = data;
+        */
+
+        weeklyMasterData = new WeeklyFormattedDataListFactory().buildWeeklyDataList(timeEntries, week, year);
+        data = FXCollections.observableArrayList(weeklyMasterData);
         return data;
     }
 
@@ -241,11 +210,11 @@ public class FormattedTimeDataLogic {
         return selectedMonth;
     }
 
-    public ObservableList<DailyFormattedDataModel> getWeeklyMasterData() {
+    public List<DailyFormattedDataModel> getWeeklyMasterData() {
         return weeklyMasterData;
     }
 
-    public ObservableList<WeeklyFormattedDataModel> getMonthtlyMasterData() {
-        return monthtlyMasterData;
+    public List<ExtendedDailyFormattedDataModel> getMonthlyMasterData() {
+        return monthlyMasterData;
     }
 }
