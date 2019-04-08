@@ -2,6 +2,7 @@ package UnemployedVoodooFamily.GUI.Content;
 
 import UnemployedVoodooFamily.Data.DailyFormattedDataModel;
 import UnemployedVoodooFamily.Data.Enums.Data;
+import UnemployedVoodooFamily.Data.Enums.FilePath;
 import UnemployedVoodooFamily.Data.RawTimeDataModel;
 import UnemployedVoodooFamily.Data.WeeklyFormattedDataModel;
 import UnemployedVoodooFamily.Logic.FormattedTimeDataLogic;
@@ -18,27 +19,31 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.formula.functions.T;
 
+import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.time.*;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -109,6 +114,8 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     @FXML
     private ComboBox monthlyDropdown;
 
+    @FXML
+    private ImageView feedbackImg;
 
     @FXML
     private Content weeklySummary;
@@ -127,6 +134,11 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
 
     @FXML
     private Tooltip errorTooltip;
+    @FXML
+    private Button explorerBtn;
+
+    private ImageView successImg;
+    private ImageView errorImg;
 
     private final ToggleGroup timeSpanToggleGroup = new ToggleGroup();
 
@@ -142,6 +154,8 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         return FXMLLoader.load(r);
     }
 
+    //region Initialization
+
     // |##################################################|
     // |                GENERAL METHODS                   |
     // |##################################################|
@@ -156,6 +170,8 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
      * Sets up the UI elements
      */
     private void setupUIElements() {
+
+        // load the summary views
         try {
             this.weeklySummary = new WeeklySummaryViewController().loadFXML();
             this.monthlySummary = new MonthlySummaryViewController().loadFXML();
@@ -163,17 +179,34 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         catch(IOException e) {
             e.printStackTrace();
         }
+
+        // set up table views
         buildFormattedWeeklyTable();
         buildFormattedMonthlyTable();
         buildRawDataTable();
 
+        // set uo UI elements for each table
         setupFormattedTableUIElements();
         setupRawTableUIElements();
 
+        //initialize the filter buttons
         initializeFilterButton(clientFilterBtn);
         initializeFilterButton(projectFilterBtn);
         initializeFilterButton(workspaceFilterBtn);
 
+        // load success and error images
+        URL successUrl = getClass().getClassLoader()
+                                   .getResource("icons" + File.separator + "baseline_check_circle_black_24dp.png");
+        Image success = new Image(successUrl.toString());
+        successImg = new ImageView(success);
+        successImg.setFitWidth(24);
+        successImg.setFitHeight(24);
+        URL errorUrl = getClass().getClassLoader()
+                                 .getResource("icons" + File.separator + "baseline_error_black_24dp.png");
+        Image error = new Image(errorUrl.toString());
+        errorImg = new ImageView(error);
+        errorImg.setFitWidth(24);
+        errorImg.setFitHeight(24);
     }
 
     private void setupFormattedTableUIElements() {
@@ -233,63 +266,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         bindTooltip(excelFeedbackLabel, errorTooltip);
         applyFilterBtn.setOnAction(event -> applyFilters());
 
-        exportBtn.setOnAction(event -> {
-            Thread t = new Thread(() -> {
-                exportBtn.setDisable(true);
-                exportProgressIndicator.setVisible(true);
-
-                boolean success = false;
-                String errorMsg = "";
-                try {
-                    success = formattedTimeDataLogic.exportToExcelDocument();
-                    Platform.runLater(() -> {
-                        excelFeedbackLabel.setVisible(true);
-                        excelFeedbackLabel.setText("Excel document was successfully created");
-                        excelFeedbackLabel.getStyleClass().remove("error");
-                        excelFeedbackLabel.getStyleClass().add("success");
-                        errorTooltip.setOpacity(0);
-                    });
-                }
-                catch(IOException e) {
-                    Platform.runLater(() -> {
-                        excelFeedbackLabel.setVisible(true);
-                        excelFeedbackLabel.setText("Error creating excel file");
-                        errorTooltip.setText(e.getMessage());
-                        excelFeedbackLabel.getStyleClass().remove("success");
-                        excelFeedbackLabel.getStyleClass().add("error");
-                        errorTooltip.setOpacity(.9);
-                    });
-                }
-            });
-            t.start();
-
-            Thread t1 = new Thread(() -> {
-                try {
-                    t.join();
-                }
-                catch(InterruptedException e) {
-                    e.printStackTrace();
-                }
-                exportProgressIndicator.setVisible(false);
-                exportBtn.setDisable(false);
-
-                /*double opacity = 1.00;
-
-                excelFeedbackLabel.setOpacity(opacity);
-                while(opacity >= 0.00) {
-                    excelFeedbackLabel.setOpacity(opacity);
-                    try {
-                        sleep(3000);
-                    }
-                    catch(InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    opacity = (opacity - 0.02);
-                }
-                excelFeedbackLabel.setOpacity(0.00);*/
-            });
-            t1.start();
-        });
+        initExcelExportBtn();
 
         rawStartDate.valueProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue.isAfter(rawEndDate.getValue())) {
@@ -412,6 +389,77 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
             }
         });
 
+        explorerBtn.setOnAction(event -> {
+            try {
+                Desktop.getDesktop().open(new File(FilePath.APP_HOME.getPath()));
+            }
+            catch(IOException e) {
+                e.printStackTrace();
+            }
+            catch(IllegalArgumentException e) {
+                //could not find path
+            }
+        });
+
+    }
+
+    private void initExcelExportBtn() {
+        exportBtn.setOnAction(event -> {
+            //try to create excel file, and initialize user feedback
+            Thread t = new Thread(() -> {
+                exportBtn.setDisable(true);
+                exportProgressIndicator.setVisible(true);
+
+                try {
+                    //create document
+                    formattedTimeDataLogic.exportToExcelDocument();
+
+                    //show success in ui
+                    Platform.runLater(() -> {
+                        showSuccessLabel(excelFeedbackLabel, "Excel document was successfully created");
+                        errorTooltip.setOpacity(0);
+                    });
+                }
+                //show error in ui
+                catch(IOException e) {
+                    Platform.runLater(() -> {
+                        showErrorLabel(excelFeedbackLabel, "Error creating excel file");
+                        errorTooltip.setText(e.getMessage());
+                        errorTooltip.setOpacity(.9);
+                    });
+                }
+            });
+            t.start();
+
+            //wait for the task to complete, then set things back to normal
+            Thread t1 = new Thread(() -> {
+                try {
+                    t.join();
+                }
+                catch(InterruptedException e) {
+                    e.printStackTrace();
+                }
+                exportProgressIndicator.setVisible(false);
+                exportBtn.setDisable(false);
+            });
+            t1.start();
+        });
+    }
+
+    private void showSuccessLabel(Label label, String message) {
+        label.setVisible(true);
+        label.setGraphic(successImg);
+        label.setText(message);
+        label.getStyleClass().remove("error");
+        label.getStyleClass().add("success");
+    }
+
+    private void showErrorLabel(Label label, String message) {
+        label.setVisible(true);
+        label.setGraphic(errorImg);
+        label.setText(message);
+        label.getStyleClass().remove("success");
+        label.getStyleClass().add("error");
     }
 
     /**
@@ -421,31 +469,189 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
      * @param tooltip
      */
     public static void bindTooltip(final Node node, final Tooltip tooltip) {
-        node.setOnMouseEntered(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                // +15 moves the tooltip 15 pixels below the mouse cursor;
-                // if you don't change the y coordinate of the tooltip, you
-                // will see constant screen flicker
-                tooltip.show(node, event.getScreenX(), event.getScreenY() + 15);
-            }
+        node.setOnMouseEntered(event -> {
+            // +15 moves the tooltip 15 pixels below the mouse cursor;
+            // if you don't change the y coordinate of the tooltip, you
+            // will see constant screen flicker
+            tooltip.show(node, event.getScreenX(), event.getScreenY() + 15);
         });
-        node.setOnMouseExited(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                tooltip.hide();
-            }
-        });
+        node.setOnMouseExited(event -> tooltip.hide());
     }
+    //endregion
 
-    private void applyFilters() {
-        setRawDataTableData();
-        setFormattedTableData();
-    }
-
+    //region Raw data methods
     // |##################################################|
     // |               RAW DATA TABLE METHODS             |
     // |##################################################|
+
+
+    private void setRawDataTableData() {
+        rawData.getItems().setAll(getObservableRawData());
+        Platform.runLater(() -> {
+            rawEndDate.setValue(rawTimeDataLogic.getFilteredDataEndDate());
+            rawStartDate.setValue(rawTimeDataLogic.getFilteredDataStartDate());
+            rawEndDate.setDisable(false);
+            rawStartDate.setDisable(false);
+        });
+    }
+
+    /**
+     * Creates an observable list containing RawTimeDataModel objects
+     * @return an ObservableList containing RawTimeDatModel objects
+     */
+    private ObservableList<RawTimeDataModel> getObservableRawData() {
+        Session session = Session.getInstance();
+        return FXCollections.observableArrayList(rawTimeDataLogic.buildRawMasterData(session.getTimeEntries(),
+                                                                                     session.getProjects(),
+                                                                                     session.getWorkspaces(),
+                                                                                     session.getClients(),
+                                                                                     filterOptions));
+    }
+    //endregion
+
+    //region Formatted data table methods
+    // |##################################################|
+    // |           FORMATTED DATA TABLE METHODS           |
+    // |##################################################|
+
+    private void setFormattedTableData() {
+        updateWeeklyTable();
+        updateMonthlyTable();
+    }
+
+    private void updateMonthlyTable() {
+        monthlyTable.getItems().setAll(getObservableMonthlyData());
+    }
+
+    private void updateWeeklyTable() {
+        weeklyTable.getItems().setAll(getObservableWeeklyData());
+    }
+
+    //region Tableview setup methods
+
+    /**
+     * Sets up a formatted table with a weekly overview
+     */
+    @SuppressWarnings("Duplicates")
+    private void buildFormattedWeeklyTable() {
+        DecimalFormat df = new DecimalFormat("#0.00 ");
+
+        this.weeklyTable = new TableView();
+        //Create all columns necessary
+        TableColumn<DailyFormattedDataModel, String> weekDayCol = new TableColumn<>("Week Day");
+        weekDayCol.setCellValueFactory(new PropertyValueFactory<>("weekDay"));
+        weekDayCol.setSortable(false);
+
+        TableColumn<DailyFormattedDataModel, Double> workedHoursCol = new TableColumn<>("Worked Hours");
+        workedHoursCol.setCellValueFactory(new PropertyValueFactory<>("workedHours"));
+        workedHoursCol.setSortable(false);
+        workedHoursCol.setCellFactory(col -> setDecimalFormatter(df));
+
+        TableColumn<DailyFormattedDataModel, Double> supposedHoursCol = new TableColumn<>("Supposed Hours");
+        supposedHoursCol.setCellValueFactory(new PropertyValueFactory<>("supposedHours"));
+        supposedHoursCol.setSortable(false);
+        supposedHoursCol.setCellFactory(col -> setDecimalFormatter(df));
+
+        TableColumn<DailyFormattedDataModel, Double> overtimeCol = new TableColumn<>("Overtime");
+        overtimeCol.setCellValueFactory(new PropertyValueFactory<>("overtime"));
+        overtimeCol.setSortable(false);
+        overtimeCol.setCellFactory(col -> new TableCell<DailyFormattedDataModel, Double>() {
+            @Override
+            protected void updateItem(Double item, boolean empty) {
+                super.updateItem(item, empty);
+                if(empty || item == null) {
+                    setText(null);
+                    setGraphic(null);
+                }
+                else {
+                    setText(df.format(item));
+                    setFont(Font.font(Font.getDefault().getName(), FontWeight.BOLD, Font.getDefault().getSize()));
+                    if(item < 0.0) {
+                        setTextFill(Color.RED); // or use setStyle(String)
+                    }
+                    else if(item > 0.0) {
+                        setTextFill(Color.GREEN); // or use setStyle(String)
+                    }
+                    else {
+                        setTextFill(Color.BLACK);
+                    }
+                }
+            }
+        });
+        workedHoursCol.setPrefWidth(120);
+        supposedHoursCol.setPrefWidth(120);
+        overtimeCol.setPrefWidth(120);
+        weekDayCol.setPrefWidth(90);
+        //Adds the columns to the table and updates it
+        this.weeklyTable.getColumns().addAll(weekDayCol, workedHoursCol, supposedHoursCol, overtimeCol);
+        this.weeklyTable.setEditable(false);
+
+        //must be called, or else the table won't appear
+        switchView(tableRoot, weeklyTable);
+        switchView(summaryRoot, weeklySummary);
+    }
+
+    /**
+     * Sets up a formatted table with monthly overview
+     */
+    @SuppressWarnings("Duplicates")
+    private void buildFormattedMonthlyTable() {
+        //Clears the already existing data in the table
+
+        this.monthlyTable = new TableView();
+        DecimalFormat df = new DecimalFormat("#0.00 ");
+
+        //Create all columns necessary
+
+        TableColumn<WeeklyFormattedDataModel, Integer> weekNumbCol = new TableColumn<>("Week Number");
+        weekNumbCol.setCellValueFactory(new PropertyValueFactory<>("weekNumber"));
+        weekNumbCol.setSortable(false);
+
+        TableColumn<WeeklyFormattedDataModel, Double> workedHoursCol = new TableColumn<>("Worked Hours");
+        workedHoursCol.setCellValueFactory(new PropertyValueFactory<>("workedHours"));
+        workedHoursCol.setSortable(false);
+        workedHoursCol.setCellFactory(col -> setDecimalFormatter(df));
+
+        TableColumn<WeeklyFormattedDataModel, Double> supposedHoursCol = new TableColumn<>("Supposed Hours");
+        supposedHoursCol.setCellValueFactory(new PropertyValueFactory<>("supposedHours"));
+        supposedHoursCol.setSortable(false);
+        supposedHoursCol.setCellFactory(col -> setDecimalFormatter(df));
+
+        TableColumn<WeeklyFormattedDataModel, Double> overtimeCol = new TableColumn<>("Overtime");
+        overtimeCol.setCellValueFactory(new PropertyValueFactory<>("overtime"));
+        overtimeCol.setSortable(false);
+
+        overtimeCol.setCellFactory(col -> new TableCell<WeeklyFormattedDataModel, Double>() {
+            @Override
+            protected void updateItem(Double item, boolean empty) {
+                super.updateItem(item, empty);
+                if(empty || item == null) {
+                    setText(null);
+                    setGraphic(null);
+                }
+                else {
+                    setText(df.format(item));
+                    setFont(Font.font(Font.getDefault().getName(), FontWeight.BOLD, Font.getDefault().getSize()));
+                    if(item < 0.0) {
+                        setTextFill(Color.RED); // or use setStyle(String)
+                    }
+                    else if(item > 0.0) {
+                        setTextFill(Color.GREEN); // or use setStyle(String)
+                    }
+                    else {
+                        setTextFill(Color.BLACK);
+                    }
+                }
+            }
+        });
+        workedHoursCol.setPrefWidth(120);
+        supposedHoursCol.setPrefWidth(120);
+        overtimeCol.setPrefWidth(120);
+        weekNumbCol.setPrefWidth(90);
+        //Adds the columns to the table and updates it
+        monthlyTable.getColumns().addAll(weekNumbCol, workedHoursCol, supposedHoursCol, overtimeCol);
+        monthlyTable.setEditable(false);
+    }
 
     /**
      * Builds the viewable table of all the raw from the Toggl user's data
@@ -492,171 +698,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
                .addAll(projectCol, clientCol, descCol, startDateCol, startTimeCol, endDateCol, endTimeCol, durationCol);
     }
 
-    private void setRawDataTableData() {
-        rawData.getItems().setAll(getObservableRawData());
-        Platform.runLater(() -> {
-            rawEndDate.setValue(rawTimeDataLogic.getFilteredDataEndDate());
-            rawStartDate.setValue(rawTimeDataLogic.getFilteredDataStartDate());
-            rawEndDate.setDisable(false);
-            rawStartDate.setDisable(false);
-        });
-    }
-
-    private void setFormattedTableData() {
-        updateWeeklyTable();
-        updateMonthlyTable();
-    }
-
-    private void updateMonthlyTable() {
-        monthlyTable.getItems().setAll(getObservableMonthlyData());
-    }
-
-    private void updateWeeklyTable() {
-        weeklyTable.getItems().setAll(getObservableWeeklyData());
-    }
-
-    /**
-     * Creates an observable list containing RawTimeDataModel objects
-     * @return an ObservableList containing RawTimeDatModel objects
-     */
-    private ObservableList<RawTimeDataModel> getObservableRawData() {
-        Session session = Session.getInstance();
-        return FXCollections.observableArrayList(rawTimeDataLogic.buildRawMasterData(session.getTimeEntries(),
-                                                                                     session.getProjects(),
-                                                                                     session.getWorkspaces(),
-                                                                                     session.getClients(),
-                                                                                     filterOptions));
-    }
-
-    // |##################################################|
-    // |           FORMATTED DATA TABLE METHODS           |
-    // |##################################################|
-
-    /**
-     * Builds a formatted table with a weekly overview
-     */
-    @SuppressWarnings("Duplicates")
-    private void buildFormattedWeeklyTable() {
-        DecimalFormat df = new DecimalFormat("#0.00 ");
-
-        this.weeklyTable = new TableView();
-        //Create all columns necessary
-        TableColumn<DailyFormattedDataModel, String> weekDayCol = new TableColumn<>("Week Day");
-        weekDayCol.setCellValueFactory(new PropertyValueFactory<>("weekDay"));
-        weekDayCol.setSortable(false);
-
-        TableColumn<DailyFormattedDataModel, Double> workedHoursCol = new TableColumn<>("Worked Hours");
-        workedHoursCol.setCellValueFactory(new PropertyValueFactory<>("workedHours"));
-        workedHoursCol.setSortable(false);
-        workedHoursCol.setCellFactory(col -> setDoubleFormatter(df));
-
-        TableColumn<DailyFormattedDataModel, Double> supposedHoursCol = new TableColumn<>("Supposed Hours");
-        supposedHoursCol.setCellValueFactory(new PropertyValueFactory<>("supposedHours"));
-        supposedHoursCol.setSortable(false);
-        supposedHoursCol.setCellFactory(col -> setDoubleFormatter(df));
-
-        TableColumn<DailyFormattedDataModel, Double> overtimeCol = new TableColumn<>("Overtime");
-        overtimeCol.setCellValueFactory(new PropertyValueFactory<>("overtime"));
-        overtimeCol.setSortable(false);
-        overtimeCol.setCellFactory(col -> new TableCell<DailyFormattedDataModel, Double>() {
-            @Override
-            protected void updateItem(Double item, boolean empty) {
-                super.updateItem(item, empty);
-                if(empty || item == null) {
-                    setText(null);
-                    setGraphic(null);
-                }
-                else {
-                    setText(df.format(item));
-                    setFont(Font.font(Font.getDefault().getName(), FontWeight.BOLD, Font.getDefault().getSize()));
-                    if(item < 0.0) {
-                        setTextFill(Color.RED); // or use setStyle(String)
-                    }
-                    else if(item > 0.0) {
-                        setTextFill(Color.GREEN); // or use setStyle(String)
-                    }
-                    else {
-                        setTextFill(Color.BLACK);
-                    }
-                }
-            }
-        });
-        workedHoursCol.setPrefWidth(120);
-        supposedHoursCol.setPrefWidth(120);
-        overtimeCol.setPrefWidth(120);
-        weekDayCol.setPrefWidth(90);
-        //Adds the columns to the table and updates it
-        this.weeklyTable.getColumns().addAll(weekDayCol, workedHoursCol, supposedHoursCol, overtimeCol);
-        this.weeklyTable.setEditable(false);
-
-        //must be called, or else the table won't appear
-        switchView(tableRoot, weeklyTable);
-        switchView(summaryRoot, weeklySummary);
-    }
-
-    /**
-     * Builds a formatted table with monthly overview
-     */
-    @SuppressWarnings("Duplicates")
-    private void buildFormattedMonthlyTable() {
-        //Clears the already existing data in the table
-
-        this.monthlyTable = new TableView();
-        DecimalFormat df = new DecimalFormat("#0.00 ");
-
-        //Create all columns necessary
-
-        TableColumn<WeeklyFormattedDataModel, Integer> weekNumbCol = new TableColumn<>("Week Number");
-        weekNumbCol.setCellValueFactory(new PropertyValueFactory<>("weekNumber"));
-        weekNumbCol.setSortable(false);
-
-        TableColumn<WeeklyFormattedDataModel, Double> workedHoursCol = new TableColumn<>("Worked Hours");
-        workedHoursCol.setCellValueFactory(new PropertyValueFactory<>("workedHours"));
-        workedHoursCol.setSortable(false);
-        workedHoursCol.setCellFactory(col -> setDoubleFormatter(df));
-
-        TableColumn<WeeklyFormattedDataModel, Double> supposedHoursCol = new TableColumn<>("Supposed Hours");
-        supposedHoursCol.setCellValueFactory(new PropertyValueFactory<>("supposedHours"));
-        supposedHoursCol.setSortable(false);
-        supposedHoursCol.setCellFactory(col -> setDoubleFormatter(df));
-
-        TableColumn<WeeklyFormattedDataModel, Double> overtimeCol = new TableColumn<>("Overtime");
-        overtimeCol.setCellValueFactory(new PropertyValueFactory<>("overtime"));
-        overtimeCol.setSortable(false);
-
-        overtimeCol.setCellFactory(col -> new TableCell<WeeklyFormattedDataModel, Double>() {
-            @Override
-            protected void updateItem(Double item, boolean empty) {
-                super.updateItem(item, empty);
-                if(empty || item == null) {
-                    setText(null);
-                    setGraphic(null);
-                }
-                else {
-                    setText(df.format(item));
-                    setFont(Font.font(Font.getDefault().getName(), FontWeight.BOLD, Font.getDefault().getSize()));
-                    if(item < 0.0) {
-                        setTextFill(Color.RED); // or use setStyle(String)
-                    }
-                    else if(item > 0.0) {
-                        setTextFill(Color.GREEN); // or use setStyle(String)
-                    }
-                    else {
-                        setTextFill(Color.BLACK);
-                    }
-                }
-            }
-        });
-        workedHoursCol.setPrefWidth(120);
-        supposedHoursCol.setPrefWidth(120);
-        overtimeCol.setPrefWidth(120);
-        weekNumbCol.setPrefWidth(90);
-        //Adds the columns to the table and updates it
-        monthlyTable.getColumns().addAll(weekNumbCol, workedHoursCol, supposedHoursCol, overtimeCol);
-        monthlyTable.setEditable(false);
-    }
-
-    private <T> TableCell<T, Double> setDoubleFormatter(DecimalFormat df) {
+    private <T> TableCell<T, Double> setDecimalFormatter(DecimalFormat df) {
         return new TableCell<T, Double>() {
             @Override
             protected void updateItem(Double item, boolean empty) {
@@ -671,6 +713,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
             }
         };
     }
+    //endregion
 
     /**
      * Creates an observable list containing WeeklyTimeDataModel objects
@@ -700,32 +743,9 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         monthSpinner.setVisible(show);
         monthSpinner.setDisable(! show);
     }
+    //endregion
 
-    // |##################################################|
-    // |                  OTHER METHODS                   |
-    // |##################################################|
-
-    /**
-     * Clears the selected TableView
-     * @param table the TableView to clear
-     */
-    private void clearTable(TableView table) {
-        table.getColumns().clear();
-        table.getItems().clear();
-    }
-
-    private <T extends Pane, S extends Region> void switchView(T root, S content) {
-        ObservableList<Node> children = root.getChildren();
-        if(children.isEmpty()) {
-            children.addAll(content);
-        }
-        else if(! children.contains(content)) {
-            children.clear();
-            children.addAll(content);
-        }
-        content.prefWidthProperty().bind(root.widthProperty());
-        content.prefHeightProperty().bind(root.heightProperty());
-    }
+    //region Filter options methods
 
     /**
      * fill all filter buttons with the necessary buttons and data
@@ -799,6 +819,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         filterOptions.remove(t);
     }
 
+
     /**
      * Inner class to create a menu-item with a check box and an object attached to it.
      */
@@ -823,7 +844,38 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
             cb.setSelected(true);
         }
     }
+    //endregion
 
+    // |##################################################|
+    // |                  OTHER METHODS                   |
+    // |##################################################|
+
+    private void applyFilters() {
+        setRawDataTableData();
+        setFormattedTableData();
+    }
+
+    /**
+     * Clears the selected TableView
+     * @param table the TableView to clear
+     */
+    private void clearTable(TableView table) {
+        table.getColumns().clear();
+        table.getItems().clear();
+    }
+
+    private <T extends Pane, S extends Region> void switchView(T root, S content) {
+        ObservableList<Node> children = root.getChildren();
+        if(children.isEmpty()) {
+            children.addAll(content);
+        }
+        else if(! children.contains(content)) {
+            children.clear();
+            children.addAll(content);
+        }
+        //content.prefWidthProperty().bind(root.widthProperty());
+        //content.prefHeightProperty().bind(root.heightProperty());
+    }
 
     /**
      * Set newly loaded data to the tables, only when
