@@ -38,7 +38,7 @@
             </HBox>
             <HBox alignment="CENTER_RIGHT" prefHeight="60.0">
                <children>
-                  <Label fx:id="weekNumLabel11" text="overtime hours ">
+                  <Label fx:id="weekNumLabel11" text="extraTime hours ">
                      <font>
                         <Font size="24.0" />
                      </font>

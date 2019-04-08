@@ -3,8 +3,8 @@ package UnemployedVoodooFamily.GUI.Content;
 import UnemployedVoodooFamily.Data.DailyFormattedDataModel;
 import UnemployedVoodooFamily.Data.Enums.Data;
 import UnemployedVoodooFamily.Data.Enums.FilePath;
+import UnemployedVoodooFamily.Data.ExtendedDailyFormattedDataModel;
 import UnemployedVoodooFamily.Data.RawTimeDataModel;
-import UnemployedVoodooFamily.Data.WeeklyFormattedDataModel;
 import UnemployedVoodooFamily.Logic.FormattedTimeDataLogic;
 import UnemployedVoodooFamily.Logic.Listeners.DataLoadListener;
 import UnemployedVoodooFamily.Logic.RawTimeDataLogic;
@@ -343,6 +343,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
             public void changed(ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) {
                 formattedTimeDataLogic.setSelectedYear(newValue);
                 updateMonthlyTable();
+                updateWeeklyTable();
             }
         });
 
@@ -364,6 +365,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
             @Override
             public void changed(ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) {
                 formattedTimeDataLogic.setSelectedWeek(newValue);
+                updateWeeklyTable();
             }
         });
 
@@ -454,6 +456,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         label.getStyleClass().add("success");
     }
 
+
     private void showErrorLabel(Label label, String message) {
         label.setVisible(true);
         label.setGraphic(errorImg);
@@ -538,24 +541,35 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
 
         this.weeklyTable = new TableView();
         //Create all columns necessary
-        TableColumn<DailyFormattedDataModel, String> weekDayCol = new TableColumn<>("Week Day");
-        weekDayCol.setCellValueFactory(new PropertyValueFactory<>("weekDay"));
-        weekDayCol.setSortable(false);
+        TableColumn<DailyFormattedDataModel, String> weekdayCol = new TableColumn<>("Week Day");
+        weekdayCol.setCellValueFactory(new PropertyValueFactory<>("weekday"));
+        weekdayCol.setSortable(false);
+
+        TableColumn<DailyFormattedDataModel, String> dateCol = new TableColumn<>("Date");
+        dateCol.setCellValueFactory(new PropertyValueFactory<>("date"));
+        dateCol.setSortable(false);
 
         TableColumn<DailyFormattedDataModel, Double> workedHoursCol = new TableColumn<>("Worked Hours");
         workedHoursCol.setCellValueFactory(new PropertyValueFactory<>("workedHours"));
         workedHoursCol.setSortable(false);
-        workedHoursCol.setCellFactory(col -> setDecimalFormatter(df));
+        workedHoursCol.getStyleClass().add("right");
 
-        TableColumn<DailyFormattedDataModel, Double> supposedHoursCol = new TableColumn<>("Supposed Hours");
+
+        TableColumn<DailyFormattedDataModel, Double> supposedHoursCol = new TableColumn<>("Supposed work hours");
         supposedHoursCol.setCellValueFactory(new PropertyValueFactory<>("supposedHours"));
         supposedHoursCol.setSortable(false);
-        supposedHoursCol.setCellFactory(col -> setDecimalFormatter(df));
+        supposedHoursCol.getStyleClass().add("right");
 
-        TableColumn<DailyFormattedDataModel, Double> overtimeCol = new TableColumn<>("Overtime");
-        overtimeCol.setCellValueFactory(new PropertyValueFactory<>("overtime"));
-        overtimeCol.setSortable(false);
-        overtimeCol.setCellFactory(col -> new TableCell<DailyFormattedDataModel, Double>() {
+
+        TableColumn<DailyFormattedDataModel, String> noteCol = new TableColumn<>("Notes");
+        noteCol.setCellValueFactory(new PropertyValueFactory<>("note"));
+        noteCol.setSortable(false);
+
+        TableColumn<DailyFormattedDataModel, Double> extraTimeCol = new TableColumn<>("+/- Hours");
+        extraTimeCol.setCellValueFactory(new PropertyValueFactory<>("extraTime"));
+        extraTimeCol.setSortable(false);
+        extraTimeCol.getStyleClass().add("right");
+        extraTimeCol.setCellFactory(col -> new TableCell<DailyFormattedDataModel, Double>() {
             @Override
             protected void updateItem(Double item, boolean empty) {
                 super.updateItem(item, empty);
@@ -579,11 +593,10 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
             }
         });
         workedHoursCol.setPrefWidth(120);
-        supposedHoursCol.setPrefWidth(120);
-        overtimeCol.setPrefWidth(120);
-        weekDayCol.setPrefWidth(90);
+        supposedHoursCol.setPrefWidth(140);
+        extraTimeCol.setPrefWidth(90);
         //Adds the columns to the table and updates it
-        this.weeklyTable.getColumns().addAll(weekDayCol, workedHoursCol, supposedHoursCol, overtimeCol);
+        this.weeklyTable.getColumns().addAll(weekdayCol, dateCol, supposedHoursCol, workedHoursCol, extraTimeCol, noteCol);
         this.weeklyTable.setEditable(false);
 
         //must be called, or else the table won't appear
@@ -603,25 +616,42 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
 
         //Create all columns necessary
 
-        TableColumn<WeeklyFormattedDataModel, Integer> weekNumbCol = new TableColumn<>("Week Number");
+        TableColumn<ExtendedDailyFormattedDataModel, Integer> weekNumbCol = new TableColumn<>("Week number");
         weekNumbCol.setCellValueFactory(new PropertyValueFactory<>("weekNumber"));
         weekNumbCol.setSortable(false);
 
-        TableColumn<WeeklyFormattedDataModel, Double> workedHoursCol = new TableColumn<>("Worked Hours");
+        TableColumn<ExtendedDailyFormattedDataModel, Integer> weekdayCol = new TableColumn<>("Weekday");
+        weekdayCol.setCellValueFactory(new PropertyValueFactory<>("weekday"));
+        weekdayCol.setSortable(false);
+
+        TableColumn<ExtendedDailyFormattedDataModel, Integer> dateCol = new TableColumn<>("Date");
+        dateCol.setCellValueFactory(new PropertyValueFactory<>("date"));
+        dateCol.setSortable(false);
+
+        TableColumn<ExtendedDailyFormattedDataModel, Double> workedHoursCol = new TableColumn<>("Hours worked");
         workedHoursCol.setCellValueFactory(new PropertyValueFactory<>("workedHours"));
         workedHoursCol.setSortable(false);
         workedHoursCol.setCellFactory(col -> setDecimalFormatter(df));
+        workedHoursCol.getStyleClass().add("right");
 
-        TableColumn<WeeklyFormattedDataModel, Double> supposedHoursCol = new TableColumn<>("Supposed Hours");
+
+        TableColumn<ExtendedDailyFormattedDataModel, Double> supposedHoursCol = new TableColumn<>("Supposed work hours");
         supposedHoursCol.setCellValueFactory(new PropertyValueFactory<>("supposedHours"));
         supposedHoursCol.setSortable(false);
         supposedHoursCol.setCellFactory(col -> setDecimalFormatter(df));
+        supposedHoursCol.getStyleClass().add("right");
 
-        TableColumn<WeeklyFormattedDataModel, Double> overtimeCol = new TableColumn<>("Overtime");
-        overtimeCol.setCellValueFactory(new PropertyValueFactory<>("overtime"));
-        overtimeCol.setSortable(false);
 
-        overtimeCol.setCellFactory(col -> new TableCell<WeeklyFormattedDataModel, Double>() {
+        TableColumn<ExtendedDailyFormattedDataModel, Double> extraTimeCol = new TableColumn<>("+/- Hours");
+        extraTimeCol.setCellValueFactory(new PropertyValueFactory<>("extraTime"));
+        extraTimeCol.setSortable(false);
+        extraTimeCol.getStyleClass().add("right");
+
+        TableColumn<ExtendedDailyFormattedDataModel, Double> noteCol = new TableColumn<>("Notes");
+        noteCol.setCellValueFactory(new PropertyValueFactory<>("note"));
+        noteCol.setSortable(false);
+
+        extraTimeCol.setCellFactory(col -> new TableCell<ExtendedDailyFormattedDataModel, Double>() {
             @Override
             protected void updateItem(Double item, boolean empty) {
                 super.updateItem(item, empty);
@@ -645,11 +675,11 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
             }
         });
         workedHoursCol.setPrefWidth(120);
-        supposedHoursCol.setPrefWidth(120);
-        overtimeCol.setPrefWidth(120);
+        supposedHoursCol.setPrefWidth(140);
+        extraTimeCol.setPrefWidth(90);
         weekNumbCol.setPrefWidth(90);
         //Adds the columns to the table and updates it
-        monthlyTable.getColumns().addAll(weekNumbCol, workedHoursCol, supposedHoursCol, overtimeCol);
+        monthlyTable.getColumns().addAll(weekNumbCol, weekdayCol, dateCol, supposedHoursCol, workedHoursCol, extraTimeCol, noteCol);
         monthlyTable.setEditable(false);
     }
 
@@ -671,20 +701,24 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         TableColumn<RawTimeDataModel, String> descCol = new TableColumn<>("Description");
         descCol.setCellValueFactory(new PropertyValueFactory<>("description"));
 
+
         TableColumn<RawTimeDataModel, String> startDateCol = new TableColumn<>("Start Date");
         startDateCol.setCellValueFactory(new PropertyValueFactory<>("startDate"));
 
         TableColumn<RawTimeDataModel, String> startTimeCol = new TableColumn<>("Start Time");
         startTimeCol.setCellValueFactory(new PropertyValueFactory<>("startTime"));
+        startTimeCol.getStyleClass().add("right");
 
         TableColumn<RawTimeDataModel, String> endDateCol = new TableColumn<>("End Date");
         endDateCol.setCellValueFactory(new PropertyValueFactory<>("endDate"));
 
         TableColumn<RawTimeDataModel, String> endTimeCol = new TableColumn<>("End Time");
         endTimeCol.setCellValueFactory(new PropertyValueFactory<>("endTime"));
+        endTimeCol.getStyleClass().add("right");
 
-        TableColumn<RawTimeDataModel, String> durationCol = new TableColumn<>("Duration (HH:mm:ss)");
+        TableColumn<RawTimeDataModel, String> durationCol = new TableColumn<>("Duration");
         durationCol.setCellValueFactory(new PropertyValueFactory<>("duration"));
+        durationCol.getStyleClass().add("right");
 
         projectCol.setPrefWidth(120);
         descCol.setPrefWidth(120);
@@ -721,17 +755,27 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
      */
     private ObservableList<DailyFormattedDataModel> getObservableWeeklyData() {
         if(rawTimeDataLogic.getFilteredTimeEntries() != null) {
-            return formattedTimeDataLogic.buildObservableWeeklyTimeData(rawTimeDataLogic.getFilteredTimeEntries());
+            return formattedTimeDataLogic.buildObservableWeeklyTimeData(rawTimeDataLogic.getFilteredTimeEntries(),
+                                                                        Integer.parseInt(weekSpinner.getEditor().getText()),
+                                                                        Integer.parseInt(yearSpinner.getEditor().getText()));
         }
-        return formattedTimeDataLogic.buildObservableWeeklyTimeData(rawTimeDataLogic.getFilteredTimeEntries());
+        return formattedTimeDataLogic.buildObservableWeeklyTimeData(rawTimeDataLogic.getFilteredTimeEntries(),
+                                                                    Integer.parseInt(weekSpinner.getEditor().getText()),
+                                                                    Integer.parseInt(yearSpinner.getEditor().getText()));
     }
 
     /**
      * Creates an observable list containing MonthlyTimeDataModel objects
      * @return an ObservableList containing MonthlyTimeDatModel objects
      */
-    private ObservableList<WeeklyFormattedDataModel> getObservableMonthlyData() {
-        return formattedTimeDataLogic.buildMonthlySortedData();
+    private ObservableList<ExtendedDailyFormattedDataModel> getObservableMonthlyData() {
+        Month month = Month.valueOf(monthSpinner.getEditor().getText().toUpperCase());
+        if(rawTimeDataLogic.getFilteredTimeEntries() != null) {
+            return formattedTimeDataLogic.buildMonthlySortedData(rawTimeDataLogic.getFilteredTimeEntries(), month,
+                                                                 Integer.parseInt(yearSpinner.getEditor().getText()));
+        }
+        return formattedTimeDataLogic.buildMonthlySortedData(rawTimeDataLogic.getFilteredTimeEntries(), month,
+                                                             Integer.parseInt(yearSpinner.getEditor().getText()));
     }
 
     private void updateWeeklySpinner(boolean show) {
