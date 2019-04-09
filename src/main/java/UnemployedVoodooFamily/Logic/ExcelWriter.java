@@ -28,7 +28,7 @@ public class ExcelWriter {
         setupStandardRowFormatting();
     }
 
-    public boolean generateExcelSheet(HashMap<String, ArrayList> monthLists) throws IOException {
+    public boolean generateExcelSheet(HashMap<String, List> monthLists) throws IOException {
         boolean success = false;
         buildWorkbook(monthLists);
         success = true;

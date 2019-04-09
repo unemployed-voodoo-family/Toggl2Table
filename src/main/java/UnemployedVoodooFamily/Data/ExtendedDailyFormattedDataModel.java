@@ -14,7 +14,7 @@ public class ExtendedDailyFormattedDataModel extends DailyFormattedDataModel {
      * @param workedHours String with worked hours
      * @param supposedHours String with supposed work hours
      */
-    public ExtendedDailyFormattedDataModel(Double workedHours, Double supposedHours, LocalDate date, int weekNumber, Double accumulated, String note) {
+    public ExtendedDailyFormattedDataModel(Double workedHours, Double supposedHours, LocalDate date, int weekNumber, double accumulated, String note) {
 
         super(workedHours, supposedHours, date, accumulated, note);
 

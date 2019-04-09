@@ -53,10 +53,10 @@ public class MonthlyFormattedDataListFactory {
 
             //TODO get actual supposed work hours
             if(currentWeekNumber != previousWeekNumber) {
-                monthlyList.add(new ExtendedDailyFormattedDataModel(workedHours, 0.00, d, currentWeekNumber,"yay"));
+                monthlyList.add(new ExtendedDailyFormattedDataModel(workedHours, 0.00, d, currentWeekNumber, 0,"yay"));
             }
             else {
-                monthlyList.add(new ExtendedDailyFormattedDataModel(workedHours, 0.00, d, 0,"yay"));
+                monthlyList.add(new ExtendedDailyFormattedDataModel(workedHours, 0.00, d, 0, 0, "yay"));
 
             }
             previousWeekNumber = currentWeekNumber;

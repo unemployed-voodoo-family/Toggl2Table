@@ -51,7 +51,7 @@ public class WeeklyFormattedDataListFactory {
             }
                 //TODO increase performance
                 //TODO get correct supposed work hours
-            weeklyList.add(new DailyFormattedDataModel(workedHours,0.00, date, ""));
+            weeklyList.add(new DailyFormattedDataModel(workedHours,0.00, date, 0, ""));
         }
 
         return weeklyList;

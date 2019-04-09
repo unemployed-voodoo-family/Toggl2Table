@@ -119,7 +119,7 @@ public class FormattedTimeDataLogic {
 
 
     //Called when the "export to excel" button is pressed
-    public boolean exportToExcelDocument(List<TimeEntry> timeEntries, int year) {
+    public boolean exportToExcelDocument(List<TimeEntry> timeEntries, int year) throws IOException {
         ExcelExportHandler exportHandler = new ExcelExportHandler(timeEntries, year);
         return exportHandler.makeExcelDocument();
     }
