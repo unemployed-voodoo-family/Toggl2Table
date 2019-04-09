@@ -1,6 +1,7 @@
 package UnemployedVoodooFamily.Data;
 
 import ch.simas.jtoggl.TimeEntry;
+import org.threeten.extra.YearWeek;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -14,47 +15,47 @@ public class WeeklyFormattedDataListFactory {
 
     private ArrayList<DailyFormattedDataModel> weeklyList;
 
-    public List<DailyFormattedDataModel> buildWeeklyDataList(List<TimeEntry> timeEntries, LocalDate date)   {
+    public List<DailyFormattedDataModel> buildWeeklyDataList(List<TimeEntry> timeEntries, YearWeek date,
+                                                             Double accumulatedOffset) {
         weeklyList = new ArrayList<>();
 
-
-        TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();
-        int year = date.getYear();
-        int weekNumber = date.get(woy);
         //finds the first day of the selected week
-        LocalDate weeksFirstDate = LocalDate.ofYearDay(year, 50)
-                                            .with(IsoFields.WEEK_OF_WEEK_BASED_YEAR, weekNumber)
-                                            .with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+        LocalDate weeksFirstDate = date.atDay(DayOfWeek.MONDAY);
 
         //Create a sublist for that specific week containing time entries only from that week
         List<TimeEntry> weekSublist = new ArrayList<>();
 
-        for(TimeEntry t : timeEntries)  {
-            if(null != t.getStop()
-                    && (t.getStart().toLocalDate().isEqual(weeksFirstDate)
-                        || (t.getStart().toLocalDate().isAfter(weeksFirstDate)
-                            && t.getStop().toLocalDate().isBefore(weeksFirstDate.plusDays(6))))) {
-                    weekSublist.add(t);
+
+        for(TimeEntry t: timeEntries) {
+            if(null != t.getStop() && (t.getStart().toLocalDate().isEqual(weeksFirstDate) || (t.getStart().toLocalDate()
+                                                                                               .isAfter(
+                                                                                                       weeksFirstDate) && t
+                    .getStop().toLocalDate().isBefore(weeksFirstDate.plusDays(6))))) {
+                weekSublist.add(t);
             }
         }
 
+        Double accumulatedHours = accumulatedOffset;
+
         //Creates a list with the entire week summarised
-        for(DayOfWeek weekday : DayOfWeek.values()) {
+        for(DayOfWeek weekday: DayOfWeek.values()) {
 
             //Create current date to process
-            LocalDate currentDate = weeksFirstDate.plusDays(weekday.getValue()-1);
-            double workedHours = 0.00;
+            LocalDate currentDate = weeksFirstDate.plusDays(weekday.getValue() - 1L);
+            double workedHours = 0d;
 
-            if(!weekSublist.isEmpty())  {
-                for(TimeEntry t : weekSublist)  {
-                    if(t.getStart().toLocalDate().isEqual(currentDate) && t.getStop().toLocalDate().isEqual(currentDate)) {
-                        workedHours += ((double)t.getDuration() % 86400) / 3600;
+            if(! weekSublist.isEmpty()) {
+                for(TimeEntry t: weekSublist) {
+                    if(t.getStart().toLocalDate().isEqual(currentDate) && t.getStop().toLocalDate()
+                                                                           .isEqual(currentDate)) {
+                        workedHours += ((double) t.getDuration() % 86400) / 3600;
                     }
                 }
             }
-                //TODO increase performance
-                //TODO get correct supposed work hours
-            weeklyList.add(new DailyFormattedDataModel(workedHours,0.00, date,  0d, ""));
+            accumulatedHours += workedHours;
+
+            //TODO get correct supposed work hours
+            weeklyList.add(new DailyFormattedDataModel(workedHours, 0.00, currentDate, accumulatedHours, ""));
         }
 
         return weeklyList;
