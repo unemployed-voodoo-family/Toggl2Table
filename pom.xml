@@ -50,6 +50,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.threeten</groupId>
+            <artifactId>threeten-extra</artifactId>
+            <version>1.5.0</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.github.unemployed-voodoo-family</groupId>
             <artifactId>jtoggl</artifactId>
             <version>1cd06f23e2174dbc18bf1387ee428a3ec61a2c8b</version>
