@@ -231,7 +231,8 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
                    exportBtn.setDisable(true);
                    exportProgressIndicator.setVisible(true);
 
-                   boolean success = formattedTimeDataLogic.exportToExcelDocument();
+                   boolean success = formattedTimeDataLogic.exportToExcelDocument(rawTimeDataLogic.getFilteredTimeEntries(),
+                                                                                  Integer.parseInt(yearSpinner.getEditor().getText()));
                    Platform.runLater(() -> {
                        if(success) {
                            excelFeedbackLabel.setText("Excel document was successfully created");
