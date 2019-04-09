@@ -14,6 +14,7 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -271,10 +272,19 @@
                   <Insets bottom="20.0" top="10.0" />
                </VBox.margin>
             </Separator>
-            <Label text="Export" textFill="#000000b3" />
+            <Label text="Export" textFill="#000000b3">
+               <VBox.margin>
+                  <Insets bottom="5.0" />
+               </VBox.margin></Label>
             <HBox prefWidth="200.0">
                <children>
-                  <Button fx:id="exportBtn" mnemonicParsing="false" text="Export to excel" />
+                  <Button fx:id="exportBtn" mnemonicParsing="false" text="Export to excel">
+                     <tooltip>
+                        <Tooltip text="Empty Tooltip" />
+                     </tooltip>
+                     <HBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </HBox.margin></Button>
                   <ProgressIndicator fx:id="exportProgressIndicator" minHeight="-Infinity" prefHeight="0.0" prefWidth="32.0" visible="false">
                      <HBox.margin>
                         <Insets left="15.0" />
@@ -282,10 +292,26 @@
                   </ProgressIndicator>
                </children>
             </HBox>
-            <Label fx:id="excelFeedbackLabel" opacity="0.0" prefHeight="28.0" prefWidth="219.0" text="Excel file created" textAlignment="CENTER">
-               <font>
-                  <Font name="System Bold" size="19.0" />
-               </font>
+            <HBox layoutX="10.0" layoutY="287.0" prefWidth="200.0">
+               <children>
+                  <Button fx:id="explorerBtn" mnemonicParsing="false" text="Show in explorer">
+                     <HBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
+            <Label fx:id="excelFeedbackLabel" prefHeight="52.0" prefWidth="220.0" text="Label" visible="false" wrapText="true">
+               <tooltip>
+                  <Tooltip fx:id="errorTooltip" opacity="0.8">
+                     <font>
+                        <Font size="17.0" />
+                     </font>
+                  </Tooltip>
+               </tooltip>
+               <VBox.margin>
+                  <Insets bottom="5.0" top="5.0" />
+               </VBox.margin>
             </Label>
          </children>
          <HBox.margin>

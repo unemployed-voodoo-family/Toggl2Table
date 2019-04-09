@@ -57,6 +57,7 @@ public class MonthlyFormattedDataListFactory {
             }
             else {
                 monthlyList.add(new ExtendedDailyFormattedDataModel(workedHours, 0.00, d, 0,"yay"));
+
             }
             previousWeekNumber = currentWeekNumber;
         }

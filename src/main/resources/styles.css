@@ -58,7 +58,7 @@
     -fx-border-color: #e6e6ea;
 }
 
-#navbar > .toggle-button:hover, #toolBar > .button:hover {
+#navbar > .toggle-button:hover, #toolBar > .button:hover, #excelFeedbackLabel:hover {
     -fx-background-color: #b4c5e4;
     -fx-border-color: #b4c5e4;
     -fx-border-radius: 2;

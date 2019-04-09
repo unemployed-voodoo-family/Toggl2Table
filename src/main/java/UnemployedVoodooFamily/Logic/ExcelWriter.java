@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.time.Month;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Properties;
 
 public class ExcelWriter {
 
@@ -27,15 +28,11 @@ public class ExcelWriter {
         setupStandardRowFormatting();
     }
 
-    public boolean generateExcelSheet(HashMap<String, List> monthLists) {
-        try {
-            buildWorkbook(monthLists);
-            return true;
-        }
-        catch(IOException e) {
-            System.out.println(e.getMessage());
-            return false;
-        }
+    public boolean generateExcelSheet(HashMap<String, ArrayList> monthLists) throws IOException {
+        boolean success = false;
+        buildWorkbook(monthLists);
+        success = true;
+        return success; //Return true if document was build correctly, false if failed
     }
 
     private void buildWorkbook(HashMap<String, List> monthLists) throws IOException {
