@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
+import java.util.Locale;
 
 import java.io.IOException;
 import java.net.URL;
@@ -51,11 +52,10 @@ public class ProfileController {
         emailField.setText(Session.getInstance().getUser().getEmail());
         countryField.setText(Session.getInstance().getUser().getLanguage());
         timeZoneField.setText(Session.getInstance().getUser().getTimeZone());
-        durationDispField.setText(Session.getInstance().getUser().getJquery_date_format());
+        durationDispField.setText(Session.getInstance().getUser().getTimeofday_format());
         dateFormatField.setText(Session.getInstance().getUser().getDate_format());
-        timeFormatField.setText(Session.getInstance().getUser().getTimeofday_format());
+        timeFormatField.setText(profile.getTimeFormat(Session.getInstance().getUser().getTimeofday_format()));
         firstDayOfWeekField.setText(profile.getFirstDayOfWeek(Session.getInstance().getUser().getBeginning_of_week()));
-
 
     }
 

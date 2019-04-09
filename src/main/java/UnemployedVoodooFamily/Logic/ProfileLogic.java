@@ -1,4 +1,5 @@
 package UnemployedVoodooFamily.Logic;
+import java.util.Locale;
 
 public class ProfileLogic {
 
@@ -26,7 +27,26 @@ public class ProfileLogic {
             return "Saturday";
         }
         else{
-            return "";
+            return "no date specified";
         }
+    }
+
+    public String getTimeFormat(String format){
+        if(format.equals("h:mm A")){
+            return "12-hour";
+        }
+        else if(format.equals("H:mm")){
+            return "24-hour";
+        }
+        else{
+            return "no format specified";
+        }
+    }
+
+    public void getLanguage(String langCode){
+        Locale locale = new Locale(langCode);
+
+
+
     }
 }

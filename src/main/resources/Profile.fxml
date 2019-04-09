@@ -98,33 +98,33 @@
                           </columnConstraints>
                           <rowConstraints>
                             <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
                             <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
-                              <Label text="Duration display format" GridPane.rowIndex="1" />
+                              <Label text="Duration display format" GridPane.rowIndex="3" />
                               <Label text="Time Zone" />
                               <HBox alignment="TOP_RIGHT" prefHeight="31.0" prefWidth="202.0" GridPane.columnIndex="1">
                                  <children>
                                     <TextField fx:id="timeZoneField" prefHeight="31.0" />
                                  </children>
                               </HBox>
-                              <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                              <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                                  <children>
                                     <TextField fx:id="durationDispField" prefHeight="31.0" />
                                  </children>
                               </HBox>
-                              <Label text="Date format" GridPane.rowIndex="2" />
-                              <HBox alignment="TOP_RIGHT" prefHeight="31.0" prefWidth="202.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                              <Label text="Date format" GridPane.rowIndex="1" />
+                              <HBox alignment="TOP_RIGHT" prefHeight="31.0" prefWidth="202.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                  <children>
                                     <TextField fx:id="dateFormatField" prefHeight="31.0" />
                                  </children>
                               </HBox>
-                              <Label text="Time format" GridPane.rowIndex="3" />
+                              <Label text="Time format" GridPane.rowIndex="2" />
                               <Label text="First day of the week" GridPane.rowIndex="4" />
-                              <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                              <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                  <children>
                                     <TextField fx:id="timeFormatField" prefHeight="31.0" />
                                  </children>
