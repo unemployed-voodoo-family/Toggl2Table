@@ -149,7 +149,6 @@ public class GUIBaseController {
     private void setKeyAndClickListeners() {
 
         refreshBtn.setOnAction(event -> {
-            spinRefreshBtn(true);
             refreshData();
         });
         settingsNavBtn.setOnAction(event -> switchContentView(settings));
@@ -172,6 +171,7 @@ public class GUIBaseController {
 
     public void refreshData() {
         progressBox.setVisible(true);
+        spinRefreshBtn(true);
         DateTimeFormatter d = DateTimeFormatter.ofPattern("HH:mm dd.MM.yyyy");
 
         t1 = new Thread(() -> {
