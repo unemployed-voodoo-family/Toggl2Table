@@ -1,6 +1,6 @@
 package UnemployedVoodooFamily.Logic;
 
-import UnemployedVoodooFamily.Data.MonthlySheetRowEntry;
+import UnemployedVoodooFamily.Data.ExtendedDailyFormattedDataModel;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellReference;
@@ -9,8 +9,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.Month;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class ExcelWriter {
 
@@ -20,27 +20,25 @@ public class ExcelWriter {
     private CellStyle dataCellStyle;
     private CellStyle dataCellStyleAlternate;
     private CellStyle summaryCellStyle;
-    private static String[] columnNames = {"Week number", "Week day", "Date", "Supposed work hours", "Worked hours", "Overtime"};
+    private static String[] columnNames = {"Week number", "Week day", "Date", "Supposed work hours", "Hours worked", "+/- Hours", "Notes"};
 
     public ExcelWriter() {
         this.workbook = new XSSFWorkbook();
         setupStandardRowFormatting();
     }
 
-    public boolean generateExcelSheet(HashMap<String, ArrayList> monthLists) {
-        boolean success = false;
+    public boolean generateExcelSheet(HashMap<String, List> monthLists) {
         try {
             buildWorkbook(monthLists);
-            success = true;
+            return true;
         }
         catch(IOException e) {
             System.out.println(e.getMessage());
             return false;
         }
-        return success; //Return true if document was build correctly, false if failed
     }
 
-    private void buildWorkbook(HashMap<String, ArrayList> monthLists) throws IOException {
+    private void buildWorkbook(HashMap<String, List> monthLists) throws IOException {
         CreationHelper creationHelper = workbook.getCreationHelper();
         for(String key: monthLists.keySet()) {
             constructSheet(key, monthLists.get(key));
@@ -56,7 +54,7 @@ public class ExcelWriter {
         workbook.close();
     }
 
-    private void constructSheet(String sheetName, ArrayList<MonthlySheetRowEntry> data) {
+    private void constructSheet(String sheetName, List<ExtendedDailyFormattedDataModel> data) {
         Sheet sheet = this.workbook.createSheet(sheetName);
 
         sheet.createFreezePane(0, 1);
@@ -70,23 +68,26 @@ public class ExcelWriter {
 
         //Create data rows for every data entry
         int rowNumber = 1;
-        int previousRowWeek = 0;
+        String previousRowWeek = "Week 0";
         boolean alternateStyle = false;
-        for(MonthlySheetRowEntry m: data) {
+        for(ExtendedDailyFormattedDataModel m: data) {
             Row row = sheet.createRow(rowNumber++);
             row.createCell(0);
-            if(previousRowWeek != m.getWeekNumber()) {
-                alternateStyle = !alternateStyle;
-                previousRowWeek = m.getWeekNumber();
-                row.getCell(0).setCellValue("Week " + m.getWeekNumber());
+            if(!m.getWeek().equals("")) {
+                if(!m.getWeek().equals(previousRowWeek)) {
+                    alternateStyle = ! alternateStyle;
+                    previousRowWeek = m.getWeek();
+                    row.getCell(0).setCellValue(m.getWeek());
+                }
             }
-            row.createCell(1).setCellValue(m.getWeekDay());
-            row.createCell(2).setCellValue(m.getDate());
-            row.createCell(3).setCellValue(m.getSupposedWorkHours());
-            row.createCell(4).setCellValue(m.getActualWorkedHours());
+            row.createCell(1).setCellValue(m.getWeekday());
+            row.createCell(2).setCellValue(m.getDate().toString());
+            row.createCell(3).setCellValue(m.getSupposedHours());
+            row.createCell(4).setCellValue(m.getWorkedHours());
             row.createCell(5).setCellFormula(
                     "SUM(" + row.getCell(4).getAddress().formatAsString() + "-" + row.getCell(3).getAddress()
                                                                                      .formatAsString() + ")");
+            row.createCell(6).setCellValue(m.getNote());
             for(Cell cell: row) {
                 //TODO rewrite to use week number
                 if(alternateStyle) {
@@ -112,6 +113,7 @@ public class ExcelWriter {
         summaryRow.createCell(5).setCellFormula("SUM(" + CellReference
                 .convertNumToColString(summaryRow.getCell(5).getColumnIndex()) + 1 + ":" + CellReference
                 .convertNumToColString(summaryRow.getCell(5).getColumnIndex()) + rowNumber + ")");
+        summaryRow.createCell(6);
 
         for(Cell cell: summaryRow) {
             cell.setCellStyle(summaryCellStyle);
@@ -127,6 +129,7 @@ public class ExcelWriter {
         summaryCellStyle = workbook.createCellStyle();
         dataCellStyle = workbook.createCellStyle();
         dataCellStyleAlternate = workbook.createCellStyle();
+        Short numberFormat = workbook.createDataFormat().getFormat("0.00");
 
         Font boldFont = workbook.createFont();
         boldFont.setBold(true);
@@ -140,17 +143,20 @@ public class ExcelWriter {
         headerCellStyle.setBorderBottom(BorderStyle.MEDIUM);
 
         summaryCellStyle.setFont(boldFont);
+        summaryCellStyle.setDataFormat(numberFormat);
         summaryCellStyle.setAlignment(HorizontalAlignment.RIGHT);
         summaryCellStyle.setBorderTop(BorderStyle.MEDIUM);
 
         dataCellStyle.setFont(dataFont);
+        dataCellStyle.setDataFormat(numberFormat);
         dataCellStyle.setAlignment(HorizontalAlignment.RIGHT);
-        dataCellStyle.setFillForegroundColor(IndexedColors.TURQUOISE.getIndex());
+        dataCellStyle.setFillForegroundColor(IndexedColors.LIGHT_TURQUOISE.getIndex());
         dataCellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 
         dataCellStyleAlternate.setFont(dataFont);
+        dataCellStyleAlternate.setDataFormat(numberFormat);
         dataCellStyleAlternate.setAlignment(HorizontalAlignment.RIGHT);
-        dataCellStyleAlternate.setFillForegroundColor(IndexedColors.ROSE.getIndex());
+        dataCellStyleAlternate.setFillForegroundColor(IndexedColors.LIGHT_CORNFLOWER_BLUE.getIndex());
         dataCellStyleAlternate.setFillPattern(FillPatternType.SOLID_FOREGROUND);
     }
 }

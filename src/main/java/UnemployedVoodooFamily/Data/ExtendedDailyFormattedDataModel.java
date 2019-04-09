@@ -31,7 +31,7 @@ public class ExtendedDailyFormattedDataModel extends DailyFormattedDataModel {
      * Returns the week number
      * @return the week number
      */
-    public String getWeekNumber() {
+    public String getWeek() {
         if(weekNumber.get().equals("")) {
             return weekNumber.get();
         }
