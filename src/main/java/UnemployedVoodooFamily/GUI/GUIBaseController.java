@@ -1,6 +1,7 @@
 package UnemployedVoodooFamily.GUI;
 
 import UnemployedVoodooFamily.Data.Enums.FilePath;
+import UnemployedVoodooFamily.GUI.Content.ProfileController;
 import UnemployedVoodooFamily.GUI.Content.SettingsController;
 import UnemployedVoodooFamily.GUI.Content.TableViewController;
 import UnemployedVoodooFamily.Logger;
@@ -93,6 +94,7 @@ public class GUIBaseController {
 
     private Node settings;
     private Node table;
+    private Node profile;
     private Thread t1;
 
     private AtomicBoolean active;
@@ -133,6 +135,7 @@ public class GUIBaseController {
         try {
             settings = new SettingsController().loadFXML();
             table = new TableViewController().loadFXML();
+            profile = new ProfileController().loadFXML();
             profileNavBtn.setText(Session.getInstance().getUser().getFullname());
         }
         catch(IOException e) {
@@ -151,6 +154,7 @@ public class GUIBaseController {
         });
         settingsNavBtn.setOnAction(event -> switchContentView(settings));
         tableNavBtn.setOnAction(event -> switchContentView(table));
+        profileNavBtn.setOnAction(event -> switchContentView(profile));
         dumpDataMenuItem.setOnAction(event -> dumpData());
         viewDataMenuItem.setOnAction(event -> {
             try {
