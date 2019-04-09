@@ -6,18 +6,21 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.IsoFields;
 import java.time.temporal.TemporalAdjusters;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.time.temporal.TemporalField;
+import java.time.temporal.WeekFields;
+import java.util.*;
 
 public class WeeklyFormattedDataListFactory {
 
     private ArrayList<DailyFormattedDataModel> weeklyList;
 
-    public List<DailyFormattedDataModel> buildWeeklyDataList(List<TimeEntry> timeEntries, int weekNumber, int year)   {
+    public List<DailyFormattedDataModel> buildWeeklyDataList(List<TimeEntry> timeEntries, LocalDate date)   {
         weeklyList = new ArrayList<>();
 
+
+        TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();
+        int year = date.getYear();
+        int weekNumber = date.get(woy);
         //finds the first day of the selected week
         LocalDate weeksFirstDate = LocalDate.ofYearDay(year, 50)
                                             .with(IsoFields.WEEK_OF_WEEK_BASED_YEAR, weekNumber)
@@ -39,19 +42,19 @@ public class WeeklyFormattedDataListFactory {
         for(DayOfWeek weekday : DayOfWeek.values()) {
 
             //Create current date to process
-            LocalDate date = weeksFirstDate.plusDays(weekday.getValue()-1);
+            LocalDate currentDate = weeksFirstDate.plusDays(weekday.getValue()-1);
             double workedHours = 0.00;
 
             if(!weekSublist.isEmpty())  {
                 for(TimeEntry t : weekSublist)  {
-                    if(t.getStart().toLocalDate().isEqual(date) && t.getStop().toLocalDate().isEqual(date)) {
+                    if(t.getStart().toLocalDate().isEqual(currentDate) && t.getStop().toLocalDate().isEqual(currentDate)) {
                         workedHours += ((double)t.getDuration() % 86400) / 3600;
                     }
                 }
             }
                 //TODO increase performance
                 //TODO get correct supposed work hours
-            weeklyList.add(new DailyFormattedDataModel(workedHours,0.00, date, ""));
+            weeklyList.add(new DailyFormattedDataModel(workedHours,0.00, date,  0d, ""));
         }
 
         return weeklyList;

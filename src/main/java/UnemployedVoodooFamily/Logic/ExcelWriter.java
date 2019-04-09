@@ -9,6 +9,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.Month;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
@@ -28,7 +29,7 @@ public class ExcelWriter {
         setupStandardRowFormatting();
     }
 
-    public boolean generateExcelSheet(HashMap<String, ArrayList> monthLists) throws IOException {
+    public boolean generateExcelSheet(HashMap<String, List> monthLists) throws IOException {
         boolean success = false;
         buildWorkbook(monthLists);
         success = true;

@@ -7,6 +7,7 @@ import UnemployedVoodooFamily.Data.MonthlyFormattedDataListFactory;
 import ch.simas.jtoggl.TimeEntry;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.assertj.core.internal.bytebuddy.asm.Advice;
 
 import java.io.IOException;
 import java.time.*;
@@ -119,7 +120,7 @@ public class FormattedTimeDataLogic {
 
 
     //Called when the "export to excel" button is pressed
-    public boolean exportToExcelDocument(List<TimeEntry> timeEntries, int year) {
+    public boolean exportToExcelDocument(List<TimeEntry> timeEntries, int year) throws IOException {
         ExcelExportHandler exportHandler = new ExcelExportHandler(timeEntries, year);
         return exportHandler.makeExcelDocument();
     }
@@ -166,6 +167,20 @@ public class FormattedTimeDataLogic {
         weeklyMasterData = new WeeklyFormattedDataListFactory().buildWeeklyDataList(timeEntries, week, year);
         data = FXCollections.observableArrayList(weeklyMasterData);
         return data;
+    }
+
+    public void buildMasterData(List<TimeEntry> timeEntries, int year) {
+        LocalDate startDate = LocalDate.of(year, 1,1);
+        LocalDate endDate = LocalDate.of(year, 12,31);
+
+        for(LocalDate date = startDate; date.isBefore(endDate.plusDays(1)); date = date
+                .with(TemporalAdjusters.next(FIRST_DAY_OF_WEEK))) {
+            weeklyMasterData.addAll(new WeeklyFormattedDataListFactory().buildWeeklyDataList(timeEntries, date));
+        }
+        for(Month month : Month.values()) {
+            monthlyMasterData = monthlyMasterData.addAll(new MonthlyFormattedDataListFactory().buildMonthlyDataList(weeklyMasterData, month);
+        }
+
     }
 
     public void setSelectedYear(int year)   {

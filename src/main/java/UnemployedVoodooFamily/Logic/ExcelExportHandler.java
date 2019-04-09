@@ -26,7 +26,7 @@ public class ExcelExportHandler {
         }
     }
 
-    public boolean makeExcelDocument() {
+    public boolean makeExcelDocument() throws IOException {
         //generateDummyLists(); //Remove this later, dummy
         boolean exportSuccess = excelWriter.generateExcelSheet(monthlyDataLists);
         if(exportSuccess)   {

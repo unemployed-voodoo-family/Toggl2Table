@@ -2,6 +2,7 @@ package UnemployedVoodooFamily.Data;
 
 import ch.simas.jtoggl.TimeEntry;
 import javafx.beans.property.SimpleIntegerProperty;
+import org.apache.poi.ss.formula.PlainCellCache;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -9,6 +10,7 @@ import java.time.YearMonth;
 import java.time.temporal.TemporalField;
 import java.time.temporal.WeekFields;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Builder for the ExtendedDailyFormattedDataModel
@@ -17,7 +19,7 @@ import java.util.*;
  */
 public class MonthlyFormattedDataListFactory {
 
-    private ArrayList<ExtendedDailyFormattedDataModel> monthlyList;
+    private List<ExtendedDailyFormattedDataModel> monthlyList;
 
     public List<ExtendedDailyFormattedDataModel> buildMonthlyDataList(List<TimeEntry> timeEntries, Month month, int year)   {
         monthlyList = new ArrayList<>();
@@ -42,10 +44,9 @@ public class MonthlyFormattedDataListFactory {
         for (LocalDate d = monthStart; !d.isAfter(monthEnd); d = d.plusDays(1)) {
             currentWeekNumber = d.get(woy);
             double workedHours = 0;
-
             if(!monthSublist.isEmpty())  {
                 for(TimeEntry t : monthSublist)  {
-                        if(t.getStart().toLocalDate().isEqual(d) && t.getStop().toLocalDate().isEqual(d)) {
+                        if(t.getStart().toLocalDate().isEqual(d)) {
                             workedHours += ((double)t.getDuration() % 86400) / 3600;
                     }
                 }
@@ -53,16 +54,20 @@ public class MonthlyFormattedDataListFactory {
 
             //TODO get actual supposed work hours
             if(currentWeekNumber != previousWeekNumber) {
-                monthlyList.add(new ExtendedDailyFormattedDataModel(workedHours, 0.00, d, currentWeekNumber,"yay"));
+                monthlyList.add(new ExtendedDailyFormattedDataModel(workedHours, 0.00, d, currentWeekNumber, 0d,"yay"));
             }
             else {
-                monthlyList.add(new ExtendedDailyFormattedDataModel(workedHours, 0.00, d, 0,"yay"));
+                monthlyList.add(new ExtendedDailyFormattedDataModel(workedHours, 0.00, d, 0, 0d, "yay"));
 
             }
             previousWeekNumber = currentWeekNumber;
         }
 
         return monthlyList;
+    }
+
+    public List<ExtendedDailyFormattedDataModel> buildMonthlyDataList(List<ExtendedDailyFormattedDataModel> timeEntries, Month month)   {
+        return timeEntries.stream().filter(o -> !o.getDate().getMonth().equals(month)).collect(Collectors.toList());
     }
 
 }
