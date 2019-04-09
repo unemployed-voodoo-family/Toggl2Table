@@ -263,9 +263,9 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
      */ private void setKeyAndClickListeners() {
 
 
+
         bindTooltip(excelFeedbackLabel, errorTooltip);
         applyFilterBtn.setOnAction(event -> applyFilters());
-
         initExcelExportBtn();
 
         rawStartDate.valueProperty().addListener((observable, oldValue, newValue) -> {
@@ -414,7 +414,8 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
 
                 try {
                     //create document
-                    formattedTimeDataLogic.exportToExcelDocument();
+                    formattedTimeDataLogic.exportToExcelDocument(rawTimeDataLogic.getFilteredTimeEntries(),
+                                                                                  Integer.parseInt(yearSpinner.getEditor().getText()));
 
                     //show success in ui
                     Platform.runLater(() -> {
