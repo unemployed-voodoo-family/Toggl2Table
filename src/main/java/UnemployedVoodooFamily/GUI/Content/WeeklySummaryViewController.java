@@ -30,6 +30,7 @@ public class WeeklySummaryViewController{
         URL r = getClass().getClassLoader().getResource("weeklyTableSummary.fxml");
         return FXMLLoader.load(r);
     }
+
     public void initialize() {
         headerLabel.setText(this.title);
     }

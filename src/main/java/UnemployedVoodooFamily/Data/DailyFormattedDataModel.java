@@ -14,6 +14,7 @@ public class DailyFormattedDataModel {
     private SimpleDoubleProperty workedHours;
     private SimpleDoubleProperty supposedHours;
     private SimpleDoubleProperty extraTime;
+    private SimpleDoubleProperty accumulatedHours;
     private SimpleStringProperty note = new SimpleStringProperty("");
 
     /**
@@ -22,13 +23,14 @@ public class DailyFormattedDataModel {
      * @param workedHours   String with hours worked
      * @param supposedHours String with supposed work hours
      */
-    public DailyFormattedDataModel(Double workedHours, Double supposedHours, LocalDate date, String note) {
+    public DailyFormattedDataModel(Double workedHours, Double supposedHours, LocalDate date, double accumulated, String note) {
 
         String weekDayStr = date.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.getDefault());
         this.weekday = new SimpleStringProperty(weekDayStr);
         this.workedHours = new SimpleDoubleProperty(workedHours);
         this.supposedHours = new SimpleDoubleProperty(supposedHours);
         this.extraTime = new SimpleDoubleProperty(workedHours - supposedHours);
+        this.accumulatedHours = new SimpleDoubleProperty(accumulated);
         if(null != note)    {
             this.note = new SimpleStringProperty(note);
         }
@@ -82,4 +84,9 @@ public class DailyFormattedDataModel {
     public String getNote() {
         return this.note.get();
     }
+
+    public double getAccumulatedHours() {
+        return accumulatedHours.get();
+    }
+
 }

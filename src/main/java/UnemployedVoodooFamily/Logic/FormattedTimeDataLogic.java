@@ -21,16 +21,9 @@ import java.util.Locale;
 public class FormattedTimeDataLogic {
 
     private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd. LLLL yyyy");
-    private static HashMap<Month, ObservableList<ExtendedDailyFormattedDataModel>> monthsMap = new HashMap<>();
 
     private static List<DailyFormattedDataModel> weeklyMasterData;
     private static List<ExtendedDailyFormattedDataModel> monthlyMasterData;
-
-    // The time range of the fetched toggl data
-    // current values are temporary
-    // the eventual values should be spanning a whole year
-    private LocalDate startDate = LocalDate.of(2019, 1, 1);
-    private LocalDate endDate = LocalDate.of(2019, 12, 31);
 
     private int selectedYear;
     private int selectedWeek;
@@ -51,16 +44,6 @@ public class FormattedTimeDataLogic {
 
         selectedMonth = LocalDate.now().getMonth();
 
-        monthsMap.put(Month.JANUARY, null);
-        monthsMap.put(Month.FEBRUARY, null);
-        monthsMap.put(Month.MARCH, null);
-        monthsMap.put(Month.APRIL, null);
-        monthsMap.put(Month.MAY, null);
-        monthsMap.put(Month.JUNE, null);
-        monthsMap.put(Month.JULY, null);
-        monthsMap.put(Month.OCTOBER, null);
-        monthsMap.put(Month.NOVEMBER, null);
-        monthsMap.put(Month.DECEMBER, null);
     }
 
     // List of the observable lists for all months.

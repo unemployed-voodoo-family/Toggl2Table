@@ -45,10 +45,10 @@ public class MonthlyFormattedDataListFactory {
             }
 
             if(currentWeekNumber != previousWeekNumber) {
-                monthlyList.add(new ExtendedDailyFormattedDataModel(workedHours, 7.5, d, currentWeekNumber,"yay"));
+                monthlyList.add(new ExtendedDailyFormattedDataModel(workedHours, 7.5, d, currentWeekNumber,0d,"yay"));
             }
             else {
-                monthlyList.add(new ExtendedDailyFormattedDataModel(workedHours, 7.5, d, 0,"yay"));
+                monthlyList.add(new ExtendedDailyFormattedDataModel(workedHours, 7.5, d, 0,0d,"yay"));
             }
             previousWeekNumber = currentWeekNumber;
         }

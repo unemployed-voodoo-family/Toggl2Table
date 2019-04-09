@@ -541,35 +541,39 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
 
         this.weeklyTable = new TableView();
         //Create all columns necessary
-        TableColumn<DailyFormattedDataModel, String> weekdayCol = new TableColumn<>("Week Day");
+        TableColumn<ExtendedDailyFormattedDataModel, String> weekdayCol = new TableColumn<>("Week Day");
         weekdayCol.setCellValueFactory(new PropertyValueFactory<>("weekday"));
         weekdayCol.setSortable(false);
 
-        TableColumn<DailyFormattedDataModel, String> dateCol = new TableColumn<>("Date");
+        TableColumn<ExtendedDailyFormattedDataModel, String> dateCol = new TableColumn<>("Date");
         dateCol.setCellValueFactory(new PropertyValueFactory<>("date"));
         dateCol.setSortable(false);
 
-        TableColumn<DailyFormattedDataModel, Double> workedHoursCol = new TableColumn<>("Worked Hours");
+        TableColumn<ExtendedDailyFormattedDataModel, Double> workedHoursCol = new TableColumn<>("Worked Hours");
         workedHoursCol.setCellValueFactory(new PropertyValueFactory<>("workedHours"));
         workedHoursCol.setSortable(false);
         workedHoursCol.getStyleClass().add("right");
 
 
-        TableColumn<DailyFormattedDataModel, Double> supposedHoursCol = new TableColumn<>("Supposed work hours");
+        TableColumn<ExtendedDailyFormattedDataModel, Double> supposedHoursCol = new TableColumn<>("Supposed work hours");
         supposedHoursCol.setCellValueFactory(new PropertyValueFactory<>("supposedHours"));
         supposedHoursCol.setSortable(false);
         supposedHoursCol.getStyleClass().add("right");
 
+        TableColumn<ExtendedDailyFormattedDataModel, Double> accumulatedHoursCol = new TableColumn<>("Accumulated hours");
+        accumulatedHoursCol.setCellValueFactory(new PropertyValueFactory<>("accumulatedHours"));
+        accumulatedHoursCol.setSortable(false);
+        accumulatedHoursCol.getStyleClass().add("right");
 
-        TableColumn<DailyFormattedDataModel, String> noteCol = new TableColumn<>("Notes");
+        TableColumn<ExtendedDailyFormattedDataModel, String> noteCol = new TableColumn<>("Notes");
         noteCol.setCellValueFactory(new PropertyValueFactory<>("note"));
         noteCol.setSortable(false);
 
-        TableColumn<DailyFormattedDataModel, Double> extraTimeCol = new TableColumn<>("+/- Hours");
+        TableColumn<ExtendedDailyFormattedDataModel, Double> extraTimeCol = new TableColumn<>("+/- Hours");
         extraTimeCol.setCellValueFactory(new PropertyValueFactory<>("extraTime"));
         extraTimeCol.setSortable(false);
         extraTimeCol.getStyleClass().add("right");
-        extraTimeCol.setCellFactory(col -> new TableCell<DailyFormattedDataModel, Double>() {
+        extraTimeCol.setCellFactory(col -> new TableCell<ExtendedDailyFormattedDataModel, Double>() {
             @Override
             protected void updateItem(Double item, boolean empty) {
                 super.updateItem(item, empty);
@@ -596,7 +600,8 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         supposedHoursCol.setPrefWidth(140);
         extraTimeCol.setPrefWidth(90);
         //Adds the columns to the table and updates it
-        this.weeklyTable.getColumns().addAll(weekdayCol, dateCol, supposedHoursCol, workedHoursCol, extraTimeCol, noteCol);
+        this.weeklyTable.getColumns().addAll(weekdayCol, dateCol, supposedHoursCol, workedHoursCol, extraTimeCol,
+                                             accumulatedHoursCol, noteCol);
         this.weeklyTable.setEditable(false);
 
         //must be called, or else the table won't appear
@@ -635,7 +640,8 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         workedHoursCol.getStyleClass().add("right");
 
 
-        TableColumn<ExtendedDailyFormattedDataModel, Double> supposedHoursCol = new TableColumn<>("Supposed work hours");
+        TableColumn<ExtendedDailyFormattedDataModel, Double> supposedHoursCol = new TableColumn<>(
+                "Supposed work hours");
         supposedHoursCol.setCellValueFactory(new PropertyValueFactory<>("supposedHours"));
         supposedHoursCol.setSortable(false);
         supposedHoursCol.setCellFactory(col -> setDecimalFormatter(df));
@@ -646,6 +652,12 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         extraTimeCol.setCellValueFactory(new PropertyValueFactory<>("extraTime"));
         extraTimeCol.setSortable(false);
         extraTimeCol.getStyleClass().add("right");
+
+        TableColumn<ExtendedDailyFormattedDataModel, Double> accumulatedHoursCol = new TableColumn<>(
+                "Accumulated hours");
+        accumulatedHoursCol.setCellValueFactory(new PropertyValueFactory<>("accumulatedHours"));
+        accumulatedHoursCol.setSortable(false);
+        accumulatedHoursCol.getStyleClass().add("right");
 
         TableColumn<ExtendedDailyFormattedDataModel, Double> noteCol = new TableColumn<>("Notes");
         noteCol.setCellValueFactory(new PropertyValueFactory<>("note"));
@@ -679,7 +691,9 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         extraTimeCol.setPrefWidth(90);
         weekNumbCol.setPrefWidth(90);
         //Adds the columns to the table and updates it
-        monthlyTable.getColumns().addAll(weekNumbCol, weekdayCol, dateCol, supposedHoursCol, workedHoursCol, extraTimeCol, noteCol);
+        monthlyTable.getColumns()
+                    .addAll(weekNumbCol, weekdayCol, dateCol, supposedHoursCol, workedHoursCol, extraTimeCol,
+                            accumulatedHoursCol, noteCol);
         monthlyTable.setEditable(false);
     }
 
@@ -756,12 +770,15 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     private ObservableList<DailyFormattedDataModel> getObservableWeeklyData() {
         if(rawTimeDataLogic.getFilteredTimeEntries() != null) {
             return formattedTimeDataLogic.buildObservableWeeklyTimeData(rawTimeDataLogic.getFilteredTimeEntries(),
-                                                                        Integer.parseInt(weekSpinner.getEditor().getText()),
-                                                                        Integer.parseInt(yearSpinner.getEditor().getText()));
+                                                                        Integer.parseInt(
+                                                                                weekSpinner.getEditor().getText()),
+                                                                        Integer.parseInt(
+                                                                                yearSpinner.getEditor().getText()));
         }
         return formattedTimeDataLogic.buildObservableWeeklyTimeData(rawTimeDataLogic.getFilteredTimeEntries(),
                                                                     Integer.parseInt(weekSpinner.getEditor().getText()),
-                                                                    Integer.parseInt(yearSpinner.getEditor().getText()));
+                                                                    Integer.parseInt(
+                                                                            yearSpinner.getEditor().getText()));
     }
 
     /**

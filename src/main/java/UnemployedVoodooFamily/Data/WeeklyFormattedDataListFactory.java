@@ -7,6 +7,8 @@ import java.time.LocalDate;
 import java.time.temporal.IsoFields;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class WeeklyFormattedDataListFactory {
@@ -40,7 +42,7 @@ public class WeeklyFormattedDataListFactory {
             }
                 //TODO increase performance
                 //TODO get correct supposed work hours
-            weeklyList.add(new DailyFormattedDataModel(workedHours,7.5, date, ""));
+            weeklyList.add(new DailyFormattedDataModel(workedHours,7.5, date, 0, ""));
         }
 
         return weeklyList;
