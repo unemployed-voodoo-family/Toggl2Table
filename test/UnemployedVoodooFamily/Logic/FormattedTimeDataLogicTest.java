@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.time.YearMonth;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -22,10 +23,14 @@ public class FormattedTimeDataLogicTest {
 
     @Test
     public void buildObservableMonthlyTimeData() {
-        formattedTimeDataLogic.buildObservableWeeklyTimeData(timeEntries);
-        ObservableList<DailyFormattedDataModel> data = formattedTimeDataLogic.getWeeklyMasterData();
+        YearMonth ym = YearMonth.of(2019, 1);
+        int daysInMonth = ym.lengthOfMonth();
+
+        formattedTimeDataLogic.buildMasterData(timeEntries, 2019);
+        List<DailyFormattedDataModel> data = formattedTimeDataLogic.getMonthlyData(ym);
         assertNotNull(data);
-        assertEquals(365, data.size());
+        assertEquals(daysInMonth, data.size());
+
     }
 
     @Test

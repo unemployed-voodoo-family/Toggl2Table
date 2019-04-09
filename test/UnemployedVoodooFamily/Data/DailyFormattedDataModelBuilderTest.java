@@ -20,7 +20,7 @@ public class DailyFormattedDataModelBuilderTest {
     Locale locale = Locale.getDefault();
     TextStyle style = TextStyle.FULL;
 
-    @Test
+    /*@Test
     public void build() {
 
         Double WORKED_HOURS = 14.5088889;
@@ -67,5 +67,5 @@ public class DailyFormattedDataModelBuilderTest {
     @After
     public void tearDown() throws Exception {
         timeEntries = null;
-    }
+    }*/
 }
