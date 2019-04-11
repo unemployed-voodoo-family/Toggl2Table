@@ -2,18 +2,12 @@ package UnemployedVoodooFamily.Logic;
 
 import UnemployedVoodooFamily.Data.Enums.FilePath;
 import ch.simas.jtoggl.TimeEntry;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
-import org.apache.poi.ss.formula.functions.T;
 
 import java.io.*;
 import java.lang.reflect.Type;
-import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class TestUtils {
@@ -23,7 +17,7 @@ public class TestUtils {
     public static List<TimeEntry> getTestTimeEntries() {
         File f = new File(FilePath.LOGS_HOME.getPath());
 
-        File[] matchingFiles = f.listFiles((dir, name) -> name.endsWith("timeentries-dump.json"));
+        //File[] matchingFiles = f.listFiles((dir, name) -> name.endsWith("timeentries-dump.json"));
         File file = new File(FilePath.LOGS_HOME.getPath(), "timeentries-dump-test.json");
 
         List<TimeEntry> timeEntries = null;
@@ -38,11 +32,13 @@ public class TestUtils {
             System.out.println("Please setup test-file to use unit tests");
             System.out.println("\"timeentries-dump-test.json\" should be placed under TogglTimeSheet\\logs");
             System.out.println("========= ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! =========\n");
-
-
         }
         catch(IOException e) {
-            e.printStackTrace();
+        }
+        catch(IllegalStateException | JsonSyntaxException e) {
+            System.out.println("========= ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! =========");
+            System.out.println("Your \"timeentries-dump-test.json\" file probably \n has an outdated format");
+            System.out.println("========= ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! =========\n");
         }
 
         return timeEntries;

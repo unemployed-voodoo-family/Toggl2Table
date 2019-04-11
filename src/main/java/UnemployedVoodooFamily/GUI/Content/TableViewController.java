@@ -210,6 +210,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         errorImg = new ImageView(error);
         errorImg.setFitWidth(24);
         errorImg.setFitHeight(24);
+
     }
 
     private void setupFormattedTableUIElements() {
@@ -263,6 +264,9 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
             }
         });
 
+
+        //set initial value
+        monthSpinner.getEditor().setText(Month.from(LocalDate.now()).getDisplayName(TextStyle.FULL, Locale.getDefault()));
 
         //Hide the Monthly spinner by default
         updateMonthlySpinner(false);
