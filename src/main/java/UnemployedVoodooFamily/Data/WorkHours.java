@@ -7,20 +7,20 @@ public class WorkHours {
     private LocalDate from;
     private LocalDate to;
     private Double hours;
-    private String comment;
+    private String note;
 
     public WorkHours(LocalDate from, LocalDate to, Double hours) {
         this.from = from;
         this.to = to;
         this.hours = hours;
-        this.comment = "";
+        this.note = "";
     }
 
-    public WorkHours(LocalDate from, LocalDate to, Double hours, String comment) {
+    public WorkHours(LocalDate from, LocalDate to, Double hours, String note) {
         this.from = from;
         this.to = to;
         this.hours = hours;
-        this.comment = comment;
+        this.note = note;
     }
 
     public LocalDate getFrom() {
@@ -35,8 +35,8 @@ public class WorkHours {
         return hours;
     }
 
-    public String getComment() {
-        return comment;
+    public String getNote() {
+        return note;
     }
 
     public DateRange getRange() {
@@ -55,7 +55,7 @@ public class WorkHours {
         this.hours = hours;
     }
 
-    public void setComment(String comment) {
-        this.comment = comment;
+    public void setNote(String note) {
+        this.note = note;
     }
 }

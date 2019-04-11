@@ -34,6 +34,8 @@ public class SettingsController {
     @FXML
     private TextField hoursField;
     @FXML
+    private TextField noteField;
+    @FXML
     private TableView hoursView;
     @FXML
     private Label inputFeedbackLabel;
@@ -153,7 +155,7 @@ public class SettingsController {
             success = true;
         }
         if(success) {
-            logic.setWorkHours(hoursFromField.getValue(), hoursToField.getValue(), hoursField.getText());
+            logic.setWorkHours(hoursFromField.getValue(), hoursToField.getValue(), hoursField.getText(), noteField.getText());
 
             if(hoursView.isVisible()) {
                 logic.populateHoursTable(hoursView);
