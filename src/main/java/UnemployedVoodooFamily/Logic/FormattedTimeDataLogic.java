@@ -4,19 +4,13 @@ import UnemployedVoodooFamily.Data.DailyFormattedDataModel;
 import UnemployedVoodooFamily.Data.WeeklyFormattedDataListFactory;
 import UnemployedVoodooFamily.Data.MonthlyFormattedDataListFactory;
 import ch.simas.jtoggl.TimeEntry;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import org.assertj.core.internal.bytebuddy.asm.Advice;
 import org.threeten.extra.YearWeek;
-
 import java.io.IOException;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalAdjusters;
 import java.time.temporal.TemporalField;
 import java.time.temporal.WeekFields;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class FormattedTimeDataLogic {
 

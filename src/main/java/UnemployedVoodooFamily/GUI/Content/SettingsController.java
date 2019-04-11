@@ -186,6 +186,8 @@ public class SettingsController {
         hoursToField.getStyleClass().remove("error");
         hoursField.setText("");
         hoursField.getStyleClass().remove("error");
+        noteField.setText("");
+        noteField.getStyleClass().remove("error");
         inputFeedbackLabel.setText("");
         inputFeedbackLabel.getStyleClass().remove("error");
     }
