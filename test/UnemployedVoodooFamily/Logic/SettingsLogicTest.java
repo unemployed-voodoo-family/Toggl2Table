@@ -34,17 +34,17 @@ public class SettingsLogicTest {
         LocalDate d4 = LocalDate.of(2019, 4, 30);
         LocalDate d5 = LocalDate.of(2019, 5, 30);
 
-        logic.setWorkHours(d2, d3, "7");
+        logic.setWorkHours(d2, d3, "7", "");
         this.workHours = propsLogic.loadJson(path);
         assertEquals(1, workHours.size());
 
-        logic.setWorkHours(d4, d5, "8");
+        logic.setWorkHours(d4, d5, "8", "");
         this.workHours = propsLogic.loadJson(path);
         assertEquals(2, workHours.size());
         LocalDate to = workHours.get(1).getTo();
         assertEquals(d5, to);
 
-        logic.setWorkHours(d5, d3, "8");
+        logic.setWorkHours(d5, d3, "8", "");
         this.workHours = propsLogic.loadJson(path);
         assertEquals(1, workHours.size());
         LocalDate to1 = workHours.get(0).getTo();
@@ -66,11 +66,11 @@ public class SettingsLogicTest {
 
 
         //make an entry covering the whole year
-        logic.setWorkHours(dFeb, dNov, "7");
+        logic.setWorkHours(dFeb, dNov, "7", "");
         this.workHours = propsLogic.loadJson(path);
         assertEquals(1, workHours.size());
 
-        logic.setWorkHours(dJan, dNov, "8");
+        logic.setWorkHours(dJan, dNov, "8", "");
         this.workHours = propsLogic.loadJson(path);
         assertEquals(1, workHours.size());
         LocalDate from = workHours.get(0).getFrom();
@@ -78,14 +78,14 @@ public class SettingsLogicTest {
         LocalDate to = workHours.get(0).getTo();
         assertEquals(dNov, to);
 
-        logic.setWorkHours(dJan, dDec, "8");
+        logic.setWorkHours(dJan, dDec, "8", "");
         this.workHours = propsLogic.loadJson(path);
         assertEquals(1, workHours.size());
         LocalDate to2 = workHours.get(0).getTo();
         assertEquals(dDec, to2);
 
         // place an entry in the middle with same hours value
-        logic.setWorkHours(dApr, dMay, "8");
+        logic.setWorkHours(dApr, dMay, "8", "");
         this.workHours = propsLogic.loadJson(path);
         assertEquals(1, workHours.size());
         LocalDate to3 = workHours.get(0).getTo();
@@ -95,7 +95,7 @@ public class SettingsLogicTest {
         assertEquals(1, workHours.size());
 
         // place an entry in the middle with different hours value
-        logic.setWorkHours(dApr, dMay, "7");
+        logic.setWorkHours(dApr, dMay, "7", "");
         this.workHours = propsLogic.loadJson(path);
         System.out.println(workHours.get(1));
         LocalDate to4 = workHours.get(1).getTo();
