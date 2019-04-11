@@ -16,6 +16,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -34,8 +35,10 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.util.Callback;
 import javafx.util.StringConverter;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.formula.functions.T;
 import org.threeten.extra.YearWeek;
 
 import java.awt.*;
@@ -266,7 +269,8 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
 
 
         //set initial value
-        monthSpinner.getEditor().setText(Month.from(LocalDate.now()).getDisplayName(TextStyle.FULL, Locale.getDefault()));
+        monthSpinner.getEditor()
+                    .setText(Month.from(LocalDate.now()).getDisplayName(TextStyle.FULL, Locale.getDefault()));
 
         //Hide the Monthly spinner by default
         updateMonthlySpinner(false);
@@ -561,8 +565,9 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     }
 
     private void updateMonthlyTable() {
+        ObservableList<DailyFormattedDataModel> data = getObservableMonthlyData();
         try {
-            monthlyTable.getItems().setAll(getObservableMonthlyData());
+            monthlyTable.getItems().setAll(data);
         }
         catch(RuntimeException e) {
             // tried getting data before it was loaded
@@ -591,6 +596,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
 
         this.weeklyTable = new TableView<>();
         //Create all columns necessary
+
         TableColumn<DailyFormattedDataModel, String> weekdayCol = new TableColumn<>("Week Day");
         weekdayCol.setCellValueFactory(new PropertyValueFactory<>("weekday"));
         weekdayCol.setSortable(false);
@@ -670,7 +676,38 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         //Clears the already existing data in the table
 
         this.monthlyTable = new TableView();
+
+        //this.monthlyTable.setRowFactory();
+
         DecimalFormat df = new DecimalFormat("#0.00 ");
+        String fillerStyle = "-fx-fill: blue;";
+
+        this.monthlyTable
+                .setRowFactory(new Callback<TableView<DailyFormattedDataModel>, TableRow<DailyFormattedDataModel>>() {
+                    @Override
+                    public TableRow<DailyFormattedDataModel> call(TableView<DailyFormattedDataModel> param) {
+                        return new TableRow<DailyFormattedDataModel>() {
+                            @Override
+                            protected void updateItem(DailyFormattedDataModel item, boolean empty) {
+                                super.updateItem(item, empty);
+                                if(empty || item == null) {
+                                    setText(null);
+                                    setGraphic(null);
+                                }
+                                else if(item.isFiller()) {
+                                    //setGraphic(new HBox());
+                                    if(!getChildren().isEmpty()) {
+                                        for(Object node : getChildren()) {
+
+                                        }
+                                    }
+
+                                }
+                            }
+
+                        };
+                    }
+                });
 
         //Create all columns necessary
 
@@ -834,12 +871,32 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
      * @return an ObservableList containing MonthlyTimeDatModel objects
      */
     private ObservableList<DailyFormattedDataModel> getObservableMonthlyData() {
-
         // find the yearmonth to fetch data from
-        YearMonth yearMonth = YearMonth.of(Integer.parseInt(yearSpinner.getEditor().getText()),
-                                           monthSpinner.getValue().get());
+        YearMonth yearMonth = YearMonth
+                .of(Integer.parseInt(yearSpinner.getEditor().getText()), monthSpinner.getValue().get());
 
-        return FXCollections.observableArrayList(formattedTimeDataLogic.getMonthlyData(yearMonth));
+        List<DailyFormattedDataModel> data = formattedTimeDataLogic.getMonthlyData(yearMonth);
+        DailyFormattedDataModel filler = new DailyFormattedDataModel(0d, 0d, LocalDate.now(), 0d, "");
+        filler.setFiller(true);
+
+        if(! data.get(0).isFiller()) {
+            data.add(0, filler);
+        }
+        List<Integer> fillerIndexes = new ArrayList<>();
+        for(int i = 0; i < data.size(); i++) {
+            DailyFormattedDataModel next = data.get(i);
+            boolean isFirstDayOfWeek = DayOfWeek.from(next.getDate()) == DayOfWeek.MONDAY;
+            if(! next.isFiller() && isFirstDayOfWeek) {
+                fillerIndexes.add(i);
+            }
+        }
+        Collections.reverse(fillerIndexes);
+        for(int index: fillerIndexes) {
+            if(! data.get(index - 1).isFiller()) {
+                data.add(index, filler);
+            }
+        }
+        return FXCollections.observableArrayList(data);
     }
 
     private void updateWeeklySpinner(boolean show) {
