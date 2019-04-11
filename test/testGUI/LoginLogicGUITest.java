@@ -18,6 +18,8 @@ import org.testfx.framework.junit.ApplicationTest;
 
 import java.util.Objects;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.junit.Assert.*;
 
@@ -48,16 +50,24 @@ public class LoginLogicGUITest extends ApplicationTest {
     @Test
     public void testSuccessfulLogin() {
         boolean loginSuccessful;
-        String apiToken = "a5f128064022cf3f6da6d4dab8bd7bd3";
+        String apiToken = System.getenv("TOGGLAPITOKEN");
         String password = "api_token";
-        clickOn("#emailField");
+        doubleClickOn("#emailField");
+        write("");
         write(apiToken);
-        clickOn("#passwordField");
+        doubleClickOn("#passwordField");
+        write("");
         write(password);
         clickOn("#submitBtn");
         sleep(10000);
         String stages = StageHelper.getStages().toString();
-        if(stages.contains("javafx.stage.Stage@32d992b2")) {
+        int i = 0;
+        Pattern pattern = Pattern.compile("javafx");
+        Matcher matcher = pattern.matcher(stages);
+        while(matcher.find()) {
+            i++;
+        }
+        if(i > 1) {
             loginSuccessful = true;
         }
         else {
@@ -71,7 +81,7 @@ public class LoginLogicGUITest extends ApplicationTest {
     public void testRememberCredentials() {
         boolean rememberedCredentials;
         FileLogic fileLogic = new FileLogic();
-        String apiToken = "a5f128064022cf3f6da6d4dab8bd7bd3";
+        String apiToken = System.getenv("TOGGLAPITOKEN");
         String password = "api_token";
         doubleClickOn("#emailField");
         write("");
