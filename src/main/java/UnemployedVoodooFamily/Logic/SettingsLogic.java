@@ -31,6 +31,7 @@ public class SettingsLogic {
     private TableColumn<WorkHoursData, String> fromCol;
     private TableColumn<WorkHoursData, String> toCol;
     private TableColumn<WorkHoursData, Double> hoursCol;
+    private TableColumn<WorkHoursData, String> noteCol;
 
 
     public SettingsLogic(String path) {
@@ -46,11 +47,11 @@ public class SettingsLogic {
      * @throws URISyntaxException
      * @throws IOException
      */
-    public void setWorkHours(LocalDate fromDate, LocalDate toDate, String hoursStr) {
+    public void setWorkHours(LocalDate fromDate, LocalDate toDate, String hoursStr, String note) {
 
         this.workHours = propsLogic.loadJson(path);
         Double hours = Double.valueOf(hoursStr);
-        WorkHours wh = new WorkHours(fromDate, toDate, hours);
+        WorkHours wh = new WorkHours(fromDate, toDate, hours, note);
         fixHoursOverlap(wh);
         propsLogic.saveJson(path, workHours);
     }
@@ -88,9 +89,9 @@ public class SettingsLogic {
                 if(oldRange.isEncapsulating(newRange) && ! value.equals(newValue)) {
                     it.remove();
                     WorkHours wh1 = new WorkHours(oldRange.getFrom(), newRange.getFrom().minusDays(1), value,
-                                                  next.getComment());
+                                                  next.getNote());
                     WorkHours wh2 = new WorkHours(newRange.getTo().plusDays(1), oldRange.getTo(), value,
-                                                  next.getComment());
+                                                  next.getNote());
                     it.add(wh1);
                     it.add(wh2);
                     continue;
@@ -158,12 +159,14 @@ public class SettingsLogic {
         fromCol = new TableColumn<>("From");
         toCol = new TableColumn<>("To");
         hoursCol = new TableColumn<>("Hours");
+        noteCol = new TableColumn<>("Note");
 
         table.getColumns().clear();
-        table.getColumns().addAll(fromCol, toCol, hoursCol);
+        table.getColumns().addAll(fromCol, toCol, hoursCol, noteCol);
         fromCol.setCellValueFactory(param -> param.getValue().fromProperty());
         toCol.setCellValueFactory(param -> param.getValue().toProperty());
         hoursCol.setCellValueFactory(param -> param.getValue().hoursProperty());
+        noteCol.setCellValueFactory(param -> param.getValue().noteProperty());
 
         //load props file
         props = propsLogic.loadProps(FilePath.getCurrentUserWorkhours());
@@ -175,7 +178,7 @@ public class SettingsLogic {
         while(it.hasNext()) {
             WorkHours next = it.next();
             Double hours = next.getHours();
-            data.add(new WorkHoursData(next.getFrom(), next.getTo(), hours));
+            data.add(new WorkHoursData(next.getFrom(), next.getTo(), hours, next.getNote()));
         }
         table.getItems().clear();
         table.getItems().addAll(data);
