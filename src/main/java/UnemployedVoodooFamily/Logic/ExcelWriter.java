@@ -1,6 +1,6 @@
 package UnemployedVoodooFamily.Logic;
 
-import UnemployedVoodooFamily.Data.ExtendedDailyFormattedDataModel;
+import UnemployedVoodooFamily.Data.DailyFormattedDataModel;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellReference;
@@ -9,6 +9,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.Month;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
@@ -51,7 +52,7 @@ public class ExcelWriter {
         workbook.close();
     }
 
-    private void constructSheet(String sheetName, List<ExtendedDailyFormattedDataModel> data) {
+    private void constructSheet(String sheetName, List<DailyFormattedDataModel> data) {
         Sheet sheet = this.workbook.createSheet(sheetName);
 
         sheet.createFreezePane(0, 1);
@@ -67,14 +68,14 @@ public class ExcelWriter {
         int rowNumber = 1;
         String previousRowWeek = "Week 0";
         boolean alternateStyle = false;
-        for(ExtendedDailyFormattedDataModel m: data) {
+        for(DailyFormattedDataModel m: data) {
             Row row = sheet.createRow(rowNumber++);
             row.createCell(0);
             if(!m.getWeek().equals("")) {
                 if(!m.getWeek().equals(previousRowWeek)) {
                     alternateStyle = ! alternateStyle;
-                    previousRowWeek = m.getWeek();
-                    row.getCell(0).setCellValue(m.getWeek());
+                    previousRowWeek = String.valueOf(m.getWeek().getWeek());
+                    row.getCell(0).setCellValue(String.valueOf(m.getWeek().getWeek()));
                 }
             }
             row.createCell(1).setCellValue(m.getWeekday());

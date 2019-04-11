@@ -85,7 +85,7 @@ public class SettingsLogicTest {
         assertEquals(dDec, to2);
 
         // place an entry in the middle with same hours value
-        logic.setWorkHours(dApr, dMay, "8", "same");
+        logic.setWorkHours(dApr, dMay, "8", "");
         this.workHours = propsLogic.loadJson(path);
         assertEquals(1, workHours.size());
         LocalDate to3 = workHours.get(0).getTo();
@@ -95,7 +95,7 @@ public class SettingsLogicTest {
         assertEquals(1, workHours.size());
 
         // place an entry in the middle with different hours value
-        logic.setWorkHours(dApr, dMay, "7", "different");
+        logic.setWorkHours(dApr, dMay, "7", "");
         this.workHours = propsLogic.loadJson(path);
         System.out.println(workHours.get(1));
         LocalDate to4 = workHours.get(1).getTo();

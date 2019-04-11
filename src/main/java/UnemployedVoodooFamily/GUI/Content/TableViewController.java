@@ -3,7 +3,6 @@ package UnemployedVoodooFamily.GUI.Content;
 import UnemployedVoodooFamily.Data.DailyFormattedDataModel;
 import UnemployedVoodooFamily.Data.Enums.Data;
 import UnemployedVoodooFamily.Data.Enums.FilePath;
-import UnemployedVoodooFamily.Data.ExtendedDailyFormattedDataModel;
 import UnemployedVoodooFamily.Data.RawTimeDataModel;
 import UnemployedVoodooFamily.Logic.FormattedTimeDataLogic;
 import UnemployedVoodooFamily.Logic.Listeners.DataLoadListener;
@@ -13,6 +12,7 @@ import ch.simas.jtoggl.Client;
 import ch.simas.jtoggl.Project;
 import ch.simas.jtoggl.Workspace;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -34,7 +34,9 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.util.StringConverter;
 import org.apache.commons.lang3.StringUtils;
+import org.threeten.extra.YearWeek;
 
 import java.awt.*;
 import java.io.File;
@@ -42,6 +44,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.time.*;
+import java.time.format.TextStyle;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -61,7 +64,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     private Tab formattedDataTab;
 
     @FXML
-    private TableView rawData;
+    private TableView<RawTimeDataModel> rawData;
 
     @FXML
     private Label excelFeedbackLabel;
@@ -105,14 +108,14 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     @FXML
     private Spinner weekSpinner;
     @FXML
-    private Spinner monthSpinner;
+    private Spinner<SimpleObjectProperty<Month>> monthSpinner;
 
     @FXML
     private ComboBox yearlyDropdown;
     @FXML
     private ComboBox weeklyDropdown;
     @FXML
-    private ComboBox monthlyDropdown;
+    private ComboBox<SimpleObjectProperty<Month>> monthlyDropdown;
 
     @FXML
     private ImageView feedbackImg;
@@ -123,9 +126,9 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     private Content monthlySummary;
 
     @FXML
-    private TableView monthlyTable;
+    private TableView<DailyFormattedDataModel> monthlyTable;
     @FXML
-    private TableView weeklyTable;
+    private TableView<DailyFormattedDataModel> weeklyTable;
 
     @FXML
     private Label yearSpinnerLabel;
@@ -207,6 +210,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         errorImg = new ImageView(error);
         errorImg.setFitWidth(24);
         errorImg.setFitHeight(24);
+
     }
 
     private void setupFormattedTableUIElements() {
@@ -228,13 +232,42 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
                 new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 52, formattedTimeDataLogic.getSelectedWeek()));
 
         //Creates a list with all months for the monthly spinner to use
-        ObservableList<String> monthsList = FXCollections.observableArrayList();
+        ObservableList<SimpleObjectProperty<Month>> monthsList = FXCollections.observableArrayList();
         for(Month m: Month.values()) {
-            monthsList.add(StringUtils.capitalize(m.toString().toLowerCase()));
+            monthsList.add(new SimpleObjectProperty<>(m));
         }
-        monthSpinner.setValueFactory(new SpinnerValueFactory.ListSpinnerValueFactory<String>(monthsList));
-        monthSpinner.getValueFactory()
-                    .setValue(StringUtils.capitalize(LocalDate.now().getMonth().toString().toLowerCase()));
+        monthSpinner.setValueFactory(new SpinnerValueFactory.ListSpinnerValueFactory<>(monthsList));
+        monthSpinner.getValueFactory().setValue(monthsList.get(Month.from(LocalDate.now()).getValue() - 1));
+
+        // change how objects are displayed
+        monthlyDropdown.setConverter(new StringConverter<SimpleObjectProperty<Month>>() {
+            @Override
+            public String toString(SimpleObjectProperty<Month> object) {
+                return object.getValue().getDisplayName(TextStyle.FULL, Locale.getDefault());
+            }
+
+            @Override
+            public SimpleObjectProperty<Month> fromString(String string) {
+                return new SimpleObjectProperty<>(Month.valueOf(string));
+            }
+        });
+
+        monthSpinner.getValueFactory().setConverter(new StringConverter<SimpleObjectProperty<Month>>() {
+            @Override
+            public String toString(SimpleObjectProperty<Month> object) {
+                return object.getValue().getDisplayName(TextStyle.FULL, Locale.getDefault());
+            }
+
+            @Override
+            public SimpleObjectProperty<Month> fromString(String string) {
+                return new SimpleObjectProperty<>(Month.valueOf(string));
+            }
+        });
+
+
+        //set initial value
+        monthSpinner.getEditor().setText(Month.from(LocalDate.now()).getDisplayName(TextStyle.FULL, Locale.getDefault()));
+
         //Hide the Monthly spinner by default
         updateMonthlySpinner(false);
 
@@ -261,7 +294,6 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     /**
      * Sets input actions on UI elements
      */ private void setKeyAndClickListeners() {
-
 
 
         bindTooltip(excelFeedbackLabel, errorTooltip);
@@ -383,13 +415,16 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
                 monthSpinner.getValueFactory().setValue(monthlyDropdown.getValue());
             }
         });
-        monthSpinner.valueProperty().addListener(new ChangeListener<String>() {
+        monthSpinner.valueProperty().addListener(new ChangeListener<SimpleObjectProperty<Month>>() {
             @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                formattedTimeDataLogic.setSelectedMonth(Month.valueOf(newValue.toUpperCase()));
+            public void changed(ObservableValue<? extends SimpleObjectProperty<Month>> observable,
+                                SimpleObjectProperty<Month> oldValue, SimpleObjectProperty<Month> newValue) {
+
+                formattedTimeDataLogic.setSelectedMonth(newValue.get());
                 updateMonthlyTable();
             }
         });
+
 
         explorerBtn.setOnAction(event -> {
             try {
@@ -415,7 +450,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
                 try {
                     //create document
                     formattedTimeDataLogic.exportToExcelDocument(rawTimeDataLogic.getFilteredTimeEntries(),
-                                                                                  Integer.parseInt(yearSpinner.getEditor().getText()));
+                                                                 Integer.parseInt(yearSpinner.getEditor().getText()));
 
                     //show success in ui
                     Platform.runLater(() -> {
@@ -518,17 +553,31 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     // |           FORMATTED DATA TABLE METHODS           |
     // |##################################################|
 
-    private void setFormattedTableData() {
+    private void updateFormattedTableData() {
+        formattedTimeDataLogic
+                .buildMasterData(rawTimeDataLogic.getFilteredTimeEntries(), formattedTimeDataLogic.getSelectedYear());
         updateWeeklyTable();
         updateMonthlyTable();
     }
 
     private void updateMonthlyTable() {
-        monthlyTable.getItems().setAll(getObservableMonthlyData());
+        try {
+            monthlyTable.getItems().setAll(getObservableMonthlyData());
+        }
+        catch(RuntimeException e) {
+            // tried getting data before it was loaded
+            e.getMessage();
+        }
     }
 
     private void updateWeeklyTable() {
-        weeklyTable.getItems().setAll(getObservableWeeklyData());
+        try {
+            weeklyTable.getItems().setAll(getObservableWeeklyData());
+        }
+        catch(Exception e) {
+            // tried getting data before it was loaded
+            e.getMessage();
+        }
     }
 
     //region Tableview setup methods
@@ -540,41 +589,44 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     private void buildFormattedWeeklyTable() {
         DecimalFormat df = new DecimalFormat("#0.00 ");
 
-        this.weeklyTable = new TableView();
+        this.weeklyTable = new TableView<>();
         //Create all columns necessary
-        TableColumn<ExtendedDailyFormattedDataModel, String> weekdayCol = new TableColumn<>("Week Day");
+        TableColumn<DailyFormattedDataModel, String> weekdayCol = new TableColumn<>("Week Day");
         weekdayCol.setCellValueFactory(new PropertyValueFactory<>("weekday"));
         weekdayCol.setSortable(false);
 
-        TableColumn<ExtendedDailyFormattedDataModel, String> dateCol = new TableColumn<>("Date");
+        TableColumn<DailyFormattedDataModel, String> dateCol = new TableColumn<>("Date");
         dateCol.setCellValueFactory(new PropertyValueFactory<>("date"));
         dateCol.setSortable(false);
 
-        TableColumn<ExtendedDailyFormattedDataModel, Double> workedHoursCol = new TableColumn<>("Worked Hours");
+        TableColumn<DailyFormattedDataModel, Double> workedHoursCol = new TableColumn<>("Worked Hours");
         workedHoursCol.setCellValueFactory(new PropertyValueFactory<>("workedHours"));
         workedHoursCol.setSortable(false);
         workedHoursCol.getStyleClass().add("right");
+        workedHoursCol.setCellFactory(col -> setDecimalFormatter(df));
 
 
-        TableColumn<ExtendedDailyFormattedDataModel, Double> supposedHoursCol = new TableColumn<>("Supposed work hours");
+        TableColumn<DailyFormattedDataModel, Double> supposedHoursCol = new TableColumn<>("Supposed work hours");
         supposedHoursCol.setCellValueFactory(new PropertyValueFactory<>("supposedHours"));
         supposedHoursCol.setSortable(false);
+        supposedHoursCol.setCellFactory(col -> setDecimalFormatter(df));
         supposedHoursCol.getStyleClass().add("right");
 
-        TableColumn<ExtendedDailyFormattedDataModel, Double> accumulatedHoursCol = new TableColumn<>("Accumulated hours");
+        TableColumn<DailyFormattedDataModel, Double> accumulatedHoursCol = new TableColumn<>("Accumulated");
         accumulatedHoursCol.setCellValueFactory(new PropertyValueFactory<>("accumulatedHours"));
+        accumulatedHoursCol.setCellFactory(col -> setDecimalFormatter(df));
         accumulatedHoursCol.setSortable(false);
         accumulatedHoursCol.getStyleClass().add("right");
 
-        TableColumn<ExtendedDailyFormattedDataModel, String> noteCol = new TableColumn<>("Notes");
+        TableColumn<DailyFormattedDataModel, String> noteCol = new TableColumn<>("Notes");
         noteCol.setCellValueFactory(new PropertyValueFactory<>("note"));
         noteCol.setSortable(false);
 
-        TableColumn<ExtendedDailyFormattedDataModel, Double> extraTimeCol = new TableColumn<>("+/- Hours");
+        TableColumn<DailyFormattedDataModel, Double> extraTimeCol = new TableColumn<>("+/- Hours");
         extraTimeCol.setCellValueFactory(new PropertyValueFactory<>("extraTime"));
         extraTimeCol.setSortable(false);
         extraTimeCol.getStyleClass().add("right");
-        extraTimeCol.setCellFactory(col -> new TableCell<ExtendedDailyFormattedDataModel, Double>() {
+        extraTimeCol.setCellFactory(col -> new TableCell<DailyFormattedDataModel, Double>() {
             @Override
             protected void updateItem(Double item, boolean empty) {
                 super.updateItem(item, empty);
@@ -622,49 +674,49 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
 
         //Create all columns necessary
 
-        TableColumn<ExtendedDailyFormattedDataModel, Integer> weekNumbCol = new TableColumn<>("Week number");
+        TableColumn<DailyFormattedDataModel, Integer> weekNumbCol = new TableColumn<>("Week number");
         weekNumbCol.setCellValueFactory(new PropertyValueFactory<>("weekNumber"));
         weekNumbCol.setSortable(false);
 
-        TableColumn<ExtendedDailyFormattedDataModel, Integer> weekdayCol = new TableColumn<>("Weekday");
+        TableColumn<DailyFormattedDataModel, Integer> weekdayCol = new TableColumn<>("Weekday");
         weekdayCol.setCellValueFactory(new PropertyValueFactory<>("weekday"));
         weekdayCol.setSortable(false);
 
-        TableColumn<ExtendedDailyFormattedDataModel, Integer> dateCol = new TableColumn<>("Date");
+        TableColumn<DailyFormattedDataModel, Integer> dateCol = new TableColumn<>("Date");
         dateCol.setCellValueFactory(new PropertyValueFactory<>("date"));
         dateCol.setSortable(false);
 
-        TableColumn<ExtendedDailyFormattedDataModel, Double> workedHoursCol = new TableColumn<>("Hours worked");
+        TableColumn<DailyFormattedDataModel, Double> workedHoursCol = new TableColumn<>("Hours worked");
         workedHoursCol.setCellValueFactory(new PropertyValueFactory<>("workedHours"));
         workedHoursCol.setSortable(false);
         workedHoursCol.setCellFactory(col -> setDecimalFormatter(df));
         workedHoursCol.getStyleClass().add("right");
 
 
-        TableColumn<ExtendedDailyFormattedDataModel, Double> supposedHoursCol = new TableColumn<>(
-                "Supposed work hours");
+        TableColumn<DailyFormattedDataModel, Double> supposedHoursCol = new TableColumn<>("Supposed work hours");
         supposedHoursCol.setCellValueFactory(new PropertyValueFactory<>("supposedHours"));
         supposedHoursCol.setSortable(false);
         supposedHoursCol.setCellFactory(col -> setDecimalFormatter(df));
         supposedHoursCol.getStyleClass().add("right");
 
 
-        TableColumn<ExtendedDailyFormattedDataModel, Double> extraTimeCol = new TableColumn<>("+/- Hours");
+        TableColumn<DailyFormattedDataModel, Double> extraTimeCol = new TableColumn<>("+/- Hours");
         extraTimeCol.setCellValueFactory(new PropertyValueFactory<>("extraTime"));
         extraTimeCol.setSortable(false);
+        extraTimeCol.setCellFactory(col -> setDecimalFormatter(df));
         extraTimeCol.getStyleClass().add("right");
 
-        TableColumn<ExtendedDailyFormattedDataModel, Double> accumulatedHoursCol = new TableColumn<>(
-                "Accumulated hours");
+        TableColumn<DailyFormattedDataModel, Double> accumulatedHoursCol = new TableColumn<>("Accumulated");
         accumulatedHoursCol.setCellValueFactory(new PropertyValueFactory<>("accumulatedHours"));
         accumulatedHoursCol.setSortable(false);
+        accumulatedHoursCol.setCellFactory(col -> setDecimalFormatter(df));
         accumulatedHoursCol.getStyleClass().add("right");
 
-        TableColumn<ExtendedDailyFormattedDataModel, Double> noteCol = new TableColumn<>("Notes");
+        TableColumn<DailyFormattedDataModel, Double> noteCol = new TableColumn<>("Notes");
         noteCol.setCellValueFactory(new PropertyValueFactory<>("note"));
         noteCol.setSortable(false);
 
-        extraTimeCol.setCellFactory(col -> new TableCell<ExtendedDailyFormattedDataModel, Double>() {
+        extraTimeCol.setCellFactory(col -> new TableCell<DailyFormattedDataModel, Double>() {
             @Override
             protected void updateItem(Double item, boolean empty) {
                 super.updateItem(item, empty);
@@ -769,31 +821,25 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
      * @return an ObservableList containing WeeklyTimeDatModel objects
      */
     private ObservableList<DailyFormattedDataModel> getObservableWeeklyData() {
-        if(rawTimeDataLogic.getFilteredTimeEntries() != null) {
-            return formattedTimeDataLogic.buildObservableWeeklyTimeData(rawTimeDataLogic.getFilteredTimeEntries(),
-                                                                        Integer.parseInt(
-                                                                                weekSpinner.getEditor().getText()),
-                                                                        Integer.parseInt(
-                                                                                yearSpinner.getEditor().getText()));
-        }
-        return formattedTimeDataLogic.buildObservableWeeklyTimeData(rawTimeDataLogic.getFilteredTimeEntries(),
-                                                                    Integer.parseInt(weekSpinner.getEditor().getText()),
-                                                                    Integer.parseInt(
-                                                                            yearSpinner.getEditor().getText()));
+
+        // find the yearweek to fetch data from
+        YearWeek yearWeek = YearWeek.of(Integer.parseInt(yearSpinner.getEditor().getText()),
+                                        Integer.parseInt(weekSpinner.getEditor().getText()));
+
+        return FXCollections.observableArrayList(formattedTimeDataLogic.getWeeklyData(yearWeek));
     }
 
     /**
      * Creates an observable list containing MonthlyTimeDataModel objects
      * @return an ObservableList containing MonthlyTimeDatModel objects
      */
-    private ObservableList<ExtendedDailyFormattedDataModel> getObservableMonthlyData() {
-        Month month = Month.valueOf(monthSpinner.getEditor().getText().toUpperCase());
-        if(rawTimeDataLogic.getFilteredTimeEntries() != null) {
-            return formattedTimeDataLogic.buildMonthlySortedData(rawTimeDataLogic.getFilteredTimeEntries(), month,
-                                                                 Integer.parseInt(yearSpinner.getEditor().getText()));
-        }
-        return formattedTimeDataLogic.buildMonthlySortedData(rawTimeDataLogic.getFilteredTimeEntries(), month,
-                                                             Integer.parseInt(yearSpinner.getEditor().getText()));
+    private ObservableList<DailyFormattedDataModel> getObservableMonthlyData() {
+
+        // find the yearmonth to fetch data from
+        YearMonth yearMonth = YearMonth.of(Integer.parseInt(yearSpinner.getEditor().getText()),
+                                           monthSpinner.getValue().get());
+
+        return FXCollections.observableArrayList(formattedTimeDataLogic.getMonthlyData(yearMonth));
     }
 
     private void updateWeeklySpinner(boolean show) {
@@ -914,7 +960,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
 
     private void applyFilters() {
         setRawDataTableData();
-        setFormattedTableData();
+        updateFormattedTableData();
     }
 
     /**
@@ -953,9 +999,8 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
                            Data.CLIENT))) {
             loadedData = EnumSet.noneOf(Data.class); //empty the set, readying it for next
             setRawDataTableData();
-            setFormattedTableData();
+            updateFormattedTableData();
             setFilterOptions();
-
         }
     }
 }
