@@ -53,7 +53,12 @@ public class WeeklyFormattedDataListFactory {
             String note = "";
 
             WorkHours wh = getWorkHours(workHours, currentDate);
-            if(wh != null) {
+            //exclude saturdays and sundays
+            if(weekday == DayOfWeek.SUNDAY || weekday == DayOfWeek.SATURDAY) {
+                supposedHours = 0;
+                note = wh.getNote();
+            }
+            else if(wh != null) {
                 supposedHours = wh.getHours();
                 note = wh.getNote();
             }
