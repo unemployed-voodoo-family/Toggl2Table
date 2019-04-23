@@ -46,7 +46,7 @@ public class Logger {
             e.printStackTrace();
         }
         GsonBuilder builder = new GsonBuilder();
-        Gson gson = builder.setPrettyPrinting().create();
+        Gson gson = builder.setPrettyPrinting().serializeNulls().create();
         gson.toJson(dataset, writer);
         try {
             writer.close();

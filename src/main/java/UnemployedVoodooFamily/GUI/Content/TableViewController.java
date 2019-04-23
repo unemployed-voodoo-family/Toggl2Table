@@ -16,6 +16,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -34,8 +35,10 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.util.Callback;
 import javafx.util.StringConverter;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.formula.functions.T;
 import org.threeten.extra.YearWeek;
 
 import java.awt.*;
@@ -266,7 +269,8 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
 
 
         //set initial value
-        monthSpinner.getEditor().setText(Month.from(LocalDate.now()).getDisplayName(TextStyle.FULL, Locale.getDefault()));
+        monthSpinner.getEditor()
+                    .setText(Month.from(LocalDate.now()).getDisplayName(TextStyle.FULL, Locale.getDefault()));
 
         //Hide the Monthly spinner by default
         updateMonthlySpinner(false);
@@ -561,8 +565,9 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     }
 
     private void updateMonthlyTable() {
+        ObservableList<DailyFormattedDataModel> data = getObservableMonthlyData();
         try {
-            monthlyTable.getItems().setAll(getObservableMonthlyData());
+            monthlyTable.getItems().setAll(data);
         }
         catch(RuntimeException e) {
             // tried getting data before it was loaded
@@ -591,6 +596,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
 
         this.weeklyTable = new TableView<>();
         //Create all columns necessary
+
         TableColumn<DailyFormattedDataModel, String> weekdayCol = new TableColumn<>("Week Day");
         weekdayCol.setCellValueFactory(new PropertyValueFactory<>("weekday"));
         weekdayCol.setSortable(false);
@@ -670,13 +676,34 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         //Clears the already existing data in the table
 
         this.monthlyTable = new TableView();
+
+        //this.monthlyTable.setRowFactory();
+
         DecimalFormat df = new DecimalFormat("#0.00 ");
+        String fillerStyle = "-fx-fill: blue;";
 
         //Create all columns necessary
+        String evenStyle = "evenRow";
+        String oddStyle = "oddRow";
 
-        TableColumn<DailyFormattedDataModel, Integer> weekNumbCol = new TableColumn<>("Week number");
+        TableColumn<DailyFormattedDataModel, YearWeek> weekNumbCol = new TableColumn<>("Week number");
         weekNumbCol.setCellValueFactory(new PropertyValueFactory<>("weekNumber"));
         weekNumbCol.setSortable(false);
+        weekNumbCol.setCellFactory(col -> new TableCell<DailyFormattedDataModel, YearWeek>() {
+            @Override
+            protected void updateItem(YearWeek item, boolean empty) {
+                super.updateItem(item, empty);
+                if(empty || item == null) {
+                    setText(null);
+                    setGraphic(null);
+                }
+                else {
+                    setText(String.valueOf(item.getWeek()));
+
+                }
+            }
+        });
+
 
         TableColumn<DailyFormattedDataModel, Integer> weekdayCol = new TableColumn<>("Weekday");
         weekdayCol.setCellValueFactory(new PropertyValueFactory<>("weekday"));
@@ -689,28 +716,44 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         TableColumn<DailyFormattedDataModel, Double> workedHoursCol = new TableColumn<>("Hours worked");
         workedHoursCol.setCellValueFactory(new PropertyValueFactory<>("workedHours"));
         workedHoursCol.setSortable(false);
-        workedHoursCol.setCellFactory(col -> setDecimalFormatter(df));
-        workedHoursCol.getStyleClass().add("right");
+        workedHoursCol.setCellFactory(col ->
+
+                                              setDecimalFormatter(df));
+        workedHoursCol.getStyleClass().
+
+                add("right");
 
 
         TableColumn<DailyFormattedDataModel, Double> supposedHoursCol = new TableColumn<>("Supposed work hours");
         supposedHoursCol.setCellValueFactory(new PropertyValueFactory<>("supposedHours"));
         supposedHoursCol.setSortable(false);
-        supposedHoursCol.setCellFactory(col -> setDecimalFormatter(df));
-        supposedHoursCol.getStyleClass().add("right");
+        supposedHoursCol.setCellFactory(col ->
+
+                                                setDecimalFormatter(df));
+        supposedHoursCol.getStyleClass().
+
+                add("right");
 
 
         TableColumn<DailyFormattedDataModel, Double> extraTimeCol = new TableColumn<>("+/- Hours");
         extraTimeCol.setCellValueFactory(new PropertyValueFactory<>("extraTime"));
         extraTimeCol.setSortable(false);
-        extraTimeCol.setCellFactory(col -> setDecimalFormatter(df));
-        extraTimeCol.getStyleClass().add("right");
+        extraTimeCol.setCellFactory(col ->
+
+                                            setDecimalFormatter(df));
+        extraTimeCol.getStyleClass().
+
+                add("right");
 
         TableColumn<DailyFormattedDataModel, Double> accumulatedHoursCol = new TableColumn<>("Accumulated");
         accumulatedHoursCol.setCellValueFactory(new PropertyValueFactory<>("accumulatedHours"));
         accumulatedHoursCol.setSortable(false);
-        accumulatedHoursCol.setCellFactory(col -> setDecimalFormatter(df));
-        accumulatedHoursCol.getStyleClass().add("right");
+        accumulatedHoursCol.setCellFactory(col ->
+
+                                                   setDecimalFormatter(df));
+        accumulatedHoursCol.getStyleClass().
+
+                add("right");
 
         TableColumn<DailyFormattedDataModel, Double> noteCol = new TableColumn<>("Notes");
         noteCol.setCellValueFactory(new PropertyValueFactory<>("note"));
@@ -744,9 +787,10 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         extraTimeCol.setPrefWidth(90);
         weekNumbCol.setPrefWidth(90);
         //Adds the columns to the table and updates it
-        monthlyTable.getColumns()
-                    .addAll(weekNumbCol, weekdayCol, dateCol, supposedHoursCol, workedHoursCol, extraTimeCol,
-                            accumulatedHoursCol, noteCol);
+        monthlyTable.getColumns().
+
+                addAll(weekNumbCol, weekdayCol, dateCol, supposedHoursCol, workedHoursCol, extraTimeCol,
+                       accumulatedHoursCol, noteCol);
         monthlyTable.setEditable(false);
     }
 
@@ -834,12 +878,12 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
      * @return an ObservableList containing MonthlyTimeDatModel objects
      */
     private ObservableList<DailyFormattedDataModel> getObservableMonthlyData() {
-
         // find the yearmonth to fetch data from
-        YearMonth yearMonth = YearMonth.of(Integer.parseInt(yearSpinner.getEditor().getText()),
-                                           monthSpinner.getValue().get());
+        YearMonth yearMonth = YearMonth
+                .of(Integer.parseInt(yearSpinner.getEditor().getText()), monthSpinner.getValue().get());
 
-        return FXCollections.observableArrayList(formattedTimeDataLogic.getMonthlyData(yearMonth));
+        List<DailyFormattedDataModel> data = formattedTimeDataLogic.getMonthlyData(yearMonth);
+        return FXCollections.observableArrayList(data);
     }
 
     private void updateWeeklySpinner(boolean show) {

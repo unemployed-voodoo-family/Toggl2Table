@@ -5,6 +5,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import org.threeten.extra.YearWeek;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.TextStyle;
 import java.util.Locale;
@@ -20,13 +21,15 @@ public class DailyFormattedDataModel {
     private SimpleStringProperty note = new SimpleStringProperty("");
     private SimpleObjectProperty<YearWeek> weekNumber;
 
+    private boolean isFiller = false;
+
     /**
      * Creates a WeeklyTimeDataModel object
      * Used to structure data for the corresponding TableView
      * @param workedHours   String with hours worked
      * @param supposedHours String with supposed work hours
      */
-    public DailyFormattedDataModel(Double workedHours, Double supposedHours, LocalDate date, double accumulated,
+    public DailyFormattedDataModel(Double workedHours, Double supposedHours, LocalDate date, Double accumulated,
                                    String note) {
 
         String weekDayStr = date.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.getDefault());
@@ -40,7 +43,11 @@ public class DailyFormattedDataModel {
         }
 
         this.date = date;
-        this.weekNumber = new SimpleObjectProperty<>(YearWeek.from(date));
+        if(date.getDayOfWeek().equals(DayOfWeek.MONDAY)) {
+            this.weekNumber = new SimpleObjectProperty<>(YearWeek.from(date));
+        } else {
+            this.weekNumber = new SimpleObjectProperty<>(null);
+        }
     }
 
     /**
@@ -99,7 +106,15 @@ public class DailyFormattedDataModel {
      * Returns the week number
      * @return the week number
      */
-    public YearWeek getWeek() {
+    public YearWeek getWeekNumber() {
         return weekNumber.get();
+    }
+
+    public boolean isFiller() {
+        return isFiller;
+    }
+
+    public void setFiller(boolean filler) {
+        isFiller = filler;
     }
 }

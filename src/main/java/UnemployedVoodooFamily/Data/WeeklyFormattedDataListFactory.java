@@ -1,6 +1,9 @@
 package UnemployedVoodooFamily.Data;
 
+import UnemployedVoodooFamily.Data.Enums.FilePath;
+import UnemployedVoodooFamily.Logic.FileLogic;
 import ch.simas.jtoggl.TimeEntry;
+import com.sun.corba.se.spi.orbutil.threadpool.Work;
 import org.threeten.extra.YearWeek;
 
 import java.time.DayOfWeek;
@@ -14,10 +17,13 @@ import java.util.*;
 public class WeeklyFormattedDataListFactory {
 
     private ArrayList<DailyFormattedDataModel> weeklyList;
+    private FileLogic fileLogic;
 
     public List<DailyFormattedDataModel> buildWeeklyDataList(List<TimeEntry> timeEntries, YearWeek date,
                                                              Double accumulatedOffset) {
         weeklyList = new ArrayList<>();
+        fileLogic = new FileLogic();
+        List<WorkHours> workHours = fileLogic.loadJson(FilePath.getCurrentUserWorkhours());
 
         //finds the first day of the selected week
         LocalDate weeksFirstDate = date.atDay(DayOfWeek.MONDAY);
@@ -43,21 +49,41 @@ public class WeeklyFormattedDataListFactory {
             //Create current date to process
             LocalDate currentDate = weeksFirstDate.plusDays(weekday.getValue() - 1L);
             double workedHours = 0d;
+            double supposedHours = 7.75;
+            String note = "";
+
+            WorkHours wh = getWorkHours(workHours, currentDate);
+            if(wh != null) {
+                supposedHours = wh.getHours();
+                note = wh.getNote();
+            }
 
             if(! weekSublist.isEmpty()) {
                 for(TimeEntry t: weekSublist) {
-                    if(t.getStart().toLocalDate().isEqual(currentDate) && t.getStop().toLocalDate()
-                                                                           .isEqual(currentDate)) {
+                    if(t.getStart().toLocalDate().isEqual(currentDate) && t.getStop().toLocalDate().isEqual(currentDate)) {
                         workedHours += ((double) t.getDuration() % 86400) / 3600;
                     }
                 }
             }
-            accumulatedHours += workedHours;
+        accumulatedHours += (workedHours - supposedHours);
 
-            //TODO get correct supposed work hours
-            weeklyList.add(new DailyFormattedDataModel(workedHours, 0.00, currentDate, accumulatedHours, ""));
-        }
+        //TODO get correct supposed work hours
+        weeklyList.add(new DailyFormattedDataModel(workedHours, supposedHours, currentDate, accumulatedHours, note));
+    }
 
         return weeklyList;
+}
+
+    private WorkHours getWorkHours(List<WorkHours> list, LocalDate date) {
+        WorkHours wh = null;
+        for(WorkHours workHours: list) {
+            if(date.getDayOfWeek() != DayOfWeek.SATURDAY || date.getDayOfWeek() != DayOfWeek.SUNDAY) {
+                if(workHours.getRange().contains(date)) {
+                    wh = workHours;
+                    break;
+                }
+            }
+        }
+        return wh;
     }
 }

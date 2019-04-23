@@ -79,10 +79,8 @@ public class DateRangeTest {
     @Test
     public void contains() {
         for(LocalDate d = date1; d.isBefore(date2.plusDays(1)) ; d = d.plusDays(1)) {
-            System.out.println(d.toString());
             assertTrue(range.contains(d));
         }
-
         assertFalse(range.contains(date2.plusDays(1)));
         assertFalse(range.contains(date1.minusDays(1)));
     }

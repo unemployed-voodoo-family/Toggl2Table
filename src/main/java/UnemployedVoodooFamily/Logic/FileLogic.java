@@ -61,7 +61,7 @@ public class FileLogic {
         return file.delete();
     }
 
-    public void writeToJson(String path, WorkHours wh) {
+    public void appendWorkHoursToJson(String path, WorkHours wh) {
         File file = getFile(path);
 
         FileWriter writer = null;
@@ -73,7 +73,10 @@ public class FileLogic {
         }
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.setPrettyPrinting().create();
-        gson.toJson(wh, writer);
+        List<WorkHours> list = loadJson(path);
+        Type listType = new TypeToken<List<WorkHours>>() {}.getType();
+        list.add(wh);
+        gson.toJson(list, listType, writer);
         try {
             writer.close();
         }
@@ -85,20 +88,23 @@ public class FileLogic {
     public List<WorkHours> loadJson(String path) {
         FileReader reader = null;
         File file = getFile(path);
+        List<WorkHours> list = null;
         try {
             reader = new FileReader(file);
+            Gson gson = new GsonBuilder().serializeNulls().setPrettyPrinting().create();
+            Type listType = new TypeToken<List<WorkHours>>() {}.getType();
+            list = gson.fromJson(reader, listType);
         }
         catch(FileNotFoundException e) {
             e.printStackTrace();
         }
-        Gson gson = new Gson();
-        Type listType = new TypeToken<List<WorkHours>>() {}.getType();
-        List<WorkHours> list = gson.fromJson(reader, listType);
-        try {
-            reader.close();
-        }
-        catch(IOException e) {
-            e.printStackTrace();
+        finally {
+            try {
+                reader.close();
+            }
+            catch(IOException e) {
+                e.printStackTrace();
+            }
         }
         return list == null ? new ArrayList<>() : list;
     }
@@ -124,7 +130,7 @@ public class FileLogic {
             e.printStackTrace();
         }
         GsonBuilder builder = new GsonBuilder();
-        Gson gson = builder.setPrettyPrinting().create();
+        Gson gson = builder.setPrettyPrinting().serializeNulls().create();
         gson.toJson(dataset, writer);
         try {
             writer.close();

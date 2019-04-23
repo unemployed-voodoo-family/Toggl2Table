@@ -78,6 +78,7 @@ public class ExcelWriter {
         for(DailyFormattedDataModel m: data) {
             Row row = sheet.createRow(rowNumber);
             row.createCell(0);
+
             if(m.getWeek().getWeek() != previousRowWeek) {
                 alternateStyle = ! alternateStyle;
                 previousRowWeek = m.getWeek().getWeek();
