@@ -682,38 +682,28 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         DecimalFormat df = new DecimalFormat("#0.00 ");
         String fillerStyle = "-fx-fill: blue;";
 
-        this.monthlyTable
-                .setRowFactory(new Callback<TableView<DailyFormattedDataModel>, TableRow<DailyFormattedDataModel>>() {
-                    @Override
-                    public TableRow<DailyFormattedDataModel> call(TableView<DailyFormattedDataModel> param) {
-                        return new TableRow<DailyFormattedDataModel>() {
-                            @Override
-                            protected void updateItem(DailyFormattedDataModel item, boolean empty) {
-                                super.updateItem(item, empty);
-                                if(empty || item == null) {
-                                    setText(null);
-                                    setGraphic(null);
-                                }
-                                else if(item.isFiller()) {
-                                    //setGraphic(new HBox());
-                                    if(!getChildren().isEmpty()) {
-                                        for(Object node : getChildren()) {
-
-                                        }
-                                    }
-
-                                }
-                            }
-
-                        };
-                    }
-                });
-
         //Create all columns necessary
+        String evenStyle = "evenRow";
+        String oddStyle = "oddRow";
 
-        TableColumn<DailyFormattedDataModel, Integer> weekNumbCol = new TableColumn<>("Week number");
+        TableColumn<DailyFormattedDataModel, YearWeek> weekNumbCol = new TableColumn<>("Week number");
         weekNumbCol.setCellValueFactory(new PropertyValueFactory<>("weekNumber"));
         weekNumbCol.setSortable(false);
+        weekNumbCol.setCellFactory(col -> new TableCell<DailyFormattedDataModel, YearWeek>() {
+            @Override
+            protected void updateItem(YearWeek item, boolean empty) {
+                super.updateItem(item, empty);
+                if(empty || item == null) {
+                    setText(null);
+                    setGraphic(null);
+                }
+                else {
+                    setText(String.valueOf(item.getWeek()));
+
+                }
+            }
+        });
+
 
         TableColumn<DailyFormattedDataModel, Integer> weekdayCol = new TableColumn<>("Weekday");
         weekdayCol.setCellValueFactory(new PropertyValueFactory<>("weekday"));
@@ -726,28 +716,44 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         TableColumn<DailyFormattedDataModel, Double> workedHoursCol = new TableColumn<>("Hours worked");
         workedHoursCol.setCellValueFactory(new PropertyValueFactory<>("workedHours"));
         workedHoursCol.setSortable(false);
-        workedHoursCol.setCellFactory(col -> setDecimalFormatter(df));
-        workedHoursCol.getStyleClass().add("right");
+        workedHoursCol.setCellFactory(col ->
+
+                                              setDecimalFormatter(df));
+        workedHoursCol.getStyleClass().
+
+                add("right");
 
 
         TableColumn<DailyFormattedDataModel, Double> supposedHoursCol = new TableColumn<>("Supposed work hours");
         supposedHoursCol.setCellValueFactory(new PropertyValueFactory<>("supposedHours"));
         supposedHoursCol.setSortable(false);
-        supposedHoursCol.setCellFactory(col -> setDecimalFormatter(df));
-        supposedHoursCol.getStyleClass().add("right");
+        supposedHoursCol.setCellFactory(col ->
+
+                                                setDecimalFormatter(df));
+        supposedHoursCol.getStyleClass().
+
+                add("right");
 
 
         TableColumn<DailyFormattedDataModel, Double> extraTimeCol = new TableColumn<>("+/- Hours");
         extraTimeCol.setCellValueFactory(new PropertyValueFactory<>("extraTime"));
         extraTimeCol.setSortable(false);
-        extraTimeCol.setCellFactory(col -> setDecimalFormatter(df));
-        extraTimeCol.getStyleClass().add("right");
+        extraTimeCol.setCellFactory(col ->
+
+                                            setDecimalFormatter(df));
+        extraTimeCol.getStyleClass().
+
+                add("right");
 
         TableColumn<DailyFormattedDataModel, Double> accumulatedHoursCol = new TableColumn<>("Accumulated");
         accumulatedHoursCol.setCellValueFactory(new PropertyValueFactory<>("accumulatedHours"));
         accumulatedHoursCol.setSortable(false);
-        accumulatedHoursCol.setCellFactory(col -> setDecimalFormatter(df));
-        accumulatedHoursCol.getStyleClass().add("right");
+        accumulatedHoursCol.setCellFactory(col ->
+
+                                                   setDecimalFormatter(df));
+        accumulatedHoursCol.getStyleClass().
+
+                add("right");
 
         TableColumn<DailyFormattedDataModel, Double> noteCol = new TableColumn<>("Notes");
         noteCol.setCellValueFactory(new PropertyValueFactory<>("note"));
@@ -781,9 +787,10 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         extraTimeCol.setPrefWidth(90);
         weekNumbCol.setPrefWidth(90);
         //Adds the columns to the table and updates it
-        monthlyTable.getColumns()
-                    .addAll(weekNumbCol, weekdayCol, dateCol, supposedHoursCol, workedHoursCol, extraTimeCol,
-                            accumulatedHoursCol, noteCol);
+        monthlyTable.getColumns().
+
+                addAll(weekNumbCol, weekdayCol, dateCol, supposedHoursCol, workedHoursCol, extraTimeCol,
+                       accumulatedHoursCol, noteCol);
         monthlyTable.setEditable(false);
     }
 
@@ -876,26 +883,6 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
                 .of(Integer.parseInt(yearSpinner.getEditor().getText()), monthSpinner.getValue().get());
 
         List<DailyFormattedDataModel> data = formattedTimeDataLogic.getMonthlyData(yearMonth);
-        DailyFormattedDataModel filler = new DailyFormattedDataModel(0d, 0d, LocalDate.now(), 0d, "");
-        filler.setFiller(true);
-
-        if(! data.get(0).isFiller()) {
-            data.add(0, filler);
-        }
-        List<Integer> fillerIndexes = new ArrayList<>();
-        for(int i = 0; i < data.size(); i++) {
-            DailyFormattedDataModel next = data.get(i);
-            boolean isFirstDayOfWeek = DayOfWeek.from(next.getDate()) == DayOfWeek.MONDAY;
-            if(! next.isFiller() && isFirstDayOfWeek) {
-                fillerIndexes.add(i);
-            }
-        }
-        Collections.reverse(fillerIndexes);
-        for(int index: fillerIndexes) {
-            if(! data.get(index - 1).isFiller()) {
-                data.add(index, filler);
-            }
-        }
         return FXCollections.observableArrayList(data);
     }
 

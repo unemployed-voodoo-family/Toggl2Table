@@ -9,10 +9,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.Month;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Properties;
 
 public class ExcelWriter {
 
@@ -71,11 +69,11 @@ public class ExcelWriter {
         for(DailyFormattedDataModel m: data) {
             Row row = sheet.createRow(rowNumber++);
             row.createCell(0);
-            if(!m.getWeek().equals("")) {
-                if(!m.getWeek().equals(previousRowWeek)) {
+            if(!m.getWeekNumber().equals("")) {
+                if(!m.getWeekNumber().equals(previousRowWeek)) {
                     alternateStyle = ! alternateStyle;
-                    previousRowWeek = String.valueOf(m.getWeek().getWeek());
-                    row.getCell(0).setCellValue(String.valueOf(m.getWeek().getWeek()));
+                    previousRowWeek = String.valueOf(m.getWeekNumber().getWeek());
+                    row.getCell(0).setCellValue(String.valueOf(m.getWeekNumber().getWeek()));
                 }
             }
             row.createCell(1).setCellValue(m.getWeekday());

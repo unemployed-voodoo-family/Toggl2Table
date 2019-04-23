@@ -36,8 +36,9 @@
 /*######## BUTTONS ########*/
 
 .highlightedRow{
-    -fx-font-size: 0;
+    -fx-font-size: 1;
 }
+
 
 .button, .toggle-button {
     -fx-background-radius: 0;

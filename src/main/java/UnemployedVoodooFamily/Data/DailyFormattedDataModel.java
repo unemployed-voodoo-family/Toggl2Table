@@ -5,6 +5,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import org.threeten.extra.YearWeek;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.TextStyle;
 import java.util.Locale;
@@ -42,7 +43,11 @@ public class DailyFormattedDataModel {
         }
 
         this.date = date;
-        this.weekNumber = new SimpleObjectProperty<>(YearWeek.from(date));
+        if(date.getDayOfWeek().equals(DayOfWeek.MONDAY)) {
+            this.weekNumber = new SimpleObjectProperty<>(YearWeek.from(date));
+        } else {
+            this.weekNumber = new SimpleObjectProperty<>(null);
+        }
     }
 
     /**
@@ -101,7 +106,7 @@ public class DailyFormattedDataModel {
      * Returns the week number
      * @return the week number
      */
-    public YearWeek getWeek() {
+    public YearWeek getWeekNumber() {
         return weekNumber.get();
     }
 
