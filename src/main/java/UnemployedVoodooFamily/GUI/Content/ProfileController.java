@@ -5,6 +5,7 @@ import UnemployedVoodooFamily.Logic.Session;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import java.util.Locale;
 
@@ -14,28 +15,28 @@ import java.net.URL;
 public class ProfileController {
 
     @FXML
-    private TextField nameField;
+    private Label nameField;
 
     @FXML
-    private TextField emailField;
+    private Label emailField;
 
     @FXML
-    private TextField countryField;
+    private Label countryField;
 
     @FXML
-    private TextField timeZoneField;
+    private Label timeZoneField;
 
     @FXML
-    private TextField durationDispField;
+    private Label durationDispField;
 
     @FXML
-    private TextField dateFormatField;
+    private Label dateFormatField;
 
     @FXML
-    private TextField timeFormatField;
+    private Label timeFormatField;
 
     @FXML
-    private TextField firstDayOfWeekField;
+    private Label firstDayOfWeekField;
 
 
     private ProfileLogic profile;
