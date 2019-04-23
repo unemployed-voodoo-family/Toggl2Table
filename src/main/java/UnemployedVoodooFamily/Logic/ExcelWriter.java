@@ -79,10 +79,10 @@ public class ExcelWriter {
             Row row = sheet.createRow(rowNumber);
             row.createCell(0);
 
-            if(m.getWeek().getWeek() != previousRowWeek) {
+            if(m.getWeekNumber().getWeek() != previousRowWeek) {
                 alternateStyle = ! alternateStyle;
-                previousRowWeek = m.getWeek().getWeek();
-                row.getCell(0).setCellValue("Week " + m.getWeek().getWeek());
+                previousRowWeek = m.getWeekNumber().getWeek();
+                row.getCell(0).setCellValue("Week " + m.getWeekNumber().getWeek());
             }
             row.createCell(1).setCellValue(m.getWeekday());
             row.createCell(2).setCellValue(m.getDate().toString());

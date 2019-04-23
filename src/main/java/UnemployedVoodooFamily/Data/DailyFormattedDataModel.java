@@ -43,11 +43,7 @@ public class DailyFormattedDataModel {
         }
 
         this.date = date;
-        if(date.getDayOfWeek().equals(DayOfWeek.MONDAY)) {
-            this.weekNumber = new SimpleObjectProperty<>(YearWeek.from(date));
-        } else {
-            this.weekNumber = new SimpleObjectProperty<>(null);
-        }
+        this.weekNumber = new SimpleObjectProperty<>(YearWeek.from(date));
     }
 
     /**
