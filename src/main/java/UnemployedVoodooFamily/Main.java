@@ -11,6 +11,9 @@ import java.io.File;
 import java.net.URL;
 
 public class Main extends Application {
+
+    private static Stage loginStage;
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -44,6 +47,7 @@ public class Main extends Application {
      */
     @Override
     public void start(Stage primaryStage) throws Exception {
+        loginStage = primaryStage;
         createDirsIfNotExists(FilePath.SETTINGS_HOME.getPath());
         createDirsIfNotExists(FilePath.LOGS_HOME.getPath());
         URL r = getClass().getClassLoader().getResource("login.fxml");
@@ -57,5 +61,9 @@ public class Main extends Application {
         //primaryStage.getIcons().add(anotherIcon);
         primaryStage.show();
         primaryStage.toFront();
+    }
+
+    public static void closeLogin() {
+        loginStage.close();
     }
 }

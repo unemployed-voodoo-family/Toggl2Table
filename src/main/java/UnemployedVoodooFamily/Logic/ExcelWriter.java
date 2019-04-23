@@ -1,9 +1,12 @@
 package UnemployedVoodooFamily.Logic;
 
 import UnemployedVoodooFamily.Data.DailyFormattedDataModel;
+import UnemployedVoodooFamily.Data.Enums.FilePath;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellReference;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.FileOutputStream;
@@ -18,39 +21,45 @@ public class ExcelWriter {
 
     private CellStyle headerCellStyle;
     private CellStyle dataCellStyle;
-    private CellStyle dataCellStyleAlternate;
+    private CellStyle dataCellStyleAlt;
     private CellStyle summaryCellStyle;
-    private static String[] columnNames = {"Week number", "Week day", "Date", "Supposed work hours", "Hours worked", "+/- Hours", "Notes"};
+    private static String[] columnNames = {"Week number", "Week day", "Date", "Supposed work hours", "Hours worked", "+/- Hours", "Accumulated hours", "Notes"};
 
     public ExcelWriter() {
         this.workbook = new XSSFWorkbook();
         setupStandardRowFormatting();
     }
 
-    public boolean generateExcelSheet(HashMap<String, List> monthLists) throws IOException {
+    public boolean generateExcelSheet(HashMap<String, List> monthLists, int year) throws IOException {
         boolean success = false;
-        buildWorkbook(monthLists);
+        buildWorkbook(monthLists, year);
         success = true;
         return success; //Return true if document was build correctly, false if failed
     }
 
-    private void buildWorkbook(HashMap<String, List> monthLists) throws IOException {
+    private void buildWorkbook(HashMap<String, List> monthLists, int year) throws IOException {
         CreationHelper creationHelper = workbook.getCreationHelper();
         for(String key: monthLists.keySet()) {
-            constructSheet(key, monthLists.get(key));
+            constructMonthlySheet(key, monthLists.get(key));
         }
         int order = 0;
         for(Month month: Month.values()) {
             workbook.setSheetOrder(StringUtils.capitalize(month.toString().toLowerCase()), order);
             order++;
         }
-        FileOutputStream fileOut = new FileOutputStream("Time Report.xlsx");
+        workbook.setActiveSheet(0);
+        workbook.setSelectedTab(0);
+        FileOutputStream fileOut = new FileOutputStream(FilePath.APP_HOME.getPath() +"\\Time Report " + year + ".xlsx");
         workbook.write(fileOut);
         fileOut.close();
         workbook.close();
     }
 
-    private void constructSheet(String sheetName, List<DailyFormattedDataModel> data) {
+    private void constructYearlySummarySheet()  {
+
+    }
+
+    private void constructMonthlySheet(String sheetName, List<DailyFormattedDataModel> data) {
         Sheet sheet = this.workbook.createSheet(sheetName);
 
         sheet.createFreezePane(0, 1);
@@ -64,38 +73,62 @@ public class ExcelWriter {
 
         //Create data rows for every data entry
         int rowNumber = 1;
-        String previousRowWeek = "Week 0";
+        int previousRowWeek = 0;
         boolean alternateStyle = false;
         for(DailyFormattedDataModel m: data) {
-            Row row = sheet.createRow(rowNumber++);
+            Row row = sheet.createRow(rowNumber);
             row.createCell(0);
-            if(!m.getWeekNumber().equals("")) {
-                if(!m.getWeekNumber().equals(previousRowWeek)) {
-                    alternateStyle = ! alternateStyle;
-                    previousRowWeek = String.valueOf(m.getWeekNumber().getWeek());
-                    row.getCell(0).setCellValue(String.valueOf(m.getWeekNumber().getWeek()));
-                }
+
+            if(m.getWeek().getWeek() != previousRowWeek) {
+                alternateStyle = ! alternateStyle;
+                previousRowWeek = m.getWeek().getWeek();
+                row.getCell(0).setCellValue("Week " + m.getWeek().getWeek());
             }
             row.createCell(1).setCellValue(m.getWeekday());
             row.createCell(2).setCellValue(m.getDate().toString());
             row.createCell(3).setCellValue(m.getSupposedHours());
             row.createCell(4).setCellValue(m.getWorkedHours());
             row.createCell(5).setCellFormula(
-                    "SUM(" + row.getCell(4).getAddress().formatAsString() + "-" + row.getCell(3).getAddress()
-                                                                                     .formatAsString() + ")");
-            row.createCell(6).setCellValue(m.getNote());
+                    "SUM(" + row.getCell(4).getAddress().formatAsString()
+                            + "-" + row.getCell(3).getAddress().formatAsString() + ")");
+            if(rowNumber > 1) {
+                row.createCell(6).setCellFormula(
+                        "SUM(" + sheet.getRow(rowNumber-1).getCell(6).getAddress().formatAsString()
+                                + "+" + row.getCell(5).getAddress().formatAsString() + ")");
+            }
+            else {
+                row.createCell(6).setCellFormula(row.getCell(5).getAddress().formatAsString());
+            }
+            row.createCell(7).setCellValue(m.getNote());
             for(Cell cell: row) {
-                //TODO rewrite to use week number
                 if(alternateStyle) {
-                    cell.setCellStyle(dataCellStyleAlternate);
+                    if(cell.getColumnIndex() == 5 || cell.getColumnIndex() == 3) {
+                        CellStyle dataAltBorder = workbook.createCellStyle();
+                        dataAltBorder.cloneStyleFrom(dataCellStyleAlt);
+                        dataAltBorder.setBorderLeft(BorderStyle.THICK);
+                        dataAltBorder.setLeftBorderColor(IndexedColors.WHITE.getIndex());
+                        cell.setCellStyle(dataAltBorder);
+                    }
+                    else {
+                        cell.setCellStyle(dataCellStyleAlt);
+                    }
                 }
                 else {
-                    cell.setCellStyle(dataCellStyle);
+                    if(cell.getColumnIndex() == 5 || cell.getColumnIndex() == 3) {
+                        CellStyle dataBorder = workbook.createCellStyle();
+                        dataBorder.cloneStyleFrom(dataCellStyle);
+                        dataBorder.setBorderLeft(BorderStyle.THICK);
+                        dataBorder.setLeftBorderColor(IndexedColors.WHITE.getIndex());
+                        cell.setCellStyle(dataBorder);
+                    }
+                    else {
+                        cell.setCellStyle(dataCellStyle);
+                    }
                 }
             }
+            rowNumber++;
         }
 
-        //TODO make a for loop to construct all the cells
         Row summaryRow = sheet.createRow(rowNumber);
         summaryRow.createCell(0).setCellValue(sheetName + " summary");
         summaryRow.createCell(1);
@@ -106,10 +139,9 @@ public class ExcelWriter {
         summaryRow.createCell(4).setCellFormula("SUM(" + CellReference
                 .convertNumToColString(summaryRow.getCell(4).getColumnIndex()) + 1 + ":" + CellReference
                 .convertNumToColString(summaryRow.getCell(4).getColumnIndex()) + rowNumber + ")");
-        summaryRow.createCell(5).setCellFormula("SUM(" + CellReference
-                .convertNumToColString(summaryRow.getCell(5).getColumnIndex()) + 1 + ":" + CellReference
-                .convertNumToColString(summaryRow.getCell(5).getColumnIndex()) + rowNumber + ")");
-        summaryRow.createCell(6);
+        summaryRow.createCell(5);
+        summaryRow.createCell(6).setCellFormula(sheet.getRow(rowNumber-1).getCell(6).getAddress().formatAsString());
+        summaryRow.createCell(7);
 
         for(Cell cell: summaryRow) {
             cell.setCellStyle(summaryCellStyle);
@@ -124,7 +156,7 @@ public class ExcelWriter {
         headerCellStyle = workbook.createCellStyle();
         summaryCellStyle = workbook.createCellStyle();
         dataCellStyle = workbook.createCellStyle();
-        dataCellStyleAlternate = workbook.createCellStyle();
+        dataCellStyleAlt = workbook.createCellStyle();
         Short numberFormat = workbook.createDataFormat().getFormat("0.00");
 
         Font boldFont = workbook.createFont();
@@ -143,16 +175,15 @@ public class ExcelWriter {
         summaryCellStyle.setAlignment(HorizontalAlignment.RIGHT);
         summaryCellStyle.setBorderTop(BorderStyle.MEDIUM);
 
+        XSSFColor dataColor = new XSSFColor(java.awt.Color.decode("#F2FFC8"));
         dataCellStyle.setFont(dataFont);
         dataCellStyle.setDataFormat(numberFormat);
         dataCellStyle.setAlignment(HorizontalAlignment.RIGHT);
-        dataCellStyle.setFillForegroundColor(IndexedColors.LIGHT_TURQUOISE.getIndex());
         dataCellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        ((XSSFCellStyle)dataCellStyle).setFillForegroundColor(dataColor);
 
-        dataCellStyleAlternate.setFont(dataFont);
-        dataCellStyleAlternate.setDataFormat(numberFormat);
-        dataCellStyleAlternate.setAlignment(HorizontalAlignment.RIGHT);
-        dataCellStyleAlternate.setFillForegroundColor(IndexedColors.LIGHT_CORNFLOWER_BLUE.getIndex());
-        dataCellStyleAlternate.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        XSSFColor dataAltColor = new XSSFColor(java.awt.Color.decode("#C7F9DB"));
+        dataCellStyleAlt.cloneStyleFrom(dataCellStyle);
+        ((XSSFCellStyle)dataCellStyleAlt).setFillForegroundColor(dataAltColor);
     }
 }
