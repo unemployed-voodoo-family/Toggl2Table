@@ -56,7 +56,9 @@ public class WeeklyFormattedDataListFactory {
             //exclude saturdays and sundays
             if(weekday == DayOfWeek.SUNDAY || weekday == DayOfWeek.SATURDAY) {
                 supposedHours = 0;
-                note = wh.getNote();
+                if(wh != null) {
+                    note = wh.getNote();
+                }
             }
             else if(wh != null) {
                 supposedHours = wh.getHours();
