@@ -22,7 +22,7 @@ public class MonthlyFormattedDataListFactory {
 
     private List<DailyFormattedDataModel> monthlyList;
 
-    public List<DailyFormattedDataModel> buildMonthlyDataList(List<TimeEntry> timeEntries, Month month, int year) {
+    /*public List<DailyFormattedDataModel> buildMonthlyDataList(List<TimeEntry> timeEntries, Month month, int year) {
         monthlyList = new ArrayList<>();
 
         LocalDate monthStart = LocalDate.of(year, month, 1);
@@ -64,7 +64,7 @@ public class MonthlyFormattedDataListFactory {
         }
 
         return monthlyList;
-    }
+    }*/
 
     public List<DailyFormattedDataModel> buildMonthlyDataList(Map<YearWeek, List<DailyFormattedDataModel>> timeEntries,
                                                               Month month, int year) {

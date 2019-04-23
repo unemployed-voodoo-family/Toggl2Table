@@ -1,13 +1,16 @@
 package UnemployedVoodooFamily.Logic;
 
+import UnemployedVoodooFamily.Data.DailyFormattedDataModel;
 import UnemployedVoodooFamily.Data.MonthlyFormattedDataListFactory;
 import ch.simas.jtoggl.TimeEntry;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.time.Month;
+import java.time.YearMonth;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 //This class should gather all the data necessary and write them to the excel document
 public class ExcelExportHandler {
@@ -17,13 +20,13 @@ public class ExcelExportHandler {
     private int year;
 
 
-    public ExcelExportHandler(List<TimeEntry> timeEntries, int year) {
+    public ExcelExportHandler(Map<YearMonth, List<DailyFormattedDataModel>> timeEntries, int year) {
         excelWriter = new ExcelWriter();
         this.year = year;
         monthlyDataLists = new HashMap<>();
         for(Month month: Month.values()) {
             monthlyDataLists.put(StringUtils.capitalize(month.toString().toLowerCase()),
-                                 new MonthlyFormattedDataListFactory().buildMonthlyDataList(timeEntries, month, year));
+                                 timeEntries.get(YearMonth.of(year, month)));
         }
     }
 

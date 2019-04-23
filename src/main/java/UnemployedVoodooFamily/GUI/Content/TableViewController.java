@@ -453,7 +453,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
 
                 try {
                     //create document
-                    formattedTimeDataLogic.exportToExcelDocument(rawTimeDataLogic.getFilteredTimeEntries(),
+                    formattedTimeDataLogic.exportToExcelDocument(formattedTimeDataLogic.getMonthlyMasterData(),
                                                                  Integer.parseInt(yearSpinner.getEditor().getText()));
 
                     //show success in ui
