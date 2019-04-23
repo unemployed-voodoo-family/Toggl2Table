@@ -12,9 +12,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.Month;
-import java.util.HashMap;
-import java.util.List;
-
+import java.util.*;
 public class ExcelWriter {
 
     private Workbook workbook;
@@ -23,11 +21,14 @@ public class ExcelWriter {
     private CellStyle dataCellStyle;
     private CellStyle dataCellStyleAlt;
     private CellStyle summaryCellStyle;
-    private static String[] columnNames = {"Week number", "Week day", "Date", "Supposed work hours", "Hours worked", "+/- Hours", "Accumulated hours", "Notes"};
+    private static String[] dataColumnNames = {"Week number", "Week day", "Date", "Supposed work hours", "Hours worked", "+/- Hours", "Accumulated hours", "Notes"};
+    private static String[] summaryColumnNames = {"", "Worked hours", "Net hours", "Accumulated hours", "Notes"};
+    private Map<Month, Integer> summaryRowNumbers;
 
     public ExcelWriter() {
         this.workbook = new XSSFWorkbook();
         setupStandardRowFormatting();
+        summaryRowNumbers = new HashMap<>();
     }
 
     public boolean generateExcelSheet(HashMap<String, List> monthLists, int year) throws IOException {
@@ -38,15 +39,24 @@ public class ExcelWriter {
     }
 
     private void buildWorkbook(HashMap<String, List> monthLists, int year) throws IOException {
-        CreationHelper creationHelper = workbook.getCreationHelper();
+        //Create monthly sheets
         for(String key: monthLists.keySet()) {
             constructMonthlySheet(key, monthLists.get(key));
         }
-        int order = 0;
-        for(Month month: Month.values()) {
+
+        //Create summary sheet
+        String summarySheetName = year + " Summary";
+        constructYearlySummarySheet(summarySheetName, year);
+
+        workbook.setSheetOrder(summarySheetName, 0);
+
+        int order = 1;
+        for(Month month: Month.values()) { //Order the monthly sheets
             workbook.setSheetOrder(StringUtils.capitalize(month.toString().toLowerCase()), order);
             order++;
         }
+
+        //Set other default settings and write to file
         workbook.setActiveSheet(0);
         workbook.setSelectedTab(0);
         FileOutputStream fileOut = new FileOutputStream(FilePath.APP_HOME.getPath() +"\\Time Report " + year + ".xlsx");
@@ -55,19 +65,64 @@ public class ExcelWriter {
         workbook.close();
     }
 
-    private void constructYearlySummarySheet()  {
+    @SuppressWarnings("Duplicates")
+    private void constructYearlySummarySheet(String sheetName, int year)  {
+        Sheet sheet = this.workbook.createSheet(sheetName);
 
+        //Create the row with columns names
+        sheet.createFreezePane(0,1);
+        Row headerRow = sheet.createRow(0);
+
+        //Create the transferred row right below the column names
+        Row transferredRow = sheet.createRow(1);
+
+        for(int i = 0; i < summaryColumnNames.length; i++)  {
+            Cell headerRowCell = headerRow.createCell(i);
+            headerRowCell.setCellValue(summaryColumnNames[i]);
+            headerRowCell.setCellStyle(headerCellStyle);
+
+            Cell transferredRowCell = transferredRow.createCell(i);
+            transferredRowCell.setCellStyle(dataCellStyleAlt);
+        }
+        transferredRow.getCell(0).setCellValue("Transferred from " + (year-1));
+
+        int rowNumber = 2;
+        for(Month month : Month.values())  {
+            Row row = sheet.createRow(rowNumber);
+            String monthName = StringUtils.capitalize(month.toString().toLowerCase());
+            row.createCell(0).setCellValue(monthName);
+            row.createCell(1).setCellFormula(monthName + "!E" + summaryRowNumbers.get(month));
+            row.createCell(2).setCellFormula(monthName + "!G" + summaryRowNumbers.get(month));
+            row.createCell(3).setCellFormula("SUM(" + sheet.getRow(rowNumber-1).getCell(3).getAddress().formatAsString()
+                                                     + "+" + row.getCell(2).getAddress().formatAsString() + ")");
+            row.createCell(4); //Notes sheet. Just for consistent column styles
+
+            for(Cell cell : row) {
+                if(rowNumber % 2 == 0)   {
+                    cell.setCellStyle(dataCellStyle);
+                }
+                else {
+                    cell.setCellStyle(dataCellStyleAlt);
+                }
+            }
+            rowNumber++;
+        }
+
+        for(int i = 0; i < summaryColumnNames.length; i++) {
+            sheet.autoSizeColumn(i);
+        }
     }
 
+    @SuppressWarnings("Duplicates")
     private void constructMonthlySheet(String sheetName, List<DailyFormattedDataModel> data) {
         Sheet sheet = this.workbook.createSheet(sheetName);
 
         sheet.createFreezePane(0, 1);
         //Create Header row
         Row headerRow = sheet.createRow(0);
-        for(int i = 0; i < (columnNames.length); i++) { //For all the columns
+        for(int i = 0; i < dataColumnNames.length; i++) { //For all the columns
             Cell cell = headerRow.createCell(i);
-            cell.setCellValue(columnNames[i]);
+            cell.setCellValue(dataColumnNames[i]);
             cell.setCellStyle(headerCellStyle);
         }
 
@@ -128,6 +183,7 @@ public class ExcelWriter {
             rowNumber++;
         }
 
+        //Create summary row
         Row summaryRow = sheet.createRow(rowNumber);
         summaryRow.createCell(0).setCellValue(sheetName + " summary");
         summaryRow.createCell(1);
@@ -142,11 +198,14 @@ public class ExcelWriter {
         summaryRow.createCell(6).setCellFormula(sheet.getRow(rowNumber-1).getCell(6).getAddress().formatAsString());
         summaryRow.createCell(7);
 
+        summaryRowNumbers.put(Month.valueOf(sheetName.toUpperCase()), rowNumber+1);
+
+        //Format summary row
         for(Cell cell: summaryRow) {
             cell.setCellStyle(summaryCellStyle);
         }
 
-        for(int i = 0; i < columnNames.length; i++) {
+        for(int i = 0; i < dataColumnNames.length; i++) {
             sheet.autoSizeColumn(i);
         }
     }
