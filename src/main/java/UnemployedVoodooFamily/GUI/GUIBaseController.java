@@ -19,6 +19,10 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.effect.Blend;
+import javafx.scene.effect.BlendMode;
+import javafx.scene.effect.ColorAdjust;
+import javafx.scene.effect.ColorInput;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
@@ -123,6 +127,7 @@ public class GUIBaseController {
         rotateSettings();
         setKeyAndClickListeners();
         loadContent();
+        applyStyles();
         refreshData();
         dumpData();
         tableNavBtn.fire();
@@ -143,6 +148,13 @@ public class GUIBaseController {
         }
     }
 
+    private void applyStyles()  {
+        ColorAdjust whiteout = new ColorAdjust();
+        whiteout.setBrightness(1);
+        refreshIcon.setEffect(whiteout);
+        avatarView.setEffect(whiteout);
+    }
+
     /**
      * Sets input actions on UI elements
      */
@@ -150,6 +162,16 @@ public class GUIBaseController {
 
         refreshBtn.setOnAction(event -> {
             refreshData();
+        });
+        refreshBtn.setOnMouseEntered(event ->   {
+            ColorAdjust whiteout = new ColorAdjust();
+            whiteout.setBrightness(0.8);
+            refreshIcon.setEffect(whiteout);
+        });
+        refreshBtn.setOnMouseExited(event -> {
+            ColorAdjust whiteout = new ColorAdjust();
+            whiteout.setBrightness(1);
+            refreshIcon.setEffect(whiteout);
         });
         settingsNavBtn.setOnAction(event -> switchContentView(settings));
         tableNavBtn.setOnAction(event -> switchContentView(table));

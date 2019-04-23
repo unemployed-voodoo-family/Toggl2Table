@@ -58,32 +58,51 @@
     -fx-text-fill: #ffff;
 }
 
+/*######## NAVBAR ########*/
+
 #navbar > .toggle-button {
-    -fx-background-color: #e6e6ea;
-    -fx-border-color: #e6e6ea;
-}
-
-#navbar > .toggle-button:hover, #toolBar > .button:hover, #excelFeedbackLabel:hover {
-    -fx-background-color: #b4c5e4;
-    -fx-border-color: #b4c5e4;
-    -fx-border-radius: 2;
-}
-
-#navbar > .toggle-button:selected, #toolBar > .button:pressed {
-    -fx-background-color: #2091d2;
-    -fx-border-color: #2091d2;
+    -fx-background-color: #545553;
+    -fx-border-color: #545553;
     -fx-text-fill: #ffff;
+    -fx-border-radius: 0;
+}
+
+#navbar > .toggle-button:hover, #excelFeedbackLabel:hover {
+    -fx-background-color: #56ab9c;
+    -fx-border-color: #56ab9c;
+    -fx-text-fill: #ffff;
+    -fx-border-radius: 0;
+}
+
+#navbar > .toggle-button:selected {
+    -fx-background-color: #70c1b3;
+    -fx-border-color: #70c1b3;
+    -fx-text-fill: #ffff;
+    -fx-border-radius: 0;
 }
 
 #toolBar > .button {
-    -fx-background-color: #e6e6ea;
-    -fx-border-color: #e6e6ea;
+    -fx-background-color: #c7f9db00;
+    -fx-border-color: #c7f9db00;
+}
+
+#toolBar > .button:hover    {
+    -fx-background-color: #c7f9db00;
+    -fx-border-color: #c7f9db00;
+}
+
+#toolBar > .button:pressed  {
+    -fx-background-color: #c7f9db00;
+    -fx-border-color: #c7f9db00;
 }
 
 #navbar {
-    -fx-background-color: #e6e6ea;
+    -fx-background-color: #494a48;
 }
 
+#lastFetchedLabel    {
+    -fx-text-fill: #ffff;
+}
 
 /*######## TABS ########*/
 
