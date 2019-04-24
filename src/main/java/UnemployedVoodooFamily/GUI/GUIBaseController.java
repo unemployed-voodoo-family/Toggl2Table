@@ -6,6 +6,7 @@ import UnemployedVoodooFamily.GUI.Content.SettingsController;
 import UnemployedVoodooFamily.GUI.Content.TableViewController;
 import UnemployedVoodooFamily.Logger;
 import UnemployedVoodooFamily.Logic.Session;
+import UnemployedVoodooFamily.Main;
 import javafx.animation.RotateTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -104,14 +105,15 @@ public class GUIBaseController {
 
     @FXML
     public void start() throws IOException {
-        Stage newStage = new Stage();
+        Stage appStage = new Stage();
         URL r = getClass().getClassLoader().getResource("LayoutBase.fxml");
         Parent root = FXMLLoader.load(r);
         Scene scene = new Scene(root);
         scene.getStylesheets().add("styles.css");
-        newStage.setTitle("Toggl Time Sheet - Main");
-        newStage.setScene(scene);
-        newStage.show();
+        appStage.setTitle("Toggl Time Sheet");
+        appStage.setScene(scene);
+        Main.closeLogin();
+        Main.changePrimaryStage(appStage);
     }
 
     public void initialize() {
