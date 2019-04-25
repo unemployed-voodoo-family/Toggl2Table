@@ -1,6 +1,5 @@
 package UnemployedVoodooFamily.GUI;
 
-import UnemployedVoodooFamily.Data.Enums.FilePath;
 import UnemployedVoodooFamily.Logic.LoginLogic;
 import UnemployedVoodooFamily.Logic.FileLogic;
 import UnemployedVoodooFamily.Main;
@@ -34,6 +33,7 @@ public class LoginController {
     private LoginLogic loginLogic = new LoginLogic();
     private boolean isLoggedIn;
     private boolean loginInProgress;
+
     private FileLogic fileLogic = new FileLogic();
 
     public LoginController() {}
@@ -116,4 +116,3 @@ public class LoginController {
         }
     }
 }
-
