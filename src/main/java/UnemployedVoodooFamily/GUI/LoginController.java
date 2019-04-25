@@ -1,7 +1,8 @@
 package UnemployedVoodooFamily.GUI;
 
 import UnemployedVoodooFamily.Logic.LoginLogic;
-import UnemployedVoodooFamily.Logic.PropertiesLogic;
+import UnemployedVoodooFamily.Logic.FileLogic;
+import UnemployedVoodooFamily.Main;
 import UnemployedVoodooFamily.Utils.PasswordUtils;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -9,7 +10,6 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 
 import java.io.File;
-import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
 
@@ -34,6 +34,10 @@ public class LoginController {
     private boolean isLoggedIn;
     private boolean loginInProgress;
 
+    private FileLogic fileLogic = new FileLogic();
+
+    public LoginController() {}
+
     public void initialize() {
         bufferImg.setVisible(false);
         setKeyAndClickListeners();
@@ -52,11 +56,13 @@ public class LoginController {
         RememberEmailCheck.setDisable(true);
         RememberPasswordCheck.setDisable(true);
         Thread loginCredThread = new Thread(() -> {
+
             bufferImg.setVisible(true);
             isLoggedIn = loginLogic
                     .attemptAuthentication(emailField.getText(), passwordField.getText(), rememberUsername,
                                            rememberPassword);
             bufferImg.setVisible(false);
+
             Platform.runLater(() -> {
                 loginInProgress = false;
                 submitBtn.setDisable(false);
@@ -66,6 +72,8 @@ public class LoginController {
                     showWrongCredentialsError("Wrong email or password");
                     emailField.getStyleClass().add("error");
                     passwordField.getStyleClass().add("error");
+                }
+                else {
                 }
             });
         });
@@ -89,7 +97,7 @@ public class LoginController {
     private void fillRememberedCredentials() {
 
         String filepath = FilePath.APP_HOME.getPath() + File.separator + "credentials.properties";
-        Properties prop = propertiesLogic.loadProps(filepath);
+        Properties prop = fileLogic.loadProps(filepath);
         String securePassword = prop.getProperty("password");
         String decodedPassword = PasswordUtils.decodeSecurePassword(securePassword);
         String email = prop.getProperty("username");

@@ -1,11 +1,15 @@
 package UnemployedVoodooFamily.GUI;
 
 import UnemployedVoodooFamily.Data.Enums.FilePath;
+import UnemployedVoodooFamily.GUI.Content.ProfileController;
 import UnemployedVoodooFamily.GUI.Content.SettingsController;
 import UnemployedVoodooFamily.GUI.Content.TableViewController;
 import UnemployedVoodooFamily.Logger;
 import UnemployedVoodooFamily.Logic.Session;
+import UnemployedVoodooFamily.Main;
+import javafx.animation.RotateTransition;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,6 +20,10 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.effect.Blend;
+import javafx.scene.effect.BlendMode;
+import javafx.scene.effect.ColorAdjust;
+import javafx.scene.effect.ColorInput;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
@@ -24,6 +32,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+import org.apache.commons.lang3.ObjectUtils;
 
 import java.awt.*;
 import java.io.File;
@@ -31,6 +41,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import static java.lang.Thread.sleep;
 
 public class GUIBaseController {
 
@@ -62,6 +75,11 @@ public class GUIBaseController {
     private Button refreshBtn;
 
     @FXML
+    private ImageView refreshIcon;
+
+    private RotateTransition rotateTransition;
+
+    @FXML
     private AnchorPane contentRoot;
 
     @FXML
@@ -81,21 +99,25 @@ public class GUIBaseController {
 
     private Node settings;
     private Node table;
+    private Node profile;
     private Thread t1;
+
+    private AtomicBoolean active;
 
     private ToggleGroup navButtons = new ToggleGroup();
 
 
     @FXML
     public void start() throws IOException {
-        Stage newStage = new Stage();
+        Stage appStage = new Stage();
         URL r = getClass().getClassLoader().getResource("LayoutBase.fxml");
         Parent root = FXMLLoader.load(r);
         Scene scene = new Scene(root);
         scene.getStylesheets().add("styles.css");
-        newStage.setTitle("Toggl Time Sheet - Main");
-        newStage.setScene(scene);
-        newStage.show();
+        appStage.setTitle("Toggl Time Sheet");
+        appStage.setScene(scene);
+        Main.closeLogin();
+        Main.changePrimaryStage(appStage);
     }
 
     public void initialize() {
@@ -103,8 +125,11 @@ public class GUIBaseController {
         tableNavBtn.setToggleGroup(navButtons);
         profileNavBtn.setToggleGroup(navButtons);
         profileNavBtn.setGraphic(avatarView);
+        active = new AtomicBoolean(false);
+        rotateSettings();
         setKeyAndClickListeners();
         loadContent();
+        applyStyles();
         refreshData();
         dumpData();
         tableNavBtn.fire();
@@ -117,6 +142,7 @@ public class GUIBaseController {
         try {
             settings = new SettingsController().loadFXML();
             table = new TableViewController().loadFXML();
+            profile = new ProfileController().loadFXML();
             profileNavBtn.setText(Session.getInstance().getUser().getFullname());
         }
         catch(IOException e) {
@@ -124,14 +150,34 @@ public class GUIBaseController {
         }
     }
 
+    private void applyStyles()  {
+        ColorAdjust whiteout = new ColorAdjust();
+        whiteout.setBrightness(1);
+        refreshIcon.setEffect(whiteout);
+        avatarView.setEffect(whiteout);
+    }
+
     /**
      * Sets input actions on UI elements
      */
     private void setKeyAndClickListeners() {
 
-        refreshBtn.setOnAction(event -> refreshData());
+        refreshBtn.setOnAction(event -> {
+            refreshData();
+        });
+        refreshBtn.setOnMouseEntered(event ->   {
+            ColorAdjust whiteout = new ColorAdjust();
+            whiteout.setBrightness(0.8);
+            refreshIcon.setEffect(whiteout);
+        });
+        refreshBtn.setOnMouseExited(event -> {
+            ColorAdjust whiteout = new ColorAdjust();
+            whiteout.setBrightness(1);
+            refreshIcon.setEffect(whiteout);
+        });
         settingsNavBtn.setOnAction(event -> switchContentView(settings));
         tableNavBtn.setOnAction(event -> switchContentView(table));
+        profileNavBtn.setOnAction(event -> switchContentView(profile));
         dumpDataMenuItem.setOnAction(event -> dumpData());
         viewDataMenuItem.setOnAction(event -> {
             try {
@@ -149,6 +195,7 @@ public class GUIBaseController {
 
     public void refreshData() {
         progressBox.setVisible(true);
+        spinRefreshBtn(true);
         DateTimeFormatter d = DateTimeFormatter.ofPattern("HH:mm dd.MM.yyyy");
 
         t1 = new Thread(() -> {
@@ -156,7 +203,6 @@ public class GUIBaseController {
             String prefix = "Fetching ";
             StringBuilder sb = new StringBuilder();
             sb.append("(1/6) ");
-
             Session session = Session.getInstance();
             Platform.runLater(() -> progressMessage.setText(sb + prefix + "work hours"));
             session.refreshWorkHours();
@@ -172,6 +218,7 @@ public class GUIBaseController {
             session.refreshClient();
             Platform.runLater(() -> {
                 progressBox.setVisible(false);
+                spinRefreshBtn(false);
                 lastFetchedLabel.setText(LocalDateTime.now().format(d));
             });
         });
@@ -210,5 +257,30 @@ public class GUIBaseController {
             children.clear();
             children.addAll(content);
         }
+    }
+
+    private void spinRefreshBtn(boolean spinning) {
+        active.set(spinning);
+        Thread t3 = new Thread(() -> {
+
+            while(active.get()) {
+                try {
+                    rotateTransition.play();
+                }
+                catch(NullPointerException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        if(active.get()) {
+            t3.start();
+        }
+    }
+
+    private void rotateSettings() {
+        rotateTransition = new RotateTransition(Duration.seconds(1.50), refreshIcon);
+        rotateTransition.setFromAngle(0);
+        rotateTransition.setToAngle(360);
+        rotateTransition.setCycleCount(1);
     }
 }

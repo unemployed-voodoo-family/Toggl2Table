@@ -1,7 +1,7 @@
 package testGUI;
 
 import UnemployedVoodooFamily.Data.Enums.FilePath;
-import UnemployedVoodooFamily.Logic.PropertiesLogic;
+import UnemployedVoodooFamily.Logic.FileLogic;
 import UnemployedVoodooFamily.Utils.PasswordUtils;
 import com.sun.javafx.stage.StageHelper;
 import javafx.fxml.FXMLLoader;
@@ -18,6 +18,8 @@ import org.testfx.framework.junit.ApplicationTest;
 
 import java.util.Objects;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.junit.Assert.*;
 
@@ -48,16 +50,24 @@ public class LoginLogicGUITest extends ApplicationTest {
     @Test
     public void testSuccessfulLogin() {
         boolean loginSuccessful;
-        String apiToken = "a5f128064022cf3f6da6d4dab8bd7bd3";
+        String apiToken = System.getenv("TOGGLAPITOKEN");
         String password = "api_token";
-        clickOn("#emailField");
+        doubleClickOn("#emailField");
+        write("");
         write(apiToken);
-        clickOn("#passwordField");
+        doubleClickOn("#passwordField");
+        write("");
         write(password);
         clickOn("#submitBtn");
         sleep(10000);
         String stages = StageHelper.getStages().toString();
-        if(stages.contains("javafx.stage.Stage@32d992b2")) {
+        int i = 0;
+        Pattern pattern = Pattern.compile("javafx");
+        Matcher matcher = pattern.matcher(stages);
+        while(matcher.find()) {
+            i++;
+        }
+        if(i > 1) {
             loginSuccessful = true;
         }
         else {
@@ -70,8 +80,8 @@ public class LoginLogicGUITest extends ApplicationTest {
     @Test
     public void testRememberCredentials() {
         boolean rememberedCredentials;
-        PropertiesLogic propertiesLogic = new PropertiesLogic();
-        String apiToken = "a5f128064022cf3f6da6d4dab8bd7bd3";
+        FileLogic fileLogic = new FileLogic();
+        String apiToken = System.getenv("TOGGLAPITOKEN");
         String password = "api_token";
         doubleClickOn("#emailField");
         write("");
@@ -82,7 +92,7 @@ public class LoginLogicGUITest extends ApplicationTest {
         clickOn("#submitBtn");
         sleep(10000);
         String filepath = FilePath.APP_HOME.getPath() + "/credentials.properties";
-        Properties prop = propertiesLogic.loadProps(filepath);
+        Properties prop = fileLogic.loadProps(filepath);
         String savedUsername = prop.getProperty("username");
         String savedPassword = PasswordUtils.decodeSecurePassword(prop.getProperty("password"));
         if(savedUsername.equals(apiToken) && savedPassword.equals(password)) {

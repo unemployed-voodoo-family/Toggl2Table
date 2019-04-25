@@ -7,7 +7,6 @@ import java.io.IOException;
 
 public class populateHoursTableTest {
 
-    SettingsLogic logic = new SettingsLogic();
 
     public populateHoursTableTest() {
         testTable();

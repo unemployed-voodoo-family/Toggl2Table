@@ -3,7 +3,6 @@ package UnemployedVoodooFamily.Logic;
 import UnemployedVoodooFamily.GUI.GUIBaseController;
 import ch.simas.jtoggl.JToggl;
 import javafx.application.Platform;
-import javafx.concurrent.Task;
 
 import java.io.*;
 import java.util.Properties;
@@ -12,8 +11,7 @@ import java.util.Properties;
 
 public class LoginLogic {
 
-    private JToggl jToggl;
-
+    private FileLogic fileLogic = new FileLogic();
 
     public boolean attemptAuthentication(String username, String password, boolean rememberUsername, boolean rememberPassword) {
         Session session = Session.getInstance();
@@ -51,7 +49,7 @@ public class LoginLogic {
         boolean storeSuccessful = false;
         OutputStream output;
         String filepath = FilePath.APP_HOME.getPath() + "/credentials.properties";
-        Properties prop = propertiesLogic.loadProps(filepath);
+        Properties prop = fileLogic.loadProps(filepath);
         prop.setProperty("username", username);
         prop.setProperty("password", securePassword);
         try {

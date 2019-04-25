@@ -14,7 +14,7 @@ public class DateRangeTest {
 
     LocalDate date1 = LocalDate.of(2019, 1, 1);
     LocalDate date2 = LocalDate.of(2019, 1, 31);
-    DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_TIME;
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
     DateRange range = new DateRange(date1, date2, formatter);
 
@@ -79,10 +79,8 @@ public class DateRangeTest {
     @Test
     public void contains() {
         for(LocalDate d = date1; d.isBefore(date2.plusDays(1)) ; d = d.plusDays(1)) {
-            System.out.println(d.toString());
             assertTrue(range.contains(d));
         }
-
         assertFalse(range.contains(date2.plusDays(1)));
         assertFalse(range.contains(date1.minusDays(1)));
     }

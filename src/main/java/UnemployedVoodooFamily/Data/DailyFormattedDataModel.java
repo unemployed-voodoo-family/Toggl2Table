@@ -1,7 +1,9 @@
 package UnemployedVoodooFamily.Data;
 
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
+import org.threeten.extra.YearWeek;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -10,62 +12,105 @@ import java.util.Locale;
 
 public class DailyFormattedDataModel {
 
-    private LocalDate day;
-    private SimpleStringProperty weekDay;
+    private LocalDate date;
+    private SimpleStringProperty weekday;
     private SimpleDoubleProperty workedHours;
     private SimpleDoubleProperty supposedHours;
-    private SimpleDoubleProperty overtime;
+    private SimpleDoubleProperty extraTime;
+    private SimpleDoubleProperty accumulatedHours;
+    private SimpleStringProperty note = new SimpleStringProperty("");
+    private SimpleObjectProperty<YearWeek> weekNumber;
+
+    private boolean isFiller = false;
 
     /**
      * Creates a WeeklyTimeDataModel object
      * Used to structure data for the corresponding TableView
      * @param workedHours   String with hours worked
      * @param supposedHours String with supposed work hours
-     * @param overtime      String with overtime
      */
-    public DailyFormattedDataModel(Double workedHours, Double supposedHours, LocalDate day) {
+    public DailyFormattedDataModel(Double workedHours, Double supposedHours, LocalDate date, Double accumulated,
+                                   String note) {
 
-        String weekDayStr = day.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.getDefault());
-        this.weekDay = new SimpleStringProperty(weekDayStr);
+        String weekDayStr = date.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.getDefault());
+        this.weekday = new SimpleStringProperty(weekDayStr);
         this.workedHours = new SimpleDoubleProperty(workedHours);
         this.supposedHours = new SimpleDoubleProperty(supposedHours);
-        this.overtime = new SimpleDoubleProperty(workedHours - supposedHours);
-        this.day = day;
+        this.extraTime = new SimpleDoubleProperty(workedHours - supposedHours);
+        this.accumulatedHours = new SimpleDoubleProperty(accumulated);
+        if(null != note) {
+            this.note = new SimpleStringProperty(note);
+        }
+
+        this.date = date;
+        this.weekNumber = new SimpleObjectProperty<>(YearWeek.from(date));
     }
 
     /**
      * Returns the weekday
      * @return the weekday
      */
-    public String getWeekDay() {
-        return weekDay.get();
+    public String getWeekday() {
+        return this.weekday.get();
     }
 
     /**
-     * Returns the amount worked as a string
-     * @return the amount worked as a string
+     * Returns the amount worked
+     * @return the amount worked
      */
     public Double getWorkedHours() {
-        return workedHours.get();
+        return this.workedHours.get();
     }
 
     /**
-     * Returns the supposed amount worked as a string
-     * @return the supposed amount worked as a string
+     * Returns the supposed amount worked
+     * @return the supposed amount worked
      */
     public Double getSupposedHours() {
-        return supposedHours.get();
+        return this.supposedHours.get();
     }
 
     /**
-     * Returns the amount of overtime worked as a string
-     * @return the amount of overtime worked as a string
+     * Returns the amount of extraTime
+     * @return the amount of extraTime
      */
-    public Double getOvertime() {
-        return overtime.get();
+    public Double getExtraTime() {
+        return this.extraTime.get();
     }
 
-    public LocalDate getDay() {
-        return day;
+    /**
+     * Returns the date
+     * @return the date
+     */
+    public LocalDate getDate() {
+        return this.date;
+    }
+
+    /**
+     * Returns the written note as a string
+     * @return the written note as a string
+     */
+    public String getNote() {
+        return this.note.get();
+    }
+
+    public double getAccumulatedHours() {
+        return accumulatedHours.get();
+    }
+
+    /**
+     * Returns the week number
+     * @return the week number
+     */
+    public YearWeek getWeekNumber() {
+        return weekNumber.get();
+    }
+
+    public boolean isFiller() {
+        return isFiller;
+    }
+
+    public void setFiller(boolean filler) {
+        isFiller = filler;
     }
 }
