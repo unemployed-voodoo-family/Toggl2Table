@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<GridPane prefHeight="81.0" prefWidth="464.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UnemployedVoodooFamily.GUI.Content.MonthlySummaryViewController">
+<GridPane prefHeight="81.0" prefWidth="464.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UnemployedVoodooFamily.GUI.Content.MonthlySummaryViewController">
    <children>
       <HBox alignment="CENTER_LEFT" prefHeight="60.0" prefWidth="236.0">
          <children>
@@ -21,7 +24,7 @@
          <children>
             <HBox alignment="CENTER_RIGHT" prefHeight="60.0" prefWidth="165.0">
                <children>
-                  <Label fx:id="weekNumLabel1" text="hours worked ">
+                  <Label text="hours worked ">
                      <font>
                         <Font size="24.0" />
                      </font>
@@ -35,7 +38,7 @@
             </HBox>
             <HBox alignment="CENTER_RIGHT" prefHeight="60.0" prefWidth="165.0">
                <children>
-                  <Label fx:id="weekNumLabel11" text="extraTime hours ">
+                  <Label text="extraTime hours ">
                      <font>
                         <Font size="24.0" />
                      </font>

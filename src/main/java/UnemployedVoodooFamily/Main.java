@@ -5,8 +5,10 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
+import javax.imageio.ImageIO;
 import java.io.File;
 import java.net.URL;
 
@@ -57,8 +59,7 @@ public class Main extends Application {
         //scene.getStylesheets().add("styles/style.css");
         primaryStage.setTitle("Toggl Time Sheet - Login");
         primaryStage.setScene(scene);
-        //Image anotherIcon = new Image();
-        //primaryStage.getIcons().add(anotherIcon);
+        primaryStage.getIcons().add(new Image("/app_logo_48.png"));
         primaryStage.show();
         primaryStage.toFront();
     }
