@@ -47,16 +47,22 @@
                             <RowConstraints vgrow="ALWAYS" />
                           </rowConstraints>
                            <children>
-                              <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+                              <HBox alignment="BOTTOM_LEFT" prefHeight="100.0" prefWidth="200.0">
                                  <children>
                                     <Text stroke="#00aeff" strokeLineCap="BUTT" strokeType="INSIDE" strokeWidth="0.0" text="Raw Data">
                                        <font>
-                                          <Font size="24.0" />
+                                          <Font size="26.0" />
                                        </font>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
                                     </Text>
                                  </children>
+                                 <GridPane.margin>
+                                    <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                                 </GridPane.margin>
                               </HBox>
-                              <HBox alignment="CENTER_RIGHT" prefHeight="60.0" prefWidth="347.0" GridPane.columnIndex="1">
+                              <HBox alignment="BOTTOM_LEFT" prefHeight="60.0" prefWidth="347.0" GridPane.columnIndex="1">
                                  <children>
                                     <Label text="From ">
                                        <font>
@@ -86,6 +92,9 @@
                                        </HBox.margin>
                                     </DatePicker>
                                  </children>
+                                 <GridPane.margin>
+                                    <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                                 </GridPane.margin>
                               </HBox>
                            </children>
                            <padding>
@@ -111,9 +120,9 @@
                         <ColumnConstraints />
                     </columnConstraints>
                     <rowConstraints>
-                        <RowConstraints maxHeight="105.0" minHeight="105.0" prefHeight="105.0" vgrow="ALWAYS" />
-                        <RowConstraints maxHeight="105.0" minHeight="45.0" prefHeight="50.0" vgrow="ALWAYS" />
-                      <RowConstraints maxHeight="548.0" minHeight="350.0" prefHeight="543.0" vgrow="ALWAYS" />
+                        <RowConstraints maxHeight="100.0" minHeight="100.0" prefHeight="100.0" vgrow="ALWAYS" />
+                        <RowConstraints maxHeight="81.0" minHeight="24.0" vgrow="ALWAYS" />
+                      <RowConstraints maxHeight="593.0" minHeight="350.0" prefHeight="546.0" vgrow="ALWAYS" />
                     </rowConstraints>
                      <children>
                         <GridPane fx:id="tableRoot" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.vgrow="ALWAYS">
@@ -132,59 +141,120 @@
                               </TableView>
                            </children>
                         </GridPane>
-                        <GridPane>
+                        <GridPane prefHeight="96.0" prefWidth="644.0">
                           <columnConstraints>
                               <ColumnConstraints hgrow="SOMETIMES" minWidth="200.0" />
                               <ColumnConstraints />
                           </columnConstraints>
                           <rowConstraints>
-                            <RowConstraints maxHeight="105.0" minHeight="105.0" prefHeight="105.0" vgrow="SOMETIMES" />
+                            <RowConstraints maxHeight="-Infinity" minHeight="91.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
-                              <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" GridPane.columnSpan="2" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
-                                 <columnConstraints>
-                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="369.0" minWidth="10.0" prefWidth="250.0" />
-                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="394.0" minWidth="10.0" prefWidth="394.0" />
-                                 </columnConstraints>
-                                 <rowConstraints>
-                                    <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                                 </rowConstraints>
+                              <VBox alignment="BOTTOM_LEFT" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" GridPane.columnSpan="2" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                                  <children>
-                                    <HBox alignment="CENTER_LEFT">
+                                    <GridPane prefHeight="88.0" prefWidth="644.0">
+                                       <columnConstraints>
+                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="369.0" minWidth="10.0" prefWidth="287.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" prefWidth="357.0" />
+                                       </columnConstraints>
+                                       <rowConstraints>
+                                          <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                                       </rowConstraints>
                                        <children>
-                                          <MenuButton fx:id="summarySelectionBtn" mnemonicParsing="false" prefHeight="70.0" prefWidth="166.0" text="Weekly Summary">
-                                            <items>
-                                                <MenuItem fx:id="weeklyToggleBtn" mnemonicParsing="false" text="Weekly Summary" />
-                                                <MenuItem fx:id="monthlyToggleBtn" mnemonicParsing="false" text="Monthly Summary" />
-                                            </items>
-                                             <HBox.margin>
-                                                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-                                             </HBox.margin>
-                                          </MenuButton>
-                                       </children>
-                                    </HBox>
-                                    <HBox alignment="CENTER_RIGHT" nodeOrientation="LEFT_TO_RIGHT" prefHeight="105.0" GridPane.columnIndex="1">
-                                       <children>
-                                          <GridPane prefHeight="90.0" prefWidth="264.0">
-                                            <columnConstraints>
-                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="175.0" minWidth="10.0" prefWidth="174.0" />
-                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="137.0" minWidth="10.0" prefWidth="112.0" />
-                                            </columnConstraints>
-                                            <rowConstraints>
-                                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                            </rowConstraints>
+                                          <HBox alignment="BOTTOM_LEFT" prefHeight="105.0" prefWidth="279.0">
                                              <children>
-                                                <Label text="Hours Worked" />
-                                                <Label text="ExtraTime Worked" GridPane.rowIndex="1" />
-                                                <Label fx:id="hoursWorkedLabel" text="0.0" GridPane.columnIndex="1" />
-                                                <Label fx:id="extraTimeWorkedLabel" text="0.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                <MenuButton fx:id="summarySelectionBtn" mnemonicParsing="false" prefHeight="49.0" prefWidth="247.0" text="Weekly Summary">
+                                                  <items>
+                                                      <MenuItem fx:id="weeklyToggleBtn" mnemonicParsing="false" text="Weekly Summary" />
+                                                      <MenuItem fx:id="monthlyToggleBtn" mnemonicParsing="false" text="Monthly Summary" />
+                                                  </items>
+                                                   <HBox.margin>
+                                                      <Insets />
+                                                   </HBox.margin>
+                                                </MenuButton>
                                              </children>
-                                          </GridPane>
+                                             <GridPane.margin>
+                                                <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                                             </GridPane.margin>
+                                          </HBox>
+                                          <HBox alignment="CENTER_RIGHT" nodeOrientation="LEFT_TO_RIGHT" prefHeight="105.0" GridPane.columnIndex="1">
+                                             <children>
+                                                <GridPane prefHeight="105.0" prefWidth="366.0">
+                                                  <columnConstraints>
+                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="246.0" minWidth="10.0" prefWidth="246.0" />
+                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="144.0" minWidth="10.0" prefWidth="111.0" />
+                                                  </columnConstraints>
+                                                  <rowConstraints>
+                                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                  </rowConstraints>
+                                                   <children>
+                                                      <HBox alignment="BOTTOM_RIGHT" GridPane.columnIndex="1">
+                                                         <children>
+                                                            <Label fx:id="hoursWorkedLabel" text="0.0">
+                                                               <font>
+                                                                  <Font name="System Bold" size="24.0" />
+                                                               </font>
+                                                               <padding>
+                                                                  <Insets right="20.0" />
+                                                               </padding>
+                                                            </Label>
+                                                         </children>
+                                                      </HBox>
+                                                      <VBox alignment="BOTTOM_RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                         <children>
+                                                            <HBox alignment="BOTTOM_RIGHT">
+                                                               <children>
+                                                                  <Label fx:id="extraTimeWorkedLabel" text="0.0">
+                                                                     <font>
+                                                                        <Font name="System Bold" size="24.0" />
+                                                                     </font>
+                                                                     <padding>
+                                                                        <Insets right="20.0" />
+                                                                     </padding>
+                                                                  </Label>
+                                                               </children>
+                                                            </HBox>
+                                                         </children>
+                                                      </VBox>
+                                                      <VBox>
+                                                         <children>
+                                                            <HBox alignment="BOTTOM_LEFT" prefHeight="100.0" prefWidth="200.0">
+                                                               <children>
+                                                                  <Label text="Hours Worked">
+                                                                     <font>
+                                                                        <Font size="24.0" />
+                                                                     </font>
+                                                                  </Label>
+                                                               </children>
+                                                            </HBox>
+                                                         </children>
+                                                      </VBox>
+                                                      <VBox GridPane.rowIndex="1">
+                                                         <children>
+                                                            <HBox alignment="BOTTOM_LEFT" prefHeight="100.0" prefWidth="200.0">
+                                                               <children>
+                                                                  <Label alignment="BOTTOM_LEFT" text="ExtraTime Worked">
+                                                                     <font>
+                                                                        <Font size="24.0" />
+                                                                     </font>
+                                                                  </Label>
+                                                               </children>
+                                                            </HBox>
+                                                         </children>
+                                                      </VBox>
+                                                   </children>
+                                                </GridPane>
+                                             </children>
+                                             <GridPane.margin>
+                                                <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                                             </GridPane.margin>
+                                          </HBox>
                                        </children>
-                                    </HBox>
+                                    </GridPane>
+                                    <Separator prefWidth="200.0" />
                                  </children>
-                              </GridPane>
+                              </VBox>
                            </children>
                         </GridPane>
                         <HBox prefHeight="71.0" prefWidth="644.0" GridPane.rowIndex="1">
@@ -263,7 +333,7 @@
                               </HBox>
                            </children>
                            <GridPane.margin>
-                              <Insets left="20.0" right="20.0" />
+                              <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                            </GridPane.margin>
                         </HBox>
                      </children>
@@ -274,11 +344,6 @@
       </TabPane>
       <VBox maxWidth="220.0" minWidth="220.0" prefWidth="220.0">
          <children>
-            <Label text="Filter by" textFill="#000000b3">
-               <VBox.margin>
-                  <Insets bottom="5.0" top="40.0" />
-               </VBox.margin>
-            </Label>
             <MenuButton fx:id="clientFilterBtn" layoutX="15.0" layoutY="122.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Clients">
                <VBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -288,6 +353,9 @@
                <VBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </VBox.margin>
+               <graphic>
+                  <Label text="Filter by" textFill="#000000b3" />
+               </graphic>
             </MenuButton>
             <MenuButton fx:id="workspaceFilterBtn" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Workspace">
                <VBox.margin>

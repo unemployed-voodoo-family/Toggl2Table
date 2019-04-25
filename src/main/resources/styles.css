@@ -1,6 +1,6 @@
-.root {
+/*.root {
     -fx-font-family: Roboto, Arial;
-}
+}*/
 
 .table-view {
     -fx-border-color: #ffffff;
@@ -27,6 +27,7 @@
     -fx-font-size: 14px;
     -fx-text-fill:#646464 ;
 }
+
 
 .root   {
     -fx-background-color: #ffffff;
@@ -178,7 +179,7 @@
     -fx-text-fill: #444444;
 }
 
-. button .image-view.spin {
+.button .image-view.spin {
     -fx-animation: spin 2s linear infinite;
 
 }
@@ -203,3 +204,30 @@
 .button.delete   {
     -fx-background-color: RED;
 }
+
+#summarySelectionBtn {
+    -fx-background-color:transparent;
+    -fx-border-width: 0 0 3 0;
+    -fx-border-color: #70C1B3;
+}
+#summarySelectionBtn .label {
+    -fx-font-size: 26;
+    -fx-padding: 0;
+}
+
+#summarySelectionBtn .arrow {
+    -fx-border-color: #70C1B3;
+    -fx-background-color: #70C1B3;
+    -fx-font-size: 24;
+
+}
+
+/*
+COLORS
+56AB9C dark green
+70C1B3 lighter green
+C7F9DB lightest green
+F2FFC8 very pale yellow
+494A48 outer space
+ */
+
