@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.DatePicker?>
@@ -22,7 +17,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="631.0" prefWidth="925.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UnemployedVoodooFamily.GUI.Content.SettingsController">
+<ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="631.0" prefWidth="925.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UnemployedVoodooFamily.GUI.Content.SettingsController">
    <content>
       <GridPane maxHeight="-Infinity" prefHeight="605.0" prefWidth="917.0">
          <columnConstraints>
@@ -104,7 +99,7 @@
                     </columnConstraints>
                     <rowConstraints>
                       <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints maxHeight="89.0" minHeight="71.0" prefHeight="71.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="145.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
                         <Label prefHeight="31.0" prefWidth="118.0" text="Stored data">
@@ -114,17 +109,16 @@
                         </Label>
                         <GridPane prefHeight="246.0" prefWidth="437.0" vgap="7.0" GridPane.rowIndex="1">
                           <columnConstraints>
-                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="180.0" minWidth="10.0" prefWidth="145.0" />
-                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="225.0" minWidth="10.0" prefWidth="225.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="251.0" minWidth="10.0" prefWidth="248.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="225.0" minWidth="10.0" prefWidth="122.0" />
                           </columnConstraints>
                           <rowConstraints>
-                            <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                            <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="35.0" vgrow="SOMETIMES" />
+                            <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="35.0" vgrow="SOMETIMES" />
+                              <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+                              <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="35.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
-                              <Label text="UnemployedVoodooFamily.Data path" GridPane.rowIndex="1" />
                               <Label text="View stored data" />
                               <HBox alignment="TOP_RIGHT" prefHeight="31.0" prefWidth="202.0" GridPane.columnIndex="1">
                                  <children>
@@ -133,16 +127,13 @@
                               </HBox>
                               <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                  <children>
-                                    <TextField fx:id="dataPathField" prefHeight="31.0" />
-                                    <Button fx:id="dataPathBtn" mnemonicParsing="false" prefHeight="31.0" prefWidth="105.0" text="Change" />
-                                 </children>
-                              </HBox>
-                              <Label text="Delete stored data" GridPane.rowIndex="2" />
-                              <HBox alignment="TOP_RIGHT" prefHeight="31.0" prefWidth="202.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                                 <children>
-                                    <Button fx:id="deleteDataBtn" mnemonicParsing="false" prefHeight="31.0" prefWidth="72.0" text="Delete" />
-                                 </children>
-                              </HBox>
+                                    <Button fx:id="dataPathBtn" mnemonicParsing="false" prefHeight="30.0" prefWidth="105.0" text="Change" />
+                                 </children></HBox>
+                              <Label text="Delete stored data" GridPane.rowIndex="3" GridPane.valignment="BOTTOM" />
+                              <HBox alignment="TOP_RIGHT" prefHeight="31.0" prefWidth="202.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <Button fx:id="deleteDataBtn" mnemonicParsing="false" prefHeight="31.0" prefWidth="72.0" text="Delete" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3" GridPane.valignment="BOTTOM" />
+                              <TextField fx:id="dataPathField" prefHeight="30.0" prefWidth="217.0" GridPane.rowIndex="1" GridPane.valignment="TOP" />
+                              <Label prefHeight="17.0" prefWidth="242.0" text="UnemployedVoodooFamily.Data path" GridPane.rowIndex="2" GridPane.valignment="TOP" />
                            </children>
                         </GridPane>
                      </children>
@@ -162,7 +153,7 @@
                   <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                </padding>
                <children>
-                  <TableView fx:id="hoursView" maxWidth="479.0" prefHeight="183.0" prefWidth="101.0" />
+                  <TableView fx:id="hoursView" maxWidth="-Infinity" prefHeight="294.0" prefWidth="350.0" />
                </children>
             </VBox>
          </children>

@@ -1,34 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.text.*?>
-<?import javafx.scene.image.*?>
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<VBox prefHeight="520.0" prefWidth="829.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UnemployedVoodooFamily.GUI.LoginController">
+<VBox prefHeight="500.0" prefWidth="829.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UnemployedVoodooFamily.GUI.LoginController">
    <children>
-      <MenuBar>
-        <menus>
-          <Menu mnemonicParsing="false" text="File">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Close" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Edit">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Delete" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Help">
-            <items>
-              <MenuItem mnemonicParsing="false" text="About" />
-            </items>
-          </Menu>
-        </menus>
-      </MenuBar>
       <GridPane fx:id="gridPane" prefHeight="462.0" prefWidth="829.0">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -60,23 +50,23 @@
                         <Insets bottom="25.0" />
                      </padding>
                   </HBox>
+                  <Label fx:id="wrongCredentials" alignment="CENTER" prefHeight="15.0" prefWidth="272.0" />
                   <Label text="Email" />
                   <TextField fx:id="emailField" onKeyPressed="#buttonPressedListener" />
                   <Label text="Password" />
                   <PasswordField fx:id="passwordField" onKeyPressed="#buttonPressedListener" />
-                  <HBox alignment="TOP_RIGHT" prefHeight="30.0" prefWidth="274.0">
-                     <children>
-                        <Hyperlink onKeyPressed="#buttonPressedListener" text="Forgot password?" />
-                     </children>
-                  </HBox>
-                  <Label fx:id="wrongCredentials" alignment="CENTER" prefHeight="15.0" prefWidth="272.0" />
+                  <HBox alignment="TOP_RIGHT" prefHeight="30.0" prefWidth="274.0" />
                   <CheckBox fx:id="RememberEmailCheck" mnemonicParsing="false" onKeyPressed="#buttonPressedListener" text="Remember email" />
                   <CheckBox fx:id="RememberPasswordCheck" mnemonicParsing="false" onKeyPressed="#buttonPressedListener" text="Remember password" />
-                  <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0">
-                     <children>
-                        <Button fx:id="submitBtn" mnemonicParsing="false" text="Submit" />
-                     </children>
-                  </HBox>
+                  <Button fx:id="submitBtn" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="30.0" prefWidth="373.0" text="Submit" textAlignment="CENTER">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets top="2.0" />
+                     </VBox.margin>
+                  </Button>
+                  <Hyperlink onKeyPressed="#buttonPressedListener" text="Forgot password?" />
                </children>
                <GridPane.margin>
                   <Insets />

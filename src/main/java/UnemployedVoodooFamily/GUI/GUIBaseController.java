@@ -9,6 +9,7 @@ import UnemployedVoodooFamily.Logic.Session;
 import UnemployedVoodooFamily.Main;
 import javafx.animation.RotateTransition;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -22,10 +23,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
-import javafx.scene.effect.Blend;
-import javafx.scene.effect.BlendMode;
-import javafx.scene.effect.ColorAdjust;
-import javafx.scene.effect.ColorInput;
+import javafx.scene.effect.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
@@ -83,12 +81,6 @@ public class GUIBaseController {
 
     @FXML
     private AnchorPane contentRoot;
-
-    @FXML
-    private MenuItem dumpDataMenuItem;
-
-    @FXML
-    private MenuItem viewDataMenuItem;
 
     @FXML
     private HBox progressBox;
@@ -160,8 +152,10 @@ public class GUIBaseController {
     private void applyStyles()  {
         ColorAdjust whiteout = new ColorAdjust();
         whiteout.setBrightness(1);
-        refreshIcon.setEffect(whiteout);
         avatarView.setEffect(whiteout);
+        ColorAdjust lightgray = new ColorAdjust();
+        lightgray.setBrightness(0.7);
+        refreshIcon.setEffect(lightgray);
     }
 
     /**
@@ -174,18 +168,19 @@ public class GUIBaseController {
         });
         refreshBtn.setOnMouseEntered(event ->   {
             ColorAdjust whiteout = new ColorAdjust();
-            whiteout.setBrightness(0.8);
+            whiteout.setBrightness(1);
             refreshIcon.setEffect(whiteout);
         });
         refreshBtn.setOnMouseExited(event -> {
             ColorAdjust whiteout = new ColorAdjust();
-            whiteout.setBrightness(1);
+            whiteout.setBrightness(0.7);
             refreshIcon.setEffect(whiteout);
         });
         logOutBtn.setOnAction(this :: logOutOfApplication);
         settingsNavBtn.setOnAction(event -> switchContentView(settings));
         tableNavBtn.setOnAction(event -> switchContentView(table));
         profileNavBtn.setOnAction(event -> switchContentView(profile));
+        /* Add these again but in the settings menu, maybe?
         dumpDataMenuItem.setOnAction(event -> dumpData());
         viewDataMenuItem.setOnAction(event -> {
             try {
@@ -198,6 +193,7 @@ public class GUIBaseController {
                 //could not find path
             }
         });
+        */
     }
 
 
