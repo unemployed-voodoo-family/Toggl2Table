@@ -59,7 +59,7 @@
 .text-field {
     -fx-border-radius: 0;
     -fx-background-radius: 0;
-    -fx-border-width: 1.5px;
+    -fx-border-width: 1px;
     -fx-background-color: #ffffff;
     -fx-border-color: transparent;
     -fx-text-fill: #666666;
@@ -123,11 +123,23 @@
 
 #navbar {
     -fx-background-color: #494a48;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 3, 0, 1, 1);
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 3, 0, 1, 0);
 }
 
 #lastFetchedLabel    {
     -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+}
+
+/*######## BOTTOM BAR ########*/
+
+#bottomBar  {
+    -fx-background-color: #494a48;
+    -fx-border-color: transparent;
+}
+
+#progressMessage    {
+    -fx-fill: #ffffff;
 }
 
 /*######## TABS ########*/
@@ -193,6 +205,69 @@
     -fx-background-color: transparent;
 }
 
+/*######## MENU BUTTON ########*/
+
+.context-menu   {
+    -fx-background-color: #ffffff;
+    -fx-border-color: transparent;
+    -fx-border-radius: 0;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 3, 0, 1, 1);
+}
+
+.menu-button    {
+    -fx-background-color: #ffffff;
+    -fx-border-color: transparent;
+    -fx-border-radius: 0;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 3, 0, 1, 1);
+}
+
+.menu-button .label {
+    -fx-border-radius: 0;
+    -fx-border-width: 0;
+    -fx-text-fill: #333333;
+    -fx-background-color: #ffffff;
+}
+
+.menu-button:hover, .menu-button:hover > .label  {
+    -fx-background-color: #56ab9c;
+    -fx-border-color: transparent;
+    -fx-mark-color: #ffffff;
+    -fx-text-fill: #ffffff;
+}
+
+.menu-button:pressed, .menu-button:pressed > .label,  .menu-button:expanded > .label{
+    -fx-background-color: #70c1b3;
+    -fx-border-color: transparent;
+    -fx-mark-color: #ffffff;
+    -fx-text-fill: #ffffff;
+}
+
+
+.menu-item  {
+    -fx-background-color: #ffffff;
+    -fx-border-color: transparent;
+    -fx-border-radius: 0;
+}
+
+.menu-item .label   {
+    -fx-border-radius: 0;
+    -fx-border-width: 0;
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #333333;
+}
+
+.menu-item:hover, .menu-item:hover > .label  {
+    -fx-background-color: #56ab9c;
+    -fx-border-color: transparent;
+    -fx-text-fill: #ffffff;
+}
+
+.menu-item:pressed, .menu-item:pressed > .label{
+    -fx-background-color: #70c1b3;
+    -fx-border-color: transparent;
+    -fx-text-fill: #ffffff;
+}
+
 /*######## DATE PICKER ########*/
 
 
@@ -212,6 +287,11 @@
 
 /*######## OTHER ########*/
 
+.scroll-pane, .scroll-pane > .corner, .scroll-pane > .viewport    {
+    -fx-background-color: #ffffff;
+}
+
+
 .hyperlink {
     -fx-text-fill: #56ab9c;
     -fx-border-color: transparent;
@@ -224,14 +304,6 @@
 .progress-indicator {
     -fx-progress-color: #70c1b3;
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 4, 0, 1, 1);
-}
-
-.menu-bar   {
-    -fx-background-radius: 0;
-    -fx-border-radius: 0;
-    -fx-border-color: #e1e1e1;
-    -fx-background-color: #ffffff;
-    -fx-text-fill: #333333;
 }
 
 .combo-box-base {
