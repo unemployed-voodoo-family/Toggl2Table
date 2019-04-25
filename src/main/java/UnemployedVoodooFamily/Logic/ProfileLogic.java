@@ -1,5 +1,6 @@
 package UnemployedVoodooFamily.Logic;
-import java.util.Locale;
+
+import ch.simas.jtoggl.User;
 
 public class ProfileLogic {
 
@@ -41,12 +42,5 @@ public class ProfileLogic {
         else{
             return "no format specified";
         }
-    }
-
-    public void getLanguage(String langCode){
-        Locale locale = new Locale(langCode);
-
-
-
     }
 }

@@ -34,6 +34,7 @@ public class LoginController {
     private LoginLogic loginLogic = new LoginLogic();
     private boolean isLoggedIn;
     private boolean loginInProgress;
+
     private FileLogic fileLogic = new FileLogic();
 
     public LoginController() {}
@@ -56,11 +57,13 @@ public class LoginController {
         RememberEmailCheck.setDisable(true);
         RememberPasswordCheck.setDisable(true);
         Thread loginCredThread = new Thread(() -> {
+
             bufferImg.setVisible(true);
             isLoggedIn = loginLogic
                     .attemptAuthentication(emailField.getText(), passwordField.getText(), rememberUsername,
                                            rememberPassword);
             bufferImg.setVisible(false);
+
             Platform.runLater(() -> {
                 loginInProgress = false;
                 submitBtn.setDisable(false);
@@ -72,7 +75,6 @@ public class LoginController {
                     passwordField.getStyleClass().add("error");
                 }
                 else {
-                    Main.closeLogin();
                 }
             });
         });
@@ -115,4 +117,3 @@ public class LoginController {
         }
     }
 }
-

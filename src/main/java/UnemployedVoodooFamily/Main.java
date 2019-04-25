@@ -14,7 +14,8 @@ import java.net.URL;
 
 public class Main extends Application {
 
-    private static Stage loginStage;
+    private static Stage primaryStage;
+
 
     public static void main(String[] args) {
         launch(args);
@@ -49,22 +50,33 @@ public class Main extends Application {
      */
     @Override
     public void start(Stage primaryStage) throws Exception {
-        loginStage = primaryStage;
+        this.primaryStage = primaryStage;
         createDirsIfNotExists(FilePath.SETTINGS_HOME.getPath());
         createDirsIfNotExists(FilePath.LOGS_HOME.getPath());
         URL r = getClass().getClassLoader().getResource("login.fxml");
         Parent root = FXMLLoader.load(r);
         Scene scene = new Scene(root);
-        scene.getStylesheets().add("styles.css");
-        //scene.getStylesheets().add("styles/style.css");
-        primaryStage.setTitle("Toggl Time Sheet - Login");
         primaryStage.setScene(scene);
-        primaryStage.getIcons().add(new Image("/app_logo_48.png"));
+
+        initStage(primaryStage);
+
         primaryStage.show();
         primaryStage.toFront();
     }
 
     public static void closeLogin() {
-        loginStage.close();
+        primaryStage.close();
+    }
+
+    public static void changePrimaryStage(Stage newStage) {
+        primaryStage = newStage;
+        initStage(newStage);
+        primaryStage.show();
+    }
+
+    private static void initStage(Stage stage) {
+        stage.getScene().getStylesheets().add("styles.css");
+        stage.setTitle("Toggl Time Sheet - Login");
+        stage.getIcons().add(new Image("/icons/app_icon/96x96.png"));
     }
 }

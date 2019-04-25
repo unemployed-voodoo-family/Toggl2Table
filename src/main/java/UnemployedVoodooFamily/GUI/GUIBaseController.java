@@ -6,8 +6,10 @@ import UnemployedVoodooFamily.GUI.Content.SettingsController;
 import UnemployedVoodooFamily.GUI.Content.TableViewController;
 import UnemployedVoodooFamily.Logger;
 import UnemployedVoodooFamily.Logic.Session;
+import UnemployedVoodooFamily.Main;
 import javafx.animation.RotateTransition;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -19,6 +21,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.effect.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
@@ -78,12 +81,6 @@ public class GUIBaseController {
     private AnchorPane contentRoot;
 
     @FXML
-    private MenuItem dumpDataMenuItem;
-
-    @FXML
-    private MenuItem viewDataMenuItem;
-
-    @FXML
     private HBox progressBox;
 
     @FXML
@@ -104,14 +101,15 @@ public class GUIBaseController {
 
     @FXML
     public void start() throws IOException {
-        Stage newStage = new Stage();
+        Stage appStage = new Stage();
         URL r = getClass().getClassLoader().getResource("LayoutBase.fxml");
         Parent root = FXMLLoader.load(r);
         Scene scene = new Scene(root);
         scene.getStylesheets().add("styles.css");
-        newStage.setTitle("Toggl Time Sheet - Main");
-        newStage.setScene(scene);
-        newStage.show();
+        appStage.setTitle("Toggl Time Sheet");
+        appStage.setScene(scene);
+        Main.closeLogin();
+        Main.changePrimaryStage(appStage);
     }
 
     public void initialize() {
@@ -123,6 +121,7 @@ public class GUIBaseController {
         rotateSettings();
         setKeyAndClickListeners();
         loadContent();
+        applyStyles();
         refreshData();
         dumpData();
         tableNavBtn.fire();
@@ -143,6 +142,15 @@ public class GUIBaseController {
         }
     }
 
+    private void applyStyles()  {
+        ColorAdjust whiteout = new ColorAdjust();
+        whiteout.setBrightness(1);
+        avatarView.setEffect(whiteout);
+        ColorAdjust lightgray = new ColorAdjust();
+        lightgray.setBrightness(0.7);
+        refreshIcon.setEffect(lightgray);
+    }
+
     /**
      * Sets input actions on UI elements
      */
@@ -151,9 +159,20 @@ public class GUIBaseController {
         refreshBtn.setOnAction(event -> {
             refreshData();
         });
+        refreshBtn.setOnMouseEntered(event ->   {
+            ColorAdjust whiteout = new ColorAdjust();
+            whiteout.setBrightness(1);
+            refreshIcon.setEffect(whiteout);
+        });
+        refreshBtn.setOnMouseExited(event -> {
+            ColorAdjust whiteout = new ColorAdjust();
+            whiteout.setBrightness(0.7);
+            refreshIcon.setEffect(whiteout);
+        });
         settingsNavBtn.setOnAction(event -> switchContentView(settings));
         tableNavBtn.setOnAction(event -> switchContentView(table));
         profileNavBtn.setOnAction(event -> switchContentView(profile));
+        /* Add these again but in the settings menu, maybe?
         dumpDataMenuItem.setOnAction(event -> dumpData());
         viewDataMenuItem.setOnAction(event -> {
             try {
@@ -166,6 +185,7 @@ public class GUIBaseController {
                 //could not find path
             }
         });
+        */
     }
 
 
