@@ -73,6 +73,10 @@ public class LoginController {
                 }
                 else {
                     Main.closeLogin();
+                    //checks if a loginStage already exists, if it does, its closed.
+                    if(GUIBaseController.loginStage != null){
+                        GUIBaseController.closeLogin();
+                    }
                 }
             });
         });

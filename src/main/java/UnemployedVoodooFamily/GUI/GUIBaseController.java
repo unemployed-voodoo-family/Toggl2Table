@@ -102,6 +102,7 @@ public class GUIBaseController {
     private Node table;
     private Node profile;
     private Thread t1;
+    public static Stage loginStage;
 
     private AtomicBoolean active;
 
@@ -159,10 +160,10 @@ public class GUIBaseController {
         refreshBtn.setOnAction(event -> {
             refreshData();
         });
+        logOutBtn.setOnAction(this :: logOutOfApplication);
         settingsNavBtn.setOnAction(event -> switchContentView(settings));
         tableNavBtn.setOnAction(event -> switchContentView(table));
         profileNavBtn.setOnAction(event -> switchContentView(profile));
-
         dumpDataMenuItem.setOnAction(event -> dumpData());
         viewDataMenuItem.setOnAction(event -> {
             try {
@@ -173,12 +174,6 @@ public class GUIBaseController {
             }
             catch(IllegalArgumentException e) {
                 //could not find path
-            }
-        });
-
-        logOutBtn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override public void handle(ActionEvent e) {
-                testing(e);
             }
         });
     }
@@ -275,38 +270,19 @@ public class GUIBaseController {
         rotateTransition.setCycleCount(1);
     }
 
-    private void LogOutOfApplication(){
-        Thread exitingThread = new Thread(() -> {
-            Platform.exit();
-            Platform.runLater(() -> {
-                Stage newStage = new Stage();
-                URL r = getClass().getClassLoader().getResource("login.fxml");
-                Parent root = null;
-                try {
-                    root = FXMLLoader.load(r);
-                }
-                catch(IOException e) {
-                    e.printStackTrace();
-                }
-                Scene scene = new Scene(root);
-                scene.getStylesheets().add("styles.css");
-                newStage.setTitle("Toggl Time Sheet - Main");
-                newStage.setScene(scene);
-                newStage.show();
-            });
-        });
-        exitingThread.start();
-        System.out.println("kk");
-
-
-    }
-
-    private void testing(ActionEvent actionEvent){
-        Node  source = (Node)  actionEvent.getSource();
+    /**
+     * Logs out of the main GUI application, after the windows has been closed, it initializes and
+     * lauches a new stage with the login FXML file
+     * @param event that is used to fetch the Node from where the method was called.
+     */
+    private void logOutOfApplication(ActionEvent event){
+        //Closes the current active Base GUI.
+        Node  source = (Node)  event.getSource();
         Stage stage  = (Stage) source.getScene().getWindow();
         stage.close();
 
-        Stage newStage = new Stage();
+        //Start a new instance of the login stage
+        loginStage = new Stage();
         URL r = getClass().getClassLoader().getResource("login.fxml");
         Parent root = null;
         try {
@@ -317,8 +293,15 @@ public class GUIBaseController {
         }
         Scene scene = new Scene(root);
         scene.getStylesheets().add("styles.css");
-        newStage.setTitle("Toggl Time Sheet - Main");
-        newStage.setScene(scene);
-        newStage.show();
+        loginStage.setTitle("Toggl Time Sheet - Login");
+        loginStage.setScene(scene);
+        loginStage.show();
+    }
+
+    /**
+     * A method that can be called from anywhere to terminate the login stage.
+     */
+    public static void closeLogin() {
+        loginStage.close();
     }
 }
