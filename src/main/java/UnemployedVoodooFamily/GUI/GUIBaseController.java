@@ -6,10 +6,13 @@ import UnemployedVoodooFamily.GUI.Content.SettingsController;
 import UnemployedVoodooFamily.GUI.Content.TableViewController;
 import UnemployedVoodooFamily.Logger;
 import UnemployedVoodooFamily.Logic.Session;
+import UnemployedVoodooFamily.Main;
 import javafx.animation.RotateTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -90,6 +93,9 @@ public class GUIBaseController {
     private Text progressMessage;
 
     @FXML
+    private ToggleButton logOutBtn;
+
+    @FXML
     private Label lastFetchedLabel;
 
     private Node settings;
@@ -118,6 +124,7 @@ public class GUIBaseController {
         settingsNavBtn.setToggleGroup(navButtons);
         tableNavBtn.setToggleGroup(navButtons);
         profileNavBtn.setToggleGroup(navButtons);
+        logOutBtn.setToggleGroup(navButtons);
         profileNavBtn.setGraphic(avatarView);
         active = new AtomicBoolean(false);
         rotateSettings();
@@ -127,6 +134,7 @@ public class GUIBaseController {
         dumpData();
         tableNavBtn.fire();
     }
+
 
     /**
      * Loads the other UnemployedVoodooFamily.GUI controllers and sets them as nodes
@@ -154,6 +162,7 @@ public class GUIBaseController {
         settingsNavBtn.setOnAction(event -> switchContentView(settings));
         tableNavBtn.setOnAction(event -> switchContentView(table));
         profileNavBtn.setOnAction(event -> switchContentView(profile));
+
         dumpDataMenuItem.setOnAction(event -> dumpData());
         viewDataMenuItem.setOnAction(event -> {
             try {
@@ -164,6 +173,12 @@ public class GUIBaseController {
             }
             catch(IllegalArgumentException e) {
                 //could not find path
+            }
+        });
+
+        logOutBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+                testing(e);
             }
         });
     }
@@ -258,5 +273,52 @@ public class GUIBaseController {
         rotateTransition.setFromAngle(0);
         rotateTransition.setToAngle(360);
         rotateTransition.setCycleCount(1);
+    }
+
+    private void LogOutOfApplication(){
+        Thread exitingThread = new Thread(() -> {
+            Platform.exit();
+            Platform.runLater(() -> {
+                Stage newStage = new Stage();
+                URL r = getClass().getClassLoader().getResource("login.fxml");
+                Parent root = null;
+                try {
+                    root = FXMLLoader.load(r);
+                }
+                catch(IOException e) {
+                    e.printStackTrace();
+                }
+                Scene scene = new Scene(root);
+                scene.getStylesheets().add("styles.css");
+                newStage.setTitle("Toggl Time Sheet - Main");
+                newStage.setScene(scene);
+                newStage.show();
+            });
+        });
+        exitingThread.start();
+        System.out.println("kk");
+
+
+    }
+
+    private void testing(ActionEvent actionEvent){
+        Node  source = (Node)  actionEvent.getSource();
+        Stage stage  = (Stage) source.getScene().getWindow();
+        stage.close();
+
+        Stage newStage = new Stage();
+        URL r = getClass().getClassLoader().getResource("login.fxml");
+        Parent root = null;
+        try {
+            root = FXMLLoader.load(r);
+        }
+        catch(IOException e) {
+            e.printStackTrace();
+        }
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add("styles.css");
+        newStage.setTitle("Toggl Time Sheet - Main");
+        newStage.setScene(scene);
+        newStage.show();
     }
 }

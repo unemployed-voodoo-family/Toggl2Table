@@ -17,6 +17,7 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
@@ -154,6 +155,15 @@
                                  </graphic>
                               </ToggleButton>
                               <ToggleButton fx:id="settingsNavBtn" alignment="CENTER_LEFT" maxHeight="50.0" minHeight="50.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="227.0" text="Settings">
+                                 <font>
+                                    <Font name="System Bold" size="13.0" />
+                                 </font>
+                                 <graphic>
+                                    <ImageView fitHeight="37.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true" />
+                                 </graphic>
+                              </ToggleButton>
+                              <Pane VBox.vgrow="ALWAYS" />
+                              <ToggleButton fx:id="logOutBtn" alignment="CENTER_LEFT" maxHeight="50.0" minHeight="50.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="227.0" text="Log Out">
                                  <font>
                                     <Font name="System Bold" size="13.0" />
                                  </font>
