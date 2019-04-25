@@ -12,6 +12,8 @@ import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -87,12 +89,16 @@ public class GUIBaseController {
     private Text progressMessage;
 
     @FXML
+    private ToggleButton logOutBtn;
+
+    @FXML
     private Label lastFetchedLabel;
 
     private Node settings;
     private Node table;
     private Node profile;
     private Thread t1;
+    private static Stage loginStage;
 
     private AtomicBoolean active;
 
@@ -108,14 +114,14 @@ public class GUIBaseController {
         scene.getStylesheets().add("styles.css");
         appStage.setTitle("Toggl Time Sheet");
         appStage.setScene(scene);
-        Main.closeLogin();
-        Main.changePrimaryStage(appStage);
+        appStage.show();
     }
 
     public void initialize() {
         settingsNavBtn.setToggleGroup(navButtons);
         tableNavBtn.setToggleGroup(navButtons);
         profileNavBtn.setToggleGroup(navButtons);
+        logOutBtn.setToggleGroup(navButtons);
         profileNavBtn.setGraphic(avatarView);
         active = new AtomicBoolean(false);
         rotateSettings();
@@ -126,6 +132,7 @@ public class GUIBaseController {
         dumpData();
         tableNavBtn.fire();
     }
+
 
     /**
      * Loads the other UnemployedVoodooFamily.GUI controllers and sets them as nodes
@@ -169,6 +176,7 @@ public class GUIBaseController {
             whiteout.setBrightness(0.7);
             refreshIcon.setEffect(whiteout);
         });
+        logOutBtn.setOnAction(this :: logOutOfApplication);
         settingsNavBtn.setOnAction(event -> switchContentView(settings));
         tableNavBtn.setOnAction(event -> switchContentView(table));
         profileNavBtn.setOnAction(event -> switchContentView(profile));
@@ -278,5 +286,50 @@ public class GUIBaseController {
         rotateTransition.setFromAngle(0);
         rotateTransition.setToAngle(360);
         rotateTransition.setCycleCount(1);
+    }
+
+    /**
+     * Logs out of the main GUI application, after the windows has been closed, it initializes and
+     * lauches a new stage with the login FXML file
+     * @param event that is used to fetch the Node from where the method was called.
+     */
+    private void logOutOfApplication(ActionEvent event){
+        //Closes the current active Base GUI.
+        Node  source = (Node)  event.getSource();
+        Stage stage  = (Stage) source.getScene().getWindow();
+        Session.terminateSession();
+        stage.close();
+
+        //Start a new instance of the login stage
+        loginStage = new Stage();
+        URL r = getClass().getClassLoader().getResource("login.fxml");
+        Parent root = null;
+        try {
+            root = FXMLLoader.load(r);
+        }
+        catch(IOException e) {
+            e.printStackTrace();
+        }
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add("styles.css");
+        loginStage.setTitle("Toggl Time Sheet - Login");
+        loginStage.setScene(scene);
+        Main.initStage(loginStage);
+        loginStage.show();
+    }
+
+    public static boolean loginStageExists(){
+        if(loginStage == null){
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
+    /**
+     * A method that can be called from anywhere to terminate the login stage.
+     */
+    public static void closeLogin() {
+        loginStage.close();
     }
 }

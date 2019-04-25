@@ -75,6 +75,11 @@ public class LoginController {
                     passwordField.getStyleClass().add("error");
                 }
                 else {
+                    Main.closeLogin();
+                    //checks if a loginStage already exists, if it does, its closed.
+                    if(GUIBaseController.loginStageExists() ){
+                        GUIBaseController.closeLogin();
+                    }
                 }
             });
         });
