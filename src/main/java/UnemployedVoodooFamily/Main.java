@@ -72,7 +72,7 @@ public class Main extends Application {
         primaryStage.show();
     }
 
-    private static void initStage(Stage stage) {
+    public static void initStage(Stage stage) {
         stage.getScene().getStylesheets().add("styles.css");
         stage.setTitle("Toggl Time Sheet - Login");
         stage.getIcons().add(new Image("/icons/app_icon/96x96.png"));

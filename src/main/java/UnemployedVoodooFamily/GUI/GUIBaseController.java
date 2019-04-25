@@ -301,6 +301,7 @@ public class GUIBaseController {
         //Closes the current active Base GUI.
         Node  source = (Node)  event.getSource();
         Stage stage  = (Stage) source.getScene().getWindow();
+        Session.terminateSession();
         stage.close();
 
         //Start a new instance of the login stage
@@ -317,6 +318,7 @@ public class GUIBaseController {
         scene.getStylesheets().add("styles.css");
         loginStage.setTitle("Toggl Time Sheet - Login");
         loginStage.setScene(scene);
+        Main.initStage(loginStage);
         loginStage.show();
     }
 
