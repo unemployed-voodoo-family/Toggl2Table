@@ -54,6 +54,32 @@
     -fx-text-fill: #ffffff;
 }
 
+/*######## TEXT FIELD ########*/
+
+.text-field {
+    -fx-border-radius: 0;
+    -fx-background-radius: 0;
+    -fx-border-width: 1.5px;
+    -fx-background-color: #ffffff;
+    -fx-border-color: transparent;
+    -fx-text-fill: #666666;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 3, 0, 1, 1);
+}
+
+.text-field:selected {
+    -fx-border-color: #70c1b3;
+}
+
+.text-field:focused {
+    -fx-text-fill: #333333;
+    -fx-border-color: #70c1b3;
+}
+
+.text-field:hover   {
+    -fx-border-color: #56ab9c;
+    -fx-text-fill: #333333;
+}
+
 /*######## NAVBAR ########*/
 
 #navbar > .toggle-button {
@@ -106,19 +132,26 @@
 
 /*######## TABS ########*/
 
+.tab-pane .tab-header-area .tab-header-background  {
+    -fx-background-color: #ffffff;
+}
+
 .tab   {
     -fx-background-color: transparent, tab-color;
-    tab-color: #f1f1f1;
+    tab-color: #ffffff;
     -fx-border-color: transparent;
-    -fx-background-insets: 0, 2 2 2 0;
-    -fx-padding: 4, 7, 4, 7;
+    -fx-background-insets: 0, 2 3 2 0;
+    -fx-padding: 10, 30, 10, 30;
     -fx-background-radius: 0;
-    -fx-text-fill: #333333;
-    -fx-font-weight: bold;
+    -fx-font-size: 14px;
     -fx-border-radius: 0;
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 3, 0, 1, 1);
+}
+
+.tab-label  {
+    -fx-text-fill: #333333;
 }
 
 .tab:hover {
@@ -138,8 +171,9 @@
 .check-box .box {
     -fx-background-radius: 0;
     -fx-border-radius: 0;
-    -fx-background-color: #f1f1f1;
-    -fx-border-color: #e1e1e1;
+    -fx-background-color: #ffffff;
+    -fx-border-color: transparent;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 2, 0, 1, 1);
 }
 
 .check-box:selected .mark {
@@ -178,13 +212,18 @@
 
 /*######## OTHER ########*/
 
-.tab-pane .tab-header-area .tab-header-background  {
-    -fx-background-color: #ffffff;
+.hyperlink {
+    -fx-text-fill: #56ab9c;
+    -fx-border-color: transparent;
 }
 
-.text-field {
-    -fx-border-radius: 0;
-    -fx-background-radius: 0;
+.hyperlink:hover, .hyperlink:selected   {
+    -fx-text-fill: #70c1b3;
+}
+
+.progress-indicator {
+    -fx-progress-color: #70c1b3;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 4, 0, 1, 1);
 }
 
 .menu-bar   {
@@ -207,6 +246,8 @@
     -fx-animation: spin 2s linear infinite;
 
 }
+
+/*######## CLASS SPECIFIC ########*/
 
 .text-field.error   {
     -fx-border-color: #ff2530;
