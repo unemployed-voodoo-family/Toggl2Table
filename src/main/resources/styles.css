@@ -16,12 +16,6 @@
     -fx-border-width: 0 0 1 0;
 }
 
-/* Css for the selected table row
-.table-row-cell:selected {
-    -fx-background-color: #bdbdbd;
-    -fx-border-color: #2091d2;
-    -fx-border-width: 1 0 1 0;
-}*/
 
 .settingsHeader {
     -fx-font-size: 14px;
@@ -30,7 +24,7 @@
 
 .root   {
     -fx-background-color: #ffffff;
-    -fx-text-fill: #444444;
+    -fx-text-fill: #333333;
 }
 
 /*######## BUTTONS ########*/
@@ -39,23 +33,25 @@
     -fx-font-size: 1;
 }
 
-
 .button, .toggle-button {
     -fx-background-radius: 0;
     -fx-border-radius: 0;
-    -fx-background-color: #f1f1f1;
-    -fx-border-color: #e1e1e1;
-    -fx-text-fill: #444444;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #ffffff;
+    -fx-text-fill: #333333;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 3, 0, 1, 1);
 }
 
 .button:hover, .toggle-button:hover {
-    -fx-border-color: #2091d2;
+    -fx-background-color: #56ab9c;
+    -fx-border-color: #56ab9c;
+    -fx-text-fill: #ffffff;
 }
 
-.button:pressed,.toggle-button:pressed, .toggle-button:selected {
-    -fx-background-color: #2091d2;
-    -fx-border-color: #2091d2;
-    -fx-text-fill: #ffff;
+.button:pressed, .toggle-button:pressed, .toggle-button:selected {
+    -fx-background-color: #70c1b3;
+    -fx-border-color: #70c1b3;
+    -fx-text-fill: #ffffff;
 }
 
 /*######## NAVBAR ########*/
@@ -63,22 +59,25 @@
 #navbar > .toggle-button {
     -fx-background-color: #545553;
     -fx-border-color: #545553;
-    -fx-text-fill: #ffff;
+    -fx-text-fill: #ffffff;
     -fx-border-radius: 0;
+    -fx-effect: null;
 }
 
 #navbar > .toggle-button:hover, #excelFeedbackLabel:hover {
     -fx-background-color: #56ab9c;
     -fx-border-color: #56ab9c;
-    -fx-text-fill: #ffff;
+    -fx-text-fill: #ffffff;
     -fx-border-radius: 0;
+    -fx-effect: null;
 }
 
 #navbar > .toggle-button:selected {
     -fx-background-color: #70c1b3;
     -fx-border-color: #70c1b3;
-    -fx-text-fill: #ffff;
+    -fx-text-fill: #ffffff;
     -fx-border-radius: 0;
+    -fx-effect: null;
 }
 
 #toolBar > .button {
@@ -98,32 +97,39 @@
 
 #navbar {
     -fx-background-color: #494a48;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 3, 0, 1, 1);
 }
 
 #lastFetchedLabel    {
-    -fx-text-fill: #ffff;
+    -fx-text-fill: #ffffff;
 }
 
 /*######## TABS ########*/
 
 .tab   {
-    -fx-background-color: #f1f1f1;
-    -fx-border-color: #e1e1e1;
-    -fx-text-fill: #444444;
+    -fx-background-color: transparent, tab-color;
+    tab-color: #f1f1f1;
+    -fx-border-color: transparent;
+    -fx-background-insets: 0, 2 2 2 0;
+    -fx-padding: 4, 7, 4, 7;
     -fx-background-radius: 0;
+    -fx-text-fill: #333333;
+    -fx-font-weight: bold;
     -fx-border-radius: 0;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 3, 0, 1, 1);
 }
 
 .tab:hover {
-    -fx-border-color: #2091d2;
+    tab-color: #56ab9c;
 }
 
-.tab:selected  {
-    -fx-background-color: #2091d2;
-    -fx-border-color: #2091d2;
+.tab:selected, .tab:focused {
+    tab-color: #70c1b3;
 }
 
-.tab:selected .tab-label{
+.tab:selected .tab-label, .tab:hover .tab-label {
     -fx-text-fill: #ffffff;
 }
 
@@ -138,7 +144,7 @@
 
 .check-box:selected .mark {
 
-    -fx-background-color: #2091d2;
+    -fx-background-color: #70c1b3;
 
 }
 
@@ -167,7 +173,7 @@
     -fx-border-radius: 0;
     -fx-background-color: #ffffff;
     -fx-border-color: #e1e1e1;
-    -fx-text-fill: #444444;
+    -fx-text-fill: #333333;
 }
 
 /*######## OTHER ########*/
@@ -186,7 +192,7 @@
     -fx-border-radius: 0;
     -fx-border-color: #e1e1e1;
     -fx-background-color: #ffffff;
-    -fx-text-fill: #444444;
+    -fx-text-fill: #333333;
 }
 
 .combo-box-base {
@@ -194,10 +200,10 @@
     -fx-border-radius: 0;
     -fx-background-color: #f1f1f1;
     -fx-border-color: #e1e1e1;
-    -fx-text-fill: #444444;
+    -fx-text-fill: #333333;
 }
 
-. button .image-view.spin {
+.button .image-view.spin {
     -fx-animation: spin 2s linear infinite;
 
 }
@@ -220,5 +226,5 @@
 }
 
 .button.delete   {
-    -fx-background-color: RED;
+    -fx-background-color: #ff2530;
 }
