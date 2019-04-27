@@ -104,7 +104,7 @@
 
 /*######## NAVBAR ########*/
 
-#navbar > .toggle-button {
+#navbar .toggle-button {
     -fx-background-color: -fx-dark;
     -fx-border-color: -fx-dark;
     -fx-text-fill: #ffffff;
@@ -112,7 +112,7 @@
     -fx-effect: null;
 }
 
-#navbar > .toggle-button:hover, #excelFeedbackLabel:hover {
+#navbar .toggle-button:hover, #excelFeedbackLabel:hover{
     -fx-background-color: -fx-main;
     -fx-border-color: -fx-main;
     -fx-text-fill: #ffffff;
@@ -120,7 +120,7 @@
     -fx-effect: null;
 }
 
-#navbar > .toggle-button:selected {
+#navbar .toggle-button:selected{
     -fx-background-color: -fx-mainlight;
     -fx-border-color: -fx-mainlight;
     -fx-text-fill: #ffffff;
@@ -128,19 +128,15 @@
     -fx-effect: null;
 }
 
-#toolBar > .button {
-    -fx-background-color: transparent;
-    -fx-border-color: transparent;
-}
-
-#toolBar > .button:hover {
-    -fx-background-color: transparent;
-    -fx-border-color: transparent;
-}
 
 #toolBar > .button:pressed {
     -fx-translate-x: -1;
     -fx-translate-y: 1;
+}
+
+#toolBar > .button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
 }
 
 #navbar {
