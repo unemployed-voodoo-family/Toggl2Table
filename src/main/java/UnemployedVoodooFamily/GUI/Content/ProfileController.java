@@ -6,6 +6,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import java.util.Locale;
 
@@ -15,28 +17,30 @@ import java.net.URL;
 public class ProfileController {
 
     @FXML
-    private Label nameField;
+    private TextField nameField;
 
     @FXML
-    private Label emailField;
+    private TextField emailField;
 
     @FXML
-    private Label countryField;
+    private TextField countryField;
 
     @FXML
-    private Label timeZoneField;
+    private TextField timeZoneField;
 
     @FXML
-    private Label durationDispField;
+    private TextField durationDispField;
 
     @FXML
-    private Label dateFormatField;
+    private TextField dateFormatField;
 
     @FXML
-    private Label timeFormatField;
+    private TextField timeFormatField;
 
     @FXML
-    private Label firstDayOfWeekField;
+    private TextField firstDayOfWeekField;
+
+    @FXML private MenuItem editProfileBtn;
 
 
     private ProfileLogic profile;
@@ -57,6 +61,7 @@ public class ProfileController {
         dateFormatField.setText(Session.getInstance().getUser().getDate_format());
         timeFormatField.setText(profile.getTimeFormat(Session.getInstance().getUser().getTimeofday_format()));
         firstDayOfWeekField.setText(profile.getFirstDayOfWeek(Session.getInstance().getUser().getBeginning_of_week()));
+        editProfileBtn.setOnAction(e -> profile.browseTogglProfile());
 
     }
 

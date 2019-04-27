@@ -4,11 +4,11 @@
 
 
 * {
-    -fx-color-dark: #494A48;
-    -fx-color-main: #56AB9C;
-    -fx-color-mainlight: #70C1B3;
-    -fx-color-mainlighter: #C7F9DB;
-    -fx-color-alt: #F2FFC8;
+    -fx-dark: #494A48;
+    -fx-main: #56AB9C;
+    -fx-mainlight: #70C1B3;
+    -fx-mainlighter: #C7F9DB;
+    -fx-alt: #F2FFC8;
 }
 
 
@@ -51,18 +51,18 @@
     -fx-background-color: #ffffff;
     -fx-border-color: #ffffff;
     -fx-text-fill: #333333;
-    -fx-effect: dropshadow(two-pass-box, rgba(0, 0, 0, 0.6), 2, 0, 0, 1);
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.6), 2, 0, 0, 1);
 }
 
 .button:hover, .toggle-button:hover {
-    -fx-background-color: -fx-color-main;
-    -fx-border-color: -fx-color-main;
+    -fx-background-color: -fx-main;
+    -fx-border-color: -fx-main;
     -fx-text-fill: #ffffff;
 }
 
 .button:pressed, .toggle-button:pressed, .toggle-button:selected {
-    -fx-background-color: -fx-color-mainlight;
-    -fx-border-color: -fx-color-mainlight;
+    -fx-background-color: -fx-mainlight;
+    -fx-border-color: -fx-mainlight;
     -fx-text-fill: #ffffff;
 }
 
@@ -77,45 +77,52 @@
     -fx-background-color: #ffffff;
     -fx-border-color: transparent;
     -fx-text-fill: #666666;
-    -fx-effect: dropshadow(two-pass-box, rgba(0, 0, 0, 0.6), 2, 0, 1, 1);
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.6), 2, 0, 1, 1);
 }
 
 .text-field:selected {
-    -fx-border-color: -fx-color-mainlight;
+    -fx-border-color: -fx-mainlight;
 }
 
 .text-field:focused {
     -fx-text-fill: #333333;
-    -fx-border-color: -fx-color-mainlight;
+    -fx-border-color: -fx-mainlight;
 }
 
 .text-field:hover {
-    -fx-border-color: -fx-color-main;
+    -fx-border-color: -fx-main;
     -fx-text-fill: #333333;
 }
 
+.displayOnlyField {
+    -fx-background-color: #f5f5f5;
+    -fx-text-fill: black;
+    -fx-effect: null;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: -fx-main;
+}
 
 /*######## NAVBAR ########*/
 
 #navbar > .toggle-button {
-    -fx-background-color: -fx-color-dark;
-    -fx-border-color: -fx-color-dark;
+    -fx-background-color: -fx-dark;
+    -fx-border-color: -fx-dark;
     -fx-text-fill: #ffffff;
     -fx-border-radius: 0;
     -fx-effect: null;
 }
 
 #navbar > .toggle-button:hover, #excelFeedbackLabel:hover {
-    -fx-background-color: -fx-color-main;
-    -fx-border-color: -fx-color-main;
+    -fx-background-color: -fx-main;
+    -fx-border-color: -fx-main;
     -fx-text-fill: #ffffff;
     -fx-border-radius: 0;
     -fx-effect: null;
 }
 
 #navbar > .toggle-button:selected {
-    -fx-background-color: -fx-color-mainlight;
-    -fx-border-color: -fx-color-mainlight;
+    -fx-background-color: -fx-mainlight;
+    -fx-border-color: -fx-mainlight;
     -fx-text-fill: #ffffff;
     -fx-border-radius: 0;
     -fx-effect: null;
@@ -137,8 +144,8 @@
 }
 
 #navbar {
-    -fx-background-color: -fx-color-dark;
-    -fx-effect: dropshadow(two-pass-box, rgba(0, 0, 0, 0.6), 2, 0, 1, 0);
+    -fx-background-color: -fx-dark;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.6), 2, 0, 1, 0);
 }
 
 #lastFetchedLabel {
@@ -149,7 +156,7 @@
 /*######## BOTTOM BAR ########*/
 
 #bottomBar {
-    -fx-background-color: -fx-color-dark;
+    -fx-background-color: -fx-dark;
     -fx-border-color: transparent;
 }
 
@@ -184,11 +191,11 @@
 }
 
 .tab:hover {
-    tab-color: -fx-color-main;
+    tab-color: -fx-main;
 }
 
 .tab:selected, .tab:focused {
-    tab-color: -fx-color-mainlight;
+    tab-color: -fx-mainlight;
 }
 
 .tab:selected .tab-label, .tab:hover .tab-label {
@@ -207,12 +214,12 @@
     -fx-border-radius: 0;
     -fx-background-color: #ffffff;
     -fx-border-color: transparent;
-    -fx-effect: dropshadow(two-pass-box, rgba(0, 0, 0, 0.6), 2, 0, 1, 1);
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.6), 2, 0, 1, 1);
 }
 
 .check-box:selected .mark {
 
-    -fx-background-color: -fx-color-mainlight;
+    -fx-background-color: -fx-mainlight;
 
 }
 
@@ -233,14 +240,14 @@
     -fx-background-color: #ffffff;
     -fx-border-color: transparent;
     -fx-border-radius: 0;
-    -fx-effect: dropshadow(two-pass-box, rgba(0, 0, 0, 0.6), 2, 0, 1, 1);
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.6), 2, 0, 1, 1);
 }
 
 .menu-button {
     -fx-background-color: #ffffff;
     -fx-border-color: transparent;
     -fx-border-radius: 0;
-    -fx-effect: dropshadow(two-pass-box, rgba(0, 0, 0, 0.6), 2, 0, 1, 1);
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.6), 2, 0, 1, 1);
 }
 
 .menu-button .label {
@@ -251,14 +258,14 @@
 }
 
 .menu-button:hover, .menu-button:hover > .label {
-    -fx-background-color: -fx-color-main;
+    -fx-background-color: -fx-main;
     -fx-border-color: transparent;
     -fx-mark-color: #ffffff;
     -fx-text-fill: #ffffff;
 }
 
 .menu-button:pressed, .menu-button:pressed > .label, .menu-button:expanded > .label {
-    -fx-background-color: -fx-color-mainlight;
+    -fx-background-color: -fx-mainlight;
     -fx-border-color: transparent;
     -fx-mark-color: #ffffff;
     -fx-text-fill: #ffffff;
@@ -279,13 +286,13 @@
 }
 
 .menu-item:hover, .menu-item:hover > .label {
-    -fx-background-color: -fx-color-main;
+    -fx-background-color: -fx-main;
     -fx-border-color: transparent;
     -fx-text-fill: #ffffff;
 }
 
 .menu-item:pressed, .menu-item:pressed > .label {
-    -fx-background-color: -fx-color-mainlight;
+    -fx-background-color: -fx-mainlight;
     -fx-border-color: transparent;
     -fx-text-fill: #ffffff;
 }
@@ -316,17 +323,17 @@
 
 
 .hyperlink {
-    -fx-text-fill: -fx-color-main;
+    -fx-text-fill: -fx-main;
     -fx-border-color: transparent;
 }
 
 .hyperlink:hover, .hyperlink:selected {
-    -fx-text-fill: -fx-color-mainlight;
+    -fx-text-fill: -fx-mainlight;
 }
 
 .progress-indicator {
-    -fx-progress-color: -fx-color-mainlight;
-    -fx-effect: dropshadow(two-pass-box, rgba(0, 0, 0, 0.6), 4, 0, 1, 1);
+    -fx-progress-color: -fx-mainlight;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.6), 4, 0, 1, 1);
 }
 
 .combo-box-base {
@@ -377,8 +384,8 @@
 }
 
 #summarySelectionBtn .arrow {
-    -fx-border-color: -fx-color-mainlight;
-    -fx-background-color: -fx-color-mainlight;
+    -fx-border-color: -fx-mainlight;
+    -fx-background-color: -fx-mainlight;
     -fx-font-size: 24;
 }
 
@@ -396,27 +403,31 @@
     -fx-background-radius: 0;
     -fx-background-color: transparent;
     -fx-border-width: 0 0 1 0;
-    -fx-border-color: -fx-color-main;
+    -fx-border-color: -fx-main;
     -fx-effect: null;
 }
 
 .date-picker .arrow-button:hover {
-    -fx-background-color: -fx-color-main;
+    -fx-background-color: -fx-main;
 }
 
 .date-picker .arrow-button:pressed {
-    -fx-background-color: -fx-color-mainlight;
+    -fx-background-color: -fx-mainlight;
 }
 
+
+#profileSettingsBtn {
+    -fx-effect: null;
+}
 
 
 
 /*
 COLORS
-56AB9C dark green
+56AB9C -fx-dark green
 70C1B3 lighter green
 C7F9DB lightest green
-F2FFC8 very pale yellow-fx-color-dark outer space
-F2FFC8 very pale yellow-fx-color-dark outer space
+F2FFC8 very pale yellow-fx-dark outer space
+F2FFC8 very pale yellow-fx-dark outer space
  */
 
