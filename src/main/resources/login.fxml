@@ -10,74 +10,67 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="500.0" prefWidth="829.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UnemployedVoodooFamily.GUI.LoginController">
+
+<HBox alignment="CENTER" prefHeight="598.0" prefWidth="853.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UnemployedVoodooFamily.GUI.LoginController">
    <children>
-      <GridPane fx:id="gridPane" prefHeight="462.0" prefWidth="829.0">
-        <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints maxHeight="90.0" minHeight="10.0" prefHeight="90.0" vgrow="SOMETIMES" />
-          <RowConstraints vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="90.0" minHeight="10.0" prefHeight="90.0" vgrow="SOMETIMES" />
-        </rowConstraints>
+      <VBox alignment="CENTER_LEFT" maxWidth="300.0" minHeight="-Infinity" minWidth="300.0" prefHeight="490.0" prefWidth="300.0" spacing="5.0">
          <children>
-            <VBox prefHeight="228.0" prefWidth="276.0" spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                  <VBox alignment="CENTER" prefHeight="94.0">
                      <children>
-                        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                        <HBox prefHeight="68.0">
                            <children>
-                              <Label text="Sign in with" textFill="#000000b2" />
-                              <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@icons/toggl.png" />
+                                    <Image url="@icons/app_icon/64x64.png" />
                                  </image>
                               </ImageView>
+                              <Label prefHeight="96.0" prefWidth="210.0" text="toggl time sheet">
+                                 <font>
+                                    <Font name="System Bold Italic" size="27.0" />
+                                 </font>
+                                 <padding>
+                                    <Insets left="5.0" />
+                                 </padding>
+                              </Label>
                            </children>
-                        </VBox>
+                        </HBox>
+                        <Label prefHeight="21.0" text="Sign in with your toggl profile" textFill="#000000b2">
+                           <padding>
+                              <Insets top="5.0" />
+                           </padding>
+                        </Label>
                      </children>
-                     <padding>
-                        <Insets bottom="25.0" />
-                     </padding>
-                  </HBox>
-                  <Label fx:id="wrongCredentials" alignment="CENTER" prefHeight="15.0" prefWidth="272.0" />
-                  <Label text="Email" />
-                  <TextField fx:id="emailField" onKeyPressed="#buttonPressedListener" />
-                  <Label text="Password" />
-                  <PasswordField fx:id="passwordField" onKeyPressed="#buttonPressedListener" />
-                  <HBox alignment="TOP_RIGHT" prefHeight="30.0" prefWidth="274.0" />
-                  <CheckBox fx:id="RememberEmailCheck" mnemonicParsing="false" onKeyPressed="#buttonPressedListener" text="Remember email" />
-                  <CheckBox fx:id="RememberPasswordCheck" mnemonicParsing="false" onKeyPressed="#buttonPressedListener" text="Remember password" />
-                  <Button fx:id="submitBtn" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="30.0" prefWidth="373.0" text="Submit" textAlignment="CENTER">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                     <VBox.margin>
-                        <Insets top="2.0" />
-                     </VBox.margin>
-                  </Button>
-                  <Hyperlink onKeyPressed="#buttonPressedListener" text="Forgot password?" />
+                  </VBox>
                </children>
-               <GridPane.margin>
-                  <Insets />
-               </GridPane.margin>
-            </VBox>
-            <HBox alignment="CENTER" prefHeight="44.0" prefWidth="276.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
-               <children>
-                  <ProgressIndicator fx:id="bufferImg" />
-               </children>
+               <padding>
+                  <Insets bottom="25.0" />
+               </padding>
             </HBox>
+            <Label fx:id="wrongCredentials" alignment="CENTER" prefHeight="15.0" prefWidth="272.0" />
+            <Label text="Email" />
+            <TextField fx:id="emailField" onKeyPressed="#buttonPressedListener" />
+            <Label text="Password" />
+            <PasswordField fx:id="passwordField" onKeyPressed="#buttonPressedListener" />
+            <HBox alignment="TOP_RIGHT" prefHeight="30.0" prefWidth="274.0" />
+            <CheckBox fx:id="RememberEmailCheck" mnemonicParsing="false" onKeyPressed="#buttonPressedListener" text="Remember email" />
+            <CheckBox fx:id="RememberPasswordCheck" mnemonicParsing="false" onKeyPressed="#buttonPressedListener" text="Remember password" />
+            <Button fx:id="submitBtn" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="30.0" prefWidth="373.0" text="Submit" textAlignment="CENTER">
+               <font>
+                  <Font size="14.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="2.0" />
+               </VBox.margin>
+            </Button>
+            <Hyperlink alignment="CENTER" contentDisplay="CENTER" onKeyPressed="#buttonPressedListener" prefWidth="300.0" text="Forgot password?" />
+            <ProgressIndicator fx:id="bufferImg" />
          </children>
-      </GridPane>
+      </VBox>
    </children>
-</VBox>
+</HBox>
