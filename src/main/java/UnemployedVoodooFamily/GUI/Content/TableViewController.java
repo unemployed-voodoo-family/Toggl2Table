@@ -1030,8 +1030,10 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     // |##################################################|
 
     private void applyFilters() {
-        setRawDataTableData();
-        updateFormattedTableData();
+        if (rawTimeDataLogic.getMasterTimeEntries() != null) {
+            setRawDataTableData();
+            updateFormattedTableData();
+        }
     }
 
     /**

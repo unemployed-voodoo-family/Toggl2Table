@@ -65,7 +65,7 @@
                   <Font size="14.0" />
                </font>
                <VBox.margin>
-                  <Insets top="2.0" />
+                  <Insets top="15.0" />
                </VBox.margin>
             </Button>
             <Hyperlink alignment="CENTER" contentDisplay="CENTER" onKeyPressed="#buttonPressedListener" prefWidth="300.0" text="Forgot password?" />

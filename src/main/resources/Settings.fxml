@@ -18,7 +18,7 @@
 
 <ScrollPane maxWidth="1.7976931348623157E308" prefHeight="631.0" prefWidth="925.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UnemployedVoodooFamily.GUI.Content.SettingsController">
    <content>
-      <GridPane prefHeight="724.0" prefWidth="783.0">
+      <GridPane prefHeight="724.0" prefWidth="863.0">
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" />
          </columnConstraints>
@@ -26,9 +26,9 @@
             <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <VBox maxWidth="1.7976931348623157E308" minWidth="400.0">
+            <VBox maxWidth="1.7976931348623157E308" minWidth="400.0" prefHeight="724.0" prefWidth="839.0">
                <children>
-                  <GridPane prefHeight="300.0" prefWidth="844.0" vgap="15.0">
+                  <GridPane prefHeight="314.0" prefWidth="816.0" vgap="15.0">
                     <columnConstraints>
                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="330.0" minWidth="10.0" prefWidth="330.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="423.0" />
@@ -82,7 +82,7 @@
                               <Font size="14.0" />
                            </font>
                         </Label>
-                        <TableView fx:id="hoursView" maxWidth="-Infinity" prefHeight="180.0" prefWidth="456.0" GridPane.columnIndex="1" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.rowSpan="2" GridPane.vgrow="NEVER">
+                        <TableView fx:id="hoursView" maxWidth="-Infinity" prefHeight="194.0" prefWidth="545.0" GridPane.columnIndex="1" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.rowSpan="2" GridPane.vgrow="NEVER">
                            <GridPane.margin>
                               <Insets left="40.0" />
                            </GridPane.margin>
@@ -97,6 +97,7 @@
                   <GridPane prefHeight="208.0" prefWidth="515.0" vgap="15.0">
                     <columnConstraints>
                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="330.0" minWidth="10.0" prefWidth="330.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="330.0" minWidth="10.0" prefWidth="330.0" />
                     </columnConstraints>
                     <rowConstraints>
                       <RowConstraints />
@@ -109,10 +110,10 @@
                               <Font size="20.0" />
                            </font>
                         </Label>
-                        <GridPane prefHeight="246.0" prefWidth="437.0" vgap="7.0" GridPane.rowIndex="2">
+                        <GridPane prefHeight="246.0" prefWidth="437.0" vgap="15.0" GridPane.rowIndex="2">
                           <columnConstraints>
                             <ColumnConstraints hgrow="SOMETIMES" maxWidth="251.0" minWidth="10.0" prefWidth="248.0" />
-                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="225.0" minWidth="10.0" prefWidth="122.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="225.0" minWidth="10.0" prefWidth="82.0" />
                           </columnConstraints>
                           <rowConstraints>
                             <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="35.0" vgrow="SOMETIMES" />
@@ -123,16 +124,22 @@
                               <Label text="View stored data" />
                               <HBox alignment="TOP_RIGHT" prefHeight="31.0" prefWidth="202.0" GridPane.columnIndex="1">
                                  <children>
-                                    <Button fx:id="viewDataBtn" mnemonicParsing="false" prefHeight="31.0" prefWidth="72.0" text="View" />
+                                    <Button fx:id="viewDataBtn" layoutY="-1.0" mnemonicParsing="false" prefHeight="79.0" prefWidth="72.0" text="View" />
                                  </children>
                               </HBox>
-                              <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                                 <children>
-                                    <Button fx:id="dataPathBtn" mnemonicParsing="false" prefHeight="30.0" prefWidth="95.0" text="Change" />
-                                 </children></HBox>
+                              <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                               <Label text="Delete stored data" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
-                              <Button fx:id="deleteDataBtn" mnemonicParsing="false" prefHeight="31.0" prefWidth="72.0" text="Delete" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
-                              <TextField fx:id="dataPathField" prefHeight="30.0" prefWidth="204.0" text="path/to/data" GridPane.rowIndex="1" GridPane.valignment="TOP" />
+                              <Button fx:id="deleteDataBtn" mnemonicParsing="false" prefHeight="96.0" prefWidth="72.0" text="Delete" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
+                              <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                                 <children>
+                                    <TextField fx:id="dataPathField" prefHeight="35.0" prefWidth="300.0" text="path/to/data" />
+                                    <Button fx:id="dataPathBtn" minWidth="72.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="72.0" text="Change">
+                                       <HBox.margin>
+                                          <Insets left="10.0" />
+                                       </HBox.margin>
+                                    </Button>
+                                 </children>
+                              </HBox>
                            </children>
                         </GridPane>
                         <Separator prefWidth="200.0" />

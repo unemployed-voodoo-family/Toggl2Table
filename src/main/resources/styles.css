@@ -57,11 +57,12 @@
 
 
 .button, .toggle-button, .spinner .increment-arrow-button, .spinner .decrement-arrow-button {
-    -fx-background-radius: 0;
-    -fx-border-radius: 0;
-    -fx-background-color: #ffffff;
-    -fx-border-color: #ffffff;
-    -fx-text-fill: #333333;
+    -fx-background-radius: 2;
+    -fx-border-radius: 2;
+    -fx-border-width: 0;
+    -fx-background-color: #f6f6f6;
+    -fx-border-color: #f6f6f6;
+    -fx-text-fill: black;
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.6), 2, 0, 0, 1);
 }
 
@@ -82,26 +83,23 @@
 /*######## TEXT FIELD ########*/
 
 .text-field {
-    -fx-border-radius: 0;
-    -fx-background-radius: 0;
+    /*-fx-border-radius: 0;
     -fx-border-width: 1px;
-    -fx-background-color: #ffffff;
+    -fx-background-color: #fffff
     -fx-border-color: transparent;
     -fx-text-fill: #666666;
-    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.6), 2, 0, 1, 1);
-}
+     fx-background-radius: 0;
+    /*-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.6), 2, 0, 1, 1);*/
+    -fx-focus-color: -fx-main;
+    -fx-faint-focus-color: #56AB9C22;
 
-.text-field:selected {
-    -fx-border-color: -fx-mainlight;
 }
 
 .text-field:focused {
     -fx-text-fill: #333333;
-    -fx-border-color: -fx-mainlight;
 }
 
 .text-field:hover {
-    -fx-border-color: -fx-main;
     -fx-text-fill: #333333;
 }
 
@@ -255,7 +253,7 @@
 }
 
 .menu-button {
-    -fx-background-color: #ffffff;
+    -fx-background-color: #f6f6f6;
     -fx-border-color: transparent;
     -fx-border-radius: 0;
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.6), 2, 0, 1, 1);
@@ -265,7 +263,7 @@
     -fx-border-radius: 0;
     -fx-border-width: 0;
     -fx-text-fill: #333333;
-    -fx-background-color: #ffffff;
+    -fx-background-color: #f6f6f6;
 }
 
 .menu-button:hover, .menu-button:hover > .label {
@@ -312,12 +310,6 @@
 /*######## DATE PICKER ########*/
 
 
-.date-picker > .text-field {
-    -fx-background-radius: 0;
-    -fx-border-radius: 0;
-    -fx-background-color: #ffffff;
-}
-
 .date-picker-popup > .month-year-pane {
     -fx-background-radius: 0;
     -fx-border-radius: 0;
@@ -348,10 +340,6 @@
 }
 
 .combo-box-base {
-    -fx-background-radius: 0;
-    -fx-border-radius: 0;
-    -fx-background-color: #f1f1f1;
-    -fx-border-color: #e1e1e1;
     -fx-text-fill: #333333;
 }
 
@@ -370,6 +358,29 @@
 .date-picker.error > .text-field {
     -fx-border-color: #ff2530;
     -fx-focus-color: #ff2530;
+}
+
+
+.date-picker .arrow-button{
+
+    -fx-background-color:
+            linear-gradient(to bottom, derive(-fx-text-box-border, -10%), -fx-text-box-border),
+            linear-gradient(from 0px 0px to 0px 5px, derive(-fx-control-inner-background, -9%), -fx-control-inner-background);
+    -fx-border-width: 1 1 1 0;
+    -fx-border-color:  #B5B5B5;
+    -fx-border-radius: 2;
+    -fx-background-radius: 2;
+    -fx-border-insets: 0 0 0 -1;
+    -fx-background-insets: 0;
+}
+
+.date-picker .arrow-button:hover {
+    -fx-background-color: -fx-main;
+}
+
+.date-picker.arrow-button:pressed {
+    -fx-background-color: -fx-mainlight;
+
 }
 
 .label.error {
@@ -404,12 +415,14 @@
     -fx-background-color: transparent;
 }
 
-#rawStartDate .text-field, .date-picker .arrow-button, #rawEndDate .text-field {
+#rawStartDate .text-field, #rawStartDate .arrow-button,
+#rawEndDate .text-field, #rawEndDate.arrow-button {
     -fx-font-size: 16;
 
 }
 
-.date-picker .text-field, .date-picker .arrow-button {
+#rawStartDate > .text-field, #rawStartDate .arrow-button,
+#rawEndDate > .text-field, #rawEndDate .arrow-button{
     -fx-background-insets: 0;
     -fx-background-radius: 0;
     -fx-background-color: transparent;
@@ -418,13 +431,27 @@
     -fx-effect: null;
 }
 
-.date-picker .arrow-button:hover {
+#rawStartDate .arrow-button:hover,
+#rawEndDate .arrow-button:hover{
     -fx-background-color: -fx-main;
 }
 
-.date-picker .arrow-button:pressed {
+#rawStartDate .arrow-button:pressed,
+#rawEndDate .arrow-button:pressed{
     -fx-background-color: -fx-mainlight;
 }
+
+
+#submitBtn {
+    -fx-background-color: -fx-main;
+    -fx-border-width: 0;
+    -fx-text-fill: white;
+}
+
+#submitBtn:hover {
+    -fx-background-color: -fx-mainlight;
+}
+
 
 
 #profileSettingsBtn {
