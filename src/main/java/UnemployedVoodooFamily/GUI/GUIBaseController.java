@@ -24,6 +24,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.effect.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
@@ -113,6 +114,7 @@ public class GUIBaseController {
         Scene scene = new Scene(root);
         scene.getStylesheets().add("styles.css");
         appStage.setTitle("Toggl Time Sheet");
+        appStage.getIcons().add(new Image("/icons/app_icon/96x96.png"));
         appStage.setScene(scene);
         appStage.show();
     }

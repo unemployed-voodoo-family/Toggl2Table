@@ -31,7 +31,6 @@ public class ExcelExportHandler {
     }
 
     public boolean makeExcelDocument() throws IOException {
-        //generateDummyLists(); //Remove this later, dummy
         boolean exportSuccess = excelWriter.generateExcelSheet(monthlyDataLists, year);
         if(exportSuccess)   {
             System.out.println("Successfully exported to excel document");
