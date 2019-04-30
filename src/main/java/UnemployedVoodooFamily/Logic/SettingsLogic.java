@@ -194,13 +194,27 @@ public class SettingsLogic {
         return data;
     }
 
-    public void deleteStoredData(FilePath directory){
-        File directoryPath = new File(directory.getPath());
+    /**
+     * This method's main function is to delete files in a specific directory,
+     * files including files in subdirectories will also be deleted, disregarding it's extension.
+     * @param path is the directory path from where all files will be removed.
+     */
+    public void deleteStoredData(String path){
+        File directory = new File(path);
 
-        for(File file: directoryPath.listFiles()){
-            if (!file.isDirectory()){
-                file.delete();
+        try{
+            for(File file: directory.listFiles()){
+                if(file.isDirectory()) {
+                    deleteStoredData(directory + File.separator + file.getName());
+                }
+                else {
+                    file.delete();
+                }
             }
         }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+
     }
 }
