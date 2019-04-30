@@ -43,7 +43,7 @@
                             <children>
                                 <Label text="Set Work Hours">
                                     <font>
-                                        <Font size="20.0" />
+                                        <Font size="24.0" />
                                     </font>
                                 </Label>
                                 <HBox alignment="TOP_RIGHT" prefHeight="0.0" prefWidth="370.0" spacing="10.0" GridPane.rowIndex="2">
@@ -83,16 +83,19 @@
                                         <Font size="14.0" />
                                     </font>
                                 </Label>
-                                <TableView fx:id="hoursView" maxWidth="-Infinity" prefHeight="180.0" prefWidth="456.0" GridPane.columnIndex="1" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.rowSpan="2" GridPane.vgrow="NEVER">
-                                    <GridPane.margin>
-                                        <Insets left="40.0" />
-                                    </GridPane.margin>
-                                </TableView>
-                                <HBox nodeOrientation="RIGHT_TO_LEFT" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
-                                    <children>
-                                        <Button alignment="CENTER_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" text="Delete" />
-                                    </children>
-                                </HBox>
+                                <HBox nodeOrientation="RIGHT_TO_LEFT" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <VBox fx:id="workHoursViewRoot" alignment="TOP_RIGHT" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.rowSpan="3">
+                           <children>
+                                      <TableView fx:id="hoursView" editable="true" maxWidth="-Infinity" prefHeight="180.0" prefWidth="456.0" />
+                                        <Button fx:id="deleteWhBtn" alignment="CENTER_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" text="Delete">
+                                 <VBox.margin>
+                                    <Insets top="15.0" />
+                                 </VBox.margin></Button>
+                           </children>
+                           <GridPane.margin>
+                              <Insets left="10.0" />
+                           </GridPane.margin>
+                        </VBox>
                             </children>
                         </GridPane>
                           <GridPane prefWidth="566.0" vgap="15.0">
@@ -122,9 +125,9 @@
                                   <Label text="Delete stored data" GridPane.rowIndex="3" GridPane.valignment="BOTTOM" />
                                   <Button fx:id="deleteDataBtn" mnemonicParsing="false" prefHeight="33.0" prefWidth="72.0" text="Delete" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3" GridPane.valignment="BOTTOM" />
                                   <TextField fx:id="dataPathField" prefHeight="42.0" prefWidth="228.0" text="path/to/data" GridPane.rowIndex="2" GridPane.valignment="TOP" />
-                                <Label prefWidth="118.0" text="Stored data">
+                                <Label prefHeight="35.0" prefWidth="248.0" text="Stored data">
                                     <font>
-                                        <Font size="20.0" />
+                                        <Font size="24.0" />
                                     </font>
                                 </Label>
                         <Label fx:id="fileRemoveFeedbackLabel" GridPane.columnIndex="2" GridPane.rowIndex="3">

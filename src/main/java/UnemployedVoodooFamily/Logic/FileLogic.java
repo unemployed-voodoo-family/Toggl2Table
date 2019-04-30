@@ -61,30 +61,6 @@ public class FileLogic {
         return file.delete();
     }
 
-    public void appendWorkHoursToJson(String path, WorkHours wh) {
-        File file = getFile(path);
-
-        FileWriter writer = null;
-        try {
-            writer = new FileWriter(file);
-        }
-        catch(IOException e) {
-            e.printStackTrace();
-        }
-        GsonBuilder builder = new GsonBuilder();
-        Gson gson = builder.setPrettyPrinting().create();
-        List<WorkHours> list = loadJson(path);
-        Type listType = new TypeToken<List<WorkHours>>() {}.getType();
-        list.add(wh);
-        gson.toJson(list, listType, writer);
-        try {
-            writer.close();
-        }
-        catch(IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     public List<WorkHours> loadJson(String path) {
         FileReader reader = null;
         File file = getFile(path);

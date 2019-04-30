@@ -8,9 +8,8 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
-<?import javafx.scene.layout.AnchorPane?>
-
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
@@ -20,7 +19,7 @@
 
 <ScrollPane hbarPolicy="NEVER" maxWidth="1.7976931348623157E308" prefHeight="589.0" prefWidth="917.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UnemployedVoodooFamily.GUI.Content.ProfileController">
    <content>
-      <GridPane maxHeight="-Infinity" prefHeight="587.0" prefWidth="600.0">
+      <GridPane maxHeight="-Infinity">
          <columnConstraints>
             <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
          </columnConstraints>
@@ -37,6 +36,9 @@
                            <font>
                               <Font size="24.0" />
                            </font>
+                           <HBox.margin>
+                              <Insets bottom="15.0" />
+                           </HBox.margin>
                         </Label>
                         <MenuButton fx:id="profileSettingsBtn" mnemonicParsing="false">
                           <items>
@@ -57,7 +59,7 @@
                         <Font name="System Bold" size="12.0" />
                      </font>
                      <padding>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                        <Insets bottom="5.0" left="5.0" right="5.0" />
                      </padding>
                   </Label>
                   <TextField fx:id="nameField" editable="false" styleClass="displayOnlyField" text="Name">
@@ -179,6 +181,9 @@
                </children>
             </HBox>
          </children>
+         <padding>
+            <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+         </padding>
       </GridPane>
    </content>
 </ScrollPane>

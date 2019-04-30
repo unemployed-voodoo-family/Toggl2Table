@@ -397,18 +397,25 @@
 
 #summarySelectionBtn {
     -fx-effect: null;
-
+    -fx-background-color: transparent;
 }
 
-#summarySelectionBtn .label {
+#summarySelectionBtn > .label {
     -fx-font-size: 26;
     -fx-padding: 0 5 0 5;
+    -fx-background-color: transparent;
+
 }
 
 #summarySelectionBtn .arrow {
     -fx-border-color: -fx-mainlight;
     -fx-background-color: -fx-mainlight;
     -fx-font-size: 24;
+}
+
+#summarySelectionBtn:hover {
+    -fx-background-color: -fx-main;
+    -fx-text-fill: black;
 }
 
 #rawStartDate, #rawEndDate {

@@ -8,6 +8,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import org.apache.poi.ss.formula.functions.T;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,10 +29,7 @@ public class SettingsLogic {
 
     private static DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
-    private TableColumn<WorkHoursData, String> fromCol;
-    private TableColumn<WorkHoursData, String> toCol;
-    private TableColumn<WorkHoursData, Double> hoursCol;
-    private TableColumn<WorkHoursData, String> noteCol;
+
 
 
     public SettingsLogic(String path) {
@@ -156,29 +154,15 @@ public class SettingsLogic {
     }
 
     public void populateHoursTable(TableView table) {
-        fromCol = new TableColumn<>("From");
-        toCol = new TableColumn<>("To");
-        hoursCol = new TableColumn<>("Hours");
-        noteCol = new TableColumn<>("Note");
-
-        table.getColumns().clear();
-        table.getColumns().addAll(fromCol, toCol, hoursCol, noteCol);
-        fromCol.setCellValueFactory(param -> param.getValue().fromProperty());
-        toCol.setCellValueFactory(param -> param.getValue().toProperty());
-        hoursCol.setCellValueFactory(param -> param.getValue().hoursProperty());
-        noteCol.setCellValueFactory(param -> param.getValue().noteProperty());
-
         //load props file
-        props = propsLogic.loadProps(FilePath.getCurrentUserWorkhours());
-        propsLogic.loadJson(path);
+        List<WorkHours> whList = propsLogic.loadJson(path);
 
         ObservableList<WorkHoursData> data = FXCollections.observableArrayList();
-        Iterator<WorkHours> it = sortWorkHoursData(propsLogic.loadJson(path)).iterator();
+        Iterator<WorkHours> it = sortWorkHoursData(whList).iterator();
 
         while(it.hasNext()) {
             WorkHours next = it.next();
-            Double hours = next.getHours();
-            data.add(new WorkHoursData(next.getFrom(), next.getTo(), hours, next.getNote()));
+            data.add(new WorkHoursData(next));
         }
         table.getItems().clear();
         table.getItems().addAll(data);
@@ -211,5 +195,13 @@ public class SettingsLogic {
                 }
             }
 
+    }
+
+    public <T> void deleteWorkHours(T workhours) {
+        if(workhours instanceof WorkHoursData) {
+            this.workHours = propsLogic.loadJson(path);
+            workHours.remove(((WorkHoursData) workhours).getWorkHours());
+            propsLogic.saveJson(path, this.workHours);
+        }
     }
 }

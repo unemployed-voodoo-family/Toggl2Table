@@ -9,31 +9,33 @@ public class WorkHoursData{
 
 
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd. LLLL yyyy");
-    private SimpleObjectProperty<String> from;
-    private SimpleObjectProperty<String> to;
+    private SimpleObjectProperty<LocalDate> from;
+    private SimpleObjectProperty<LocalDate> to;
     private SimpleObjectProperty<Double> hours;
     private SimpleObjectProperty<String> note;
+    private WorkHours workHours;
 
-    public WorkHoursData(LocalDate from, LocalDate to, Double hours, String note) {
-        this.from = new SimpleObjectProperty<>(from.format(formatter));
-        this.to = new SimpleObjectProperty<>(to.format(formatter));
-        this.hours = new SimpleObjectProperty<>(hours);
-        this.note = new SimpleObjectProperty<>(note);
+    public WorkHoursData(WorkHours wh) {
+        this.workHours = wh;
+        this.from = new SimpleObjectProperty<>(wh.getFrom());
+        this.to = new SimpleObjectProperty<>(wh.getTo());
+        this.hours = new SimpleObjectProperty<>(wh.getHours());
+        this.note = new SimpleObjectProperty<>(wh.getNote());
     }
 
-    public String getFrom() {
+    public LocalDate getFrom() {
         return from.get();
     }
 
-    public SimpleObjectProperty<String> fromProperty() {
+    public SimpleObjectProperty<LocalDate> fromProperty() {
         return from;
     }
 
-    public String getTo() {
+    public LocalDate getTo() {
         return to.get();
     }
 
-    public SimpleObjectProperty<String> toProperty() {
+    public SimpleObjectProperty<LocalDate> toProperty() {
         return to;
     }
 
@@ -51,5 +53,9 @@ public class WorkHoursData{
 
     public SimpleObjectProperty<String> noteProperty() {
         return note;
+    }
+
+    public WorkHours getWorkHours() {
+        return this.workHours;
     }
 }
