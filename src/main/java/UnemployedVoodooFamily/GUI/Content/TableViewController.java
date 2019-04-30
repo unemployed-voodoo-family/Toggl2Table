@@ -50,6 +50,7 @@ import java.time.*;
 import java.time.format.TextStyle;
 import java.util.*;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -141,6 +142,11 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     @FXML
     private Button explorerBtn;
 
+    @FXML
+    private Label hoursWorkedLabel;
+    @FXML
+    private Label extraTimeWorkedLabel;
+
     private ImageView successImg;
     private ImageView errorImg;
 
@@ -151,6 +157,9 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     private EnumSet<Data> loadedData = EnumSet.noneOf(Data.class);
 
     private Set<Object> filterOptions = new HashSet<>();
+
+    private static DecimalFormat df = new DecimalFormat("#0.00");
+
 
 
     public Node loadFXML() throws IOException {
@@ -176,10 +185,10 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     private void setupUIElements() {
 
         // load the summary views
-            monthlySummaryViewController = new MonthlySummaryViewController();
-            weeklySummaryViewController = new WeeklySummaryViewController();
-            //this.weeklySummary = weeklySummaryViewController.loadFXML();
-            //this.monthlySummary = monthlySummaryViewController.loadFXML();
+        monthlySummaryViewController = new MonthlySummaryViewController();
+        weeklySummaryViewController = new WeeklySummaryViewController();
+        //this.weeklySummary = weeklySummaryViewController.loadFXML();
+        //this.monthlySummary = monthlySummaryViewController.loadFXML();
 
 
         // set up table views
@@ -195,7 +204,6 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         initializeFilterButton(clientFilterBtn);
         initializeFilterButton(projectFilterBtn);
         initializeFilterButton(workspaceFilterBtn);
-
 
 
         // load success and error images
@@ -418,14 +426,10 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
                 monthSpinner.getValueFactory().setValue(monthlyDropdown.getValue());
             }
         });
-        monthSpinner.valueProperty().addListener(new ChangeListener<SimpleObjectProperty<Month>>() {
-            @Override
-            public void changed(ObservableValue<? extends SimpleObjectProperty<Month>> observable,
-                                SimpleObjectProperty<Month> oldValue, SimpleObjectProperty<Month> newValue) {
-
-                formattedTimeDataLogic.setSelectedMonth(newValue.get());
-                updateSummaryValues();
-            }
+        monthSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
+            formattedTimeDataLogic.setSelectedMonth(newValue.get());
+            updateMonthlyTable();
+            updateSummaryValues();
         });
 
 
@@ -443,7 +447,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     }
 
     private void updateSummaryValues() {
-         // TODO: implement
+        // TODO: implement
     }
 
     private void initExcelExportBtn() {
@@ -569,7 +573,12 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     private void updateMonthlyTable() {
         ObservableList<DailyFormattedDataModel> data = getObservableMonthlyData();
         try {
-            monthlyTable.getItems().setAll(data);
+            Platform.runLater(() -> {
+                double[] values = calculateSummary(data);
+                monthlyTable.getItems().setAll(data);
+                hoursWorkedLabel.setText(df.format(values[0]));
+                extraTimeWorkedLabel.setText(df.format(values[1]));
+            });
         }
         catch(RuntimeException e) {
             // tried getting data before it was loaded
@@ -578,13 +587,33 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     }
 
     private void updateWeeklyTable() {
+        ObservableList<DailyFormattedDataModel> data = getObservableWeeklyData();
         try {
-            weeklyTable.getItems().setAll(getObservableWeeklyData());
+            Platform.runLater(() -> {
+                double[] values = calculateSummary(data);
+                weeklyTable.getItems().setAll(getObservableWeeklyData());
+                hoursWorkedLabel.setText(String.valueOf(values[0]));
+                extraTimeWorkedLabel.setText(String.valueOf(values[1]));
+            });
         }
         catch(Exception e) {
             // tried getting data before it was loaded
             e.getMessage();
         }
+    }
+
+    private double[] calculateSummary(ObservableList<DailyFormattedDataModel> data) {
+        double extraTime = 0d;
+        double worked = 0d;
+
+        for(DailyFormattedDataModel item : data) {
+            extraTime += item.getExtraTime();
+            worked += item.getWorkedHours();
+        }
+        extraTimeWorkedLabel.setText(String.valueOf(extraTime));
+        hoursWorkedLabel.setText(String.valueOf(worked));
+
+        return new double[]{worked, extraTime};
     }
 
     //region Tableview setup methods
@@ -594,8 +623,6 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
      */
     @SuppressWarnings("Duplicates")
     private void buildFormattedWeeklyTable() {
-        DecimalFormat df = new DecimalFormat("#0.00 ");
-
         this.weeklyTable = new TableView<>();
         //Create all columns necessary
 
@@ -680,7 +707,6 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
 
         //this.monthlyTable.setRowFactory();
 
-        DecimalFormat df = new DecimalFormat("#0.00 ");
         String fillerStyle = "-fx-fill: blue;";
 
         //Create all columns necessary
@@ -844,7 +870,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
                .addAll(projectCol, clientCol, descCol, startDateCol, startTimeCol, endDateCol, endTimeCol, durationCol);
     }
 
-    private <T> TableCell<T, Double> setDecimalFormatter(DecimalFormat df) {
+    private <T> TableCell<T, Double> setDecimalFormatter(DecimalFormat format) {
         return new TableCell<T, Double>() {
             @Override
             protected void updateItem(Double item, boolean empty) {
@@ -854,7 +880,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
                     setGraphic(null);
                 }
                 else {
-                    setText(df.format(item));
+                    setText(format.format(item));
                 }
             }
         };
