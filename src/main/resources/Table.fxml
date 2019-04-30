@@ -64,21 +64,21 @@
                               </HBox>
                               <HBox alignment="CENTER_LEFT" prefWidth="347.0" GridPane.columnIndex="1">
                                  <children>
-                                    <Label text="From ">
+                                    <Label maxWidth="-Infinity" minWidth="-Infinity" prefWidth="55.0" text="From ">
                                        <font>
                                           <Font size="20.0" />
                                        </font>
                                        <HBox.margin>
-                                          <Insets right="5.0" />
+                                          <Insets />
                                        </HBox.margin>
                                     </Label>
                                     <DatePicker fx:id="rawStartDate" minHeight="-Infinity" minWidth="-Infinity" prefWidth="160.0" showWeekNumbers="true" />
-                                    <Label text="  -  ">
+                                    <Label maxWidth="-Infinity" minWidth="-Infinity" prefWidth="30.0" text="  -  ">
                                        <font>
                                           <Font size="20.0" />
                                        </font>
                                     </Label>
-                                    <Label text="To ">
+                                    <Label maxWidth="-Infinity" minWidth="-Infinity" prefWidth="30.0" text="To ">
                                        <font>
                                           <Font size="20.0" />
                                        </font>
@@ -121,9 +121,9 @@
                     </columnConstraints>
                     <rowConstraints>
                         <RowConstraints maxHeight="105.0" minHeight="105.0" prefHeight="105.0" vgrow="ALWAYS" />
-                        <RowConstraints maxHeight="81.0" minHeight="24.0" vgrow="ALWAYS" />
-                      <RowConstraints maxHeight="81.0" minHeight="24.0" vgrow="ALWAYS" />
-                        <RowConstraints maxHeight="593.0" minHeight="350.0" prefHeight="546.0" vgrow="ALWAYS" />
+                        <RowConstraints maxHeight="40.0" minHeight="40.0" prefHeight="40.0" vgrow="ALWAYS" />
+                      <RowConstraints maxHeight="24.0" minHeight="24.0" prefHeight="24.0" vgrow="NEVER" />
+                        <RowConstraints maxHeight="1.7976931348623157E308" minHeight="15.0" prefHeight="546.0" vgrow="ALWAYS" />
                     </rowConstraints>
                      <children>
                         <GridPane fx:id="tableRoot" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" GridPane.vgrow="ALWAYS">
@@ -131,7 +131,7 @@
                             <ColumnConstraints hgrow="ALWAYS" minWidth="400.0" />
                           </columnConstraints>
                           <rowConstraints>
-                            <RowConstraints minHeight="350.0" vgrow="ALWAYS" />
+                            <RowConstraints minHeight="15.0" vgrow="ALWAYS" />
                           </rowConstraints>
                            <children>
                               <TableView fx:id="weeklyTable" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
@@ -224,8 +224,8 @@
                         <Separator prefWidth="200.0" GridPane.rowIndex="2" />
                         <GridPane>
                            <columnConstraints>
-                              <ColumnConstraints hgrow="ALWAYS" maxWidth="314.0" minWidth="10.0" prefWidth="314.0" />
-                              <ColumnConstraints hgrow="ALWAYS" maxWidth="479.0" minWidth="200.0" prefWidth="330.0" />
+                              <ColumnConstraints hgrow="NEVER" maxWidth="314.0" minWidth="10.0" prefWidth="314.0" />
+                              <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="200.0" />
                            </columnConstraints>
                            <rowConstraints>
                               <RowConstraints vgrow="ALWAYS" />
@@ -413,7 +413,7 @@
             </Label>
          </children>
          <HBox.margin>
-            <Insets left="5.0" right="5.0" top="70.0" />
+            <Insets left="5.0" right="5.0" top="35.0" />
          </HBox.margin>
       </VBox>
    </children>

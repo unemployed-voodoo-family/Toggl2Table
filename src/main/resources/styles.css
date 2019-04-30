@@ -14,6 +14,12 @@
 
 .table-view {
     -fx-border-color: #ffffff;
+    -fx-font-family: Helvetica;
+}
+
+#hoursView {
+    -fx-border-width: 0;
+    -fx-border-color: transparent;
 }
 
 .table-column.right {
@@ -21,9 +27,14 @@
 }
 
 .table-view *.filler, .table-view *.column-header {
-    -fx-background-color: #ffffff;
+    -fx-background-color: -fx-dark;
     -fx-border-color: #646464;
     -fx-border-width: 0 0 1 0;
+}
+
+.table-view *.column-header .label{
+    -fx-text-fill: white;
+
 }
 
 
@@ -45,7 +56,7 @@
 }
 
 
-.button, .toggle-button {
+.button, .toggle-button, .spinner .increment-arrow-button, .spinner .decrement-arrow-button {
     -fx-background-radius: 0;
     -fx-border-radius: 0;
     -fx-background-color: #ffffff;
@@ -54,13 +65,13 @@
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.6), 2, 0, 0, 1);
 }
 
-.button:hover, .toggle-button:hover {
+.button:hover, .toggle-button:hover, .spinner .increment-arrow-button:hover, .spinner .decrement-arrow-button:hover {
     -fx-background-color: -fx-main;
     -fx-border-color: -fx-main;
     -fx-text-fill: #ffffff;
 }
 
-.button:pressed, .toggle-button:pressed, .toggle-button:selected {
+.button:pressed, .toggle-button:pressed, .toggle-button:selected, .spinner .increment-arrow-button:pressed, .spinner .decrement-arrow-button:pressed {
     -fx-background-color: -fx-mainlight;
     -fx-border-color: -fx-mainlight;
     -fx-text-fill: #ffffff;
@@ -146,6 +157,10 @@
 
 #lastFetchedLabel {
     -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+}
+
+.spinner .text-field {
     -fx-font-weight: bold;
 }
 
