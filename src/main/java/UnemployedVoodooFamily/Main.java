@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
+import javax.imageio.ImageIO;
 import java.io.File;
 import java.net.URL;
 
@@ -56,6 +57,7 @@ public class Main extends Application {
         Parent root = FXMLLoader.load(r);
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
+
         initStage(primaryStage);
 
         primaryStage.show();

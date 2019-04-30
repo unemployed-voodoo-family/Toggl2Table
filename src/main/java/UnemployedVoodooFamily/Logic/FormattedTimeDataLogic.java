@@ -129,4 +129,8 @@ public class FormattedTimeDataLogic {
     public Map<YearMonth, List<DailyFormattedDataModel>> getMonthlyMasterData() {
         return monthlyMasterData;
     }
+
+    public static Map<YearMonth, List<DailyFormattedDataModel>> getMonthlyMaterData() {
+        return monthlyMasterData;
+    }
 }

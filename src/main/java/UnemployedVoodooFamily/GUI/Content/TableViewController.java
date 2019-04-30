@@ -73,10 +73,10 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     private Label excelFeedbackLabel;
 
     @FXML
-    private ToggleButton weeklyToggleBtn;
+    private MenuItem weeklyToggleBtn;
 
     @FXML
-    private ToggleButton monthlyToggleBtn;
+    private MenuItem monthlyToggleBtn;
 
     @FXML
     private Button exportBtn;
@@ -88,8 +88,6 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     private DatePicker rawStartDate;
     @FXML
     private DatePicker rawEndDate;
-    @FXML
-    private AnchorPane summaryRoot;
 
     @FXML
     private VBox filterBox;
@@ -105,6 +103,8 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     private TabPane tableTabPane;
     @FXML
     private HBox root;
+    @FXML
+    private MenuButton summarySelectionBtn;
 
     @FXML
     private Spinner yearSpinner;
@@ -123,10 +123,8 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     @FXML
     private ImageView feedbackImg;
 
-    @FXML
-    private Content weeklySummary;
-    @FXML
-    private Content monthlySummary;
+    private MonthlySummaryViewController monthlySummaryViewController;
+    private WeeklySummaryViewController weeklySummaryViewController;
 
     @FXML
     private TableView<DailyFormattedDataModel> monthlyTable;
@@ -178,13 +176,11 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     private void setupUIElements() {
 
         // load the summary views
-        try {
-            this.weeklySummary = new WeeklySummaryViewController().loadFXML();
-            this.monthlySummary = new MonthlySummaryViewController().loadFXML();
-        }
-        catch(IOException e) {
-            e.printStackTrace();
-        }
+            monthlySummaryViewController = new MonthlySummaryViewController();
+            weeklySummaryViewController = new WeeklySummaryViewController();
+            //this.weeklySummary = weeklySummaryViewController.loadFXML();
+            //this.monthlySummary = monthlySummaryViewController.loadFXML();
+
 
         // set up table views
         buildFormattedWeeklyTable();
@@ -199,6 +195,8 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         initializeFilterButton(clientFilterBtn);
         initializeFilterButton(projectFilterBtn);
         initializeFilterButton(workspaceFilterBtn);
+
+
 
         // load success and error images
         URL successUrl = getClass().getClassLoader()
@@ -217,9 +215,10 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     }
 
     private void setupFormattedTableUIElements() {
-        weeklyToggleBtn.setToggleGroup(timeSpanToggleGroup);
-        monthlyToggleBtn.setToggleGroup(timeSpanToggleGroup);
-        weeklyToggleBtn.setSelected(true);
+        //weeklyToggleBtn.setToggleGroup(timeSpanToggleGroup);
+        //monthlyToggleBtn.setToggleGroup(timeSpanToggleGroup);
+        //weeklyToggleBtn.setSelected(true);
+        weeklyToggleBtn.fire();
 
         yearSpinner.getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
         weekSpinner.getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
@@ -343,17 +342,17 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         });
 
         weeklyToggleBtn.setOnAction((ActionEvent e) -> {
-            weeklyToggleBtn.setSelected(true);
             switchView(tableRoot, weeklyTable);
-            switchView(summaryRoot, weeklySummary);
+            summarySelectionBtn.setText("Weekly Summary");
+            //switchView(summaryRoot, weeklySummary);
             updateWeeklySpinner(true);
             updateMonthlySpinner(false);
             timePeriodSpinnerLabel.setText("Week");
         });
         monthlyToggleBtn.setOnAction((ActionEvent e) -> {
-            monthlyToggleBtn.setSelected(true);
             switchView(tableRoot, monthlyTable);
-            switchView(summaryRoot, monthlySummary);
+            summarySelectionBtn.setText("Monthly Summary");
+            //switchView(summaryRoot, monthlySummary);
             updateWeeklySpinner(false);
             updateMonthlySpinner(true);
             timePeriodSpinnerLabel.setText("Month");
@@ -425,7 +424,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
                                 SimpleObjectProperty<Month> oldValue, SimpleObjectProperty<Month> newValue) {
 
                 formattedTimeDataLogic.setSelectedMonth(newValue.get());
-                updateMonthlyTable();
+                updateSummaryValues();
             }
         });
 
@@ -441,7 +440,10 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
                 //could not find path
             }
         });
+    }
 
+    private void updateSummaryValues() {
+         // TODO: implement
     }
 
     private void initExcelExportBtn() {
@@ -665,7 +667,6 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
 
         //must be called, or else the table won't appear
         switchView(tableRoot, weeklyTable);
-        switchView(summaryRoot, weeklySummary);
     }
 
     /**

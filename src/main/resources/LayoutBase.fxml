@@ -12,15 +12,14 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox maxHeight="1.7976931348623157E308" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UnemployedVoodooFamily.GUI.GUIBaseController">
+<VBox maxHeight="1.7976931348623157E308" minHeight="280.0" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UnemployedVoodooFamily.GUI.GUIBaseController">
   <children>
-      <GridPane fx:id="appRoot" prefHeight="673.0" prefWidth="1126.0" VBox.vgrow="ALWAYS">
+      <GridPane fx:id="appRoot" minHeight="280.0" prefHeight="673.0" prefWidth="1126.0" VBox.vgrow="ALWAYS">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="300.0" />
         </columnConstraints>
@@ -36,7 +35,7 @@
                      </BorderPane.margin></AnchorPane>
                </center>
                <bottom>
-                  <VBox fx:id="bottomBar" prefHeight="24.0" prefWidth="1088.0" BorderPane.alignment="CENTER">
+                  <VBox fx:id="bottomBar" maxHeight="24.0" minWidth="24.0" prefHeight="24.0" prefWidth="1088.0" BorderPane.alignment="CENTER">
                      <children>
                         <HBox fx:id="progressBox" alignment="CENTER" prefHeight="0.0" prefWidth="1115.0" visible="false">
                            <children>
@@ -56,7 +55,7 @@
                <left>
                   <HBox maxWidth="170.0" minWidth="170.0" prefHeight="670.0" prefWidth="170.0" BorderPane.alignment="CENTER">
                      <children>
-                        <VBox id="navbar" fx:id="navbar" maxHeight="1.7976931348623157E308" prefHeight="670.0" prefWidth="216.0">
+                        <VBox id="navbar" fx:id="navbar" maxHeight="1.7976931348623157E308" maxWidth="170.0" minHeight="256.0" minWidth="170.0" prefHeight="670.0" prefWidth="170.0">
                            <children>
                               <HBox fx:id="toolBar" alignment="CENTER_LEFT" prefHeight="18.0" prefWidth="164.0">
                                  <children>
@@ -114,15 +113,18 @@
                                     <ImageView fitHeight="37.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true" />
                                  </graphic>
                               </ToggleButton>
-                              <Pane VBox.vgrow="ALWAYS" />
-                              <ToggleButton fx:id="logOutBtn" alignment="CENTER_LEFT" maxHeight="50.0" minHeight="50.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="227.0" text="Log Out">
-                                 <font>
-                                    <Font name="System Bold" size="13.0" />
-                                 </font>
-                                 <graphic>
-                                    <ImageView fitHeight="37.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true" />
-                                 </graphic>
-                              </ToggleButton>
+                              <VBox alignment="BOTTOM_LEFT" minHeight="-Infinity" VBox.vgrow="ALWAYS">
+                                 <children>
+                                    <ToggleButton fx:id="logOutBtn" alignment="CENTER_LEFT" maxHeight="50.0" minHeight="50.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="227.0" text="Log Out">
+                                       <font>
+                                          <Font name="System Bold" size="13.0" />
+                                       </font>
+                                       <graphic>
+                                          <ImageView fitHeight="37.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true" />
+                                       </graphic>
+                                    </ToggleButton>
+                                 </children>
+                              </VBox>
                            </children>
                         </VBox>
                      </children>
