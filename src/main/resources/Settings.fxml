@@ -8,7 +8,9 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
@@ -16,28 +18,28 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<ScrollPane maxWidth="1.7976931348623157E308" prefHeight="631.0" prefWidth="925.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UnemployedVoodooFamily.GUI.Content.SettingsController">
+<ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="631.0" prefWidth="925.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UnemployedVoodooFamily.GUI.Content.SettingsController">
    <content>
-      <GridPane prefHeight="724.0" prefWidth="863.0">
+      <GridPane maxHeight="-Infinity" prefHeight="605.0" prefWidth="917.0">
          <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="509.0" minWidth="10.0" prefWidth="430.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
          </columnConstraints>
          <rowConstraints>
             <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <VBox maxWidth="1.7976931348623157E308" minWidth="400.0" prefHeight="724.0" prefWidth="839.0">
+            <VBox maxWidth="-Infinity" minWidth="400.0" prefHeight="605.0" prefWidth="400.0">
                <children>
-                  <GridPane prefHeight="314.0" prefWidth="816.0" vgap="15.0">
+                  <GridPane prefHeight="314.0" prefWidth="370.0" vgap="15.0">
                     <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="330.0" minWidth="10.0" prefWidth="330.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="423.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                     </columnConstraints>
                     <rowConstraints>
-                      <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="SOMETIMES" />
-                      <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="166.0" minHeight="10.0" prefHeight="107.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="-Infinity" minHeight="30.0" prefHeight="32.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="-Infinity" minHeight="30.0" prefHeight="32.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
                         <Label text="Set Work Hours">
@@ -47,6 +49,14 @@
                         </Label>
                         <HBox alignment="TOP_RIGHT" prefHeight="0.0" prefWidth="370.0" spacing="10.0" GridPane.rowIndex="2">
                            <children>
+                              <BorderPane prefWidth="250.0" HBox.hgrow="ALWAYS">
+                                 <center>
+                                    <Label fx:id="inputFeedbackLabel" prefHeight="32.0" prefWidth="261.0" textAlignment="RIGHT" BorderPane.alignment="CENTER">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font></Label>
+                                 </center>
+                              </BorderPane>
                               <Button fx:id="confirmHoursBtn" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="110.0" text="Confirm" />
                            </children>
                         </HBox>
@@ -57,9 +67,9 @@
                           </columnConstraints>
                           <rowConstraints>
                             <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                            <RowConstraints maxHeight="-Infinity" vgrow="SOMETIMES" />
-                              <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="SOMETIMES" />
-                              <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="SOMETIMES" />
+                            <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
                               <Label text="To" GridPane.rowIndex="1" />
@@ -94,23 +104,26 @@
                         </HBox>
                      </children>
                   </GridPane>
-                  <GridPane prefHeight="208.0" prefWidth="515.0" vgap="15.0">
+                  <Separator prefHeight="50.0" prefWidth="370.0">
+                     <padding>
+                        <Insets bottom="20.0" top="40.0" />
+                     </padding>
+                  </Separator>
+                  <GridPane prefHeight="191.0" prefWidth="370.0" vgap="15.0">
                     <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="330.0" minWidth="10.0" prefWidth="330.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="330.0" minWidth="10.0" prefWidth="330.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                     </columnConstraints>
                     <rowConstraints>
-                      <RowConstraints />
                       <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="145.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="145.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Label prefHeight="31.0" prefWidth="118.0" text="Stored data" GridPane.rowIndex="1">
+                        <Label prefHeight="31.0" prefWidth="118.0" text="Stored data">
                            <font>
                               <Font size="20.0" />
                            </font>
                         </Label>
-                        <GridPane prefHeight="246.0" prefWidth="437.0" vgap="15.0" GridPane.rowIndex="2">
+                        <GridPane prefHeight="177.0" prefWidth="369.0" vgap="7.0" GridPane.rowIndex="1">
                           <columnConstraints>
                             <ColumnConstraints hgrow="SOMETIMES" maxWidth="251.0" minWidth="10.0" prefWidth="248.0" />
                             <ColumnConstraints hgrow="SOMETIMES" maxWidth="225.0" minWidth="10.0" prefWidth="82.0" />
@@ -119,6 +132,7 @@
                             <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="35.0" vgrow="SOMETIMES" />
                             <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="35.0" vgrow="SOMETIMES" />
                               <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="35.0" vgrow="SOMETIMES" />
+                              <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
                               <Label text="View stored data" />
@@ -127,22 +141,20 @@
                                     <Button fx:id="viewDataBtn" layoutY="-1.0" mnemonicParsing="false" prefHeight="79.0" prefWidth="72.0" text="View" />
                                  </children>
                               </HBox>
-                              <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                              <Label text="Delete stored data" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
-                              <Button fx:id="deleteDataBtn" mnemonicParsing="false" prefHeight="96.0" prefWidth="72.0" text="Delete" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
-                              <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                              <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                  <children>
-                                    <TextField fx:id="dataPathField" prefHeight="35.0" prefWidth="300.0" text="path/to/data" />
-                                    <Button fx:id="dataPathBtn" minWidth="72.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="72.0" text="Change">
-                                       <HBox.margin>
-                                          <Insets left="10.0" />
-                                       </HBox.margin>
-                                    </Button>
-                                 </children>
-                              </HBox>
+                                    <Button fx:id="dataPathBtn" mnemonicParsing="false" prefHeight="30.0" prefWidth="105.0" text="Change" />
+                                 </children></HBox>
+                              <Label text="Delete stored data" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
+                              <Button fx:id="deleteDataBtn" mnemonicParsing="false" prefHeight="31.0" prefWidth="72.0" text="Delete" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
+                              <TextField fx:id="dataPathField" prefHeight="30.0" prefWidth="217.0" GridPane.rowIndex="1" GridPane.valignment="TOP" />
+                              <Label fx:id="fileRemoveFeedbackLabel" GridPane.rowIndex="3">
+                                 <tooltip>
+                                    <Tooltip fx:id="errorTooltip" text="Empty Tooltip" />
+                                 </tooltip>
+                              </Label>
                            </children>
                         </GridPane>
-                        <Separator prefWidth="200.0" />
                      </children>
                   </GridPane>
                   <Separator prefHeight="39.0" prefWidth="370.0">
@@ -154,6 +166,14 @@
                <padding>
                   <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                </padding>
+            </VBox>
+            <VBox prefHeight="605.0" prefWidth="545.0" GridPane.columnIndex="1">
+               <padding>
+                  <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+               </padding>
+               <children>
+                  <TableView fx:id="hoursView" maxWidth="-Infinity" prefHeight="294.0" prefWidth="350.0" />
+               </children>
             </VBox>
          </children>
       </GridPane>

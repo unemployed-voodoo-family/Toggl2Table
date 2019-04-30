@@ -2,12 +2,16 @@ package UnemployedVoodooFamily.GUI.Content;
 
 import UnemployedVoodooFamily.Data.Enums.FilePath;
 import UnemployedVoodooFamily.Logic.SettingsLogic;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
@@ -41,7 +45,16 @@ public class SettingsController {
     private Label inputFeedbackLabel;
 
     @FXML
+    private Label fileRemoveFeedbackLabel;
+
+    @FXML
+    private Tooltip errorTooltip;
+
+    @FXML
     private Button deleteDataBtn;
+
+    private ImageView successImg;
+    private ImageView errorImg;
 
     private SettingsLogic logic;
 
@@ -60,6 +73,20 @@ public class SettingsController {
         this.hoursView.setVisible(false);
         toggleViewHoursList();
         setKeyAndClickListeners();
+
+        // load success and error images
+        URL successUrl = getClass().getClassLoader()
+                                   .getResource("icons" + File.separator + "baseline_check_circle_black_24dp.png");
+        Image success = new Image(successUrl.toString());
+        successImg = new ImageView(success);
+        successImg.setFitWidth(24);
+        successImg.setFitHeight(24);
+        URL errorUrl = getClass().getClassLoader()
+                                 .getResource("icons" + File.separator + "baseline_error_black_24dp.png");
+        Image error = new Image(errorUrl.toString());
+        errorImg = new ImageView(error);
+        errorImg.setFitWidth(24);
+        errorImg.setFitHeight(24);
     }
 
     @SuppressWarnings("Duplicates")
@@ -68,7 +95,25 @@ public class SettingsController {
      */ private void setKeyAndClickListeners() {
         confirmHoursBtn.setOnAction(event -> trySetWorkHours());
         viewHoursBtn.setOnAction(event -> toggleViewHoursList());
-        deleteDataBtn.setOnAction(event -> logic.deleteStoredData(FilePath.LOGS_HOME));
+        deleteDataBtn.setOnAction(event -> {
+            Thread fileDeleteThread = new Thread(() -> {
+                try{
+                    logic.deleteStoredData(FilePath.APP_HOME.getPath());
+
+                    Platform.runLater(() -> {
+                        showSuccessLabel(fileRemoveFeedbackLabel, "Locally stored files have been removed");
+                    });
+                }
+                catch(Exception e){
+                    Platform.runLater(() -> {
+                        showErrorLabel(fileRemoveFeedbackLabel, "Error deleting files");
+                        errorTooltip.setText(e.getMessage());
+                        errorTooltip.setOpacity(.9);
+                    });
+                }
+                });
+            fileDeleteThread.start();
+        });
 
         hoursField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             hoursField.getStyleClass().remove("error");
@@ -190,6 +235,23 @@ public class SettingsController {
         noteField.getStyleClass().remove("error");
         inputFeedbackLabel.setText("");
         inputFeedbackLabel.getStyleClass().remove("error");
+    }
+
+    private void showSuccessLabel(Label label, String message) {
+        label.setVisible(true);
+        label.setGraphic(successImg);
+        label.setText(message);
+        label.getStyleClass().remove("error");
+        label.getStyleClass().add("success");
+    }
+
+
+    private void showErrorLabel(Label label, String message) {
+        label.setVisible(true);
+        label.setGraphic(errorImg);
+        label.setText(message);
+        label.getStyleClass().remove("success");
+        label.getStyleClass().add("error");
     }
 }
 

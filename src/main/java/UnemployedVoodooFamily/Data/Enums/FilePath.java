@@ -6,7 +6,8 @@ import ch.simas.jtoggl.User;
 import java.io.File;
 
 public enum FilePath {
-    USER_HOME(System.getProperty("user.home")), APP_HOME(USER_HOME.getPath() + File.separator + "TogglTimeSheet"),
+    USER_HOME(System.getProperty("user.home")),
+    APP_HOME(USER_HOME.getPath() + File.separator + "TogglTimeSheet"),
     SETTINGS_HOME(APP_HOME.getPath() + File.separator + "Settings"),
     LOGS_HOME(APP_HOME.getPath() + File.separator + "logs"),
     SAVED_WORKHOURS(SETTINGS_HOME.getPath() + File.separator + "hours.json");
