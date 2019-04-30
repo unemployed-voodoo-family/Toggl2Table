@@ -199,10 +199,9 @@ public class SettingsLogic {
      * files including files in subdirectories will also be deleted, disregarding it's extension.
      * @param path is the directory path from where all files will be removed.
      */
-    public void deleteStoredData(String path){
+    public void deleteStoredData(String path) throws Exception{
         File directory = new File(path);
 
-        try{
             for(File file: directory.listFiles()){
                 if(file.isDirectory()) {
                     deleteStoredData(directory + File.separator + file.getName());
@@ -211,10 +210,6 @@ public class SettingsLogic {
                     file.delete();
                 }
             }
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
 
     }
 }
