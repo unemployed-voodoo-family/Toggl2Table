@@ -101,7 +101,10 @@ public class SettingsController {
         // load success and error images
         URL successUrl = getClass().getClassLoader()
                                    .getResource("icons" + File.separator + "baseline_check_circle_black_24dp.png");
-        Image success = new Image(successUrl.toString());
+        if(successUrl == null) {
+
+        }
+        Image success = new Image(successUrl.toExternalForm());
         successImg = new ImageView(success);
         successImg.setFitWidth(24);
         successImg.setFitHeight(24);

@@ -931,24 +931,32 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
      */
     private void setFilterOptions() {
         Session session = Session.getInstance();
-        clearCheckMenuObjects(projectFilterBtn);
-        clearCheckMenuObjects(workspaceFilterBtn);
-        clearCheckMenuObjects(clientFilterBtn);
+        Platform.runLater(() -> {
+            clearCheckMenuObjects(projectFilterBtn);
+            clearCheckMenuObjects(workspaceFilterBtn);
+            clearCheckMenuObjects(clientFilterBtn);
 
-        HashMap<Long, Project> projects = session.getProjects();
-        for(Map.Entry<Long, Project> project: projects.entrySet()) {
-            projectFilterBtn.getItems().add(new CheckMenuObject(project.getValue(), project.getValue().getName()));
-        }
-        HashMap<Long, Workspace> workspaces = session.getWorkspaces();
-        for(Map.Entry<Long, Workspace> workspace: workspaces.entrySet()) {
-            workspaceFilterBtn.getItems()
-                              .add(new CheckMenuObject(workspace.getValue(), workspace.getValue().getName()));
-        }
-        HashMap<Long, Client> clients = session.getClients();
-        System.out.println(clients.toString());
-        for(Map.Entry<Long, Client> client: clients.entrySet()) {
-            clientFilterBtn.getItems().add(new CheckMenuObject(client.getValue(), client.getValue().getName()));
-        }
+
+            projectFilterBtn.getItems().add(new CheckMenuObject<>(new Project(), "No Project"));
+            HashMap<Long, Project> projects = session.getProjects();
+            for(Map.Entry<Long, Project> project: projects.entrySet()) {
+                projectFilterBtn.getItems().add(new CheckMenuObject(project.getValue(), project.getValue().getName()));
+            }
+
+            workspaceFilterBtn.getItems().add(new CheckMenuObject<>(new Workspace(), "No Workspace"));
+            HashMap<Long, Workspace> workspaces = session.getWorkspaces();
+            for(Map.Entry<Long, Workspace> workspace: workspaces.entrySet()) {
+                workspaceFilterBtn.getItems()
+                                  .add(new CheckMenuObject(workspace.getValue(), workspace.getValue().getName()));
+            }
+
+            clientFilterBtn.getItems().add(new CheckMenuObject<>(new Client(), "No Client"));
+            HashMap<Long, Client> clients = session.getClients();
+            System.out.println(clients.toString());
+            for(Map.Entry<Long, Client> client: clients.entrySet()) {
+                clientFilterBtn.getItems().add(new CheckMenuObject(client.getValue(), client.getValue().getName()));
+            }
+        });
     }
 
     private void clearCheckMenuObjects(MenuButton button) {

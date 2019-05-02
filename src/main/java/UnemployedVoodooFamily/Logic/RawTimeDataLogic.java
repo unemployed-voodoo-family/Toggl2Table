@@ -43,15 +43,33 @@ public class RawTimeDataLogic {
         if(excludedData != null && ! excludedData.isEmpty()) {
             List<TimeEntry> excludedEntries;
 
+            // find the timeentries that are to be excluded by searching for
+            // matching projects/workspaces/clients in the timeentries and excludedData lists
+            // timeentries with no projects/workspaces/clients are represented by empty objects
+            // of their corresponding type (e.g. new Project())
             excludedEntries = filteredTimeEntries.stream().filter(timeEntry -> {
-                boolean result = false;
-                Project p = timeEntry.getProject();
-                Client c = p == null ? null : p.getClient();
-                Workspace w = timeEntry.getWorkspace();
-                result = excludedData.stream()
-                                     .anyMatch(entry -> entry.equals(w) || entry.equals(c) || entry.equals(p));
 
-                return result;
+                Project p = timeEntry.getProject();
+                if(p == null) {
+                    p = new Project();
+                }
+                Client c = p == null ? new Client() : p.getClient();
+                if (c == null) {
+                    c = new Client();
+                }
+                Workspace w = timeEntry.getWorkspace();
+                if (w == null) {
+                    w = new Workspace();
+                }
+
+                Workspace finalW = w;
+                Project finalP = p;
+                Client finalC = c;
+                return excludedData.stream().anyMatch(
+                        entry ->
+                                entry.equals(finalW) ||
+                                entry.equals(finalC) ||
+                                entry.equals(finalP));
             }).collect(Collectors.toList());
 
             filteredTimeEntries.removeAll(excludedEntries);
@@ -70,7 +88,8 @@ public class RawTimeDataLogic {
                 OffsetDateTime stop = timeEntry.getStop().withOffsetSameInstant(zoneOffset);
 
                 if((start.toLocalDate().isAfter(getFilteredDataStartDate()) || start.toLocalDate().isEqual(
-                        getFilteredDataStartDate())) && (stop.toLocalDate().isBefore(getFilteredDataEndDate()) || stop.toLocalDate().isEqual(getFilteredDataEndDate()))) {
+                        getFilteredDataStartDate())) && (stop.toLocalDate().isBefore(getFilteredDataEndDate()) || stop
+                        .toLocalDate().isEqual(getFilteredDataEndDate()))) {
                     String startDate = start.toLocalDate().format(dateFormatter);
                     String startTime = start.toLocalTime().format(durationFormatter);
 
@@ -79,7 +98,8 @@ public class RawTimeDataLogic {
 
                     long duration = timeEntry.getDuration();
                     String durationStr = LocalTime.MIN.plusSeconds(duration)
-                                                      .format(DateTimeFormatter.ofPattern("HH")) + "H " + LocalTime.MIN.plusSeconds(duration).format(DateTimeFormatter.ofPattern("mm")) + "m";
+                                                      .format(DateTimeFormatter.ofPattern("HH")) + "H " + LocalTime.MIN
+                            .plusSeconds(duration).format(DateTimeFormatter.ofPattern("mm")) + "m";
 
                     Project project = timeEntry.getProject();
                     String projectName = "";
