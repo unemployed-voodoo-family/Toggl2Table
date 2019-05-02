@@ -41,6 +41,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -212,16 +214,18 @@ public class GUIBaseController {
             Session session = Session.getInstance();
             Platform.runLater(() -> progressMessage.setText(sb + prefix + "work hours"));
             session.refreshWorkHours();
-            Platform.runLater(() -> progressMessage.setText(sb.replace(1, 2, "2") + prefix + "time entries"));
-            session.refreshTimeEntries();
-            Platform.runLater(() -> progressMessage.setText(sb.replace(1, 2, "3") + prefix + "workspaces"));
+            Platform.runLater(() -> progressMessage.setText(sb.replace(1, 2, "2") + prefix + "workspaces"));
             session.refreshWorkspaces();
-            Platform.runLater(() -> progressMessage.setText(sb.replace(1, 2, "4") + prefix + "projects"));
+            Platform.runLater(() -> progressMessage.setText(sb.replace(1, 2, "3") + prefix + "projects"));
             session.refreshProjects();
-            Platform.runLater(() -> progressMessage.setText(sb.replace(1, 2, "5") + prefix + "tasks"));
+            Platform.runLater(() -> progressMessage.setText(sb.replace(1, 2, "4") + prefix + "tasks"));
             session.refreshTasks();
-            Platform.runLater(() -> progressMessage.setText(sb.replace(1, 2, "6") + prefix + "clients"));
+            Platform.runLater(() -> progressMessage.setText(sb.replace(1, 2, "5") + prefix + "clients"));
             session.refreshClient();
+            Platform.runLater(() -> progressMessage.setText(sb.replace(1, 2, "6") + prefix + "time entries"));
+            OffsetDateTime start = OffsetDateTime.of(2019, 1, 1, 0, 0, 0, 0, ZoneOffset.ofHours(1));
+            OffsetDateTime end = OffsetDateTime.of(2019, 12, 31, 0, 0, 0, 0, ZoneOffset.ofHours(1));
+            session.refreshTimeEntries(start, end);
             Platform.runLater(() -> {
                 progressBox.setVisible(false);
                 spinRefreshBtn(false);
