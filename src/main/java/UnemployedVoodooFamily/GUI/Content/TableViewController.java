@@ -356,6 +356,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
             updateWeeklySpinner(true);
             updateMonthlySpinner(false);
             timePeriodSpinnerLabel.setText("Week");
+            updateFormattedTableData();
         });
         monthlyToggleBtn.setOnAction((ActionEvent e) -> {
             switchView(tableRoot, monthlyTable);
@@ -364,7 +365,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
             updateWeeklySpinner(false);
             updateMonthlySpinner(true);
             timePeriodSpinnerLabel.setText("Month");
-            updateMonthlyTable();
+            updateFormattedTableData();
         });
 
         //Year Spinner + Dropdown
@@ -385,8 +386,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
             @Override
             public void changed(ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) {
                 formattedTimeDataLogic.setSelectedYear(newValue);
-                updateMonthlyTable();
-                updateWeeklyTable();
+                updateFormattedTableData();
             }
         });
 
@@ -408,7 +408,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
             @Override
             public void changed(ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) {
                 formattedTimeDataLogic.setSelectedWeek(newValue);
-                updateWeeklyTable();
+                updateFormattedTableData();
             }
         });
 
@@ -428,8 +428,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         });
         monthSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
             formattedTimeDataLogic.setSelectedMonth(newValue.get());
-            updateMonthlyTable();
-            updateSummaryValues();
+            updateFormattedTableData();
         });
 
 
@@ -444,10 +443,6 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
                 //could not find path
             }
         });
-    }
-
-    private void updateSummaryValues() {
-        // TODO: implement
     }
 
     private void initExcelExportBtn() {
@@ -566,8 +561,12 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     private void updateFormattedTableData() {
         formattedTimeDataLogic
                 .buildMasterData(rawTimeDataLogic.getFilteredTimeEntries(), formattedTimeDataLogic.getSelectedYear());
-        updateWeeklyTable();
-        updateMonthlyTable();
+        if(weekSpinner.isVisible()) {
+            updateWeeklyTable();
+        }
+        else if (monthSpinner.isVisible()) {
+            updateMonthlyTable();
+        }
     }
 
     private void updateMonthlyTable() {
