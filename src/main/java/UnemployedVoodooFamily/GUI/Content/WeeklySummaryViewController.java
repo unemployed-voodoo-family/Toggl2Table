@@ -7,6 +7,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
@@ -27,7 +28,7 @@ public class WeeklySummaryViewController{
     }
 
     public <T extends Pane> T loadFXML() throws IOException {
-        URL r = getClass().getClassLoader().getResource("weeklyTableSummary.fxml");
+        URL r = getClass().getClassLoader().getResource("view\\" + "weeklyTableSummary.fxml");
         return FXMLLoader.load(r);
     }
 

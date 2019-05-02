@@ -6,9 +6,7 @@ import UnemployedVoodooFamily.Data.WorkHours;
 import UnemployedVoodooFamily.Data.WorkHoursData;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import org.apache.poi.ss.formula.functions.T;
 
 import java.io.File;
 import java.io.IOException;
@@ -62,7 +60,7 @@ public class SettingsLogic {
      * Checks for overlap between the newly created period and the already existing ones.
      * Fixes overlap by overwriting old entries, and stitches
      * continous periods which have the same value.
-     * @param props    the properties to write to
+     * @param wh    the properties to write to
      * @param newRange the DateRange entered by the user
      * @param newValue the work hours entered by the user
      */

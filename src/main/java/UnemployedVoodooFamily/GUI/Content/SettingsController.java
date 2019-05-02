@@ -1,12 +1,7 @@
 package UnemployedVoodooFamily.GUI.Content;
 
 import UnemployedVoodooFamily.Data.Enums.FilePath;
-import UnemployedVoodooFamily.Data.WorkHours;
-import UnemployedVoodooFamily.Data.WorkHoursData;
 import UnemployedVoodooFamily.Logic.SettingsLogic;
-import com.sun.corba.se.spi.orbutil.threadpool.Work;
-import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -14,25 +9,12 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
-import javafx.util.Callback;
-import javafx.util.StringConverter;
-import javafx.util.converter.LocalDateStringConverter;
 
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDate;
-import java.time.MonthDay;
-import java.time.format.DateTimeFormatter;
 
 public class SettingsController {
 
@@ -64,21 +46,7 @@ public class SettingsController {
     private Label inputFeedbackLabel;
 
     @FXML
-    private Label fileRemoveFeedbackLabel;
-
-    @FXML
-    private Tooltip errorTooltip;
-
-    @FXML
     private Button deleteDataBtn;
-    @FXML
-    private Button deleteWhBtn;
-
-    @FXML
-    private VBox workHoursViewRoot;
-
-    private ImageView successImg;
-    private ImageView errorImg;
 
     private SettingsLogic logic;
 
@@ -88,51 +56,15 @@ public class SettingsController {
      * @throws IOException
      */
     public Node loadFXML() throws IOException {
-        URL r = getClass().getClassLoader().getResource("Settings.fxml");
+        URL r = getClass().getClassLoader().getResource("view\\" + "Settings.fxml");
         return FXMLLoader.load(r);
     }
 
     public void initialize() {
         this.logic = new SettingsLogic(FilePath.getCurrentUserWorkhours());
-        this.workHoursViewRoot.setVisible(false);
+        this.hoursView.setVisible(false);
         toggleViewHoursList();
         setKeyAndClickListeners();
-
-        // load success and error images
-        URL successUrl = getClass().getClassLoader()
-                                   .getResource("icons" + File.separator + "baseline_check_circle_black_24dp.png");
-        Image success = new Image(successUrl.toString());
-        successImg = new ImageView(success);
-        successImg.setFitWidth(24);
-        successImg.setFitHeight(24);
-        URL errorUrl = getClass().getClassLoader()
-                                 .getResource("icons" + File.separator + "baseline_error_black_24dp.png");
-        Image error = new Image(errorUrl.toString());
-        errorImg = new ImageView(error);
-        errorImg.setFitWidth(24);
-        errorImg.setFitHeight(24);
-
-
-        TableColumn<WorkHoursData, LocalDate> fromCol;
-        TableColumn<WorkHoursData, LocalDate> toCol;
-        TableColumn<WorkHoursData, Double> hoursCol;
-        TableColumn<WorkHoursData, String> noteCol;
-
-        fromCol = new TableColumn<>("From");
-        toCol = new TableColumn<>("To");
-        hoursCol = new TableColumn<>("Hours");
-        noteCol = new TableColumn<>("Note");
-
-        hoursView.getColumns().clear();
-        hoursView.getColumns().addAll(fromCol, toCol, hoursCol, noteCol);
-        System.out.println(fromCol.isEditable());
-
-        fromCol.setCellValueFactory(param -> param.getValue().fromProperty());
-
-        toCol.setCellValueFactory(param -> param.getValue().toProperty());
-        hoursCol.setCellValueFactory(param -> param.getValue().hoursProperty());
-        noteCol.setCellValueFactory(param -> param.getValue().noteProperty());
-
     }
 
     @SuppressWarnings("Duplicates")
@@ -141,38 +73,18 @@ public class SettingsController {
      */ private void setKeyAndClickListeners() {
         confirmHoursBtn.setOnAction(event -> trySetWorkHours());
         viewHoursBtn.setOnAction(event -> toggleViewHoursList());
-
-        deleteWhBtn.setOnAction(event -> {
-            logic.deleteWorkHours(hoursView.getSelectionModel().getSelectedItem());
-            if(workHoursViewRoot.isVisible()) {
-                logic.populateHoursTable(hoursView);
-            }
-        });
         deleteDataBtn.setOnAction(event -> {
-            Thread fileDeleteThread = new Thread(() -> {
-                try {
-                    logic.deleteStoredData(FilePath.APP_HOME.getPath());
-
-                    Platform.runLater(() -> {
-                        showSuccessLabel(fileRemoveFeedbackLabel, "Locally stored files have been removed");
-                    });
-                }
-                catch(Exception e) {
-                    Platform.runLater(() -> {
-                        showErrorLabel(fileRemoveFeedbackLabel, "Error deleting files");
-                        errorTooltip.setText(e.getMessage());
-                        errorTooltip.setOpacity(.9);
-                    });
-                }
-            });
-            fileDeleteThread.start();
+            try {
+                logic.deleteStoredData(String.valueOf(FilePath.LOGS_HOME));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         });
 
         hoursField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             hoursField.getStyleClass().remove("error");
             if(! newValue) {
-                if(! hoursField.getText()
-                               .matches("[0-1]?[0-9](\\.[0-9][0-9]?)?|2[0-3](\\.[0-9][0-9]?)?|24(\\.[0][0]?)?")) {
+                if(! hoursField.getText().matches("[0-1]?[0-9](\\.[0-9][0-9]?)?|2[0-3](\\.[0-9][0-9]?)?|24(\\.[0][0]?)?")) {
                     hoursField.setText("");
                     hoursField.getStyleClass().add("error");
                 }
@@ -203,8 +115,7 @@ public class SettingsController {
             }
         });
 
-        //deleteDataBtn.getStyleClass().add("delete");
-        viewDataBtn.setOnAction(a -> {
+        viewDataBtn.setOnAction(event -> {
             try {
                 Desktop.getDesktop().open(new File(FilePath.APP_HOME.getPath()));
             }
@@ -215,18 +126,20 @@ public class SettingsController {
                 //could not find path
             }
         });
+
+        //deleteDataBtn.getStyleClass().add("delete");
     }
 
     /**
      * Toggle visibility of hours table
      */
     private void toggleViewHoursList() {
-        if(workHoursViewRoot.isVisible()) {
-            workHoursViewRoot.setVisible(false);
+        if(hoursView.isVisible()) {
+            hoursView.setVisible(false);
             viewHoursBtn.setText("View hours");
         }
         else {
-            workHoursViewRoot.setVisible(true);
+            hoursView.setVisible(true);
             viewHoursBtn.setText("Hide hours");
             populateHoursList();
         }
@@ -265,10 +178,9 @@ public class SettingsController {
             success = true;
         }
         if(success) {
-            logic.setWorkHours(hoursFromField.getValue(), hoursToField.getValue(), hoursField.getText(),
-                               noteField.getText());
+            logic.setWorkHours(hoursFromField.getValue(), hoursToField.getValue(), hoursField.getText(), noteField.getText());
 
-            if(workHoursViewRoot.isVisible()) {
+            if(hoursView.isVisible()) {
                 logic.populateHoursTable(hoursView);
             }
 
@@ -284,7 +196,7 @@ public class SettingsController {
         inputFeedbackLabel.setText(errorMessage);
     }
 
-    private void showWorkHoursInputSuccess() {
+    private void showWorkHoursInputSuccess()    {
         inputFeedbackLabel.getStyleClass().remove("error");
         inputFeedbackLabel.getStyleClass().add("success");
         inputFeedbackLabel.setText("Work hours added");
@@ -301,23 +213,6 @@ public class SettingsController {
         noteField.getStyleClass().remove("error");
         inputFeedbackLabel.setText("");
         inputFeedbackLabel.getStyleClass().remove("error");
-    }
-
-    private void showSuccessLabel(Label label, String message) {
-        label.setVisible(true);
-        label.setGraphic(successImg);
-        label.setText(message);
-        label.getStyleClass().remove("error");
-        label.getStyleClass().add("success");
-    }
-
-
-    private void showErrorLabel(Label label, String message) {
-        label.setVisible(true);
-        label.setGraphic(errorImg);
-        label.setText(message);
-        label.getStyleClass().remove("success");
-        label.getStyleClass().add("error");
     }
 }
 

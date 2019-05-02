@@ -163,7 +163,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
 
 
     public Node loadFXML() throws IOException {
-        URL r = getClass().getClassLoader().getResource("Table.fxml");
+        URL r = getClass().getClassLoader().getResource("view\\" + "Table.fxml");
         return FXMLLoader.load(r);
     }
 
@@ -219,7 +219,6 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         errorImg = new ImageView(error);
         errorImg.setFitWidth(24);
         errorImg.setFitHeight(24);
-
     }
 
     private void setupFormattedTableUIElements() {
