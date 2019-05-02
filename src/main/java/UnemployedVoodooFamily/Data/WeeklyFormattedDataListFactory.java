@@ -67,8 +67,8 @@ public class WeeklyFormattedDataListFactory {
 
             if(! weekSublist.isEmpty()) {
                 for(TimeEntry t: weekSublist) {
-                    if(t.getStart().toLocalDate().isEqual(currentDate) && t.getStop().toLocalDate().isEqual(currentDate)) {
-                        workedHours += ((double) t.getDuration() % 86400) / 3600;
+                    if(t.getStart().toLocalDate().isEqual(currentDate)) {
+                        workedHours += (((double) t.getDuration()) / 3600);
                     }
                 }
             }
