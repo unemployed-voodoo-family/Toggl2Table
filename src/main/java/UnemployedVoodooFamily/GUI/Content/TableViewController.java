@@ -163,7 +163,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
 
 
     public Node loadFXML() throws IOException {
-        URL r = getClass().getClassLoader().getResource("view\\" + "Table.fxml");
+        URL r = getClass().getClassLoader().getResource("Table.fxml");
         return FXMLLoader.load(r);
     }
 
@@ -219,6 +219,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         errorImg = new ImageView(error);
         errorImg.setFitWidth(24);
         errorImg.setFitHeight(24);
+
     }
 
     private void setupFormattedTableUIElements() {
@@ -355,7 +356,6 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
             updateWeeklySpinner(true);
             updateMonthlySpinner(false);
             timePeriodSpinnerLabel.setText("Week");
-            updateFormattedTableData();
         });
         monthlyToggleBtn.setOnAction((ActionEvent e) -> {
             switchView(tableRoot, monthlyTable);
@@ -364,7 +364,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
             updateWeeklySpinner(false);
             updateMonthlySpinner(true);
             timePeriodSpinnerLabel.setText("Month");
-            updateFormattedTableData();
+            updateMonthlyTable();
         });
 
         //Year Spinner + Dropdown
@@ -385,7 +385,8 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
             @Override
             public void changed(ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) {
                 formattedTimeDataLogic.setSelectedYear(newValue);
-                updateFormattedTableData();
+                updateMonthlyTable();
+                updateWeeklyTable();
             }
         });
 
@@ -407,7 +408,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
             @Override
             public void changed(ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) {
                 formattedTimeDataLogic.setSelectedWeek(newValue);
-                updateFormattedTableData();
+                updateWeeklyTable();
             }
         });
 
@@ -427,7 +428,8 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         });
         monthSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
             formattedTimeDataLogic.setSelectedMonth(newValue.get());
-            updateFormattedTableData();
+            updateMonthlyTable();
+            updateSummaryValues();
         });
 
 
@@ -563,13 +565,9 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
 
     private void updateFormattedTableData() {
         formattedTimeDataLogic
-                .buildMasterData(rawTimeDataLogic.getFilteredTimeEntries(), Integer.parseInt(yearSpinner.getEditor().getText()));
-        if(weekSpinner.isVisible()) {
-            updateWeeklyTable();
-        }
-        else if(monthSpinner.isVisible())   {
-            updateMonthlyTable();
-        }
+                .buildMasterData(rawTimeDataLogic.getFilteredTimeEntries(), formattedTimeDataLogic.getSelectedYear());
+        updateWeeklyTable();
+        updateMonthlyTable();
     }
 
     private void updateMonthlyTable() {
@@ -816,7 +814,9 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         extraTimeCol.setPrefWidth(90);
         weekNumbCol.setPrefWidth(90);
         //Adds the columns to the table and updates it
-        monthlyTable.getColumns().addAll(weekNumbCol, weekdayCol, dateCol, supposedHoursCol, workedHoursCol, extraTimeCol,
+        monthlyTable.getColumns().
+
+                addAll(weekNumbCol, weekdayCol, dateCol, supposedHoursCol, workedHoursCol, extraTimeCol,
                        accumulatedHoursCol, noteCol);
         monthlyTable.setEditable(false);
     }

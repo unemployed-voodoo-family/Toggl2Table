@@ -9,8 +9,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
-
-import java.io.File;
 import java.util.Locale;
 
 import java.io.IOException;
@@ -49,7 +47,7 @@ public class ProfileController {
 
 
     public Node loadFXML() throws IOException {
-        URL r = getClass().getClassLoader().getResource("view\\" + "Profile.fxml");
+        URL r = getClass().getClassLoader().getResource("Profile.fxml");
         return FXMLLoader.load(r);
     }
 

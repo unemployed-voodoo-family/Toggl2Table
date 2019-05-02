@@ -111,7 +111,7 @@ public class GUIBaseController {
     @FXML
     public void start() throws IOException {
         Stage appStage = new Stage();
-        URL r = getClass().getClassLoader().getResource("view" + File.separator + "LayoutBase.fxml");
+        URL r = getClass().getClassLoader().getResource("LayoutBase.fxml");
         Parent root = FXMLLoader.load(r);
         Scene scene = new Scene(root);
         scene.getStylesheets().add("styles.css");
