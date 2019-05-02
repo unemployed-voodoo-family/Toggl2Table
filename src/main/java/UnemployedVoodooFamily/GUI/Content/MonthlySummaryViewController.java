@@ -1,18 +1,14 @@
 package UnemployedVoodooFamily.GUI.Content;
 
-import UnemployedVoodooFamily.Data.DailyFormattedDataModel;
-import UnemployedVoodooFamily.Logic.FormattedTimeDataLogic;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 
-import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.time.Month;
-import java.util.ArrayList;
 
 public class MonthlySummaryViewController {
 
@@ -21,7 +17,7 @@ public class MonthlySummaryViewController {
     @FXML
     private Label hoursWorkedLabel;
     @FXML
-    private Label extraTimeLabel;
+    private Label overtimeWorkedLabel;
 
     private String title;
 
@@ -30,7 +26,7 @@ public class MonthlySummaryViewController {
     }
 
     public <T extends Pane> T loadFXML() throws IOException {
-        URL r = getClass().getClassLoader().getResource("monthlyTableSummary.fxml");
+        URL r = getClass().getClassLoader().getResource("view\\" + "monthlyTableSummary.fxml");
         return FXMLLoader.load(r);
     }
 
