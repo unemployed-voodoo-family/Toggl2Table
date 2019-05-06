@@ -209,14 +209,20 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         // load success and error images
         URL successUrl = getClass().getClassLoader()
                                    .getResource("icons/baseline_check_circle_black_24dp.png");
-        Image success = new Image(successUrl.toString());
-        successImg = new ImageView(success);
+        if(successUrl != null) {
+            Image success = new Image(successUrl.toString());
+            successImg = new ImageView(success);
+        }
+
         successImg.setFitWidth(24);
         successImg.setFitHeight(24);
         URL errorUrl = getClass().getClassLoader()
                                  .getResource("icons/baseline_error_black_24dp.png");
-        Image error = new Image(errorUrl.toString());
-        errorImg = new ImageView(error);
+        if(errorUrl != null) {
+            Image error = new Image(errorUrl.toString());
+            errorImg = new ImageView(error);
+        }
+
         errorImg.setFitWidth(24);
         errorImg.setFitHeight(24);
 
