@@ -49,7 +49,7 @@ public class WeeklyFormattedDataListFactory {
             //Create current date to process
             LocalDate currentDate = weeksFirstDate.plusDays(weekday.getValue() - 1L);
             double workedHours = 0d;
-            double supposedHours = 7.75;
+            double supposedHours = 0d;
             String note = "";
 
             WorkHours wh = getWorkHours(workHours, currentDate);

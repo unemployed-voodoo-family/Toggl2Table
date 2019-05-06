@@ -640,7 +640,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         workedHoursCol.setCellFactory(col -> setDecimalFormatter(df));
 
 
-        TableColumn<DailyFormattedDataModel, Double> supposedHoursCol = new TableColumn<>("Supposed work hours");
+        TableColumn<DailyFormattedDataModel, Double> supposedHoursCol = new TableColumn<>("Ordinary work hours");
         supposedHoursCol.setCellValueFactory(new PropertyValueFactory<>("supposedHours"));
         supposedHoursCol.setSortable(false);
         supposedHoursCol.setCellFactory(col -> setDecimalFormatter(df));
@@ -750,7 +750,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
                 add("right");
 
 
-        TableColumn<DailyFormattedDataModel, Double> supposedHoursCol = new TableColumn<>("Supposed work hours");
+        TableColumn<DailyFormattedDataModel, Double> supposedHoursCol = new TableColumn<>("Ordinary work hours");
         supposedHoursCol.setCellValueFactory(new PropertyValueFactory<>("supposedHours"));
         supposedHoursCol.setSortable(false);
         supposedHoursCol.setCellFactory(col ->
