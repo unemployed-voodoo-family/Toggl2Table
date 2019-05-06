@@ -597,8 +597,8 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
             Platform.runLater(() -> {
                 double[] values = calculateSummary(data);
                 weeklyTable.getItems().setAll(getObservableWeeklyData());
-                hoursWorkedLabel.setText(String.valueOf(values[0]));
-                extraTimeWorkedLabel.setText(String.valueOf(values[1]));
+                hoursWorkedLabel.setText(df.format(values[0]));
+                extraTimeWorkedLabel.setText(df.format(values[1]));
             });
         }
         catch(Exception e) {
@@ -615,8 +615,8 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
             extraTime += item.getExtraTime();
             worked += item.getWorkedHours();
         }
-        extraTimeWorkedLabel.setText(String.valueOf(extraTime));
-        hoursWorkedLabel.setText(String.valueOf(worked));
+        extraTimeWorkedLabel.setText(df.format(extraTime));
+        hoursWorkedLabel.setText(df.format(worked));
 
         return new double[]{worked, extraTime};
     }
