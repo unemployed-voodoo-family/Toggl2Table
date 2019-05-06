@@ -513,7 +513,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     }
 
     /**
-     * Thank you Mr. Messier
+     * Show tooltip on mouse entered
      * https://stackoverflow.com/questions/26854301/how-to-control-the-javafx-tooltips-delay
      * @param node
      * @param tooltip
@@ -534,7 +534,9 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     // |               RAW DATA TABLE METHODS             |
     // |##################################################|
 
-
+    /**
+     * Sets data to the raw data table, using selected time period
+     */
     private void setRawDataTableData() {
         rawData.getItems().setAll(getObservableRawData());
         Platform.runLater(() -> {
@@ -564,6 +566,9 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     // |           FORMATTED DATA TABLE METHODS           |
     // |##################################################|
 
+    /**
+     * Update the currently visible table.
+     */
     private void updateFormattedTableData() {
         formattedTimeDataLogic
                 .buildMasterData(rawTimeDataLogic.getFilteredTimeEntries(), formattedTimeDataLogic.getSelectedYear());
@@ -575,6 +580,9 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         }
     }
 
+    /**
+     * Update the monthly table and summary labels
+     */
     private void updateMonthlyTable() {
         ObservableList<DailyFormattedDataModel> data = getObservableMonthlyData();
         try {
@@ -591,6 +599,9 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         }
     }
 
+    /**
+     * Update the weekly table and summary labels.
+     */
     private void updateWeeklyTable() {
         ObservableList<DailyFormattedDataModel> data = getObservableWeeklyData();
         try {
@@ -607,6 +618,12 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         }
     }
 
+
+    /**
+     * Calculate hours worked and hours worked, respectively for the given dataset
+     * @param data the dataset to calculate from
+     * @return an array containing [1] hours worked and [2] overtime worked
+     */
     private double[] calculateSummary(ObservableList<DailyFormattedDataModel> data) {
         double extraTime = 0d;
         double worked = 0d;
