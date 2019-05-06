@@ -5,11 +5,8 @@ import UnemployedVoodooFamily.Logic.Session;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
-import java.util.Locale;
 
 import java.io.IOException;
 import java.net.URL;

@@ -7,14 +7,11 @@ import ch.simas.jtoggl.TimeEntry;
 import org.threeten.extra.YearWeek;
 import java.io.IOException;
 import java.time.*;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalField;
 import java.time.temporal.WeekFields;
 import java.util.*;
 
 public class FormattedTimeDataLogic {
-
-    private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd. LLLL yyyy");
 
     private static Map<YearWeek, List<DailyFormattedDataModel>> weeklyMasterData;
     private static Map<YearMonth, List<DailyFormattedDataModel>> monthlyMasterData;
@@ -22,10 +19,6 @@ public class FormattedTimeDataLogic {
     private int selectedYear;
     private int selectedWeek;
     private Month selectedMonth;
-
-    private static DayOfWeek LAST_DAY_OF_WEEK = DayOfWeek.SUNDAY;
-    private static DayOfWeek FIRST_DAY_OF_WEEK = DayOfWeek.MONDAY;
-
 
     public FormattedTimeDataLogic() {
         //Get current year
@@ -76,7 +69,7 @@ public class FormattedTimeDataLogic {
         YearWeek startWeek = YearWeek.from(startDate);
         YearWeek endWeek = YearWeek.from(endDate);
 
-        Double accumulatedOffset = 0d;
+        double accumulatedOffset = 0d;
 
         for(YearWeek date = startWeek; date.isBefore(endWeek.plusWeeks(1)); date = date.plusWeeks(1)) {
             weeklyMasterData.put(date, new WeeklyFormattedDataListFactory().buildWeeklyDataList(timeEntries, date, accumulatedOffset));
