@@ -5,10 +5,17 @@ import UnemployedVoodooFamily.Logic.LoginLogic;
 import UnemployedVoodooFamily.Logic.FileLogic;
 import UnemployedVoodooFamily.Main;
 import UnemployedVoodooFamily.Utils.PasswordUtils;
+import javafx.animation.Animation;
+import javafx.animation.RotateTransition;
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
+import javafx.util.Duration;
 
 import java.io.File;
 import java.util.Properties;
@@ -30,6 +37,10 @@ public class LoginController {
     private CheckBox RememberPasswordCheck;
     @FXML
     private Label wrongCredentials;
+    @FXML
+    private ImageView t2tlogo;
+    @FXML
+    private HBox logoBox;
 
     private LoginLogic loginLogic = new LoginLogic();
     private boolean isLoggedIn;
@@ -46,7 +57,19 @@ public class LoginController {
     }
 
     private void setKeyAndClickListeners() {
+        RotateTransition easterEgg = new RotateTransition(Duration.seconds(.3), t2tlogo);
+        easterEgg.setFromAngle(t2tlogo.getRotate());
+        easterEgg.setToAngle(t2tlogo.getRotate() + 30);
+        System.out.println(t2tlogo.getRotate());
+
         submitBtn.setOnAction(event -> loginWithCredentials());
+        t2tlogo.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            event.consume();
+            System.out.println("hello");
+            easterEgg.setFromAngle(t2tlogo.getRotate());
+            easterEgg.setToAngle(t2tlogo.getRotate() + 30);
+            easterEgg.play();
+        });
     }
 
     private void loginWithCredentials() {
@@ -77,7 +100,7 @@ public class LoginController {
                 else {
                     Main.closeLogin();
                     //checks if a loginStage already exists, if it does, its closed.
-                    if(GUIBaseController.loginStageExists() ){
+                    if(GUIBaseController.loginStageExists()) {
                         GUIBaseController.closeLogin();
                     }
                 }
