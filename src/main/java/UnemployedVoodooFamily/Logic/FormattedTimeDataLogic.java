@@ -90,7 +90,6 @@ public class FormattedTimeDataLogic {
 
     public void setSelectedYear(int year) {
         this.selectedYear = year;
-        System.out.println("Selected year is: " + this.selectedYear);
     }
 
     public int getSelectedYear() {
@@ -99,7 +98,6 @@ public class FormattedTimeDataLogic {
 
     public void setSelectedWeek(int selectedWeek) {
         this.selectedWeek = selectedWeek;
-        System.out.println("Selected week is: " + this.selectedWeek);
     }
 
     public int getSelectedWeek() {
@@ -108,7 +106,6 @@ public class FormattedTimeDataLogic {
 
     public void setSelectedMonth(Month selectedMonth) {
         this.selectedMonth = selectedMonth;
-        System.out.println("Selected month: " + this.selectedMonth);
     }
 
     public Month getSelectedMonth() {

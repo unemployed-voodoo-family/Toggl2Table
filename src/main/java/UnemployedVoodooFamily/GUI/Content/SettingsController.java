@@ -118,7 +118,6 @@ public class SettingsController {
 
         hoursView.getColumns().clear();
         hoursView.getColumns().addAll(fromCol, toCol, hoursCol, noteCol);
-        System.out.println(fromCol.isEditable());
 
         fromCol.setCellValueFactory(param -> param.getValue().fromProperty());
 

@@ -158,12 +158,10 @@ public class RawTimeDataLogic {
 
     public void setDataStartDate(LocalDate date) {
         this.filterStartDate = date;
-        System.out.println("New raw start date is:" + filterStartDate.toString());
     }
 
     public void setDataEndDate(LocalDate date) {
         this.filterEndDate = date;
-        System.out.println("New raw end date is:" + filterEndDate.toString());
     }
 
     public List<TimeEntry> getFilteredTimeEntries() {

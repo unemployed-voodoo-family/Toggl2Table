@@ -58,12 +58,10 @@ public class LoginController {
         RotateTransition easterEgg = new RotateTransition(Duration.seconds(.3), t2tlogo);
         easterEgg.setFromAngle(t2tlogo.getRotate());
         easterEgg.setToAngle(t2tlogo.getRotate() + 30);
-        System.out.println(t2tlogo.getRotate());
 
         submitBtn.setOnAction(event -> loginWithCredentials());
         t2tlogo.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             event.consume();
-            System.out.println("hello");
             easterEgg.setFromAngle(t2tlogo.getRotate());
             easterEgg.setToAngle(t2tlogo.getRotate() + 30);
             easterEgg.play();

@@ -298,7 +298,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
                 updateFormattedTableData();
             }
         });
-        
+
         bindTooltip(excelFeedbackLabel, errorTooltip);
         applyFilterBtn.setOnAction(event -> applyFilters());
         initExcelExportBtn();
@@ -365,7 +365,6 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
             yearSpinner.getEditor().setVisible(false);
             yearlyDropdown.setVisible(true);
             yearlyDropdown.show();
-            System.out.println("Year spinner clicked");
         });
         yearlyDropdown.setOnHiding((Event e) -> {
             yearSpinner.getEditor().setVisible(true);
@@ -387,7 +386,6 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
             weekSpinner.getEditor().setVisible(false);
             weeklyDropdown.setVisible(true);
             weeklyDropdown.show();
-            System.out.println("Week spinner clicked");
         });
         weeklyDropdown.setOnHiding((Event e) -> {
             weekSpinner.getEditor().setVisible(true);
@@ -409,7 +407,6 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
             monthSpinner.getEditor().setVisible(false);
             monthlyDropdown.setVisible(true);
             monthlyDropdown.show();
-            System.out.println("Month spinner clicked");
         });
         monthlyDropdown.setOnHiding((Event e) -> {
             monthSpinner.getEditor().setVisible(true);
@@ -960,7 +957,6 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
 
             clientFilterBtn.getItems().add(new CheckMenuObject<>(new Client(), "No Client"));
             HashMap<Long, Client> clients = session.getClients();
-            System.out.println(clients.toString());
             for(Map.Entry<Long, Client> client: clients.entrySet()) {
                 clientFilterBtn.getItems().add(new CheckMenuObject(client.getValue(), client.getValue().getName()));
             }

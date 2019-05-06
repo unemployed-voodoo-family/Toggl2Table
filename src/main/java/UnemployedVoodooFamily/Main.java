@@ -25,7 +25,6 @@ public class Main extends Application {
 
         // if the directory does not exist, create it
         if (!theDir.exists()) {
-            System.out.println("creating directory: " + theDir.toString());
             boolean result = false;
 
             try{
@@ -35,7 +34,6 @@ public class Main extends Application {
                 //handle it
             }
             if(result) {
-                System.out.println("DIR created");
             }
         }
     }
