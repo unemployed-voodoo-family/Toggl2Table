@@ -14,7 +14,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <HBox alignment="CENTER" prefHeight="598.0" prefWidth="853.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UnemployedVoodooFamily.GUI.LoginController">
    <children>
       <VBox alignment="CENTER_LEFT" maxWidth="300.0" minHeight="-Infinity" minWidth="300.0" prefHeight="490.0" prefWidth="300.0" spacing="5.0">
@@ -23,9 +22,9 @@
                <children>
                   <VBox alignment="CENTER" prefHeight="94.0">
                      <children>
-                        <HBox prefHeight="68.0">
+                        <HBox fx:id="logoBox" prefHeight="68.0">
                            <children>
-                              <ImageView fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fx:id="t2tlogo" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@icons/app_icon/64x64.png" />
                                  </image>
