@@ -11,22 +11,22 @@ import java.util.*;
 public class Session {
 
     private static JToggl jToggl = null;
-    private List<TimeEntry> timeEntries;
-    private LinkedHashMap<Long, Workspace> workspaces;
-    private HashMap<Long, Project> projects;
-    private HashMap<Long, Task> tasks;
-    private HashMap<Long, Client> clients;
-    private User user;
+    private static List<TimeEntry> timeEntries;
+    private static LinkedHashMap<Long, Workspace> workspaces;
+    private static HashMap<Long, Project> projects;
+    private static HashMap<Long, Task> tasks;
+    private static HashMap<Long, Client> clients;
+    private static User user;
 
-    private ZoneId zoneId;
-    private ZoneOffset zoneOffset;
+    private static ZoneId zoneId;
+    private static ZoneOffset zoneOffset;
 
-    private Properties workHours;
-    private FileLogic propsLogic;
+    private static Properties workHours;
+    private static FileLogic propsLogic;
 
     private static Session togglSession = new Session();
 
-    private List<DataLoadListener> loadListeners = new ArrayList<>();
+    private static List<DataLoadListener> loadListeners = new ArrayList<>();
 
     private Session() {
         this.propsLogic = new FileLogic();
@@ -60,6 +60,12 @@ public class Session {
     }
 
     public static void terminateSession() {
+        user = null;
+        projects = null;
+        tasks = null;
+        clients = null;
+        workspaces = null;
+        timeEntries = null;
         jToggl = null;
     }
 

@@ -22,6 +22,7 @@ import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
@@ -291,7 +292,13 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
      * Sets input actions on UI elements
      */ private void setKeyAndClickListeners() {
 
-
+         // update formatted tables when tableview gui is shown
+        root.sceneProperty().addListener((observable, oldValue, newValue) -> {
+            if(oldValue == null && newValue != null && formattedTimeDataLogic.getMonthlyMasterData() != null) {
+                updateFormattedTableData();
+            }
+        });
+        
         bindTooltip(excelFeedbackLabel, errorTooltip);
         applyFilterBtn.setOnAction(event -> applyFilters());
         initExcelExportBtn();
