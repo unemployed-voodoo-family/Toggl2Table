@@ -1,8 +1,5 @@
 package UnemployedVoodooFamily.Data.Enums;
 
-import UnemployedVoodooFamily.Logic.Session;
-import ch.simas.jtoggl.User;
-
 import java.io.File;
 
 public enum FilePath {

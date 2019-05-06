@@ -3,26 +3,18 @@ package UnemployedVoodooFamily.Data;
 import UnemployedVoodooFamily.Data.Enums.FilePath;
 import UnemployedVoodooFamily.Logic.FileLogic;
 import ch.simas.jtoggl.TimeEntry;
-import com.sun.corba.se.spi.orbutil.threadpool.Work;
 import org.threeten.extra.YearWeek;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.temporal.IsoFields;
-import java.time.temporal.TemporalAdjusters;
-import java.time.temporal.TemporalField;
-import java.time.temporal.WeekFields;
 import java.util.*;
 
 public class WeeklyFormattedDataListFactory {
 
-    private ArrayList<DailyFormattedDataModel> weeklyList;
-    private FileLogic fileLogic;
-
     public List<DailyFormattedDataModel> buildWeeklyDataList(List<TimeEntry> timeEntries, YearWeek date,
                                                              Double accumulatedOffset) {
-        weeklyList = new ArrayList<>();
-        fileLogic = new FileLogic();
+        ArrayList<DailyFormattedDataModel> weeklyList = new ArrayList<>();
+        FileLogic fileLogic = new FileLogic();
         List<WorkHours> workHours = fileLogic.loadJson(FilePath.getCurrentUserWorkhours());
 
         //finds the first day of the selected week
@@ -74,7 +66,6 @@ public class WeeklyFormattedDataListFactory {
             }
         accumulatedHours += (workedHours - supposedHours);
 
-        //TODO get correct supposed work hours
         weeklyList.add(new DailyFormattedDataModel(workedHours, supposedHours, currentDate, accumulatedHours, note));
     }
 

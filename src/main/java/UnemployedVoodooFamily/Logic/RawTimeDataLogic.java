@@ -2,7 +2,6 @@ package UnemployedVoodooFamily.Logic;
 
 import UnemployedVoodooFamily.Data.RawTimeDataModel;
 import ch.simas.jtoggl.*;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.sql.Time;
@@ -10,11 +9,9 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class RawTimeDataLogic {
     // and is responsible for handling raw time data
-    //TODO replace ObservableLists with ArrayLists
     private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MMM-dd");
 
     private LocalDate filterStartDate = LocalDate.now().minusWeeks(1);

@@ -16,17 +16,16 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -35,10 +34,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.util.Callback;
 import javafx.util.StringConverter;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.formula.functions.T;
 import org.threeten.extra.YearWeek;
 
 import java.awt.*;
@@ -46,15 +42,14 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.text.DecimalFormat;
-import java.time.*;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.YearMonth;
 import java.time.format.TextStyle;
-import java.util.*;
 import java.util.List;
-import java.util.function.Consumer;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
-import static java.lang.Thread.sleep;
 
 public class TableViewController<Content extends Pane> implements DataLoadListener {
 
@@ -124,9 +119,6 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     @FXML
     private ImageView feedbackImg;
 
-    private MonthlySummaryViewController monthlySummaryViewController;
-    private WeeklySummaryViewController weeklySummaryViewController;
-
     @FXML
     private TableView<DailyFormattedDataModel> monthlyTable;
     @FXML
@@ -149,8 +141,6 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
 
     private ImageView successImg;
     private ImageView errorImg;
-
-    private final ToggleGroup timeSpanToggleGroup = new ToggleGroup();
 
     private RawTimeDataLogic rawTimeDataLogic = new RawTimeDataLogic();
     private FormattedTimeDataLogic formattedTimeDataLogic = new FormattedTimeDataLogic();
@@ -184,13 +174,6 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
      */
     private void setupUIElements() {
 
-        // load the summary views
-        monthlySummaryViewController = new MonthlySummaryViewController();
-        weeklySummaryViewController = new WeeklySummaryViewController();
-        //this.weeklySummary = weeklySummaryViewController.loadFXML();
-        //this.monthlySummary = monthlySummaryViewController.loadFXML();
-
-
         // set up table views
         buildFormattedWeeklyTable();
         buildFormattedMonthlyTable();
@@ -204,7 +187,6 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         initializeFilterButton(clientFilterBtn);
         initializeFilterButton(projectFilterBtn);
         initializeFilterButton(workspaceFilterBtn);
-
 
         // load success and error images
         URL successUrl = getClass().getClassLoader()
@@ -229,9 +211,6 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     }
 
     private void setupFormattedTableUIElements() {
-        //weeklyToggleBtn.setToggleGroup(timeSpanToggleGroup);
-        //monthlyToggleBtn.setToggleGroup(timeSpanToggleGroup);
-        //weeklyToggleBtn.setSelected(true);
         weeklyToggleBtn.fire();
 
         yearSpinner.getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
@@ -1084,8 +1063,6 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
             children.clear();
             children.addAll(content);
         }
-        //content.prefWidthProperty().bind(root.widthProperty());
-        //content.prefHeightProperty().bind(root.heightProperty());
     }
 
     /**

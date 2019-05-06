@@ -1,6 +1,5 @@
 package UnemployedVoodooFamily.GUI;
 
-import UnemployedVoodooFamily.Data.Enums.FilePath;
 import UnemployedVoodooFamily.GUI.Content.ProfileController;
 import UnemployedVoodooFamily.GUI.Content.SettingsController;
 import UnemployedVoodooFamily.GUI.Content.TableViewController;
@@ -9,21 +8,18 @@ import UnemployedVoodooFamily.Logic.Session;
 import UnemployedVoodooFamily.Main;
 import javafx.animation.RotateTransition;
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
-import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
-import javafx.scene.effect.*;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -34,10 +30,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import org.apache.commons.lang3.ObjectUtils;
 
-import java.awt.*;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
@@ -45,8 +38,6 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import static java.lang.Thread.sleep;
 
 public class GUIBaseController {
 
@@ -184,20 +175,6 @@ public class GUIBaseController {
         settingsNavBtn.setOnAction(event -> switchContentView(settings));
         tableNavBtn.setOnAction(event -> switchContentView(table));
         profileNavBtn.setOnAction(event -> switchContentView(profile));
-        /* Add these again but in the settings menu, maybe?
-        dumpDataMenuItem.setOnAction(event -> dumpData());
-        viewDataMenuItem.setOnAction(event -> {
-            try {
-                Desktop.getDesktop().open(new File(FilePath.LOGS_HOME.getPath()));
-            }
-            catch(IOException e) {
-                e.printStackTrace();
-            }
-            catch(IllegalArgumentException e) {
-                //could not find path
-            }
-        });
-        */
     }
 
 

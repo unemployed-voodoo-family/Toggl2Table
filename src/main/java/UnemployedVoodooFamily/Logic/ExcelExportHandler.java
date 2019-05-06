@@ -1,8 +1,6 @@
 package UnemployedVoodooFamily.Logic;
 
 import UnemployedVoodooFamily.Data.DailyFormattedDataModel;
-import UnemployedVoodooFamily.Data.MonthlyFormattedDataListFactory;
-import ch.simas.jtoggl.TimeEntry;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;

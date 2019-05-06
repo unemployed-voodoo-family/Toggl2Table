@@ -1,6 +1,5 @@
 package UnemployedVoodooFamily.Logic;
 
-import UnemployedVoodooFamily.Data.Enums.FilePath;
 import UnemployedVoodooFamily.Data.WorkHours;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -8,8 +7,6 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.*;
 import java.lang.reflect.Type;
-import java.net.URL;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

@@ -17,7 +17,6 @@ public class Session {
     private HashMap<Long, Task> tasks;
     private HashMap<Long, Client> clients;
     private User user;
-    private PagedResult detailedReport;
 
     private ZoneId zoneId;
     private ZoneOffset zoneOffset;
