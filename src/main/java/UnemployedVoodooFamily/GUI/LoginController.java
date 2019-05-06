@@ -1,14 +1,12 @@
 package UnemployedVoodooFamily.GUI;
 
 import UnemployedVoodooFamily.Data.Enums.FilePath;
-import UnemployedVoodooFamily.Logic.LoginLogic;
 import UnemployedVoodooFamily.Logic.FileLogic;
+import UnemployedVoodooFamily.Logic.LoginLogic;
 import UnemployedVoodooFamily.Main;
 import UnemployedVoodooFamily.Utils.PasswordUtils;
-import javafx.animation.Animation;
 import javafx.animation.RotateTransition;
 import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
