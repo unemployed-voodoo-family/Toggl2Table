@@ -3,12 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ProgressIndicator?>
-<?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -22,51 +17,9 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox maxHeight="1.7976931348623157E308" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UnemployedVoodooFamily.GUI.GUIBaseController">
+<VBox maxHeight="1.7976931348623157E308" minHeight="280.0" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UnemployedVoodooFamily.GUI.GUIBaseController">
   <children>
-    <MenuBar minHeight="-Infinity" minWidth="-Infinity" VBox.vgrow="NEVER">
-      <menus>
-        <Menu mnemonicParsing="false" text="File">
-          <items>
-            <MenuItem mnemonicParsing="false" text="New" />
-            <MenuItem mnemonicParsing="false" text="Open…" />
-            <Menu mnemonicParsing="false" text="Open Recent" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Close" />
-            <MenuItem mnemonicParsing="false" text="Save" />
-            <MenuItem mnemonicParsing="false" text="Save As…" />
-            <MenuItem mnemonicParsing="false" text="Revert" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Preferences…" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Quit" />
-          </items>
-        </Menu>
-        <Menu mnemonicParsing="false" text="Edit">
-          <items>
-            <MenuItem mnemonicParsing="false" text="Undo" />
-            <MenuItem mnemonicParsing="false" text="Redo" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Cut" />
-            <MenuItem mnemonicParsing="false" text="Copy" />
-            <MenuItem mnemonicParsing="false" text="Paste" />
-            <MenuItem mnemonicParsing="false" text="Delete" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Select All" />
-            <MenuItem mnemonicParsing="false" text="Unselect All" />
-          </items>
-        </Menu>
-        <Menu mnemonicParsing="false" text="Help">
-          <items>
-                  <MenuItem fx:id="dumpDataMenuItem" mnemonicParsing="false" text="Dump loaded Toggl data" />
-                  <MenuItem fx:id="viewDataMenuItem" mnemonicParsing="false" text="View Data In Explorer" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="About MyHelloApp" />
-          </items>
-        </Menu>
-      </menus>
-    </MenuBar>
-      <GridPane fx:id="appRoot" prefHeight="673.0" prefWidth="1126.0" VBox.vgrow="ALWAYS">
+      <GridPane fx:id="appRoot" minHeight="280.0" prefHeight="673.0" prefWidth="1126.0" VBox.vgrow="ALWAYS">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="300.0" />
         </columnConstraints>
@@ -82,9 +35,8 @@
                      </BorderPane.margin></AnchorPane>
                </center>
                <bottom>
-                  <VBox prefWidth="1115.0" BorderPane.alignment="CENTER">
+                  <VBox fx:id="bottomBar" maxHeight="24.0" minWidth="24.0" prefHeight="24.0" prefWidth="1088.0" BorderPane.alignment="CENTER">
                      <children>
-                        <Separator prefWidth="200.0" />
                         <HBox fx:id="progressBox" alignment="CENTER" prefHeight="0.0" prefWidth="1115.0" visible="false">
                            <children>
                               <ProgressIndicator />
@@ -101,9 +53,9 @@
                   </VBox>
                </bottom>
                <left>
-                  <HBox maxWidth="170.0" minWidth="170.0" prefHeight="670.0" prefWidth="170.0" BorderPane.alignment="CENTER">
+                  <HBox maxWidth="-Infinity" minWidth="-Infinity" prefHeight="670.0" prefWidth="180.0" BorderPane.alignment="CENTER">
                      <children>
-                        <VBox id="navbar" fx:id="navbar" maxHeight="1.7976931348623157E308" prefHeight="670.0" prefWidth="216.0">
+                        <VBox id="navbar" fx:id="navbar" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="256.0" minWidth="-Infinity" prefHeight="670.0" prefWidth="180.0">
                            <children>
                               <HBox fx:id="toolBar" alignment="CENTER_LEFT" prefHeight="18.0" prefWidth="164.0">
                                  <children>
@@ -130,7 +82,7 @@
                                     <Insets bottom="10.0" left="10.0" right="5.0" top="10.0" />
                                  </padding>
                               </HBox>
-                              <ToggleButton fx:id="profileNavBtn" alignment="CENTER_LEFT" maxHeight="50.0" minHeight="50.0" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="50.0" prefWidth="227.0" text="User Name">
+                              <ToggleButton fx:id="profileNavBtn" alignment="CENTER_LEFT" maxHeight="50.0" minHeight="50.0" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="50.0" prefWidth="190.0" text="User Name">
                                  <graphic>
                                     <ImageView fx:id="avatarView" fitHeight="37.0" fitWidth="37.0" nodeOrientation="RIGHT_TO_LEFT" pickOnBounds="true" preserveRatio="true">
                                        <image>
@@ -161,6 +113,18 @@
                                     <ImageView fitHeight="37.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true" />
                                  </graphic>
                               </ToggleButton>
+                              <VBox alignment="BOTTOM_LEFT" minHeight="-Infinity" VBox.vgrow="ALWAYS">
+                                 <children>
+                                    <ToggleButton fx:id="logOutBtn" alignment="CENTER_LEFT" maxHeight="50.0" minHeight="50.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="227.0" text="Log Out">
+                                       <font>
+                                          <Font name="System Bold" size="13.0" />
+                                       </font>
+                                       <graphic>
+                                          <ImageView fitHeight="37.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true" />
+                                       </graphic>
+                                    </ToggleButton>
+                                 </children>
+                              </VBox>
                            </children>
                         </VBox>
                      </children>

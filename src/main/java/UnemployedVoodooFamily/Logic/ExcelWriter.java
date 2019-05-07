@@ -21,7 +21,7 @@ public class ExcelWriter {
     private CellStyle dataCellStyle;
     private CellStyle dataCellStyleAlt;
     private CellStyle summaryCellStyle;
-    private static String[] dataColumnNames = {"Week number", "Week day", "Date", "Supposed work hours", "Hours worked", "+/- Hours", "Accumulated hours", "Notes"};
+    private static String[] dataColumnNames = {"Week number", "Week day", "Date", "Ordinary work hours", "Hours worked", "+/- Hours", "Accumulated hours", "Notes"};
     private static String[] summaryColumnNames = {"", "Worked hours", "Net hours", "Accumulated hours", "Notes"};
     private Map<Month, Integer> summaryRowNumbers;
 

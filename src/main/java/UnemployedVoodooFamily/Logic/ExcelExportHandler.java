@@ -1,8 +1,6 @@
 package UnemployedVoodooFamily.Logic;
 
 import UnemployedVoodooFamily.Data.DailyFormattedDataModel;
-import UnemployedVoodooFamily.Data.MonthlyFormattedDataListFactory;
-import ch.simas.jtoggl.TimeEntry;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -24,17 +22,17 @@ public class ExcelExportHandler {
         excelWriter = new ExcelWriter();
         this.year = year;
         monthlyDataLists = new HashMap<>();
-        for(Month month: Month.values()) {
-            monthlyDataLists.put(StringUtils.capitalize(month.toString().toLowerCase()),
-                                 timeEntries.get(YearMonth.of(year, month)));
+        if(null != timeEntries) {
+            for(Month month: Month.values()) {
+                monthlyDataLists.put(StringUtils.capitalize(month.toString().toLowerCase()),
+                                     timeEntries.get(YearMonth.of(year, month)));
+            }
         }
     }
 
     public boolean makeExcelDocument() throws IOException {
-        //generateDummyLists(); //Remove this later, dummy
         boolean exportSuccess = excelWriter.generateExcelSheet(monthlyDataLists, year);
         if(exportSuccess)   {
-            System.out.println("Successfully exported to excel document");
         }
         return exportSuccess;
     }

@@ -2,10 +2,10 @@ package UnemployedVoodooFamily.GUI.Content;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 
+import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
 
@@ -16,7 +16,7 @@ public class MonthlySummaryViewController {
     @FXML
     private Label hoursWorkedLabel;
     @FXML
-    private Label overtimeWorkedLabel;
+    private Label extraTimeLabel;
 
     private String title;
 

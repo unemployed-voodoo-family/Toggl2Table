@@ -1,6 +1,5 @@
 package UnemployedVoodooFamily.GUI;
 
-import UnemployedVoodooFamily.Data.Enums.FilePath;
 import UnemployedVoodooFamily.GUI.Content.ProfileController;
 import UnemployedVoodooFamily.GUI.Content.SettingsController;
 import UnemployedVoodooFamily.GUI.Content.TableViewController;
@@ -9,21 +8,19 @@ import UnemployedVoodooFamily.Logic.Session;
 import UnemployedVoodooFamily.Main;
 import javafx.animation.RotateTransition;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
-import javafx.scene.effect.Blend;
-import javafx.scene.effect.BlendMode;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.effect.ColorAdjust;
-import javafx.scene.effect.ColorInput;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
@@ -33,17 +30,14 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import org.apache.commons.lang3.ObjectUtils;
 
-import java.awt.*;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import static java.lang.Thread.sleep;
 
 public class GUIBaseController {
 
@@ -83,16 +77,13 @@ public class GUIBaseController {
     private AnchorPane contentRoot;
 
     @FXML
-    private MenuItem dumpDataMenuItem;
-
-    @FXML
-    private MenuItem viewDataMenuItem;
-
-    @FXML
     private HBox progressBox;
 
     @FXML
     private Text progressMessage;
+
+    @FXML
+    private ToggleButton logOutBtn;
 
     @FXML
     private Label lastFetchedLabel;
@@ -101,6 +92,7 @@ public class GUIBaseController {
     private Node table;
     private Node profile;
     private Thread t1;
+    private static Stage loginStage;
 
     private AtomicBoolean active;
 
@@ -115,15 +107,16 @@ public class GUIBaseController {
         Scene scene = new Scene(root);
         scene.getStylesheets().add("styles.css");
         appStage.setTitle("Toggl Time Sheet");
+        appStage.getIcons().add(new Image("/icons/app_icon/96x96.png"));
         appStage.setScene(scene);
-        Main.closeLogin();
-        Main.changePrimaryStage(appStage);
+        appStage.show();
     }
 
     public void initialize() {
         settingsNavBtn.setToggleGroup(navButtons);
         tableNavBtn.setToggleGroup(navButtons);
         profileNavBtn.setToggleGroup(navButtons);
+        logOutBtn.setToggleGroup(navButtons);
         profileNavBtn.setGraphic(avatarView);
         active = new AtomicBoolean(false);
         rotateSettings();
@@ -134,6 +127,7 @@ public class GUIBaseController {
         dumpData();
         tableNavBtn.fire();
     }
+
 
     /**
      * Loads the other UnemployedVoodooFamily.GUI controllers and sets them as nodes
@@ -153,8 +147,10 @@ public class GUIBaseController {
     private void applyStyles()  {
         ColorAdjust whiteout = new ColorAdjust();
         whiteout.setBrightness(1);
-        refreshIcon.setEffect(whiteout);
         avatarView.setEffect(whiteout);
+        ColorAdjust lightgray = new ColorAdjust();
+        lightgray.setBrightness(0.7);
+        refreshIcon.setEffect(lightgray);
     }
 
     /**
@@ -167,29 +163,18 @@ public class GUIBaseController {
         });
         refreshBtn.setOnMouseEntered(event ->   {
             ColorAdjust whiteout = new ColorAdjust();
-            whiteout.setBrightness(0.8);
+            whiteout.setBrightness(1);
             refreshIcon.setEffect(whiteout);
         });
         refreshBtn.setOnMouseExited(event -> {
             ColorAdjust whiteout = new ColorAdjust();
-            whiteout.setBrightness(1);
+            whiteout.setBrightness(0.7);
             refreshIcon.setEffect(whiteout);
         });
+        logOutBtn.setOnAction(this :: logOutOfApplication);
         settingsNavBtn.setOnAction(event -> switchContentView(settings));
         tableNavBtn.setOnAction(event -> switchContentView(table));
         profileNavBtn.setOnAction(event -> switchContentView(profile));
-        dumpDataMenuItem.setOnAction(event -> dumpData());
-        viewDataMenuItem.setOnAction(event -> {
-            try {
-                Desktop.getDesktop().open(new File(FilePath.LOGS_HOME.getPath()));
-            }
-            catch(IOException e) {
-                e.printStackTrace();
-            }
-            catch(IllegalArgumentException e) {
-                //could not find path
-            }
-        });
     }
 
 
@@ -206,16 +191,18 @@ public class GUIBaseController {
             Session session = Session.getInstance();
             Platform.runLater(() -> progressMessage.setText(sb + prefix + "work hours"));
             session.refreshWorkHours();
-            Platform.runLater(() -> progressMessage.setText(sb.replace(1, 2, "2") + prefix + "time entries"));
-            session.refreshTimeEntries();
-            Platform.runLater(() -> progressMessage.setText(sb.replace(1, 2, "3") + prefix + "workspaces"));
+            Platform.runLater(() -> progressMessage.setText(sb.replace(1, 2, "2") + prefix + "workspaces"));
             session.refreshWorkspaces();
-            Platform.runLater(() -> progressMessage.setText(sb.replace(1, 2, "4") + prefix + "projects"));
+            Platform.runLater(() -> progressMessage.setText(sb.replace(1, 2, "3") + prefix + "projects"));
             session.refreshProjects();
-            Platform.runLater(() -> progressMessage.setText(sb.replace(1, 2, "5") + prefix + "tasks"));
+            Platform.runLater(() -> progressMessage.setText(sb.replace(1, 2, "4") + prefix + "tasks"));
             session.refreshTasks();
-            Platform.runLater(() -> progressMessage.setText(sb.replace(1, 2, "6") + prefix + "clients"));
+            Platform.runLater(() -> progressMessage.setText(sb.replace(1, 2, "5") + prefix + "clients"));
             session.refreshClient();
+            Platform.runLater(() -> progressMessage.setText(sb.replace(1, 2, "6") + prefix + "time entries"));
+            OffsetDateTime start = OffsetDateTime.of(2019, 1, 1, 0, 0, 0, 0, ZoneOffset.ofHours(1));
+            OffsetDateTime end = OffsetDateTime.of(2019, 12, 31, 0, 0, 0, 0, ZoneOffset.ofHours(1));
+            session.refreshTimeEntries(start, end);
             Platform.runLater(() -> {
                 progressBox.setVisible(false);
                 spinRefreshBtn(false);
@@ -282,5 +269,50 @@ public class GUIBaseController {
         rotateTransition.setFromAngle(0);
         rotateTransition.setToAngle(360);
         rotateTransition.setCycleCount(1);
+    }
+
+    /**
+     * Logs out of the main GUI application, after the windows has been closed, it initializes and
+     * lauches a new stage with the login FXML file
+     * @param event that is used to fetch the Node from where the method was called.
+     */
+    private void logOutOfApplication(ActionEvent event){
+        //Closes the current active Base GUI.
+        Node  source = (Node)  event.getSource();
+        Stage stage  = (Stage) source.getScene().getWindow();
+        Session.terminateSession();
+        stage.close();
+
+        //Start a new instance of the login stage
+        loginStage = new Stage();
+        URL r = getClass().getClassLoader().getResource("login.fxml");
+        Parent root = null;
+        try {
+            root = FXMLLoader.load(r);
+        }
+        catch(IOException e) {
+            e.printStackTrace();
+        }
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add("styles.css");
+        loginStage.setTitle("Toggl Time Sheet - Login");
+        loginStage.setScene(scene);
+        Main.initStage(loginStage);
+        loginStage.show();
+    }
+
+    public static boolean loginStageExists(){
+        if(loginStage == null){
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
+    /**
+     * A method that can be called from anywhere to terminate the login stage.
+     */
+    public static void closeLogin() {
+        loginStage.close();
     }
 }

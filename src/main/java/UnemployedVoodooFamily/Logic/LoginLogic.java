@@ -1,6 +1,8 @@
 package UnemployedVoodooFamily.Logic;
 
+import UnemployedVoodooFamily.Data.Enums.FilePath;
 import UnemployedVoodooFamily.GUI.GUIBaseController;
+import UnemployedVoodooFamily.Utils.PasswordUtils;
 import ch.simas.jtoggl.JToggl;
 import javafx.application.Platform;
 
@@ -33,7 +35,7 @@ public class LoginLogic {
             togglThread.join();
         }
         catch(RuntimeException e) {
-            e.printStackTrace();
+            e.getMessage();
             Session.getInstance().terminateSession();
         }
         catch(InterruptedException e) {

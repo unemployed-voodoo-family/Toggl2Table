@@ -1,6 +1,5 @@
 package UnemployedVoodooFamily.Logic;
 
-import UnemployedVoodooFamily.Data.Enums.FilePath;
 import UnemployedVoodooFamily.Data.WorkHours;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -8,8 +7,6 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.*;
 import java.lang.reflect.Type;
-import java.net.URL;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -59,30 +56,6 @@ public class FileLogic {
     public boolean deleteFile(String path) {
         File file = new File(path);
         return file.delete();
-    }
-
-    public void appendWorkHoursToJson(String path, WorkHours wh) {
-        File file = getFile(path);
-
-        FileWriter writer = null;
-        try {
-            writer = new FileWriter(file);
-        }
-        catch(IOException e) {
-            e.printStackTrace();
-        }
-        GsonBuilder builder = new GsonBuilder();
-        Gson gson = builder.setPrettyPrinting().create();
-        List<WorkHours> list = loadJson(path);
-        Type listType = new TypeToken<List<WorkHours>>() {}.getType();
-        list.add(wh);
-        gson.toJson(list, listType, writer);
-        try {
-            writer.close();
-        }
-        catch(IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public List<WorkHours> loadJson(String path) {

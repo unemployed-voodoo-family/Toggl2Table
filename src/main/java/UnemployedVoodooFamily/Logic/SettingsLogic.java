@@ -1,13 +1,12 @@
 package UnemployedVoodooFamily.Logic;
 
 import UnemployedVoodooFamily.Data.DateRange;
-import UnemployedVoodooFamily.Data.Enums.FilePath;
 import UnemployedVoodooFamily.Data.WorkHours;
 import UnemployedVoodooFamily.Data.WorkHoursData;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import org.apache.poi.ss.formula.functions.T;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,18 +20,9 @@ import java.util.*;
  */
 public class SettingsLogic {
 
-    private Properties props = new Properties();
     private FileLogic propsLogic = new FileLogic();
     private String path;
     private List<WorkHours> workHours;
-
-    private static DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-
-    private TableColumn<WorkHoursData, String> fromCol;
-    private TableColumn<WorkHoursData, String> toCol;
-    private TableColumn<WorkHoursData, Double> hoursCol;
-    private TableColumn<WorkHoursData, String> noteCol;
-
 
     public SettingsLogic(String path) {
         this.workHours = propsLogic.loadJson(path);
@@ -44,8 +34,6 @@ public class SettingsLogic {
      * @param fromDate the start of the period
      * @param toDate   the end of the period
      * @param hoursStr the standard work hours for this period
-     * @throws URISyntaxException
-     * @throws IOException
      */
     public void setWorkHours(LocalDate fromDate, LocalDate toDate, String hoursStr, String note) {
 
@@ -64,14 +52,9 @@ public class SettingsLogic {
      * Checks for overlap between the newly created period and the already existing ones.
      * Fixes overlap by overwriting old entries, and stitches
      * continous periods which have the same value.
-     * @param props    the properties to write to
-     * @param newRange the DateRange entered by the user
-     * @param newValue the work hours entered by the user
      */
     private void fixHoursOverlap(WorkHours wh) {
 
-        //TODO: Check if user input is logical
-        //TODO: sort stored properties properly
         if(this.workHours == null) {
             this.workHours = new ArrayList<>();
         }
@@ -156,29 +139,15 @@ public class SettingsLogic {
     }
 
     public void populateHoursTable(TableView table) {
-        fromCol = new TableColumn<>("From");
-        toCol = new TableColumn<>("To");
-        hoursCol = new TableColumn<>("Hours");
-        noteCol = new TableColumn<>("Note");
-
-        table.getColumns().clear();
-        table.getColumns().addAll(fromCol, toCol, hoursCol, noteCol);
-        fromCol.setCellValueFactory(param -> param.getValue().fromProperty());
-        toCol.setCellValueFactory(param -> param.getValue().toProperty());
-        hoursCol.setCellValueFactory(param -> param.getValue().hoursProperty());
-        noteCol.setCellValueFactory(param -> param.getValue().noteProperty());
-
         //load props file
-        props = propsLogic.loadProps(FilePath.getCurrentUserWorkhours());
-        propsLogic.loadJson(path);
+        List<WorkHours> whList = propsLogic.loadJson(path);
 
         ObservableList<WorkHoursData> data = FXCollections.observableArrayList();
-        Iterator<WorkHours> it = sortWorkHoursData(propsLogic.loadJson(path)).iterator();
+        Iterator<WorkHours> it = sortWorkHoursData(whList).iterator();
 
         while(it.hasNext()) {
             WorkHours next = it.next();
-            Double hours = next.getHours();
-            data.add(new WorkHoursData(next.getFrom(), next.getTo(), hours, next.getNote()));
+            data.add(new WorkHoursData(next));
         }
         table.getItems().clear();
         table.getItems().addAll(data);
@@ -194,13 +163,30 @@ public class SettingsLogic {
         return data;
     }
 
-    public void deleteStoredData(FilePath directory){
-        File directoryPath = new File(directory.getPath());
+    /**
+     * This method's main function is to delete files in a specific directory,
+     * files including files in subdirectories will also be deleted, disregarding it's extension.
+     * @param path is the directory path from where all files will be removed.
+     */
+    public void deleteStoredData(String path) throws Exception{
+        File directory = new File(path);
 
-        for(File file: directoryPath.listFiles()){
-            if (!file.isDirectory()){
-                file.delete();
+            for(File file: directory.listFiles()){
+                if(file.isDirectory()) {
+                    deleteStoredData(directory + File.separator + file.getName());
+                }
+                else {
+                    file.delete();
+                }
             }
+
+    }
+
+    public <T> void deleteWorkHours(T workhours) {
+        if(workhours instanceof WorkHoursData) {
+            this.workHours = propsLogic.loadJson(path);
+            workHours.remove(((WorkHoursData) workhours).getWorkHours());
+            propsLogic.saveJson(path, this.workHours);
         }
     }
 }

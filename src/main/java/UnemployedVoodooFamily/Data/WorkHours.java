@@ -1,6 +1,7 @@
 package UnemployedVoodooFamily.Data;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class WorkHours {
 
@@ -57,5 +58,23 @@ public class WorkHours {
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if(this == o) {
+            return true;
+        }
+        if(o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        WorkHours workHours = (WorkHours) o;
+        return Objects.equals(from, workHours.from) && Objects.equals(to, workHours.to) && Objects
+                .equals(hours, workHours.hours) && Objects.equals(note, workHours.note);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(from, to, hours, note);
     }
 }

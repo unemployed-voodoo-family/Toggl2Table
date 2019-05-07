@@ -25,7 +25,6 @@ public class Main extends Application {
 
         // if the directory does not exist, create it
         if (!theDir.exists()) {
-            System.out.println("creating directory: " + theDir.toString());
             boolean result = false;
 
             try{
@@ -35,7 +34,6 @@ public class Main extends Application {
                 //handle it
             }
             if(result) {
-                System.out.println("DIR created");
             }
         }
     }
@@ -56,6 +54,7 @@ public class Main extends Application {
         Parent root = FXMLLoader.load(r);
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
+
         initStage(primaryStage);
 
         primaryStage.show();
@@ -72,7 +71,7 @@ public class Main extends Application {
         primaryStage.show();
     }
 
-    private static void initStage(Stage stage) {
+    public static void initStage(Stage stage) {
         stage.getScene().getStylesheets().add("styles.css");
         stage.setTitle("Toggl Time Sheet - Login");
         stage.getIcons().add(new Image("/icons/app_icon/96x96.png"));

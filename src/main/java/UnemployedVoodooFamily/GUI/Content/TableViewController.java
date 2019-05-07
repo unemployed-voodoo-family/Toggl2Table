@@ -16,17 +16,17 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -35,10 +35,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.util.Callback;
 import javafx.util.StringConverter;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.formula.functions.T;
 import org.threeten.extra.YearWeek;
 
 import java.awt.*;
@@ -46,14 +43,14 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.text.DecimalFormat;
-import java.time.*;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.YearMonth;
 import java.time.format.TextStyle;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
-import static java.lang.Thread.sleep;
 
 public class TableViewController<Content extends Pane> implements DataLoadListener {
 
@@ -73,10 +70,10 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     private Label excelFeedbackLabel;
 
     @FXML
-    private ToggleButton weeklyToggleBtn;
+    private MenuItem weeklyToggleBtn;
 
     @FXML
-    private ToggleButton monthlyToggleBtn;
+    private MenuItem monthlyToggleBtn;
 
     @FXML
     private Button exportBtn;
@@ -88,8 +85,6 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     private DatePicker rawStartDate;
     @FXML
     private DatePicker rawEndDate;
-    @FXML
-    private AnchorPane summaryRoot;
 
     @FXML
     private VBox filterBox;
@@ -105,6 +100,8 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     private TabPane tableTabPane;
     @FXML
     private HBox root;
+    @FXML
+    private MenuButton summarySelectionBtn;
 
     @FXML
     private Spinner yearSpinner;
@@ -124,11 +121,6 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     private ImageView feedbackImg;
 
     @FXML
-    private Content weeklySummary;
-    @FXML
-    private Content monthlySummary;
-
-    @FXML
     private TableView<DailyFormattedDataModel> monthlyTable;
     @FXML
     private TableView<DailyFormattedDataModel> weeklyTable;
@@ -143,16 +135,22 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     @FXML
     private Button explorerBtn;
 
+    @FXML
+    private Label hoursWorkedLabel;
+    @FXML
+    private Label extraTimeWorkedLabel;
+
     private ImageView successImg;
     private ImageView errorImg;
-
-    private final ToggleGroup timeSpanToggleGroup = new ToggleGroup();
 
     private RawTimeDataLogic rawTimeDataLogic = new RawTimeDataLogic();
     private FormattedTimeDataLogic formattedTimeDataLogic = new FormattedTimeDataLogic();
     private EnumSet<Data> loadedData = EnumSet.noneOf(Data.class);
 
     private Set<Object> filterOptions = new HashSet<>();
+
+    private static DecimalFormat df = new DecimalFormat("#0.00");
+
 
 
     public Node loadFXML() throws IOException {
@@ -177,15 +175,6 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
      */
     private void setupUIElements() {
 
-        // load the summary views
-        try {
-            this.weeklySummary = new WeeklySummaryViewController().loadFXML();
-            this.monthlySummary = new MonthlySummaryViewController().loadFXML();
-        }
-        catch(IOException e) {
-            e.printStackTrace();
-        }
-
         // set up table views
         buildFormattedWeeklyTable();
         buildFormattedMonthlyTable();
@@ -202,24 +191,28 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
 
         // load success and error images
         URL successUrl = getClass().getClassLoader()
-                                   .getResource("icons" + File.separator + "baseline_check_circle_black_24dp.png");
-        Image success = new Image(successUrl.toString());
-        successImg = new ImageView(success);
+                                   .getResource("icons/baseline_check_circle_black_24dp.png");
+        if(successUrl != null) {
+            Image success = new Image(successUrl.toString());
+            successImg = new ImageView(success);
+        }
+
         successImg.setFitWidth(24);
         successImg.setFitHeight(24);
         URL errorUrl = getClass().getClassLoader()
-                                 .getResource("icons" + File.separator + "baseline_error_black_24dp.png");
-        Image error = new Image(errorUrl.toString());
-        errorImg = new ImageView(error);
+                                 .getResource("icons/baseline_error_black_24dp.png");
+        if(errorUrl != null) {
+            Image error = new Image(errorUrl.toString());
+            errorImg = new ImageView(error);
+        }
+
         errorImg.setFitWidth(24);
         errorImg.setFitHeight(24);
 
     }
 
     private void setupFormattedTableUIElements() {
-        weeklyToggleBtn.setToggleGroup(timeSpanToggleGroup);
-        monthlyToggleBtn.setToggleGroup(timeSpanToggleGroup);
-        weeklyToggleBtn.setSelected(true);
+        weeklyToggleBtn.fire();
 
         yearSpinner.getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
         weekSpinner.getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
@@ -299,6 +292,12 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
      * Sets input actions on UI elements
      */ private void setKeyAndClickListeners() {
 
+         // update formatted tables when tableview gui is shown
+        root.sceneProperty().addListener((observable, oldValue, newValue) -> {
+            if(oldValue == null && newValue != null && formattedTimeDataLogic.getMonthlyMasterData() != null) {
+                updateFormattedTableData();
+            }
+        });
 
         bindTooltip(excelFeedbackLabel, errorTooltip);
         applyFilterBtn.setOnAction(event -> applyFilters());
@@ -343,21 +342,22 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         });
 
         weeklyToggleBtn.setOnAction((ActionEvent e) -> {
-            weeklyToggleBtn.setSelected(true);
             switchView(tableRoot, weeklyTable);
-            switchView(summaryRoot, weeklySummary);
+            summarySelectionBtn.setText("Weekly Summary");
+            //switchView(summaryRoot, weeklySummary);
             updateWeeklySpinner(true);
             updateMonthlySpinner(false);
             timePeriodSpinnerLabel.setText("Week");
+            updateFormattedTableData();
         });
         monthlyToggleBtn.setOnAction((ActionEvent e) -> {
-            monthlyToggleBtn.setSelected(true);
             switchView(tableRoot, monthlyTable);
-            switchView(summaryRoot, monthlySummary);
+            summarySelectionBtn.setText("Monthly Summary");
+            //switchView(summaryRoot, monthlySummary);
             updateWeeklySpinner(false);
             updateMonthlySpinner(true);
             timePeriodSpinnerLabel.setText("Month");
-            updateMonthlyTable();
+            updateFormattedTableData();
         });
 
         //Year Spinner + Dropdown
@@ -365,7 +365,6 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
             yearSpinner.getEditor().setVisible(false);
             yearlyDropdown.setVisible(true);
             yearlyDropdown.show();
-            System.out.println("Year spinner clicked");
         });
         yearlyDropdown.setOnHiding((Event e) -> {
             yearSpinner.getEditor().setVisible(true);
@@ -378,8 +377,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
             @Override
             public void changed(ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) {
                 formattedTimeDataLogic.setSelectedYear(newValue);
-                updateMonthlyTable();
-                updateWeeklyTable();
+                updateFormattedTableData();
             }
         });
 
@@ -388,7 +386,6 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
             weekSpinner.getEditor().setVisible(false);
             weeklyDropdown.setVisible(true);
             weeklyDropdown.show();
-            System.out.println("Week spinner clicked");
         });
         weeklyDropdown.setOnHiding((Event e) -> {
             weekSpinner.getEditor().setVisible(true);
@@ -401,7 +398,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
             @Override
             public void changed(ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) {
                 formattedTimeDataLogic.setSelectedWeek(newValue);
-                updateWeeklyTable();
+                updateFormattedTableData();
             }
         });
 
@@ -410,7 +407,6 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
             monthSpinner.getEditor().setVisible(false);
             monthlyDropdown.setVisible(true);
             monthlyDropdown.show();
-            System.out.println("Month spinner clicked");
         });
         monthlyDropdown.setOnHiding((Event e) -> {
             monthSpinner.getEditor().setVisible(true);
@@ -419,14 +415,9 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
                 monthSpinner.getValueFactory().setValue(monthlyDropdown.getValue());
             }
         });
-        monthSpinner.valueProperty().addListener(new ChangeListener<SimpleObjectProperty<Month>>() {
-            @Override
-            public void changed(ObservableValue<? extends SimpleObjectProperty<Month>> observable,
-                                SimpleObjectProperty<Month> oldValue, SimpleObjectProperty<Month> newValue) {
-
-                formattedTimeDataLogic.setSelectedMonth(newValue.get());
-                updateMonthlyTable();
-            }
+        monthSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
+            formattedTimeDataLogic.setSelectedMonth(newValue.get());
+            updateFormattedTableData();
         });
 
 
@@ -441,7 +432,6 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
                 //could not find path
             }
         });
-
     }
 
     private void initExcelExportBtn() {
@@ -453,20 +443,26 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
 
                 try {
                     //create document
-                    formattedTimeDataLogic.exportToExcelDocument(formattedTimeDataLogic.getMonthlyMasterData(),
+                    boolean success = formattedTimeDataLogic.exportToExcelDocument(formattedTimeDataLogic.getMonthlyMasterData(),
                                                                  Integer.parseInt(yearSpinner.getEditor().getText()));
 
                     //show success in ui
                     Platform.runLater(() -> {
-                        showSuccessLabel(excelFeedbackLabel, "Excel document was successfully created");
+                        if(success) {
+                            showSuccessLabel(excelFeedbackLabel, "Excel document was successfully created");
+                        }
+                        else {
+                            showErrorLabel(excelFeedbackLabel, "Cannot create Excel document while time entries are still downloading");
+                        }
                         errorTooltip.setOpacity(0);
                     });
                 }
                 //show error in ui
                 catch(IOException e) {
                     Platform.runLater(() -> {
-                        showErrorLabel(excelFeedbackLabel, "Error creating excel file");
-                        errorTooltip.setText(e.getMessage());
+                        showErrorLabel(excelFeedbackLabel, "Error creating Excel document");
+                        errorTooltip.setText("Could not create Excel file.\n" +
+                                             "Check that you have permission for the folder and that the file isn't already opened");
                         errorTooltip.setOpacity(.9);
                     });
                 }
@@ -506,7 +502,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     }
 
     /**
-     * Thank you Mr. Messier
+     * Show tooltip on mouse entered
      * https://stackoverflow.com/questions/26854301/how-to-control-the-javafx-tooltips-delay
      * @param node
      * @param tooltip
@@ -527,7 +523,9 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     // |               RAW DATA TABLE METHODS             |
     // |##################################################|
 
-
+    /**
+     * Sets data to the raw data table, using selected time period
+     */
     private void setRawDataTableData() {
         rawData.getItems().setAll(getObservableRawData());
         Platform.runLater(() -> {
@@ -557,17 +555,35 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     // |           FORMATTED DATA TABLE METHODS           |
     // |##################################################|
 
+    /**
+     * Update the currently visible table.
+     */
     private void updateFormattedTableData() {
+        if(rawTimeDataLogic.getMasterTimeEntries() == null) {
+            return;
+        }
         formattedTimeDataLogic
                 .buildMasterData(rawTimeDataLogic.getFilteredTimeEntries(), formattedTimeDataLogic.getSelectedYear());
-        updateWeeklyTable();
-        updateMonthlyTable();
+        if(weekSpinner.isVisible()) {
+            updateWeeklyTable();
+        }
+        else if (monthSpinner.isVisible()) {
+            updateMonthlyTable();
+        }
     }
 
+    /**
+     * Update the monthly table and summary labels
+     */
     private void updateMonthlyTable() {
         ObservableList<DailyFormattedDataModel> data = getObservableMonthlyData();
         try {
-            monthlyTable.getItems().setAll(data);
+            Platform.runLater(() -> {
+                double[] values = calculateSummary(data);
+                monthlyTable.getItems().setAll(data);
+                hoursWorkedLabel.setText(df.format(values[0]));
+                extraTimeWorkedLabel.setText(df.format(values[1]));
+            });
         }
         catch(RuntimeException e) {
             // tried getting data before it was loaded
@@ -575,14 +591,43 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         }
     }
 
+    /**
+     * Update the weekly table and summary labels.
+     */
     private void updateWeeklyTable() {
+        ObservableList<DailyFormattedDataModel> data = getObservableWeeklyData();
         try {
-            weeklyTable.getItems().setAll(getObservableWeeklyData());
+            Platform.runLater(() -> {
+                double[] values = calculateSummary(data);
+                weeklyTable.getItems().setAll(getObservableWeeklyData());
+                hoursWorkedLabel.setText(df.format(values[0]));
+                extraTimeWorkedLabel.setText(df.format(values[1]));
+            });
         }
         catch(Exception e) {
             // tried getting data before it was loaded
             e.getMessage();
         }
+    }
+
+
+    /**
+     * Calculate hours worked and hours worked, respectively for the given dataset
+     * @param data the dataset to calculate from
+     * @return an array containing [1] hours worked and [2] overtime worked
+     */
+    private double[] calculateSummary(ObservableList<DailyFormattedDataModel> data) {
+        double extraTime = 0d;
+        double worked = 0d;
+
+        for(DailyFormattedDataModel item : data) {
+            extraTime += item.getExtraTime();
+            worked += item.getWorkedHours();
+        }
+        extraTimeWorkedLabel.setText(df.format(extraTime));
+        hoursWorkedLabel.setText(df.format(worked));
+
+        return new double[]{worked, extraTime};
     }
 
     //region Tableview setup methods
@@ -592,8 +637,6 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
      */
     @SuppressWarnings("Duplicates")
     private void buildFormattedWeeklyTable() {
-        DecimalFormat df = new DecimalFormat("#0.00 ");
-
         this.weeklyTable = new TableView<>();
         //Create all columns necessary
 
@@ -612,7 +655,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         workedHoursCol.setCellFactory(col -> setDecimalFormatter(df));
 
 
-        TableColumn<DailyFormattedDataModel, Double> supposedHoursCol = new TableColumn<>("Supposed work hours");
+        TableColumn<DailyFormattedDataModel, Double> supposedHoursCol = new TableColumn<>("Ordinary work hours");
         supposedHoursCol.setCellValueFactory(new PropertyValueFactory<>("supposedHours"));
         supposedHoursCol.setSortable(false);
         supposedHoursCol.setCellFactory(col -> setDecimalFormatter(df));
@@ -665,7 +708,6 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
 
         //must be called, or else the table won't appear
         switchView(tableRoot, weeklyTable);
-        switchView(summaryRoot, weeklySummary);
     }
 
     /**
@@ -679,7 +721,6 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
 
         //this.monthlyTable.setRowFactory();
 
-        DecimalFormat df = new DecimalFormat("#0.00 ");
         String fillerStyle = "-fx-fill: blue;";
 
         //Create all columns necessary
@@ -724,7 +765,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
                 add("right");
 
 
-        TableColumn<DailyFormattedDataModel, Double> supposedHoursCol = new TableColumn<>("Supposed work hours");
+        TableColumn<DailyFormattedDataModel, Double> supposedHoursCol = new TableColumn<>("Ordinary work hours");
         supposedHoursCol.setCellValueFactory(new PropertyValueFactory<>("supposedHours"));
         supposedHoursCol.setSortable(false);
         supposedHoursCol.setCellFactory(col ->
@@ -843,7 +884,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
                .addAll(projectCol, clientCol, descCol, startDateCol, startTimeCol, endDateCol, endTimeCol, durationCol);
     }
 
-    private <T> TableCell<T, Double> setDecimalFormatter(DecimalFormat df) {
+    private <T> TableCell<T, Double> setDecimalFormatter(DecimalFormat format) {
         return new TableCell<T, Double>() {
             @Override
             protected void updateItem(Double item, boolean empty) {
@@ -853,7 +894,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
                     setGraphic(null);
                 }
                 else {
-                    setText(df.format(item));
+                    setText(format.format(item));
                 }
             }
         };
@@ -904,24 +945,31 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
      */
     private void setFilterOptions() {
         Session session = Session.getInstance();
-        clearCheckMenuObjects(projectFilterBtn);
-        clearCheckMenuObjects(workspaceFilterBtn);
-        clearCheckMenuObjects(clientFilterBtn);
+        Platform.runLater(() -> {
+            clearCheckMenuObjects(projectFilterBtn);
+            clearCheckMenuObjects(workspaceFilterBtn);
+            clearCheckMenuObjects(clientFilterBtn);
 
-        HashMap<Long, Project> projects = session.getProjects();
-        for(Map.Entry<Long, Project> project: projects.entrySet()) {
-            projectFilterBtn.getItems().add(new CheckMenuObject(project.getValue(), project.getValue().getName()));
-        }
-        HashMap<Long, Workspace> workspaces = session.getWorkspaces();
-        for(Map.Entry<Long, Workspace> workspace: workspaces.entrySet()) {
-            workspaceFilterBtn.getItems()
-                              .add(new CheckMenuObject(workspace.getValue(), workspace.getValue().getName()));
-        }
-        HashMap<Long, Client> clients = session.getClients();
-        System.out.println(clients.toString());
-        for(Map.Entry<Long, Client> client: clients.entrySet()) {
-            clientFilterBtn.getItems().add(new CheckMenuObject(client.getValue(), client.getValue().getName()));
-        }
+
+            projectFilterBtn.getItems().add(new CheckMenuObject<>(new Project(), "No Project"));
+            HashMap<Long, Project> projects = session.getProjects();
+            for(Map.Entry<Long, Project> project: projects.entrySet()) {
+                projectFilterBtn.getItems().add(new CheckMenuObject(project.getValue(), project.getValue().getName()));
+            }
+
+            workspaceFilterBtn.getItems().add(new CheckMenuObject<>(new Workspace(), "No Workspace"));
+            HashMap<Long, Workspace> workspaces = session.getWorkspaces();
+            for(Map.Entry<Long, Workspace> workspace: workspaces.entrySet()) {
+                workspaceFilterBtn.getItems()
+                                  .add(new CheckMenuObject(workspace.getValue(), workspace.getValue().getName()));
+            }
+
+            clientFilterBtn.getItems().add(new CheckMenuObject<>(new Client(), "No Client"));
+            HashMap<Long, Client> clients = session.getClients();
+            for(Map.Entry<Long, Client> client: clients.entrySet()) {
+                clientFilterBtn.getItems().add(new CheckMenuObject(client.getValue(), client.getValue().getName()));
+            }
+        });
     }
 
     private void clearCheckMenuObjects(MenuButton button) {
@@ -1003,8 +1051,10 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     // |##################################################|
 
     private void applyFilters() {
-        setRawDataTableData();
-        updateFormattedTableData();
+        if (rawTimeDataLogic.getMasterTimeEntries() != null) {
+            setRawDataTableData();
+            updateFormattedTableData();
+        }
     }
 
     /**
@@ -1025,8 +1075,6 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
             children.clear();
             children.addAll(content);
         }
-        //content.prefWidthProperty().bind(root.widthProperty());
-        //content.prefHeightProperty().bind(root.heightProperty());
     }
 
     /**

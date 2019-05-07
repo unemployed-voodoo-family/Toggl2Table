@@ -1,13 +1,19 @@
 package UnemployedVoodooFamily.GUI;
 
-import UnemployedVoodooFamily.Logic.LoginLogic;
+import UnemployedVoodooFamily.Data.Enums.FilePath;
 import UnemployedVoodooFamily.Logic.FileLogic;
+import UnemployedVoodooFamily.Logic.LoginLogic;
 import UnemployedVoodooFamily.Main;
 import UnemployedVoodooFamily.Utils.PasswordUtils;
+import javafx.animation.RotateTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
+import javafx.util.Duration;
 
 import java.io.File;
 import java.util.Properties;
@@ -29,6 +35,10 @@ public class LoginController {
     private CheckBox RememberPasswordCheck;
     @FXML
     private Label wrongCredentials;
+    @FXML
+    private ImageView t2tlogo;
+    @FXML
+    private HBox logoBox;
 
     private LoginLogic loginLogic = new LoginLogic();
     private boolean isLoggedIn;
@@ -45,7 +55,17 @@ public class LoginController {
     }
 
     private void setKeyAndClickListeners() {
+        RotateTransition easterEgg = new RotateTransition(Duration.seconds(.3), t2tlogo);
+        easterEgg.setFromAngle(t2tlogo.getRotate());
+        easterEgg.setToAngle(t2tlogo.getRotate() + 30);
+
         submitBtn.setOnAction(event -> loginWithCredentials());
+        t2tlogo.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            event.consume();
+            easterEgg.setFromAngle(t2tlogo.getRotate());
+            easterEgg.setToAngle(t2tlogo.getRotate() + 30);
+            easterEgg.play();
+        });
     }
 
     private void loginWithCredentials() {
@@ -74,6 +94,11 @@ public class LoginController {
                     passwordField.getStyleClass().add("error");
                 }
                 else {
+                    Main.closeLogin();
+                    //checks if a loginStage already exists, if it does, its closed.
+                    if(GUIBaseController.loginStageExists()) {
+                        GUIBaseController.closeLogin();
+                    }
                 }
             });
         });

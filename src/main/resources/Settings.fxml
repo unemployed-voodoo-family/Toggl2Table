@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.DatePicker?>
@@ -13,8 +8,8 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
@@ -22,150 +17,140 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="631.0" prefWidth="925.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UnemployedVoodooFamily.GUI.Content.SettingsController">
-   <content>
-      <GridPane maxHeight="-Infinity" prefHeight="605.0" prefWidth="917.0">
-         <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="509.0" minWidth="10.0" prefWidth="430.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-         </columnConstraints>
-         <rowConstraints>
-            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-         </rowConstraints>
-         <children>
-            <VBox maxWidth="-Infinity" minWidth="400.0" prefHeight="605.0" prefWidth="400.0">
-               <children>
-                  <GridPane prefHeight="314.0" prefWidth="370.0" vgap="15.0">
-                    <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                      <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints maxHeight="166.0" minHeight="10.0" prefHeight="107.0" vgrow="SOMETIMES" />
-                      <RowConstraints maxHeight="-Infinity" minHeight="30.0" prefHeight="32.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="-Infinity" minHeight="30.0" prefHeight="32.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
-                     <children>
-                        <Label text="Set Work Hours">
-                           <font>
-                              <Font size="20.0" />
-                           </font>
-                        </Label>
-                        <HBox alignment="TOP_RIGHT" prefHeight="0.0" prefWidth="370.0" spacing="10.0" GridPane.rowIndex="2">
+<ScrollPane maxWidth="1.7976931348623157E308" prefHeight="631.0" prefWidth="925.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UnemployedVoodooFamily.GUI.Content.SettingsController">
+    <content>
+        <GridPane prefHeight="724.0" prefWidth="783.0">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+            </rowConstraints>
+            <children>
+                <VBox maxWidth="1.7976931348623157E308" minWidth="400.0">
+                    <children>
+                        <GridPane prefHeight="300.0" prefWidth="844.0" vgap="15.0">
+                            <columnConstraints>
+                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="330.0" minWidth="10.0" prefWidth="330.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="423.0" />
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="SOMETIMES" />
+                                <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="SOMETIMES" />
+                                <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="SOMETIMES" />
+                                <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="SOMETIMES" />
+                            </rowConstraints>
+                            <children>
+                                <Label text="Set Work Hours">
+                                    <font>
+                                        <Font size="24.0" />
+                                    </font>
+                                </Label>
+                                <HBox alignment="TOP_RIGHT" prefHeight="0.0" prefWidth="370.0" spacing="10.0" GridPane.rowIndex="2">
+                                    <children>
+                                        <Button fx:id="confirmHoursBtn" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="110.0" text="Confirm" />
+                                    </children>
+                                </HBox>
+                                <GridPane vgap="7.0" GridPane.rowIndex="1">
+                                    <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints maxHeight="-Infinity" vgrow="SOMETIMES" />
+                                        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="SOMETIMES" />
+                                        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="SOMETIMES" />
+                                    </rowConstraints>
+                                    <children>
+                                        <Label text="To" GridPane.rowIndex="1" />
+                                        <Label text="From" />
+                                        <DatePicker fx:id="hoursFromField" prefHeight="25.0" prefWidth="189.0" GridPane.columnIndex="1" />
+                                        <DatePicker fx:id="hoursToField" prefHeight="25.0" prefWidth="205.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                        <Label text="Hours" GridPane.rowIndex="2" />
+                                        <TextField fx:id="hoursField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                        <Label text="Note" GridPane.rowIndex="3" />
+                                        <TextField fx:id="noteField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                    </children>
+                                </GridPane>
+                                <HBox alignment="TOP_RIGHT" prefHeight="60.0" prefWidth="370.0" spacing="10.0" GridPane.rowIndex="3">
+                                    <children>
+                                        <Button fx:id="viewHoursBtn" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="110.0" text="View Hours" />
+                                    </children>
+                                </HBox>
+                                <Label fx:id="inputFeedbackLabel" prefHeight="32.0" prefWidth="261.0" textAlignment="RIGHT" GridPane.rowIndex="2">
+                                    <font>
+                                        <Font size="14.0" />
+                                    </font>
+                                </Label>
+                                <HBox nodeOrientation="RIGHT_TO_LEFT" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <VBox fx:id="workHoursViewRoot" alignment="TOP_RIGHT" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.rowSpan="3">
                            <children>
-                              <BorderPane prefWidth="250.0" HBox.hgrow="ALWAYS">
-                                 <center>
-                                    <Label fx:id="inputFeedbackLabel" prefHeight="32.0" prefWidth="261.0" textAlignment="RIGHT" BorderPane.alignment="CENTER">
-                                       <font>
-                                          <Font size="14.0" />
-                                       </font></Label>
-                                 </center>
-                              </BorderPane>
-                              <Button fx:id="confirmHoursBtn" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="110.0" text="Confirm" />
+                                      <TableView fx:id="hoursView" editable="true" maxWidth="-Infinity" prefHeight="180.0" prefWidth="456.0" />
+                                        <Button fx:id="deleteWhBtn" alignment="CENTER_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" text="Delete">
+                                 <VBox.margin>
+                                    <Insets top="15.0" />
+                                 </VBox.margin></Button>
                            </children>
-                        </HBox>
-                        <GridPane vgap="7.0" GridPane.rowIndex="1">
-                          <columnConstraints>
-                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                          </columnConstraints>
-                          <rowConstraints>
-                            <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                            <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                          </rowConstraints>
-                           <children>
-                              <Label text="To" GridPane.rowIndex="1" />
-                              <Label text="From" />
-                              <DatePicker fx:id="hoursFromField" prefHeight="25.0" prefWidth="189.0" GridPane.columnIndex="1" />
-                              <DatePicker fx:id="hoursToField" prefHeight="25.0" prefWidth="205.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                              <Label text="Hours" GridPane.rowIndex="2" />
-                              <TextField fx:id="hoursField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                              <Label text="Note" GridPane.rowIndex="3" />
-                              <TextField fx:id="noteField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                           </children>
+                           <GridPane.margin>
+                              <Insets left="10.0" />
+                           </GridPane.margin>
+                        </VBox>
+                            </children>
                         </GridPane>
-                        <HBox alignment="TOP_RIGHT" prefHeight="60.0" prefWidth="370.0" spacing="10.0" GridPane.rowIndex="3">
-                           <children>
-                              <Button fx:id="viewHoursBtn" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="110.0" text="View Hours" />
-                           </children>
+                          <GridPane prefWidth="566.0" vgap="15.0">
+                              <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="250.0" minWidth="10.0" prefWidth="250.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="80.0" minWidth="10.0" prefWidth="80.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                              </columnConstraints>
+                              <rowConstraints>
+                                  <RowConstraints maxHeight="45.0" minHeight="10.0" prefHeight="37.0" vgrow="SOMETIMES" />
+                                  <RowConstraints maxHeight="30.0" minHeight="-Infinity" prefHeight="35.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="35.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="35.0" vgrow="SOMETIMES" />
+                              </rowConstraints>
+                              <children>
+                                  <Label text="View stored data" GridPane.rowIndex="1" />
+                                  <HBox alignment="TOP_RIGHT" prefHeight="31.0" prefWidth="202.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                      <children>
+                                          <Button fx:id="viewDataBtn" mnemonicParsing="false" prefHeight="33.0" prefWidth="72.0" text="View" />
+                                      </children>
+                                  </HBox>
+                                  <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="2">
+                                      <children>
+                                          <Button fx:id="dataPathBtn" mnemonicParsing="false" prefHeight="33.0" prefWidth="75.0" text="Change" />
+                                      </children>
                         </HBox>
-                     </children>
-                  </GridPane>
-                  <Separator prefHeight="50.0" prefWidth="370.0">
-                     <padding>
-                        <Insets bottom="20.0" top="40.0" />
-                     </padding>
-                  </Separator>
-                  <GridPane prefHeight="191.0" prefWidth="370.0" vgap="15.0">
-                    <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                      <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints maxHeight="89.0" minHeight="71.0" prefHeight="71.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
-                     <children>
-                        <Label prefHeight="31.0" prefWidth="118.0" text="Stored data">
-                           <font>
-                              <Font size="20.0" />
-                           </font>
+                                  <Label text="Delete stored data" GridPane.rowIndex="3" GridPane.valignment="BOTTOM" />
+                                  <Button fx:id="deleteDataBtn" mnemonicParsing="false" prefHeight="33.0" prefWidth="72.0" text="Delete" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3" GridPane.valignment="BOTTOM" />
+                                  <TextField fx:id="dataPathField" prefHeight="42.0" prefWidth="228.0" text="path/to/data" GridPane.rowIndex="2" GridPane.valignment="TOP" />
+                                <Label prefHeight="35.0" prefWidth="248.0" text="Stored data">
+                                    <font>
+                                        <Font size="24.0" />
+                                    </font>
+                                </Label>
+                        <Label fx:id="fileRemoveFeedbackLabel" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                           <padding>
+                              <Insets left="10.0" />
+                           </padding>
+                           <tooltip>
+                              <Tooltip fx:id="errorTooltip" text="Empty Tooltip" />
+                           </tooltip>
                         </Label>
-                        <GridPane prefHeight="246.0" prefWidth="437.0" vgap="7.0" GridPane.rowIndex="1">
-                          <columnConstraints>
-                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="180.0" minWidth="10.0" prefWidth="145.0" />
-                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="225.0" minWidth="10.0" prefWidth="225.0" />
-                          </columnConstraints>
-                          <rowConstraints>
-                            <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                            <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                          </rowConstraints>
-                           <children>
-                              <Label text="UnemployedVoodooFamily.Data path" GridPane.rowIndex="1" />
-                              <Label text="View stored data" />
-                              <HBox alignment="TOP_RIGHT" prefHeight="31.0" prefWidth="202.0" GridPane.columnIndex="1">
-                                 <children>
-                                    <Button fx:id="viewDataBtn" mnemonicParsing="false" prefHeight="31.0" prefWidth="72.0" text="View" />
-                                 </children>
-                              </HBox>
-                              <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                                 <children>
-                                    <TextField fx:id="dataPathField" prefHeight="31.0" />
-                                    <Button fx:id="dataPathBtn" mnemonicParsing="false" prefHeight="31.0" prefWidth="105.0" text="Change" />
-                                 </children>
-                              </HBox>
-                              <Label text="Delete stored data" GridPane.rowIndex="2" />
-                              <HBox alignment="TOP_RIGHT" prefHeight="31.0" prefWidth="202.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                                 <children>
-                                    <Button fx:id="deleteDataBtn" mnemonicParsing="false" prefHeight="31.0" prefWidth="72.0" text="Delete" />
-                                 </children>
-                              </HBox>
-                           </children>
-                        </GridPane>
-                     </children>
-                  </GridPane>
-                  <Separator prefHeight="39.0" prefWidth="370.0">
-                     <padding>
-                        <Insets bottom="20.0" top="40.0" />
-                     </padding>
-                  </Separator>
-               </children>
-               <padding>
-                  <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
-               </padding>
-            </VBox>
-            <VBox prefHeight="605.0" prefWidth="545.0" GridPane.columnIndex="1">
-               <padding>
-                  <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
-               </padding>
-               <children>
-                  <TableView fx:id="hoursView" maxWidth="479.0" prefHeight="183.0" prefWidth="101.0" />
-               </children>
-            </VBox>
-         </children>
-      </GridPane>
-   </content>
+                              </children>
+                          </GridPane>
+                        <Separator prefHeight="39.0" prefWidth="370.0">
+                            <padding>
+                                <Insets bottom="20.0" top="40.0" />
+                            </padding>
+                        </Separator>
+                    </children>
+                    <padding>
+                        <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                    </padding>
+                </VBox>
+            </children>
+        </GridPane>
+    </content>
 </ScrollPane>
