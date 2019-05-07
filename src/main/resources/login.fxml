@@ -67,7 +67,7 @@
                   <Insets top="15.0" />
                </VBox.margin>
             </Button>
-            <Hyperlink alignment="CENTER" contentDisplay="CENTER" onKeyPressed="#buttonPressedListener" prefWidth="300.0" text="Forgot password?" />
+            <Hyperlink fx:id="forgotPasswordLink" alignment="CENTER" contentDisplay="CENTER" onKeyPressed="#buttonPressedListener" prefWidth="300.0" text="Forgot password?" />
             <ProgressIndicator fx:id="bufferImg" />
          </children>
       </VBox>

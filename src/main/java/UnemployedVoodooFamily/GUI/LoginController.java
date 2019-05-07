@@ -16,6 +16,7 @@ import javafx.scene.layout.HBox;
 import javafx.util.Duration;
 
 import java.io.File;
+import java.util.Optional;
 import java.util.Properties;
 
 
@@ -39,6 +40,8 @@ public class LoginController {
     private ImageView t2tlogo;
     @FXML
     private HBox logoBox;
+    @FXML
+    private Hyperlink forgotPasswordLink;
 
     private LoginLogic loginLogic = new LoginLogic();
     private boolean isLoggedIn;
@@ -65,6 +68,18 @@ public class LoginController {
             easterEgg.setFromAngle(t2tlogo.getRotate());
             easterEgg.setToAngle(t2tlogo.getRotate() + 30);
             easterEgg.play();
+        });
+        forgotPasswordLink.setOnAction(event -> {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Leaving Toggl Time Sheet");
+            alert.setHeaderText("You will now be sent to Toggls website");
+            alert.setContentText("Are you ok with this?");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK){
+                loginLogic.browseTogglForgotPW();
+            } else {
+                alert.close();
+            }
         });
     }
 
