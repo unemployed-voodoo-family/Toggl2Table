@@ -22,9 +22,11 @@ public class ExcelExportHandler {
         excelWriter = new ExcelWriter();
         this.year = year;
         monthlyDataLists = new HashMap<>();
-        for(Month month: Month.values()) {
-            monthlyDataLists.put(StringUtils.capitalize(month.toString().toLowerCase()),
-                                 timeEntries.get(YearMonth.of(year, month)));
+        if(null != timeEntries) {
+            for(Month month: Month.values()) {
+                monthlyDataLists.put(StringUtils.capitalize(month.toString().toLowerCase()),
+                                     timeEntries.get(YearMonth.of(year, month)));
+            }
         }
     }
 

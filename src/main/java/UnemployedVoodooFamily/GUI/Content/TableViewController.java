@@ -443,20 +443,26 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
 
                 try {
                     //create document
-                    formattedTimeDataLogic.exportToExcelDocument(formattedTimeDataLogic.getMonthlyMasterData(),
+                    boolean success = formattedTimeDataLogic.exportToExcelDocument(formattedTimeDataLogic.getMonthlyMasterData(),
                                                                  Integer.parseInt(yearSpinner.getEditor().getText()));
 
                     //show success in ui
                     Platform.runLater(() -> {
-                        showSuccessLabel(excelFeedbackLabel, "Excel document was successfully created");
+                        if(success) {
+                            showSuccessLabel(excelFeedbackLabel, "Excel document was successfully created");
+                        }
+                        else {
+                            showErrorLabel(excelFeedbackLabel, "Cannot create Excel document while time entries are still downloading");
+                        }
                         errorTooltip.setOpacity(0);
                     });
                 }
                 //show error in ui
                 catch(IOException e) {
                     Platform.runLater(() -> {
-                        showErrorLabel(excelFeedbackLabel, "Error creating excel file");
-                        errorTooltip.setText(e.getMessage());
+                        showErrorLabel(excelFeedbackLabel, "Error creating Excel document");
+                        errorTooltip.setText("Could not create Excel file.\n" +
+                                             "Check that you have permission for the folder and that the file isn't already opened");
                         errorTooltip.setOpacity(.9);
                     });
                 }
