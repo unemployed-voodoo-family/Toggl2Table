@@ -45,6 +45,7 @@ import java.net.URL;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.OffsetDateTime;
 import java.time.YearMonth;
 import java.time.format.TextStyle;
 import java.util.List;
@@ -373,12 +374,8 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
                 yearSpinner.getValueFactory().setValue(yearlyDropdown.getValue());
             }
         });
-        yearSpinner.valueProperty().addListener(new ChangeListener<Integer>() {
-            @Override
-            public void changed(ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) {
-                formattedTimeDataLogic.setSelectedYear(newValue);
-                updateFormattedTableData();
-            }
+        yearSpinner.valueProperty().addListener((ChangeListener<Integer>) (observable, oldValue, newValue) -> {
+            formattedTimeDataLogic.setSelectedYear(newValue);
         });
 
         //Week Spinner + Dropdown

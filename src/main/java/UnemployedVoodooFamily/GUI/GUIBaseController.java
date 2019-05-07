@@ -33,6 +33,7 @@ import javafx.util.Duration;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -200,9 +201,7 @@ public class GUIBaseController {
             Platform.runLater(() -> progressMessage.setText(sb.replace(1, 2, "5") + prefix + "clients"));
             session.refreshClient();
             Platform.runLater(() -> progressMessage.setText(sb.replace(1, 2, "6") + prefix + "time entries"));
-            OffsetDateTime start = OffsetDateTime.of(2019, 1, 1, 0, 0, 0, 0, ZoneOffset.ofHours(1));
-            OffsetDateTime end = OffsetDateTime.of(2019, 12, 31, 0, 0, 0, 0, ZoneOffset.ofHours(1));
-            session.refreshTimeEntries(start, end);
+            session.refreshTimeEntries();
             Platform.runLater(() -> {
                 progressBox.setVisible(false);
                 spinRefreshBtn(false);
