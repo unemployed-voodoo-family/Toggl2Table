@@ -8,6 +8,11 @@
     <artifactId>TogglTimeSheet</artifactId>
     <version>1.0.1</version>
     <packaging>jar</packaging>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
 
     <build>
         <plugins>
@@ -77,11 +82,48 @@
                                 <addDependencies>true</addDependencies>
                             </classPath>
                             <jre>
-                                <minVersion>1.8.0</minVersion>
-                                <opts>
-                                    <opt>-Djava.endorsed.dirs=./endorsed</opt>
-                                </opts>
+                                <path>./jre</path>
                             </jre>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <!-- This copies the JRE used to do the build from java.home - should be 32 bit Windows JRE -->
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.6</version>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <!-- here the phase you need -->
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target/jre</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${java.home}</directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>assembly</id>
+                        <phase>package</phase>
+                        <goals><goal>single</goal></goals>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>assembly.xml</descriptor>
+                            </descriptors>
                         </configuration>
                     </execution>
                 </executions>
@@ -120,12 +162,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.controlsfx</groupId>
-            <artifactId>controlsfx</artifactId>
-            <version>8.40.14</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.threeten</groupId>
             <artifactId>threeten-extra</artifactId>
             <version>1.5.0</version>
@@ -150,6 +186,7 @@
             <artifactId>poi-ooxml</artifactId>
             <version>3.17</version>
         </dependency>
+
         <dependency>
             <groupId>org.testfx</groupId>
             <artifactId>testfx-junit</artifactId>
