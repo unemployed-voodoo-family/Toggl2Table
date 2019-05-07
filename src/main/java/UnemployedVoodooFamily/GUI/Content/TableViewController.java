@@ -559,6 +559,9 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
      * Update the currently visible table.
      */
     private void updateFormattedTableData() {
+        if(rawTimeDataLogic.getMasterTimeEntries() == null) {
+            return;
+        }
         formattedTimeDataLogic
                 .buildMasterData(rawTimeDataLogic.getFilteredTimeEntries(), formattedTimeDataLogic.getSelectedYear());
         if(weekSpinner.isVisible()) {
