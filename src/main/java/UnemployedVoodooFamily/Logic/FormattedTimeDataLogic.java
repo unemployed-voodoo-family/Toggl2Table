@@ -36,6 +36,9 @@ public class FormattedTimeDataLogic {
 
     //Called when the "export to excel" button is pressed
     public boolean exportToExcelDocument(Map<YearMonth, List<DailyFormattedDataModel>> timeEntries, int year) throws IOException {
+        if(timeEntries == null) {
+            return false;
+        }
         ExcelExportHandler exportHandler = new ExcelExportHandler(timeEntries, year);
         return exportHandler.makeExcelDocument();
     }
