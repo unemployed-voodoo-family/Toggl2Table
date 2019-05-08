@@ -15,10 +15,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.effect.*;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -32,11 +34,12 @@ import javafx.util.Duration;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import static java.lang.Thread.sleep;
 
 public class GUIBaseController {
 
@@ -176,20 +179,6 @@ public class GUIBaseController {
         settingsNavBtn.setOnAction(event -> switchContentView(settings));
         tableNavBtn.setOnAction(event -> switchContentView(table));
         profileNavBtn.setOnAction(event -> switchContentView(profile));
-        /* Add these again but in the settings menu, maybe?
-        dumpDataMenuItem.setOnAction(event -> dumpData());
-        viewDataMenuItem.setOnAction(event -> {
-            try {
-                Desktop.getDesktop().open(new File(FilePath.LOGS_HOME.getPath()));
-            }
-            catch(IOException e) {
-                e.printStackTrace();
-            }
-            catch(IllegalArgumentException e) {
-                //could not find path
-            }
-        });
-        */
     }
 
 
@@ -220,16 +209,16 @@ public class GUIBaseController {
             Session session = Session.getInstance();
             Platform.runLater(() -> progressMessage.setText(sb + prefix + "work hours"));
             session.refreshWorkHours();
-            Platform.runLater(() -> progressMessage.setText(sb.replace(1, 2, "2") + prefix + "time entries"));
-            session.refreshTimeEntries();
-            Platform.runLater(() -> progressMessage.setText(sb.replace(1, 2, "3") + prefix + "workspaces"));
+            Platform.runLater(() -> progressMessage.setText(sb.replace(1, 2, "2") + prefix + "workspaces"));
             session.refreshWorkspaces();
-            Platform.runLater(() -> progressMessage.setText(sb.replace(1, 2, "4") + prefix + "projects"));
+            Platform.runLater(() -> progressMessage.setText(sb.replace(1, 2, "3") + prefix + "projects"));
             session.refreshProjects();
-            Platform.runLater(() -> progressMessage.setText(sb.replace(1, 2, "5") + prefix + "tasks"));
+            Platform.runLater(() -> progressMessage.setText(sb.replace(1, 2, "4") + prefix + "tasks"));
             session.refreshTasks();
-            Platform.runLater(() -> progressMessage.setText(sb.replace(1, 2, "6") + prefix + "clients"));
+            Platform.runLater(() -> progressMessage.setText(sb.replace(1, 2, "5") + prefix + "clients"));
             session.refreshClient();
+            Platform.runLater(() -> progressMessage.setText(sb.replace(1, 2, "6") + prefix + "time entries"));
+            session.refreshTimeEntries();
             Platform.runLater(() -> {
                 progressBox.setVisible(false);
                 spinRefreshBtn(false);

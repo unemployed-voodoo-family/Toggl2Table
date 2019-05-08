@@ -1,12 +1,9 @@
 package UnemployedVoodooFamily.GUI.Content;
 
 import UnemployedVoodooFamily.Data.Enums.FilePath;
-import UnemployedVoodooFamily.Data.WorkHours;
 import UnemployedVoodooFamily.Data.WorkHoursData;
 import UnemployedVoodooFamily.Logic.SettingsLogic;
-import com.sun.corba.se.spi.orbutil.threadpool.Work;
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -14,25 +11,16 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.util.Callback;
-import javafx.util.StringConverter;
-import javafx.util.converter.LocalDateStringConverter;
 
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.MonthDay;
-import java.time.format.DateTimeFormatter;
 
 public class SettingsController {
 
@@ -100,15 +88,20 @@ public class SettingsController {
 
         // load success and error images
         URL successUrl = getClass().getClassLoader()
-                                   .getResource("icons" + File.separator + "baseline_check_circle_black_24dp.png");
-        Image success = new Image(successUrl.toString());
-        successImg = new ImageView(success);
+                                   .getResource("icons/baseline_check_circle_black_24dp.png");
+        if(successUrl != null) {
+            Image success = new Image(successUrl.toExternalForm());
+            successImg = new ImageView(success);
+        }
         successImg.setFitWidth(24);
         successImg.setFitHeight(24);
         URL errorUrl = getClass().getClassLoader()
-                                 .getResource("icons" + File.separator + "baseline_error_black_24dp.png");
-        Image error = new Image(errorUrl.toString());
-        errorImg = new ImageView(error);
+                                 .getResource("icons/baseline_error_black_24dp.png");
+
+        if(errorUrl != null) {
+            Image error = new Image(errorUrl.toString());
+            errorImg = new ImageView(error);
+        }
         errorImg.setFitWidth(24);
         errorImg.setFitHeight(24);
 
@@ -125,7 +118,6 @@ public class SettingsController {
 
         hoursView.getColumns().clear();
         hoursView.getColumns().addAll(fromCol, toCol, hoursCol, noteCol);
-        System.out.println(fromCol.isEditable());
 
         fromCol.setCellValueFactory(param -> param.getValue().fromProperty());
 

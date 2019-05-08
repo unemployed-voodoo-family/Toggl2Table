@@ -1,7 +1,5 @@
 package UnemployedVoodooFamily.Logic;
 
-import ch.simas.jtoggl.User;
-
 import java.awt.*;
 import java.io.IOException;
 import java.net.URI;

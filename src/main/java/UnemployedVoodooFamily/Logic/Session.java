@@ -11,22 +11,23 @@ import java.util.*;
 public class Session {
 
     private static JToggl jToggl = null;
-    private List<TimeEntry> timeEntries;
-    private LinkedHashMap<Long, Workspace> workspaces;
-    private HashMap<Long, Project> projects;
-    private HashMap<Long, Task> tasks;
-    private HashMap<Long, Client> clients;
-    private User user;
+    private static List<TimeEntry> timeEntries;
+    private static LinkedHashMap<Long, Workspace> workspaces;
+    private static HashMap<Long, Project> projects;
+    private static HashMap<Long, Task> tasks;
+    private static HashMap<Long, Client> clients;
+    private static User user;
 
-    private ZoneId zoneId;
-    private ZoneOffset zoneOffset;
+    private static ZoneId zoneId;
+    private static ZoneOffset zoneOffset;
 
-    private Properties workHours;
-    private FileLogic propsLogic;
+    private static Properties workHours;
+    private static FileLogic propsLogic;
 
     private static Session togglSession = new Session();
 
-    private List<DataLoadListener> loadListeners = new ArrayList<>();
+    private static List<DataLoadListener> loadListeners = new ArrayList<>();
+
 
     private Session() {
         this.propsLogic = new FileLogic();
@@ -60,6 +61,12 @@ public class Session {
     }
 
     public static void terminateSession() {
+        user = null;
+        projects = null;
+        tasks = null;
+        clients = null;
+        workspaces = null;
+        timeEntries = null;
         jToggl = null;
     }
 
@@ -91,14 +98,47 @@ public class Session {
         return zoneOffset;
     }
 
-    public void refreshTimeEntries() {
-        //TODO - Implement reports api instead.
-        //TODO - Get timezone from toggl user
-        OffsetDateTime start = OffsetDateTime.of(2019, 1, 1, 0,0,0,0, ZoneOffset.ofHours(1));
-        OffsetDateTime end = OffsetDateTime.of(2019, 12, 31, 0,0,0,0, ZoneOffset.ofHours(1));
-        timeEntries = jToggl.getTimeEntries(start, end);
-        this.notifyDataLoaded(Data.TIME_ENTRIES);
 
+    /**
+     * Fetch all the time-entries from the given period
+     * @param start the start date to fetch from
+     * @param end   the end date to fetch from
+     */
+    public void refreshTimeEntries() {
+        // fetch time entries
+        fetchTimeEntries();
+        this.notifyDataLoaded(Data.TIME_ENTRIES);
+    }
+
+    private void fetchTimeEntries() {
+        OffsetDateTime start = OffsetDateTime.of(2007, 1, 1, 0, 0, 0, 0, zoneOffset);
+        OffsetDateTime end = OffsetDateTime.of(LocalDate.now().getYear(), 12, 31, 0, 0, 0, 0, zoneOffset);
+        List<TimeEntry> fetchedEntries = jToggl.getTimeEntries(start, end);
+        this.timeEntries = fetchedEntries;
+
+        // if the fetched time-entries size is over Toggl's limit of 1000
+        // time entries per request, this will keep fetching until we have
+        // all the time entries for the given period
+        boolean finished = false;
+        while(! finished) {
+            if(fetchedEntries.size() > 999) {
+
+                // fetch from new start date
+                OffsetDateTime newStart = timeEntries.get(fetchedEntries.size() - 1).getStart();
+                fetchedEntries = jToggl.getTimeEntries(newStart, end);
+
+                //remove eventual duplicate time entry
+                int duplicateCheckIndex = timeEntries.indexOf(fetchedEntries.get(0));
+                if(! fetchedEntries.isEmpty() && duplicateCheckIndex != - 1) {
+                    timeEntries.remove(duplicateCheckIndex);
+                }
+                timeEntries.addAll(fetchedEntries);
+
+            }
+            else {
+                finished = true;
+            }
+        }
     }
 
     public void refreshUser() {
@@ -140,23 +180,4 @@ public class Session {
         return workHours;
     }
 
-    public void refreshClients() {
-
-    }
-
-    public void refreshReport() {
-        /*PagedResult detailedReport = jToggl.getDetailedReport((PagedReportsParameter) new PagedReportsParameter(workspace.getId(), "jtoggl-integration-test")
-                .setSince("2011-11-15")
-                .setUntil("2011-11-15")
-                .setProjectIds(Collections.singleton(project.getId())));*/
-    }
-
-
-    public void refreshTimeData() {
-        this.refreshWorkHours();
-        this.refreshTimeEntries();
-        this.refreshProjects();
-        this.refreshWorkspaces();
-        this.refreshTasks();
-    }
 }

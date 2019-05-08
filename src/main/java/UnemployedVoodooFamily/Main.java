@@ -8,7 +8,6 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
-import javax.imageio.ImageIO;
 import java.io.File;
 import java.net.URL;
 
@@ -26,7 +25,6 @@ public class Main extends Application {
 
         // if the directory does not exist, create it
         if (!theDir.exists()) {
-            System.out.println("creating directory: " + theDir.toString());
             boolean result = false;
 
             try{
@@ -36,7 +34,6 @@ public class Main extends Application {
                 //handle it
             }
             if(result) {
-                System.out.println("DIR created");
             }
         }
     }

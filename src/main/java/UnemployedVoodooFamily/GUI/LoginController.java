@@ -1,16 +1,22 @@
 package UnemployedVoodooFamily.GUI;
 
 import UnemployedVoodooFamily.Data.Enums.FilePath;
-import UnemployedVoodooFamily.Logic.LoginLogic;
 import UnemployedVoodooFamily.Logic.FileLogic;
+import UnemployedVoodooFamily.Logic.LoginLogic;
 import UnemployedVoodooFamily.Main;
 import UnemployedVoodooFamily.Utils.PasswordUtils;
+import javafx.animation.RotateTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
+import javafx.util.Duration;
 
 import java.io.File;
+import java.util.Optional;
 import java.util.Properties;
 
 
@@ -30,6 +36,12 @@ public class LoginController {
     private CheckBox RememberPasswordCheck;
     @FXML
     private Label wrongCredentials;
+    @FXML
+    private ImageView t2tlogo;
+    @FXML
+    private HBox logoBox;
+    @FXML
+    private Hyperlink forgotPasswordLink;
 
     private LoginLogic loginLogic = new LoginLogic();
     private boolean isLoggedIn;
@@ -46,7 +58,29 @@ public class LoginController {
     }
 
     private void setKeyAndClickListeners() {
+        RotateTransition easterEgg = new RotateTransition(Duration.seconds(.3), t2tlogo);
+        easterEgg.setFromAngle(t2tlogo.getRotate());
+        easterEgg.setToAngle(t2tlogo.getRotate() + 30);
+
         submitBtn.setOnAction(event -> loginWithCredentials());
+        t2tlogo.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            event.consume();
+            easterEgg.setFromAngle(t2tlogo.getRotate());
+            easterEgg.setToAngle(t2tlogo.getRotate() + 30);
+            easterEgg.play();
+        });
+        forgotPasswordLink.setOnAction(event -> {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Leaving Toggl Time Sheet");
+            alert.setHeaderText("You will now be sent to Toggls website");
+            alert.setContentText("Are you ok with this?");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK){
+                loginLogic.browseTogglForgotPW();
+            } else {
+                alert.close();
+            }
+        });
     }
 
     private void loginWithCredentials() {
@@ -77,7 +111,7 @@ public class LoginController {
                 else {
                     Main.closeLogin();
                     //checks if a loginStage already exists, if it does, its closed.
-                    if(GUIBaseController.loginStageExists() ){
+                    if(GUIBaseController.loginStageExists()) {
                         GUIBaseController.closeLogin();
                     }
                 }

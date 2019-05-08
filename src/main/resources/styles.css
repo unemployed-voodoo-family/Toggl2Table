@@ -56,7 +56,7 @@
 }
 
 
-.button, .toggle-button, .spinner .increment-arrow-button, .spinner .decrement-arrow-button {
+.button, .toggle-button/*, .spinner .increment-arrow-button, .spinner .decrement-arrow-button*/ {
     -fx-background-radius: 2;
     -fx-border-radius: 2;
     -fx-border-width: 0;
@@ -155,10 +155,6 @@
 
 #lastFetchedLabel {
     -fx-text-fill: #ffffff;
-    -fx-font-weight: bold;
-}
-
-.spinner .text-field {
     -fx-font-weight: bold;
 }
 
@@ -309,7 +305,6 @@
 
 /*######## DATE PICKER ########*/
 
-
 .date-picker-popup > .month-year-pane {
     -fx-background-radius: 0;
     -fx-border-radius: 0;
@@ -318,7 +313,36 @@
     -fx-text-fill: #333333;
 }
 
+/*######## TABLE ########*/
+
+.table-row-cell:selected {
+    -fx-background-color: -fx-mainlight;
+    -fx-table-cell-border-color: -fx-mainlight;
+}
+
 /*######## OTHER ########*/
+
+.spinner    {
+    -fx-background-color: transparent;
+    -fx-background-radius: 2;
+    -fx-border-radius: 2;
+    -fx-border-width: 0;
+    -fx-border-color: transparent;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.6), 2, 0, 1, 1);
+}
+
+.spinner .increment-arrow-button, .spinner .decrement-arrow-button  {
+    -fx-background-radius: 2;
+    -fx-border-radius: 2;
+    -fx-border-width: 0;
+    -fx-background-color: #f6f6f6;
+    -fx-border-color: #f6f6f6;
+    -fx-text-fill: black;
+}
+
+.spinner .text-field {
+    -fx-font-weight: bold;
+}
 
 .scroll-pane, .scroll-pane > .corner, .scroll-pane > .viewport {
     -fx-background-color: #ffffff;

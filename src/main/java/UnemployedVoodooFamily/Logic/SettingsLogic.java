@@ -1,12 +1,10 @@
 package UnemployedVoodooFamily.Logic;
 
 import UnemployedVoodooFamily.Data.DateRange;
-import UnemployedVoodooFamily.Data.Enums.FilePath;
 import UnemployedVoodooFamily.Data.WorkHours;
 import UnemployedVoodooFamily.Data.WorkHoursData;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import org.apache.poi.ss.formula.functions.T;
 
@@ -22,15 +20,9 @@ import java.util.*;
  */
 public class SettingsLogic {
 
-    private Properties props = new Properties();
     private FileLogic propsLogic = new FileLogic();
     private String path;
     private List<WorkHours> workHours;
-
-    private static DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-
-
-
 
     public SettingsLogic(String path) {
         this.workHours = propsLogic.loadJson(path);
@@ -42,8 +34,6 @@ public class SettingsLogic {
      * @param fromDate the start of the period
      * @param toDate   the end of the period
      * @param hoursStr the standard work hours for this period
-     * @throws URISyntaxException
-     * @throws IOException
      */
     public void setWorkHours(LocalDate fromDate, LocalDate toDate, String hoursStr, String note) {
 
@@ -62,14 +52,9 @@ public class SettingsLogic {
      * Checks for overlap between the newly created period and the already existing ones.
      * Fixes overlap by overwriting old entries, and stitches
      * continous periods which have the same value.
-     * @param props    the properties to write to
-     * @param newRange the DateRange entered by the user
-     * @param newValue the work hours entered by the user
      */
     private void fixHoursOverlap(WorkHours wh) {
 
-        //TODO: Check if user input is logical
-        //TODO: sort stored properties properly
         if(this.workHours == null) {
             this.workHours = new ArrayList<>();
         }
