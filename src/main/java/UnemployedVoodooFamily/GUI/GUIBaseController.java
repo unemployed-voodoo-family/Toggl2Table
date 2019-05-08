@@ -1,6 +1,5 @@
 package UnemployedVoodooFamily.GUI;
 
-import UnemployedVoodooFamily.Data.Enums.FilePath;
 import UnemployedVoodooFamily.GUI.Content.ProfileController;
 import UnemployedVoodooFamily.GUI.Content.SettingsController;
 import UnemployedVoodooFamily.GUI.Content.TableViewController;
@@ -9,11 +8,8 @@ import UnemployedVoodooFamily.Logic.Session;
 import UnemployedVoodooFamily.Main;
 import javafx.animation.RotateTransition;
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
-import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -22,7 +18,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
 import javafx.scene.effect.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -34,10 +29,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import org.apache.commons.lang3.ObjectUtils;
 
-import java.awt.*;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
@@ -77,6 +69,10 @@ public class GUIBaseController {
 
     @FXML
     private ImageView refreshIcon;
+    @FXML
+    private ImageView logoutIcon;
+    @FXML
+    private ImageView helpIcon;
 
     private RotateTransition rotateTransition;
 
@@ -90,7 +86,9 @@ public class GUIBaseController {
     private Text progressMessage;
 
     @FXML
-    private ToggleButton logOutBtn;
+    private Button logoutBtn;
+    @FXML
+    private Button helpBtn;
 
     @FXML
     private Label lastFetchedLabel;
@@ -123,13 +121,12 @@ public class GUIBaseController {
         settingsNavBtn.setToggleGroup(navButtons);
         tableNavBtn.setToggleGroup(navButtons);
         profileNavBtn.setToggleGroup(navButtons);
-        logOutBtn.setToggleGroup(navButtons);
         profileNavBtn.setGraphic(avatarView);
         active = new AtomicBoolean(false);
         rotateSettings();
+        applyStyles();
         setKeyAndClickListeners();
         loadContent();
-        applyStyles();
         refreshData();
         dumpData();
         tableNavBtn.fire();
@@ -158,6 +155,8 @@ public class GUIBaseController {
         ColorAdjust lightgray = new ColorAdjust();
         lightgray.setBrightness(0.7);
         refreshIcon.setEffect(lightgray);
+        logoutIcon.setEffect(lightgray);
+        helpIcon.setEffect(lightgray);
     }
 
     /**
@@ -168,17 +167,12 @@ public class GUIBaseController {
         refreshBtn.setOnAction(event -> {
             refreshData();
         });
-        refreshBtn.setOnMouseEntered(event ->   {
-            ColorAdjust whiteout = new ColorAdjust();
-            whiteout.setBrightness(1);
-            refreshIcon.setEffect(whiteout);
-        });
-        refreshBtn.setOnMouseExited(event -> {
-            ColorAdjust whiteout = new ColorAdjust();
-            whiteout.setBrightness(0.7);
-            refreshIcon.setEffect(whiteout);
-        });
-        logOutBtn.setOnAction(this :: logOutOfApplication);
+        setToolbarImgColor(refreshBtn);
+        setToolbarImgColor(refreshBtn);
+        setToolbarImgColor(refreshBtn);
+
+        logoutBtn.setOnAction(this :: logOutOfApplication);
+        helpBtn.setOnAction(event -> this.openHelpPrompt());
         settingsNavBtn.setOnAction(event -> switchContentView(settings));
         tableNavBtn.setOnAction(event -> switchContentView(table));
         profileNavBtn.setOnAction(event -> switchContentView(profile));
@@ -199,6 +193,20 @@ public class GUIBaseController {
     }
 
 
+    private void setToolbarImgColor(Button button) {
+        button.setOnMouseEntered(event ->   {
+            System.out.println("hellp");
+            ColorAdjust whiteout = new ColorAdjust();
+            whiteout.setBrightness(1);
+            button.setEffect(whiteout);
+            System.out.println(button.getEffect());
+        });
+        button.setOnMouseExited(event -> {
+            ColorAdjust whiteout = new ColorAdjust();
+            whiteout.setBrightness(0.7);
+            button.setEffect(whiteout);
+        });
+    }
     public void refreshData() {
         progressBox.setVisible(true);
         spinRefreshBtn(true);
@@ -318,6 +326,10 @@ public class GUIBaseController {
         loginStage.setScene(scene);
         Main.initStage(loginStage);
         loginStage.show();
+    }
+
+    private void openHelpPrompt() {
+
     }
 
     public static boolean loginStageExists(){

@@ -138,12 +138,12 @@
 }
 
 
-#toolBar > .button:pressed {
+.toolBar > .button:pressed {
     -fx-translate-x: -1;
     -fx-translate-y: 1;
 }
 
-#toolBar > .button {
+.toolBar > .button {
     -fx-background-color: transparent;
     -fx-border-color: transparent;
 }
