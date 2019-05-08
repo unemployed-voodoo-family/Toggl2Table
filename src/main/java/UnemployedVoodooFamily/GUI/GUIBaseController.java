@@ -170,9 +170,9 @@ public class GUIBaseController {
         refreshBtn.setOnAction(event -> {
             refreshData();
         });
-        setToolbarImgColor(refreshBtn);
-        setToolbarImgColor(refreshBtn);
-        setToolbarImgColor(refreshBtn);
+        setToolbarImgColor(refreshBtn, refreshIcon);
+        setToolbarImgColor(helpBtn, helpIcon);
+        setToolbarImgColor(logoutBtn, logoutIcon);
 
         logoutBtn.setOnAction(this :: logOutOfApplication);
         helpBtn.setOnAction(event -> this.openHelpPrompt());
@@ -182,18 +182,16 @@ public class GUIBaseController {
     }
 
 
-    private void setToolbarImgColor(Button button) {
+    private void setToolbarImgColor(Button button, ImageView icon) {
         button.setOnMouseEntered(event ->   {
-            System.out.println("hellp");
             ColorAdjust whiteout = new ColorAdjust();
             whiteout.setBrightness(1);
-            button.setEffect(whiteout);
-            System.out.println(button.getEffect());
+            icon.setEffect(whiteout);
         });
         button.setOnMouseExited(event -> {
             ColorAdjust whiteout = new ColorAdjust();
             whiteout.setBrightness(0.7);
-            button.setEffect(whiteout);
+            icon.setEffect(whiteout);
         });
     }
     public void refreshData() {
@@ -318,8 +316,19 @@ public class GUIBaseController {
     }
 
     private void openHelpPrompt() {
-
-    }
+        Parent root;
+        try {
+            root = FXMLLoader.load(getClass().getClassLoader().getResource("helpPrompt.fxml"));
+            Stage stage = new Stage();
+            stage.setTitle("Toggl Time Sheet - Help");
+            stage.show();
+            stage.setScene(new Scene(root));
+            // Hide this current window (if this is what you want)
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        }
 
     public static boolean loginStageExists(){
         if(loginStage == null){
