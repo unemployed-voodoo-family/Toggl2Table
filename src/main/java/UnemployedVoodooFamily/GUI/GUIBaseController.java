@@ -127,7 +127,6 @@ public class GUIBaseController {
         setKeyAndClickListeners();
         loadContent();
         refreshData();
-        dumpData();
         tableNavBtn.fire();
     }
 
