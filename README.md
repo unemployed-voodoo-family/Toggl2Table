@@ -1,5 +1,5 @@
 # Toggl2Table
-A student application to export Toggl hours to a table formatted based on users work hours
+Toggl Time sheet is a desktop application with functionality for formatting time entries from Toggl, using the users own specified working hours. The imported and formatted data can filtered and previewed, which can then be exported to .xlsx format.
 
 ## Built With
 [Jtoggl](https://github.com/bbaumgartner/jtoggl) - Toggl REST API<br>
