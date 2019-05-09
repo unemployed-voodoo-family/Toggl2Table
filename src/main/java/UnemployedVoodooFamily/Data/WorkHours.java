@@ -3,6 +3,9 @@ package UnemployedVoodooFamily.Data;
 import java.time.LocalDate;
 import java.util.Objects;
 
+/**
+ * Object representing an "ordinary work hours" time period.
+ */
 public class WorkHours {
 
     private LocalDate from;

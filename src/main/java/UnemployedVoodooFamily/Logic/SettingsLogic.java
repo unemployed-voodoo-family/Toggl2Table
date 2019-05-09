@@ -2,17 +2,13 @@ package UnemployedVoodooFamily.Logic;
 
 import UnemployedVoodooFamily.Data.DateRange;
 import UnemployedVoodooFamily.Data.WorkHours;
-import UnemployedVoodooFamily.Data.WorkHoursData;
+import UnemployedVoodooFamily.Data.WorkHoursModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableView;
-import org.apache.poi.ss.formula.functions.T;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
@@ -142,12 +138,12 @@ public class SettingsLogic {
         //load props file
         List<WorkHours> whList = propsLogic.loadJson(path);
 
-        ObservableList<WorkHoursData> data = FXCollections.observableArrayList();
+        ObservableList<WorkHoursModel> data = FXCollections.observableArrayList();
         Iterator<WorkHours> it = sortWorkHoursData(whList).iterator();
 
         while(it.hasNext()) {
             WorkHours next = it.next();
-            data.add(new WorkHoursData(next));
+            data.add(new WorkHoursModel(next));
         }
         table.getItems().clear();
         table.getItems().addAll(data);
@@ -183,9 +179,9 @@ public class SettingsLogic {
     }
 
     public <T> void deleteWorkHours(T workhours) {
-        if(workhours instanceof WorkHoursData) {
+        if(workhours instanceof WorkHoursModel) {
             this.workHours = propsLogic.loadJson(path);
-            workHours.remove(((WorkHoursData) workhours).getWorkHours());
+            workHours.remove(((WorkHoursModel) workhours).getWorkHours());
             propsLogic.saveJson(path, this.workHours);
         }
     }

@@ -28,6 +28,7 @@ public class Session {
 
     private static List<DataLoadListener> loadListeners = new ArrayList<>();
 
+
     private Session() {
         this.propsLogic = new FileLogic();
     }
@@ -97,14 +98,21 @@ public class Session {
         return zoneOffset;
     }
 
+
     /**
      * Fetch all the time-entries from the given period
      * @param start the start date to fetch from
-     * @param end the end date to fetch from
+     * @param end   the end date to fetch from
      */
-    public void refreshTimeEntries(OffsetDateTime start, OffsetDateTime end) {
-
+    public void refreshTimeEntries() {
         // fetch time entries
+        fetchTimeEntries();
+        this.notifyDataLoaded(Data.TIME_ENTRIES);
+    }
+
+    private void fetchTimeEntries() {
+        OffsetDateTime start = OffsetDateTime.of(2007, 1, 1, 0, 0, 0, 0, zoneOffset);
+        OffsetDateTime end = OffsetDateTime.of(LocalDate.now().getYear(), 12, 31, 0, 0, 0, 0, zoneOffset);
         List<TimeEntry> fetchedEntries = jToggl.getTimeEntries(start, end);
         this.timeEntries = fetchedEntries;
 
@@ -112,7 +120,7 @@ public class Session {
         // time entries per request, this will keep fetching until we have
         // all the time entries for the given period
         boolean finished = false;
-        while(!finished) {
+        while(! finished) {
             if(fetchedEntries.size() > 999) {
 
                 // fetch from new start date
@@ -121,16 +129,16 @@ public class Session {
 
                 //remove eventual duplicate time entry
                 int duplicateCheckIndex = timeEntries.indexOf(fetchedEntries.get(0));
-                if(!fetchedEntries.isEmpty() && duplicateCheckIndex != -1) {
+                if(! fetchedEntries.isEmpty() && duplicateCheckIndex != - 1) {
                     timeEntries.remove(duplicateCheckIndex);
                 }
                 timeEntries.addAll(fetchedEntries);
 
-            } else {
+            }
+            else {
                 finished = true;
             }
         }
-        this.notifyDataLoaded(Data.TIME_ENTRIES);
     }
 
     public void refreshUser() {

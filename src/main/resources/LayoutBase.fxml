@@ -57,7 +57,7 @@
                      <children>
                         <VBox id="navbar" fx:id="navbar" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="256.0" minWidth="-Infinity" prefHeight="670.0" prefWidth="180.0">
                            <children>
-                              <HBox fx:id="toolBar" alignment="CENTER_LEFT" prefHeight="18.0" prefWidth="164.0">
+                              <HBox fx:id="toolBar" alignment="CENTER_LEFT" prefHeight="18.0" prefWidth="164.0" styleClass="toolBar">
                                  <children>
                                     <Button fx:id="refreshBtn" minWidth="37.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="37.0">
                                        <graphic>
@@ -115,14 +115,31 @@
                               </ToggleButton>
                               <VBox alignment="BOTTOM_LEFT" minHeight="-Infinity" VBox.vgrow="ALWAYS">
                                  <children>
-                                    <ToggleButton fx:id="logOutBtn" alignment="CENTER_LEFT" maxHeight="50.0" minHeight="50.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="227.0" text="Log Out">
-                                       <font>
-                                          <Font name="System Bold" size="13.0" />
-                                       </font>
-                                       <graphic>
-                                          <ImageView fitHeight="37.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true" />
-                                       </graphic>
-                                    </ToggleButton>
+                                    <HBox styleClass="toolBar">
+                                       <children>
+                                          <Button fx:id="logoutBtn" minWidth="37.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="37.0">
+                                             <graphic>
+                                                <ImageView fx:id="logoutIcon" fitHeight="34.0" fitWidth="29.0" onMouseClicked="#refreshData" pickOnBounds="true" preserveRatio="true" rotate="180.0">
+                                                   <image>
+                                                      <Image url="@icons/baseline_exit_to_app_black_18dp.png" />
+                                                   </image>
+                                                </ImageView>
+                                             </graphic>
+                                          </Button>
+                                          <Button fx:id="helpBtn" minWidth="37.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="37.0">
+                                             <graphic>
+                                                <ImageView fx:id="helpIcon" fitHeight="34.0" fitWidth="29.0" onMouseClicked="#refreshData" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@icons/baseline_help_outline_black_18dp.png" />
+                                                   </image>
+                                                </ImageView>
+                                             </graphic>
+                                          </Button>
+                                       </children>
+                                       <padding>
+                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                       </padding>
+                                    </HBox>
                                  </children>
                               </VBox>
                            </children>

@@ -5,8 +5,11 @@ import javafx.beans.property.SimpleObjectProperty;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-public class WorkHoursData{
-
+/**
+ * Wrapper for WorkHours, where each field is wrapped in a Properties object,
+ * for use with JavaFX components.
+ */
+public class WorkHoursModel {
 
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd. LLLL yyyy");
     private SimpleObjectProperty<LocalDate> from;
@@ -15,7 +18,7 @@ public class WorkHoursData{
     private SimpleObjectProperty<String> note;
     private WorkHours workHours;
 
-    public WorkHoursData(WorkHours wh) {
+    public WorkHoursModel(WorkHours wh) {
         this.workHours = wh;
         this.from = new SimpleObjectProperty<>(wh.getFrom());
         this.to = new SimpleObjectProperty<>(wh.getTo());

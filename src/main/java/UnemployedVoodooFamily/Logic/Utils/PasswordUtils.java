@@ -1,4 +1,4 @@
-package UnemployedVoodooFamily.Utils;
+package UnemployedVoodooFamily.Logic.Utils;
 
 import java.util.Base64;
 

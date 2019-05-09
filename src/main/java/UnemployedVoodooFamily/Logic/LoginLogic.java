@@ -2,11 +2,14 @@ package UnemployedVoodooFamily.Logic;
 
 import UnemployedVoodooFamily.Data.Enums.FilePath;
 import UnemployedVoodooFamily.GUI.GUIBaseController;
-import UnemployedVoodooFamily.Utils.PasswordUtils;
+import UnemployedVoodooFamily.Logic.Utils.PasswordUtils;
 import ch.simas.jtoggl.JToggl;
 import javafx.application.Platform;
 
+import java.awt.*;
 import java.io.*;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Properties;
 
 
@@ -36,7 +39,7 @@ public class LoginLogic {
         }
         catch(RuntimeException e) {
             e.getMessage();
-            Session.getInstance().terminateSession();
+            Session.terminateSession();
         }
         catch(InterruptedException e) {
             e.printStackTrace();
@@ -79,6 +82,31 @@ public class LoginLogic {
         }
         else {
             saveUsernameAndPassword("", "");
+        }
+    }
+
+    public void browseTogglForgotPW() {
+        String url = "https://toggl.com/forgot-password/";
+
+        if(Desktop.isDesktopSupported()) {
+            Desktop desktop = Desktop.getDesktop();
+            try {
+                desktop.browse(new URI(url));
+            }
+            catch(IOException | URISyntaxException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+        else {
+            Runtime runtime = Runtime.getRuntime();
+            try {
+                runtime.exec("xdg-open " + url);
+            }
+            catch(IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
     }
 }

@@ -34,8 +34,6 @@ import javafx.util.Duration;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -70,6 +68,10 @@ public class GUIBaseController {
 
     @FXML
     private ImageView refreshIcon;
+    @FXML
+    private ImageView logoutIcon;
+    @FXML
+    private ImageView helpIcon;
 
     private RotateTransition rotateTransition;
 
@@ -83,7 +85,9 @@ public class GUIBaseController {
     private Text progressMessage;
 
     @FXML
-    private ToggleButton logOutBtn;
+    private Button logoutBtn;
+    @FXML
+    private Button helpBtn;
 
     @FXML
     private Label lastFetchedLabel;
@@ -116,15 +120,13 @@ public class GUIBaseController {
         settingsNavBtn.setToggleGroup(navButtons);
         tableNavBtn.setToggleGroup(navButtons);
         profileNavBtn.setToggleGroup(navButtons);
-        logOutBtn.setToggleGroup(navButtons);
         profileNavBtn.setGraphic(avatarView);
         active = new AtomicBoolean(false);
         rotateSettings();
+        applyStyles();
         setKeyAndClickListeners();
         loadContent();
-        applyStyles();
         refreshData();
-        dumpData();
         tableNavBtn.fire();
     }
 
@@ -151,6 +153,8 @@ public class GUIBaseController {
         ColorAdjust lightgray = new ColorAdjust();
         lightgray.setBrightness(0.7);
         refreshIcon.setEffect(lightgray);
+        logoutIcon.setEffect(lightgray);
+        helpIcon.setEffect(lightgray);
     }
 
     /**
@@ -161,23 +165,30 @@ public class GUIBaseController {
         refreshBtn.setOnAction(event -> {
             refreshData();
         });
-        refreshBtn.setOnMouseEntered(event ->   {
-            ColorAdjust whiteout = new ColorAdjust();
-            whiteout.setBrightness(1);
-            refreshIcon.setEffect(whiteout);
-        });
-        refreshBtn.setOnMouseExited(event -> {
-            ColorAdjust whiteout = new ColorAdjust();
-            whiteout.setBrightness(0.7);
-            refreshIcon.setEffect(whiteout);
-        });
-        logOutBtn.setOnAction(this :: logOutOfApplication);
+        setToolbarImgColor(refreshBtn, refreshIcon);
+        setToolbarImgColor(helpBtn, helpIcon);
+        setToolbarImgColor(logoutBtn, logoutIcon);
+
+        logoutBtn.setOnAction(this :: logOutOfApplication);
+        helpBtn.setOnAction(event -> this.openHelpPrompt());
         settingsNavBtn.setOnAction(event -> switchContentView(settings));
         tableNavBtn.setOnAction(event -> switchContentView(table));
         profileNavBtn.setOnAction(event -> switchContentView(profile));
     }
 
 
+    private void setToolbarImgColor(Button button, ImageView icon) {
+        button.setOnMouseEntered(event ->   {
+            ColorAdjust whiteout = new ColorAdjust();
+            whiteout.setBrightness(1);
+            icon.setEffect(whiteout);
+        });
+        button.setOnMouseExited(event -> {
+            ColorAdjust whiteout = new ColorAdjust();
+            whiteout.setBrightness(0.7);
+            icon.setEffect(whiteout);
+        });
+    }
     public void refreshData() {
         progressBox.setVisible(true);
         spinRefreshBtn(true);
@@ -200,9 +211,7 @@ public class GUIBaseController {
             Platform.runLater(() -> progressMessage.setText(sb.replace(1, 2, "5") + prefix + "clients"));
             session.refreshClient();
             Platform.runLater(() -> progressMessage.setText(sb.replace(1, 2, "6") + prefix + "time entries"));
-            OffsetDateTime start = OffsetDateTime.of(2019, 1, 1, 0, 0, 0, 0, ZoneOffset.ofHours(1));
-            OffsetDateTime end = OffsetDateTime.of(2019, 12, 31, 0, 0, 0, 0, ZoneOffset.ofHours(1));
-            session.refreshTimeEntries(start, end);
+            session.refreshTimeEntries();
             Platform.runLater(() -> {
                 progressBox.setVisible(false);
                 spinRefreshBtn(false);
@@ -285,7 +294,7 @@ public class GUIBaseController {
 
         //Start a new instance of the login stage
         loginStage = new Stage();
-        URL r = getClass().getClassLoader().getResource("login.fxml");
+        URL r = getClass().getClassLoader().getResource("Login.fxml");
         Parent root = null;
         try {
             root = FXMLLoader.load(r);
@@ -300,6 +309,21 @@ public class GUIBaseController {
         Main.initStage(loginStage);
         loginStage.show();
     }
+
+    private void openHelpPrompt() {
+        Parent root;
+        try {
+            root = FXMLLoader.load(getClass().getClassLoader().getResource("HelpPrompt.fxml"));
+            Stage stage = new Stage();
+            stage.setTitle("Toggl Time Sheet - Help");
+            stage.show();
+            stage.setScene(new Scene(root));
+            // Hide this current window (if this is what you want)
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        }
 
     public static boolean loginStageExists(){
         if(loginStage == null){

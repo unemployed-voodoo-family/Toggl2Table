@@ -50,7 +50,7 @@ public class Main extends Application {
         this.primaryStage = primaryStage;
         createDirsIfNotExists(FilePath.SETTINGS_HOME.getPath());
         createDirsIfNotExists(FilePath.LOGS_HOME.getPath());
-        URL r = getClass().getClassLoader().getResource("login.fxml");
+        URL r = getClass().getClassLoader().getResource("Login.fxml");
         Parent root = FXMLLoader.load(r);
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
