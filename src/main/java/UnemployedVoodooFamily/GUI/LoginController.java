@@ -4,7 +4,7 @@ import UnemployedVoodooFamily.Data.Enums.FilePath;
 import UnemployedVoodooFamily.Logic.FileLogic;
 import UnemployedVoodooFamily.Logic.LoginLogic;
 import UnemployedVoodooFamily.Main;
-import UnemployedVoodooFamily.Utils.PasswordUtils;
+import UnemployedVoodooFamily.Logic.Utils.PasswordUtils;
 import javafx.animation.RotateTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;

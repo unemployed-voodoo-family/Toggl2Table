@@ -1,7 +1,7 @@
 package UnemployedVoodooFamily.GUI.Content;
 
 import UnemployedVoodooFamily.Data.Enums.FilePath;
-import UnemployedVoodooFamily.Data.WorkHoursData;
+import UnemployedVoodooFamily.Data.WorkHoursModel;
 import UnemployedVoodooFamily.Logic.SettingsLogic;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -106,10 +106,10 @@ public class SettingsController {
         errorImg.setFitHeight(24);
 
 
-        TableColumn<WorkHoursData, LocalDate> fromCol;
-        TableColumn<WorkHoursData, LocalDate> toCol;
-        TableColumn<WorkHoursData, Double> hoursCol;
-        TableColumn<WorkHoursData, String> noteCol;
+        TableColumn<WorkHoursModel, LocalDate> fromCol;
+        TableColumn<WorkHoursModel, LocalDate> toCol;
+        TableColumn<WorkHoursModel, Double> hoursCol;
+        TableColumn<WorkHoursModel, String> noteCol;
 
         fromCol = new TableColumn<>("From");
         toCol = new TableColumn<>("To");

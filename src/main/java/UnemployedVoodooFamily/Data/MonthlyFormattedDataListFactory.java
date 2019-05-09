@@ -9,9 +9,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Builder for the ExtendedDailyFormattedDataModel
- * Builds the summary for one week for use in the monthly table
- * Assumes all supplied data is from the same week.
+ * Factory for the ExtendedDailyFormattedDataModel
+ * Builds the summary for one each day for use in the monthly table
  */
 public class MonthlyFormattedDataListFactory {
 

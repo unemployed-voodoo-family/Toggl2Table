@@ -2,6 +2,9 @@ package UnemployedVoodooFamily.Data.Enums;
 
 import java.io.File;
 
+/**
+ * The fule paths used by this application
+ */
 public enum FilePath {
     USER_HOME(System.getProperty("user.home")),
     APP_HOME(USER_HOME.getPath() + File.separator + "TogglTimeSheet"),

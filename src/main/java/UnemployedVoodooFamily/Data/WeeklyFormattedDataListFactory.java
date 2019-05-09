@@ -11,14 +11,21 @@ import java.util.*;
 
 public class WeeklyFormattedDataListFactory {
 
-    public List<DailyFormattedDataModel> buildWeeklyDataList(List<TimeEntry> timeEntries, YearWeek date,
+    /**
+     * Formats the given timeEntries for the specified week.
+     * @param timeEntries the timeEntries to format
+     * @param week the week to format the timeEntries in
+     * @param accumulatedOffset The total accumulated hours throughout the year, up to the given week.
+     * @return A list with seven entries, monday to sunday, with formatted timeEntries.
+     */
+    public List<DailyFormattedDataModel> buildWeeklyDataList(List<TimeEntry> timeEntries, YearWeek week,
                                                              Double accumulatedOffset) {
         ArrayList<DailyFormattedDataModel> weeklyList = new ArrayList<>();
         FileLogic fileLogic = new FileLogic();
         List<WorkHours> workHours = fileLogic.loadJson(FilePath.getCurrentUserWorkhours());
 
         //finds the first day of the selected week
-        LocalDate weeksFirstDate = date.atDay(DayOfWeek.MONDAY);
+        LocalDate weeksFirstDate = week.atDay(DayOfWeek.MONDAY);
 
         //Create a sublist for that specific week containing time entries only from that week
         List<TimeEntry> weekSublist = new ArrayList<>();
@@ -72,6 +79,15 @@ public class WeeklyFormattedDataListFactory {
         return weeklyList;
 }
 
+
+    /**
+     * Get the corresponding work hours object for the given date
+     * Performs a search over the workhours list, until it finds an object which oontains the given date
+     * Always ignores saturdays and sundays
+     * @param list the list of WorkHours
+     * @param date the date to check
+     * @return a WorkHours object which is contains the given date, or null if no match is found.
+     */
     private WorkHours getWorkHours(List<WorkHours> list, LocalDate date) {
         WorkHours wh = null;
         for(WorkHours workHours: list) {
