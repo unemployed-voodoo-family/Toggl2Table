@@ -15,6 +15,8 @@
 !define VERSIONMAJOR 1
 !define VERSIONMINOR 0
 !define VERSIONBUILD 1
+
+!define OUTPATH "target\installer"
 # These will be displayed by the "Click here for support information" link in "Add/Remove Programs"
 # It is possible to use "mailto:" links in here to open the email client
 !define HELPURL "https://github.com/unemployed-voodoo-family/Toggl2Table" # "Support Information" link
@@ -29,7 +31,8 @@ InstallDir "$PROGRAMFILES\${APPNAME}"
 # This will be in the installer/uninstaller's title bar
 Name "${COMPANYNAME} - ${APPNAME}"
 Icon "src\main\resources\icons\app_icon\logo.ico"
-outFile "target\${APPLICATIONNAME}-installer.exe"
+!system 'md "${OUTPATH}"'
+outFile "${OUTPATH}\${APPLICATIONNAME}-installer.exe"
  
 !include LogicLib.nsh
  

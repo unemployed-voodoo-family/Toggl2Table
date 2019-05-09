@@ -122,12 +122,14 @@
                         <goals><goal>single</goal></goals>
                         <configuration>
                             <descriptors>
-                                <descriptor>assembly.xml</descriptor>
+                                <descriptor>assembleWinPortable.xml</descriptor>
+                                <descriptor>assembleTar.xml</descriptor>
                             </descriptors>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
+
         </plugins>
 
         <resources>
