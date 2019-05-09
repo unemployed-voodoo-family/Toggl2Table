@@ -17,7 +17,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.effect.*;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.effect.ColorAdjust;
@@ -34,10 +33,7 @@ import javafx.util.Duration;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -299,7 +295,7 @@ public class GUIBaseController {
 
         //Start a new instance of the login stage
         loginStage = new Stage();
-        URL r = getClass().getClassLoader().getResource("login.fxml");
+        URL r = getClass().getClassLoader().getResource("Login.fxml");
         Parent root = null;
         try {
             root = FXMLLoader.load(r);
@@ -318,7 +314,7 @@ public class GUIBaseController {
     private void openHelpPrompt() {
         Parent root;
         try {
-            root = FXMLLoader.load(getClass().getClassLoader().getResource("helpPrompt.fxml"));
+            root = FXMLLoader.load(getClass().getClassLoader().getResource("HelpPrompt.fxml"));
             Stage stage = new Stage();
             stage.setTitle("Toggl Time Sheet - Help");
             stage.show();
