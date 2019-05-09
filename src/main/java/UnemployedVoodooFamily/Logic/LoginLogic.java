@@ -39,7 +39,7 @@ public class LoginLogic {
         }
         catch(RuntimeException e) {
             e.getMessage();
-            Session.getInstance().terminateSession();
+            Session.terminateSession();
         }
         catch(InterruptedException e) {
             e.printStackTrace();

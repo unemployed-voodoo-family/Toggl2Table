@@ -62,7 +62,7 @@
                                     <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                                  </GridPane.margin>
                               </HBox>
-                              <HBox alignment="CENTER_LEFT" prefWidth="347.0" GridPane.columnIndex="1">
+                              <HBox fx:id="topTableBar" alignment="CENTER_LEFT" prefWidth="347.0" GridPane.columnIndex="1">
                                  <children>
                                     <Label maxWidth="-Infinity" minWidth="-Infinity" prefWidth="55.0" text="From ">
                                        <font>
