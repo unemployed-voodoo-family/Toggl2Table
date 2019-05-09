@@ -8,7 +8,12 @@ Toggl Time sheet is a desktop application with functionality for formatting time
 [Apache POI](https://poi.apache.org) - Java library that can read and write MS Excel files using Java, as well as creating exports<br>
 [TestFX](https://github.com/TestFX/TestFX) - JavaFX library that allows us to test GUI functions.<br>
 
+## Installation Instructions:
+1. Download the latest executable file from the "releases" section.
 
+2. Run the file.
+
+Done. Enjoy.
 
 ## Authors
 All contributors in this project where 2nd year computer engineering students from NTNU Ålesund
