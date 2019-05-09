@@ -2,7 +2,7 @@ package testGUI;
 
 import UnemployedVoodooFamily.Data.Enums.FilePath;
 import UnemployedVoodooFamily.Logic.FileLogic;
-import UnemployedVoodooFamily.Utils.PasswordUtils;
+import UnemployedVoodooFamily.Logic.Utils.PasswordUtils;
 import com.sun.javafx.stage.StageHelper;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
