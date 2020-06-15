@@ -124,7 +124,7 @@ public class Session {
             if(fetchedEntries.size() > 999) {
 
                 // fetch from new start date
-                OffsetDateTime newStart = timeEntries.get(fetchedEntries.size() - 1).getStart();
+                OffsetDateTime newStart = fetchedEntries.get(fetchedEntries.size() - 1).getStart();
                 fetchedEntries = jToggl.getTimeEntries(newStart, end);
 
                 //remove eventual duplicate time entry
