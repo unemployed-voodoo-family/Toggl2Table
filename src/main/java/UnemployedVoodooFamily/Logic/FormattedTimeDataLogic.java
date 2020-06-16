@@ -72,12 +72,13 @@ public class FormattedTimeDataLogic {
         YearWeek startWeek = YearWeek.from(startDate);
         YearWeek endWeek = YearWeek.from(endDate);
 
-        double accumulatedOffset = 0d;
+        double hourBalance = 0d;
 
         for(YearWeek date = startWeek; date.isBefore(endWeek.plusWeeks(1)); date = date.plusWeeks(1)) {
-            weeklyMasterData.put(date, new WeeklyFormattedDataListFactory().buildWeeklyDataList(timeEntries, date, accumulatedOffset));
-            List<DailyFormattedDataModel> latestWeek = weeklyMasterData.get(date);
-            accumulatedOffset = latestWeek.get(latestWeek.size() - 1).getAccumulatedHours();
+            List<DailyFormattedDataModel> latestWeek = new WeeklyFormattedDataListFactory().buildWeeklyDataList(timeEntries, date, hourBalance);
+            weeklyMasterData.put(date, latestWeek);
+            DailyFormattedDataModel lastDay = latestWeek.get(latestWeek.size() - 1);
+            hourBalance = lastDay.getAccumulatedHours();
         }
 
         for(Month month: Month.values()) {

@@ -14,14 +14,17 @@ import java.util.stream.Collectors;
  */
 public class MonthlyFormattedDataListFactory {
 
+    /**
+     * Get timeEntries for a whole year, return a list of entries for each day of a given month
+     * @param timeEntries map, where keys are weeks and values are lists of 7 entries of formatted data corresponding
+     *                    each day
+     * @param month The month we are interested in (filter)
+     * @param year  The year we are interested in (filter)
+     * @return a list where each value is a formatted data for a single day of the corresponding month. Entries are
+     * ordered by date.
+     */
     public List<DailyFormattedDataModel> buildMonthlyDataList(Map<YearWeek, List<DailyFormattedDataModel>> timeEntries,
                                                               Month month, int year) {
-        if(timeEntries.size() < 1) {
-
-        }
-        // create new list
-        List<DailyFormattedDataModel> resultList = new ArrayList<>();
-
         // start and end dates of the month
         YearMonth ym = YearMonth.of(year, month);
         LocalDate start = LocalDate.of(year, month, 1);
@@ -39,7 +42,7 @@ public class MonthlyFormattedDataListFactory {
                                                                .collect(Collectors.toList());
 
         //add all the lists from this month to the result-list
-        resultList.addAll(filteredStart);
+        List<DailyFormattedDataModel> resultList = new ArrayList<>(filteredStart);
         for(YearWeek i = startYw.plusWeeks(1); i.isBefore(endYw); i = i.plusWeeks(1)) {
             resultList.addAll(timeEntries.get(i));
         }

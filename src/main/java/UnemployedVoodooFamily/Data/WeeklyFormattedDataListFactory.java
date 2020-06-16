@@ -13,13 +13,13 @@ public class WeeklyFormattedDataListFactory {
 
     /**
      * Formats the given timeEntries for the specified week.
-     * @param timeEntries the timeEntries to format
-     * @param week the week to format the timeEntries in
-     * @param accumulatedOffset The total accumulated hours throughout the year, up to the given week.
+     * @param timeEntries      the timeEntries to format
+     * @param week             the week to format the timeEntries in
+     * @param accumulatedHours The total accumulated hours throughout the year, up to the given week.
      * @return A list with seven entries, monday to sunday, with formatted timeEntries.
      */
     public List<DailyFormattedDataModel> buildWeeklyDataList(List<TimeEntry> timeEntries, YearWeek week,
-                                                             Double accumulatedOffset) {
+                                                             Double accumulatedHours) {
         ArrayList<DailyFormattedDataModel> weeklyList = new ArrayList<>();
         FileLogic fileLogic = new FileLogic();
         List<WorkHours> workHours = fileLogic.loadJson(FilePath.getCurrentUserWorkhours());
@@ -39,8 +39,6 @@ public class WeeklyFormattedDataListFactory {
                 weekSublist.add(t);
             }
         }
-
-        Double accumulatedHours = accumulatedOffset;
 
         //Creates a list with the entire week summarised
         for(DayOfWeek weekday: DayOfWeek.values()) {
@@ -71,13 +69,13 @@ public class WeeklyFormattedDataListFactory {
                     }
                 }
             }
-        accumulatedHours += (workedHours - supposedHours);
+            accumulatedHours += (workedHours - supposedHours);
 
-        weeklyList.add(new DailyFormattedDataModel(workedHours, supposedHours, currentDate, accumulatedHours, note));
-    }
+            weeklyList.add(new DailyFormattedDataModel(workedHours, supposedHours, currentDate, accumulatedHours, note));
+        }
 
         return weeklyList;
-}
+    }
 
 
     /**

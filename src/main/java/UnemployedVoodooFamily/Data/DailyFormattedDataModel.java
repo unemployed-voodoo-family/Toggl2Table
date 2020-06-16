@@ -9,6 +9,9 @@ import java.time.LocalDate;
 import java.time.format.TextStyle;
 import java.util.Locale;
 
+/**
+ * Used to structure data for the corresponding TableView
+ */
 public class DailyFormattedDataModel {
 
     private LocalDate date;
