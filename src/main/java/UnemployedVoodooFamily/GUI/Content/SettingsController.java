@@ -2,6 +2,7 @@ package UnemployedVoodooFamily.GUI.Content;
 
 import UnemployedVoodooFamily.Data.Enums.FilePath;
 import UnemployedVoodooFamily.Data.WorkHoursModel;
+import UnemployedVoodooFamily.Logic.FileLogic;
 import UnemployedVoodooFamily.Logic.SettingsLogic;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -143,7 +144,7 @@ public class SettingsController {
         deleteDataBtn.setOnAction(event -> {
             Thread fileDeleteThread = new Thread(() -> {
                 try {
-                    logic.deleteStoredData(FilePath.APP_HOME.getPath());
+                    FileLogic.deleteStoredData(FilePath.APP_HOME.getPath());
 
                     Platform.runLater(() -> {
                         showSuccessLabel(fileRemoveFeedbackLabel, "Locally stored files have been removed");

@@ -2,9 +2,7 @@ package UnemployedVoodooFamily.Logic;
 
 import UnemployedVoodooFamily.Data.RawTimeDataModel;
 import ch.simas.jtoggl.*;
-import javafx.collections.ObservableList;
 
-import java.sql.Time;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;

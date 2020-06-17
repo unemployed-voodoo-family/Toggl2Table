@@ -17,9 +17,9 @@ public class FileLogic {
     /**
      * Load properties from a file
      * @param path Path to a file where properties are stored
-     * @return
+     * @return Loaded properties
      */
-    public Properties loadProps(String path) {
+    public static Properties loadProps(String path) {
         Properties props = new Properties();
         File file = getFile(path);
         try {
@@ -31,6 +31,26 @@ public class FileLogic {
             e.printStackTrace();
         }
         return props;
+    }
+
+
+    /**
+     * Save properties to a file
+     * @param props Properties to store
+     * @param filepath path to property file
+     * @return True on success, false on error
+     */
+    public static boolean saveProps(Properties props, String filepath) {
+        boolean storeSuccessful = false;
+        try {
+            FileOutputStream output = new FileOutputStream(filepath);
+            props.store(output, null);
+            storeSuccessful = true;
+        }
+        catch(IOException e) {
+            e.printStackTrace();
+        }
+        return storeSuccessful;
     }
 
     private static File getFile(String path) {
@@ -103,5 +123,24 @@ public class FileLogic {
             e.printStackTrace();
         }
         return false;
+    }
+
+    /**
+     * This method's main function is to delete files in a specific directory,
+     * files including files in subdirectories will also be deleted, disregarding it's extension.
+     * @param path is the directory path from where all files will be removed.
+     */
+    public static void deleteStoredData(String path) throws SecurityException{
+        File directory = new File(path);
+
+        for(File file: directory.listFiles()) {
+            if(file.isDirectory()) {
+                deleteStoredData(directory + File.separator + file.getName());
+            }
+            else {
+                file.delete();
+            }
+        }
+
     }
 }

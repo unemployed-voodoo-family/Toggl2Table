@@ -1,5 +1,7 @@
 package UnemployedVoodooFamily.GUI.Content;
 
+import UnemployedVoodooFamily.GUI.GUIHelper;
+import UnemployedVoodooFamily.Logic.LoginLogic;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -45,28 +47,7 @@ public class HelpPromptController {
     }
 
     private void browseManual() {
-        String url = "https://github.com/unemployed-voodoo-family/Toggl2Table/wiki";
-
-        if(Desktop.isDesktopSupported()) {
-            Desktop desktop = Desktop.getDesktop();
-            try {
-                desktop.browse(new URI(url));
-            }
-            catch(IOException | URISyntaxException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
-        else {
-            Runtime runtime = Runtime.getRuntime();
-            try {
-                runtime.exec("xdg-open " + url);
-            }
-            catch(IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
+        GUIHelper.navigateToUrl("https://github.com/unemployed-voodoo-family/Toggl2Table/wiki");
     }
 
     private void closeStage(ActionEvent event) {
