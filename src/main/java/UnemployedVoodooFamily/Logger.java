@@ -1,12 +1,9 @@
 package UnemployedVoodooFamily;
 
 import UnemployedVoodooFamily.Data.Enums.FilePath;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import UnemployedVoodooFamily.Logic.FileLogic;
 
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
@@ -23,35 +20,15 @@ public class Logger {
     private Logger() {
     }
 
-    public void dumpCollection(Collection<?> dataset, String name) {
-        File file = new File(FilePath.LOGS_HOME.getPath() + File.separator + LocalDateTime.now()
-                                                                                          .format(formatter) + "." + name + "-dump.json");
-        try {
-            file.getParentFile().mkdirs();
-            file.createNewFile();
-        }
-        catch(IOException e) {
-            e.printStackTrace();
-        }
-        writeFile(file, dataset);
-    }
-
-    private void writeFile(File file, Collection<?> dataset) {
-        FileWriter writer = null;
-        try {
-            writer = new FileWriter(file);
-        }
-        catch(IOException e) {
-            e.printStackTrace();
-        }
-        GsonBuilder builder = new GsonBuilder();
-        Gson gson = builder.setPrettyPrinting().serializeNulls().create();
-        gson.toJson(dataset, writer);
-        try {
-            writer.close();
-        }
-        catch(IOException e) {
-            e.printStackTrace();
-        }
+    /**
+     * Write a collection to a log file. File name will be generated, based on the current system time.
+     * @param dataset Collection to be logged
+     * @param name    Name of the file (some other parts will be added, this is just part of the final file name)
+     * @return True on success, false on error
+     */
+    public boolean dumpCollection(Collection<?> dataset, String name) {
+        String date = LocalDateTime.now().format(formatter);
+        String fileName = FilePath.LOGS_HOME.getPath() + File.separator + date + "." + name + "-dump.json";
+        return FileLogic.saveCollectionToJson(fileName, dataset);
     }
 }

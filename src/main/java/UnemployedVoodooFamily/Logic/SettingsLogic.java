@@ -1,6 +1,7 @@
 package UnemployedVoodooFamily.Logic;
 
 import UnemployedVoodooFamily.Data.DateRange;
+import UnemployedVoodooFamily.Data.WorkHourConfig;
 import UnemployedVoodooFamily.Data.WorkHours;
 import UnemployedVoodooFamily.Data.WorkHoursModel;
 import javafx.collections.FXCollections;
@@ -16,46 +17,45 @@ import java.util.*;
  */
 public class SettingsLogic {
 
-    private FileLogic propsLogic = new FileLogic();
     private String path;
-    private List<WorkHours> workHours;
+    private WorkHourConfig workHourConfig;
 
+    /**
+     * Initialize Setting logic
+     * @param path Path to the file where to store the settings
+     */
     public SettingsLogic(String path) {
-        this.workHours = propsLogic.loadJson(path);
+        this.workHourConfig = WorkHourConfig.loadFromJson(path);
         this.path = path;
     }
 
     /**
-     * Writes the specified work hours to the "hours.properties" file.
+     * Writes the specified work hours to the  settings file.
      * @param fromDate the start of the period
      * @param toDate   the end of the period
      * @param hoursStr the standard work hours for this period
      */
     public void setWorkHours(LocalDate fromDate, LocalDate toDate, String hoursStr, String note) {
-
-        this.workHours = propsLogic.loadJson(path);
+        // TODO - code smell - loading from file and saving to file happens in too many places?
+        this.workHourConfig = WorkHourConfig.loadFromJson(path);
         Double hours = Double.valueOf(hoursStr);
         WorkHours wh = new WorkHours(fromDate, toDate, hours, note);
         fixHoursOverlap(wh);
-        propsLogic.saveJson(path, workHours);
-    }
-
-    public List<WorkHours> getWorkHours() {
-        return this.workHours;
+        this.workHourConfig.saveToJson(path);
     }
 
     /**
      * Checks for overlap between the newly created period and the already existing ones.
      * Fixes overlap by overwriting old entries, and stitches
-     * continous periods which have the same value.
+     * continuous periods which have the same value.
      */
     private void fixHoursOverlap(WorkHours wh) {
-
-        if(this.workHours == null) {
-            this.workHours = new ArrayList<>();
+        // TODO - code smell - too long
+        if(this.workHourConfig == null) {
+            this.workHourConfig = new WorkHourConfig();
         }
-        if(! this.workHours.isEmpty()) {
-            ListIterator<WorkHours> it = this.workHours.listIterator();
+        if(! this.workHourConfig.isEmpty()) {
+            ListIterator<WorkHours> it = this.workHourConfig.listIterator();
             while(it.hasNext()) {
                 WorkHours next = it.next();
                 Double value = next.getHours();
@@ -130,33 +130,26 @@ public class SettingsLogic {
         else {
             // There are no other values in the list,
             // and the new value can just be added
-            this.workHours.add(wh);
+            this.workHourConfig.add(wh);
         }
     }
 
     public void populateHoursTable(TableView table) {
         //load props file
-        List<WorkHours> whList = propsLogic.loadJson(path);
+        if (workHourConfig != null) {
+            workHourConfig.sort();
+            ObservableList<WorkHoursModel> data = FXCollections.observableArrayList();
+            ListIterator<WorkHours> it = workHourConfig.listIterator();
 
-        ObservableList<WorkHoursModel> data = FXCollections.observableArrayList();
-        Iterator<WorkHours> it = sortWorkHoursData(whList).iterator();
-
-        while(it.hasNext()) {
-            WorkHours next = it.next();
-            data.add(new WorkHoursModel(next));
+            while(it.hasNext()) {
+                WorkHours next = it.next();
+                data.add(new WorkHoursModel(next));
+            }
+            ObservableList tableItems = table.getItems();
+            tableItems.clear();
+            tableItems.addAll(data);
         }
-        table.getItems().clear();
-        table.getItems().addAll(data);
-    }
 
-    private List<WorkHours> sortWorkHoursData(List<WorkHours> data) {
-
-        data.sort((o1, o2) -> {
-            LocalDate d1 = o1.getFrom();
-            LocalDate d2 = o2.getFrom();
-            return d1.compareTo(d2);
-        });
-        return data;
     }
 
     /**
@@ -164,25 +157,24 @@ public class SettingsLogic {
      * files including files in subdirectories will also be deleted, disregarding it's extension.
      * @param path is the directory path from where all files will be removed.
      */
-    public void deleteStoredData(String path) throws Exception{
+    public void deleteStoredData(String path) throws SecurityException{
         File directory = new File(path);
 
-            for(File file: directory.listFiles()){
-                if(file.isDirectory()) {
-                    deleteStoredData(directory + File.separator + file.getName());
-                }
-                else {
-                    file.delete();
-                }
+        for(File file: directory.listFiles()) {
+            if(file.isDirectory()) {
+                deleteStoredData(directory + File.separator + file.getName());
             }
+            else {
+                file.delete();
+            }
+        }
 
     }
 
     public <T> void deleteWorkHours(T workhours) {
         if(workhours instanceof WorkHoursModel) {
-            this.workHours = propsLogic.loadJson(path);
-            workHours.remove(((WorkHoursModel) workhours).getWorkHours());
-            propsLogic.saveJson(path, this.workHours);
+            workHourConfig.remove(((WorkHoursModel) workhours).getWorkHours());
+            workHourConfig.saveToJson(path);
         }
     }
 }

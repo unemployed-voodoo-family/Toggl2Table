@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 /**
- * Object representing an "ordinary work hours" time period.
+ * A configuration of "ordinary work hours" for a given time period.
  */
 public class WorkHours {
 
@@ -13,6 +13,12 @@ public class WorkHours {
     private Double hours;
     private String note;
 
+    /**
+     * Construct the object.
+     * @param from Start of the period when the work hour config is valid
+     * @param to End of the period
+     * @param hours How many work hours/day there are during this period
+     */
     public WorkHours(LocalDate from, LocalDate to, Double hours) {
         this.from = from;
         this.to = to;
@@ -57,10 +63,6 @@ public class WorkHours {
 
     public void setHours(Double hours) {
         this.hours = hours;
-    }
-
-    public void setNote(String note) {
-        this.note = note;
     }
 
     @Override
