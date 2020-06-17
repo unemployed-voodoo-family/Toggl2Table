@@ -75,7 +75,7 @@ public class FormattedTimeDataLogic {
         double hourBalance = 0d;
 
         for(YearWeek date = startWeek; date.isBefore(endWeek.plusWeeks(1)); date = date.plusWeeks(1)) {
-            List<DailyFormattedDataModel> latestWeek = new WeeklyFormattedDataListFactory().buildWeeklyDataList(timeEntries, date, hourBalance);
+            List<DailyFormattedDataModel> latestWeek = WeeklyFormattedDataListFactory.buildWeeklyDataList(timeEntries, date, hourBalance);
             weeklyMasterData.put(date, latestWeek);
             DailyFormattedDataModel lastDay = latestWeek.get(latestWeek.size() - 1);
             hourBalance = lastDay.getAccumulatedHours();
