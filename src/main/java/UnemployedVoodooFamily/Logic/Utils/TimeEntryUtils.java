@@ -19,7 +19,10 @@ public class TimeEntryUtils {
     public static boolean isWithinRange(TimeEntry t, LocalDate startDate, LocalDate stopDate) {
         LocalDate start = t.getStart().toLocalDate();
         LocalDate stop = t.getStop().toLocalDate();
-        return start.isEqual(startDate) || start.isAfter(startDate) && stop.isBefore(stopDate);
+        if(start.isEqual(startDate)) {
+            return true;
+        }
+        return start.isAfter(startDate) && (stop.isBefore(stopDate) || stop.isEqual(stopDate));
     }
 
 
