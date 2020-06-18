@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter;
 
 /**
  * Class to store a period of time, denoted by a from and to date.
- * Includes helper methods to comapare with other DateRanges
+ * Includes helper methods to compare with other DateRanges
  */
 public class DateRange {
     private DateTimeFormatter formatter;
