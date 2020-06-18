@@ -1,16 +1,11 @@
 package UnemployedVoodooFamily.Logic;
 
 import UnemployedVoodooFamily.Data.Enums.FilePath;
-import UnemployedVoodooFamily.GUI.GUIBaseController;
-import UnemployedVoodooFamily.GUI.GUIHelper;
 import UnemployedVoodooFamily.Logic.Utils.PasswordUtils;
 import ch.simas.jtoggl.JToggl;
-import javafx.application.Platform;
 
-import java.io.IOException;
 import java.util.Properties;
 
-// TODO - code smell - Logic depends on GUI?
 public class LoginLogic {
 
     private FileLogic fileLogic = new FileLogic();
@@ -22,27 +17,13 @@ public class LoginLogic {
         try {
             session.setSession(new JToggl(username, password));
             // Run this thread to avoid UnemployedVoodooFamily.GUI from freezing
-            Thread togglThread = new Thread(() -> Platform.runLater(() -> {
-                try {
-                    new GUIBaseController().start();
-                }
-                catch(IOException ioe) {
-                    System.out.println(ioe.getMessage());
-                }
-            }));
-            togglThread.start();
             loggedIn = true;
             rememberWhich(username, password, rememberUsername, rememberPassword);
-            togglThread.join();
         }
         catch(RuntimeException e) {
             e.getMessage();
             Session.terminateSession();
         }
-        catch(InterruptedException e) {
-            e.printStackTrace();
-        }
-
 
         return loggedIn;
     }
@@ -64,7 +45,4 @@ public class LoginLogic {
         saveUsernameAndPassword(username, securePassword);
     }
 
-    public void browseTogglForgotPW() {
-        GUIHelper.navigateToUrl("https://toggl.com/forgot-password/");
-    }
 }

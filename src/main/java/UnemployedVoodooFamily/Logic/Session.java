@@ -101,8 +101,6 @@ public class Session {
 
     /**
      * Fetch all the time-entries from the given period
-     * @param start the start date to fetch from
-     * @param end   the end date to fetch from
      */
     public void refreshTimeEntries() {
         // fetch time entries

@@ -1,11 +1,8 @@
 package UnemployedVoodooFamily.Logic;
 
-import UnemployedVoodooFamily.GUI.GUIHelper;
-
 public class ProfileLogic {
 
-
-    public String getFirstDayOfWeek(long weekDay){
+    public static String getFirstDayOfWeek(long weekDay){
         if(weekDay == 0){
             return "Sunday";
         }
@@ -32,7 +29,7 @@ public class ProfileLogic {
         }
     }
 
-    public String getTimeFormat(String format){
+    public static String getTimeFormat(String format){
         if(format.equals("h:mm A")){
             return "12-hour";
         }
@@ -42,9 +39,5 @@ public class ProfileLogic {
         else{
             return "no format specified";
         }
-    }
-
-    public void browseTogglProfile() {
-        GUIHelper.navigateToUrl("https://toggl.com/app/profile");
     }
 }
