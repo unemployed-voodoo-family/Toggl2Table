@@ -46,6 +46,7 @@ public class SettingsLogic {
      * continuous periods which have the same value.
      */
     private void fixHoursOverlap(WorkHours wh) {
+        // TODO - when you add a holiday on the first interval day (f.ex, 1st of Jan), there is a bug - we get three intervals
         // TODO - code smell - too long
         WorkHourConfig workHourConfig = WorkHourConfig.getInstance();
         if(! workHourConfig.isEmpty()) {
