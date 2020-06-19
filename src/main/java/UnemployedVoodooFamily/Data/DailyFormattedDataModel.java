@@ -23,8 +23,6 @@ public class DailyFormattedDataModel {
     private SimpleStringProperty note = new SimpleStringProperty("");
     private SimpleObjectProperty<YearWeek> weekNumber;
 
-    private boolean isFiller = false;
-
     /**
      * Creates a WeeklyTimeDataModel object
      * Used to structure data for the corresponding TableView
@@ -106,13 +104,5 @@ public class DailyFormattedDataModel {
      */
     public YearWeek getWeekNumber() {
         return weekNumber.get();
-    }
-
-    public boolean isFiller() {
-        return isFiller;
-    }
-
-    public void setFiller(boolean filler) {
-        isFiller = filler;
     }
 }

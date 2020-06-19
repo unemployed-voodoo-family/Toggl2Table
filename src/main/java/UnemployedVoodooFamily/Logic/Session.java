@@ -125,6 +125,8 @@ public class Session {
                 OffsetDateTime newStart = fetchedEntries.get(fetchedEntries.size() - 1).getStart();
                 fetchedEntries = jToggl.getTimeEntries(newStart, end);
 
+                System.out.println("Fetched time entries until " + fetchedEntries.get(fetchedEntries.size() - 1).getStart());
+
                 //remove eventual duplicate time entry
                 int duplicateCheckIndex = timeEntries.indexOf(fetchedEntries.get(0));
                 if(! fetchedEntries.isEmpty() && duplicateCheckIndex != - 1) {
