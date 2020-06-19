@@ -590,11 +590,12 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
      * Update the weekly table and summary labels.
      */
     private void updateWeeklyTable() {
-        ObservableList<DailyFormattedDataModel> data = getObservableWeeklyData();
+        ObservableList<DailyFormattedDataModel> data = createObservableWeeklyData();
         try {
             Platform.runLater(() -> {
                 double[] values = calculateSummary(data);
-                weeklyTable.getItems().setAll(getObservableWeeklyData());
+                // TODO - is this correct? weeklyTable.getItems().setAll(createObservableWeeklyData());
+                weeklyTable.getItems().setAll(data);
                 hoursWorkedLabel.setText(df.format(values[0]));
                 extraTimeWorkedLabel.setText(df.format(values[1]));
             });
@@ -900,7 +901,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
      * Creates an observable list containing WeeklyTimeDataModel objects
      * @return an ObservableList containing WeeklyTimeDatModel objects
      */
-    private ObservableList<DailyFormattedDataModel> getObservableWeeklyData() {
+    private ObservableList<DailyFormattedDataModel> createObservableWeeklyData() {
 
         // find the yearweek to fetch data from
         YearWeek yearWeek = YearWeek.of(Integer.parseInt(yearSpinner.getEditor().getText()),
