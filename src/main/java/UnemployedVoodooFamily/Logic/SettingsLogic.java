@@ -17,14 +17,13 @@ import java.util.*;
 public class SettingsLogic {
 
     private String path;
-    private WorkHourConfig workHourConfig;
 
     /**
      * Initialize Setting logic
      * @param path Path to the file where to store the settings
      */
     public SettingsLogic(String path) {
-        this.workHourConfig = WorkHourConfig.loadFromJson(path);
+        WorkHourConfig.loadFromJson(path);
         this.path = path;
     }
 
@@ -35,12 +34,10 @@ public class SettingsLogic {
      * @param hoursStr the standard work hours for this period
      */
     public void setWorkHours(LocalDate fromDate, LocalDate toDate, String hoursStr, String note) {
-        // TODO - code smell - loading from file and saving to file happens in too many places?
-        this.workHourConfig = WorkHourConfig.loadFromJson(path);
         Double hours = Double.valueOf(hoursStr);
         WorkHours wh = new WorkHours(fromDate, toDate, hours, note);
         fixHoursOverlap(wh);
-        this.workHourConfig.saveToJson(path);
+        WorkHourConfig.saveToJson(path);
     }
 
     /**
@@ -50,11 +47,9 @@ public class SettingsLogic {
      */
     private void fixHoursOverlap(WorkHours wh) {
         // TODO - code smell - too long
-        if(this.workHourConfig == null) {
-            this.workHourConfig = new WorkHourConfig();
-        }
-        if(! this.workHourConfig.isEmpty()) {
-            ListIterator<WorkHours> it = this.workHourConfig.listIterator();
+        WorkHourConfig workHourConfig = WorkHourConfig.getInstance();
+        if(! workHourConfig.isEmpty()) {
+            ListIterator<WorkHours> it = workHourConfig.listIterator();
             while(it.hasNext()) {
                 WorkHours next = it.next();
                 Double value = next.getHours();
@@ -129,13 +124,13 @@ public class SettingsLogic {
         else {
             // There are no other values in the list,
             // and the new value can just be added
-            this.workHourConfig.add(wh);
+            workHourConfig.add(wh);
         }
     }
 
     public void populateHoursTable(TableView table) {
-        //load props file
-        if (workHourConfig != null) {
+        WorkHourConfig workHourConfig = WorkHourConfig.getInstance();
+        if(workHourConfig != null) {
             workHourConfig.sort();
             ObservableList<WorkHoursModel> data = FXCollections.observableArrayList();
             ListIterator<WorkHours> it = workHourConfig.listIterator();
@@ -153,9 +148,10 @@ public class SettingsLogic {
 
 
     public <T> void deleteWorkHours(T workhours) {
+        WorkHourConfig workHourConfig = WorkHourConfig.getInstance();
         if(workhours instanceof WorkHoursModel) {
             workHourConfig.remove(((WorkHoursModel) workhours).getWorkHours());
-            workHourConfig.saveToJson(path);
+            WorkHourConfig.saveToJson(path);
         }
     }
 }

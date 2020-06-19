@@ -14,12 +14,27 @@ import java.util.ListIterator;
  */
 public class WorkHourConfig {
     private List<WorkHours> periods;
+    // True when data is loaded from JSON
+    private boolean jsonLoaded = false;
+
+    private static WorkHourConfig instance;
+
+    /**
+     * Get a singleton instance of expected work hour configuration
+     * @return
+     */
+    public static WorkHourConfig getInstance() {
+        if (instance == null) {
+            instance = new WorkHourConfig();
+        }
+        return instance;
+    }
 
     /**
      * Create a configuration
      * @param periods Work hour periods to register in the configuration.
      */
-    public WorkHourConfig(List<WorkHours> periods) {
+    private WorkHourConfig(List<WorkHours> periods) {
         if (periods != null) {
             this.periods = periods;
         } else {
@@ -27,7 +42,7 @@ public class WorkHourConfig {
         }
     }
 
-    public WorkHourConfig() {
+    private WorkHourConfig() {
         this.periods = new LinkedList<>();
     }
 
@@ -36,12 +51,16 @@ public class WorkHourConfig {
      * @param filePath Path to the JSON file
      * @return A work hour config object or null on error
      */
-    public static WorkHourConfig loadFromJson(String filePath) {
+    public static void loadFromJson(String filePath) {
+        if (instance != null && instance.jsonLoaded) {
+            System.out.println("NOT loading JSON config, getting it from cache");
+            return;
+        }
+
         List<WorkHours> periods = FileLogic.loadWorkHourListFromJsonFile(filePath);
         if (periods != null) {
-            return new WorkHourConfig(periods);
-        } else {
-            return null;
+            instance = new WorkHourConfig(periods);
+            instance.jsonLoaded = true;
         }
     }
 
@@ -76,8 +95,12 @@ public class WorkHourConfig {
      * @param filePath Path to the JSON file
      * @return True on success, false on error
      */
-    public boolean saveToJson(String filePath) {
-        return FileLogic.saveCollectionToJson(filePath, this.periods);
+    public static boolean saveToJson(String filePath) {
+        if (instance != null) {
+            return FileLogic.saveCollectionToJson(filePath, instance.periods);
+        } else {
+            return false;
+        }
     }
 
     /**

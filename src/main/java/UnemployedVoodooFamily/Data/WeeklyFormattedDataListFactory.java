@@ -21,7 +21,7 @@ public class WeeklyFormattedDataListFactory {
     public static List<DailyFormattedDataModel> buildWeeklyDataList(List<TimeEntry> timeEntries, YearWeek week,
                                                              Double accumulatedHours) {
         ArrayList<DailyFormattedDataModel> weeklyList = new ArrayList<>();
-        WorkHourConfig workHourConfig = WorkHourConfig.loadFromJson(FilePath.getCurrentUserWorkhours());
+        WorkHourConfig workHourConfig = WorkHourConfig.getInstance();
 
         if (workHourConfig == null) return weeklyList;
 
