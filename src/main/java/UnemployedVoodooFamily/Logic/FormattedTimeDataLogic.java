@@ -1,10 +1,9 @@
 package UnemployedVoodooFamily.Logic;
 
-import UnemployedVoodooFamily.Data.DailyFormattedDataModel;
-import UnemployedVoodooFamily.Data.WeeklyFormattedDataListFactory;
-import UnemployedVoodooFamily.Data.MonthlyFormattedDataListFactory;
+import UnemployedVoodooFamily.Data.*;
 import ch.simas.jtoggl.TimeEntry;
 import org.threeten.extra.YearWeek;
+
 import java.io.IOException;
 import java.time.*;
 import java.time.temporal.TemporalField;
@@ -12,13 +11,13 @@ import java.time.temporal.WeekFields;
 import java.util.*;
 
 public class FormattedTimeDataLogic {
-
     private static Map<YearWeek, List<DailyFormattedDataModel>> weeklyMasterData;
     private static Map<YearMonth, List<DailyFormattedDataModel>> monthlyMasterData;
 
     private int selectedYear;
     private int selectedWeek;
     private Month selectedMonth;
+    private double hourBalance;
 
     public FormattedTimeDataLogic() {
         //Get current year
@@ -28,14 +27,13 @@ public class FormattedTimeDataLogic {
         LocalDate date = LocalDate.now();
         TemporalField weekFields = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();
         selectedWeek = date.get(weekFields);
-
         selectedMonth = LocalDate.now().getMonth();
-
     }
 
 
     //Called when the "export to excel" button is pressed
-    public boolean exportToExcelDocument(Map<YearMonth, List<DailyFormattedDataModel>> timeEntries, int year) throws IOException {
+    public boolean exportToExcelDocument(Map<YearMonth, List<DailyFormattedDataModel>> timeEntries,
+                                         int year) throws IOException {
         if(timeEntries == null) {
             return false;
         }
@@ -63,33 +61,112 @@ public class FormattedTimeDataLogic {
      * @param year
      */
     public void buildMasterData(List<TimeEntry> timeEntries, int year) {
+        if(timeEntries.isEmpty()) {
+            return;
+        }
 
+        Iterator<TimeEntry> it = timeEntries.iterator();
+        TimeEntry te = it.next();
+        // Skip the time entries before the given year
+        while(it.hasNext() && te.getStart().getYear() < year) {
+            te = it.next();
+        }
+
+        // Look at the day of time entries. Sum up all entries in each day
+        int day = te.getStart().getDayOfYear();
+        LocalDate date = te.getStart().toLocalDate();
+        double workedHours = 0;
+        hourBalance = 0d;
         weeklyMasterData = new HashMap<>();
         monthlyMasterData = new HashMap<>();
 
-        LocalDate startDate = LocalDate.of(year, 1, 1);
-        LocalDate endDate = LocalDate.of(year, 12, 31);
-        YearWeek startWeek = YearWeek.from(startDate);
-        YearWeek endWeek = YearWeek.from(endDate);
+        // TODO - for weekdays with no time entries add a day with 0 hours and expected number of hours
 
-        double hourBalance = 0d;
+        while(te != null && te.getStart().getYear() == year) {
+            if(newDayStarts(te, day)) {
+                DailyFormattedDataModel dayData = createDayData(date, workedHours);
+                addDayToWeek(dayData);
+                addDayToMonth(dayData);
+                // Reset the state
+                date = te.getStart().toLocalDate();
+                day = date.getDayOfYear();
+                workedHours = 0;
+            }
+            workedHours += ((float) te.getDuration()) / 3600.0;
 
-        for(YearWeek date = startWeek; date.isBefore(endWeek.plusWeeks(1)); date = date.plusWeeks(1)) {
-            List<DailyFormattedDataModel> latestWeek = WeeklyFormattedDataListFactory.buildWeeklyDataList(timeEntries, date, hourBalance);
-            weeklyMasterData.put(date, latestWeek);
-            DailyFormattedDataModel lastDay = latestWeek.get(latestWeek.size() - 1);
-            hourBalance = lastDay.getAccumulatedHours();
+            if(it.hasNext()) {
+                te = it.next();
+            }
+            else {
+                te = null;
+                // No more time entries, add the unfinished day data to the lists
+                if(workedHours > 0) {
+                    DailyFormattedDataModel dayData = createDayData(date, workedHours);
+                    addDayToWeek(dayData);
+                    addDayToMonth(dayData);
+                }
+            }
         }
 
-        for(Month month: Month.values()) {
+        // TODO - build project-wise report entries: for a chosen project, find hours for each of given tags
+    }
 
-            List<DailyFormattedDataModel> list = new MonthlyFormattedDataListFactory()
-                    .buildMonthlyDataList(weeklyMasterData, month, year);
-            YearMonth yearMonth = YearMonth.of(year, month);
+    /**
+     * Check if the time entry is in a new day, compared to the day of the previous time entry
+     * @param te      Tume entry
+     * @param prevDay the day of the previous time entry
+     * @return
+     */
+    private boolean newDayStarts(TimeEntry te, int prevDay) {
+        return te.getStart().getDayOfYear() != prevDay;
+    }
 
-            monthlyMasterData.put(yearMonth, list);
+    /**
+     * Summarize accumulated hour information, create a day summary
+     * @param date        Date for the day
+     * @param workedHours How many hours were worked that day
+     * @return A formatted entry for day summary
+     */
+    private DailyFormattedDataModel createDayData(LocalDate date, double workedHours) {
+        WorkHours wh = WorkHourConfig.getInstance().getFor(date);
+        double supposedHours = wh != null ? wh.getHours() : 0;
+        String note = wh != null ? wh.getNote() : "";
+        hourBalance += (workedHours - supposedHours);
+        return new DailyFormattedDataModel(workedHours, supposedHours, date, hourBalance, note);
+    }
+
+    /**
+     * Add a day entry to weekly master data
+     * @param dayData
+     */
+    private void addDayToWeek(DailyFormattedDataModel dayData) {
+        // Update week and month data
+        YearWeek week = dayData.getWeekNumber();
+        if(weeklyMasterData.containsKey(week)) {
+            weeklyMasterData.get(week).add(dayData);
         }
+        else {
+            List<DailyFormattedDataModel> weekData = new LinkedList<>();
+            weekData.add(dayData);
+            weeklyMasterData.put(week, weekData);
+        }
+    }
 
+    /**
+     * Add a day entry to monthly master data
+     * @param dayData
+     */
+    public void addDayToMonth(DailyFormattedDataModel dayData) {
+        LocalDate d = dayData.getDate();
+        YearMonth month = YearMonth.of(d.getYear(), d.getMonthValue());
+        if(monthlyMasterData.containsKey(month)) {
+            monthlyMasterData.get(month).add(dayData);
+        }
+        else {
+            List<DailyFormattedDataModel> monthData = new LinkedList<>();
+            monthData.add(dayData);
+            monthlyMasterData.put(month, monthData);
+        }
     }
 
     public void setSelectedYear(int year) {
