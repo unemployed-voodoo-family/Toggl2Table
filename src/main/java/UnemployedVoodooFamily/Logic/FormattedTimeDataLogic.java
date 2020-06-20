@@ -80,13 +80,12 @@ public class FormattedTimeDataLogic {
         weeklyMasterData = new HashMap<>();
         monthlyMasterData = new HashMap<>();
 
-        // TODO - for weekdays with no time entries add a day with 0 hours and expected number of hours
-
         while(te != null && te.getStart().getYear() == year) {
             if(newDayStarts(te, day)) {
                 DailyFormattedDataModel dayData = createDayData(date, workedHours);
                 addDayToWeek(dayData);
                 addDayToMonth(dayData);
+                markEmptyWorkdaysAsZero(year, day, te.getStart().getDayOfYear());
                 // Reset the state
                 date = te.getStart().toLocalDate();
                 day = date.getDayOfYear();
@@ -109,6 +108,26 @@ public class FormattedTimeDataLogic {
         }
 
         // TODO - build project-wise report entries: for a chosen project, find hours for each of given tags
+    }
+
+    /**
+     * Find all work days between the previous day and the current day, create zero-hour entries in those days.
+     * @param year The year. Warning - both days must be in the same year!
+     * @param prevDay Previous day
+     * @param currentDay Current day
+     */
+    private void markEmptyWorkdaysAsZero(int year, int prevDay, int currentDay) {
+        WorkHourConfig config = WorkHourConfig.getInstance();
+        for (int day = prevDay + 1; day < currentDay; ++day) {
+            LocalDate d = LocalDate.ofYearDay(year, day);
+            WorkHours wh = config.getFor(d);
+            if (wh != null && wh.getHours() > 0) {
+                System.out.println("Expected to work " + wh.getHours() + " hours on " + d + ", took it free");
+                DailyFormattedDataModel dayData = createDayData(d, 0);
+                addDayToWeek(dayData);
+                addDayToMonth(dayData);
+            }
+        }
     }
 
     /**
