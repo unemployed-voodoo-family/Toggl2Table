@@ -19,120 +19,39 @@ public class SettingsLogic {
     private String path;
 
     /**
-     * Initialize Setting logic
+     * Set path to JSON file.
      * @param path Path to the file where to store the settings
      */
-    public SettingsLogic(String path) {
-        WorkHourConfig.loadFromJson(path);
+    public void setJsonFilePath(String path) {
         this.path = path;
     }
 
     /**
-     * Writes the specified work hours to the  settings file.
+     * Load settings from JSON file
+     */
+    public void loadFromJson() {
+        WorkHourConfig.loadFromJson(path);
+    }
+
+    /**
+     * Add the specified work-hour entry to the config, store it in settings file.
      * @param fromDate the start of the period
      * @param toDate   the end of the period
      * @param hoursStr the standard work hours for this period
      */
-    public void setWorkHours(LocalDate fromDate, LocalDate toDate, String hoursStr, String note) {
+    public void addWorkHours(LocalDate fromDate, LocalDate toDate, String hoursStr, String note) {
         Double hours = Double.valueOf(hoursStr);
         WorkHours wh = new WorkHours(fromDate, toDate, hours, note);
-        fixHoursOverlap(wh);
+        WorkHourConfig config = WorkHourConfig.getInstance();
+        config.add(wh);
+        config.sort();
         WorkHourConfig.saveToJson(path);
     }
 
-    /**
-     * Checks for overlap between the newly created period and the already existing ones.
-     * Fixes overlap by overwriting old entries, and stitches
-     * continuous periods which have the same value.
-     */
-    private void fixHoursOverlap(WorkHours wh) {
-        // TODO - when you add a holiday on the first interval day (f.ex, 1st of Jan), there is a bug - we get three intervals
-        // TODO - code smell - too long
-        WorkHourConfig workHourConfig = WorkHourConfig.getInstance();
-        if(! workHourConfig.isEmpty()) {
-            ListIterator<WorkHours> it = workHourConfig.listIterator();
-            while(it.hasNext()) {
-                WorkHours next = it.next();
-                Double value = next.getHours();
-                Double newValue = wh.getHours();
-                DateRange oldRange = next.getRange();
-                DateRange newRange = wh.getRange();
-                boolean keyChanged = false;
-
-                // if the new value is inside another value, split it
-                if(oldRange.isEncapsulating(newRange) && ! value.equals(newValue)) {
-                    it.remove();
-                    WorkHours wh1 = new WorkHours(oldRange.getFrom(), newRange.getFrom().minusDays(1), value,
-                                                  next.getNote());
-                    WorkHours wh2 = new WorkHours(newRange.getTo().plusDays(1), oldRange.getTo(), value,
-                                                  next.getNote());
-                    it.add(wh1);
-                    it.add(wh2);
-                    continue;
-                }
-
-                //if new "from" value overrides old "to" value
-                if(newRange.fromValueinRange(oldRange)) {
-                    if(newValue.equals(value)) {
-                        newRange.setFrom(oldRange.getFrom());
-                    }
-                    else {
-                        oldRange.setTo(newRange.getFrom().minusDays(1));
-                        keyChanged = true;
-                    }
-                }
-                //check if values can be combined
-                LocalDate fromValue = newRange.getFrom();
-                if(newValue.equals(value) && fromValue.minusDays(1).equals(oldRange.getTo())) {
-                    newRange.setFrom(oldRange.getFrom());
-                }
-
-                //if new "to" value overrides old "from" value
-                if(newRange.toValueInRange(oldRange)) {
-                    if(newValue.equals(value)) {
-                        newRange.setTo(oldRange.getTo());
-                    }
-                    else {
-                        oldRange.setFrom(newRange.getTo().plusDays(1));
-                        keyChanged = true;
-                    }
-                }
-
-                // check if entries can be combined
-                LocalDate toValue = newRange.getTo();
-                if(newValue.equals(value) && toValue.plusDays(1).equals(oldRange.getFrom())) {
-                    newRange.setTo(oldRange.getTo());
-                }
-
-                //if a value in the list was changed, save the changes
-                if(keyChanged) {
-                    it.remove();
-                    it.add(new WorkHours(oldRange.getFrom(), oldRange.getTo(), value));
-                }
-
-                //if values are illogical or overwritten by the new value, remove
-                if(newRange.isEncapsulating(oldRange) || oldRange.getFrom().equals(oldRange.getTo()) || oldRange
-                        .getFrom().isAfter(oldRange.getTo())) {
-                    it.remove();
-                }
-                wh.setFrom(newRange.getFrom());
-                wh.setTo(newRange.getTo());
-            }
-            // after checking against the other
-            // entries, put the new entry
-            it.add(wh);
-        }
-        else {
-            // There are no other values in the list,
-            // and the new value can just be added
-            workHourConfig.add(wh);
-        }
-    }
 
     public void populateHoursTable(TableView table) {
         WorkHourConfig workHourConfig = WorkHourConfig.getInstance();
         if(workHourConfig != null) {
-            workHourConfig.sort();
             ObservableList<WorkHoursModel> data = FXCollections.observableArrayList();
             ListIterator<WorkHours> it = workHourConfig.listIterator();
 

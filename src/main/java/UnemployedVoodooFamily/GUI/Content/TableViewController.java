@@ -594,7 +594,6 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         try {
             Platform.runLater(() -> {
                 double[] values = calculateSummary(data);
-                // TODO - is this correct? weeklyTable.getItems().setAll(createObservableWeeklyData());
                 weeklyTable.getItems().setAll(data);
                 hoursWorkedLabel.setText(df.format(values[0]));
                 extraTimeWorkedLabel.setText(df.format(values[1]));

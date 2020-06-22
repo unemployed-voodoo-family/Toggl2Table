@@ -8,12 +8,11 @@ import java.time.format.DateTimeFormatter;
  * Includes helper methods to compare with other DateRanges
  */
 public class DateRange {
-    private DateTimeFormatter formatter;
+    private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     private LocalDate from;
     private LocalDate to;
 
-    public DateRange(LocalDate from, LocalDate to, DateTimeFormatter formatter) {
-        this.formatter = formatter;
+    public DateRange(LocalDate from, LocalDate to) {
         this.from = from;
         this.to = to;
     }
@@ -40,11 +39,7 @@ public class DateRange {
      * @return true/false
      */
     public boolean fromValueinRange(DateRange otherRange) {
-        boolean inRange = false;
-        if(this.from.isAfter(otherRange.from) && this.from.isBefore(otherRange.to) || this.from.equals(otherRange.to)) {
-            inRange = true;
-        }
-        return inRange;
+        return otherRange.contains(this.from);
     }
 
     /**
@@ -53,11 +48,7 @@ public class DateRange {
      * @return true/false
      */
     public boolean toValueInRange(DateRange otherRange) {
-        boolean inRange = false;
-        if(this.to.isAfter(otherRange.from) && this.to.isBefore(otherRange.to) || this.to.equals(otherRange.from)) {
-            inRange = true;
-        }
-        return inRange;
+       return otherRange.contains(this.to);
     }
 
     /**
@@ -66,11 +57,7 @@ public class DateRange {
      * @return true/false
      */
     public boolean isEncapsulating(DateRange otherRange) {
-        boolean encapsulating = false;
-        if(isBeforeOrEqual(this.from, otherRange.from) && isAfterOrEqual(this.to, otherRange.to)) {
-            encapsulating = true;
-        }
-        return encapsulating;
+        return isBeforeOrEqual(this.from, otherRange.from) && isAfterOrEqual(this.to, otherRange.to);
     }
 
 
@@ -80,12 +67,8 @@ public class DateRange {
      * @param otherDate the date to check against
      * @return true or false
      */
-    private boolean isAfterOrEqual(LocalDate date, LocalDate otherDate) {
-        boolean afterOrEqual = false;
-        if(date.isAfter(otherDate) || date.equals(otherDate)) {
-            afterOrEqual = true;
-        }
-        return afterOrEqual;
+    private static boolean isAfterOrEqual(LocalDate date, LocalDate otherDate) {
+        return date.isAfter(otherDate) || date.equals(otherDate);
     }
 
     /**
@@ -94,36 +77,17 @@ public class DateRange {
      * @param otherDate the date to check against
      * @return true or false
      */
-    private boolean isBeforeOrEqual(LocalDate date, LocalDate otherDate) {
-        boolean afterOrEqual = false;
-        if(date.isBefore(otherDate) || date.equals(otherDate)) {
-            afterOrEqual = true;
-        }
-        return afterOrEqual;
+    private static boolean isBeforeOrEqual(LocalDate date, LocalDate otherDate) {
+        return date.isBefore(otherDate) || date.equals(otherDate);
     }
 
     /**
-     * Create a daterange from a string, using the supplied format
-     * @param rangeStr the string to convert to a DateRange
-     * @param formatter the formatter to use for conversion
-     * @return a daterange object
-     */
-    public static DateRange ofString(String rangeStr, DateTimeFormatter formatter) {
-        String[] dates = rangeStr.split(" - ");
-        return new DateRange(LocalDate.parse(dates[0], formatter), LocalDate.parse(dates[1], formatter), formatter);
-    }
-
-    /**
-     * Check if the given date is in the range of this daterange.
+     * Check if the given date is in this range.
      * @param date the date to check
-     * @return true or false
+     * @return true when date is within the range
      */
     public boolean contains(LocalDate date) {
-        boolean contains = false;
-        if(isAfterOrEqual(date, from) && isBeforeOrEqual(date, to)) {
-            contains = true;
-        }
-        return contains;
+        return isAfterOrEqual(date, this.from) && isBeforeOrEqual(date, this.to);
     }
 
     /**
@@ -133,8 +97,7 @@ public class DateRange {
      * @return a daterange object with the supplied start and end dates
      */
     public static DateRange of(LocalDate from, LocalDate to) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        return new DateRange(from, to, formatter);
+        return new DateRange(from, to);
     }
 
     @Override

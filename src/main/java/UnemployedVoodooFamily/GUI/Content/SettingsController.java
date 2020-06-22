@@ -82,7 +82,10 @@ public class SettingsController {
     }
 
     public void initialize() {
-        this.logic = new SettingsLogic(FilePath.getCurrentUserWorkhours());
+        this.logic = new SettingsLogic();
+        this.logic.setJsonFilePath(FilePath.getCurrentUserWorkhours());
+        this.logic.loadFromJson();
+
         this.workHoursViewRoot.setVisible(false);
         toggleViewHoursList();
         setKeyAndClickListeners();
@@ -132,7 +135,7 @@ public class SettingsController {
     /**
      * Set key and click listeners
      */ private void setKeyAndClickListeners() {
-        confirmHoursBtn.setOnAction(event -> trySetWorkHours());
+        confirmHoursBtn.setOnAction(event -> tryAddWorkHours());
         viewHoursBtn.setOnAction(event -> toggleViewHoursList());
 
         deleteWhBtn.setOnAction(event -> {
@@ -233,9 +236,27 @@ public class SettingsController {
     }
 
     /**
-     * Sets work hours if fields are not empty
+     * Adds a work-hour entry if the fields are not empty
      */
-    private void trySetWorkHours() {
+    private void tryAddWorkHours() {
+        if(checkWorkHourFields()) {
+            logic.addWorkHours(hoursFromField.getValue(), hoursToField.getValue(), hoursField.getText(),
+                               noteField.getText());
+
+            if(workHoursViewRoot.isVisible()) {
+                logic.populateHoursTable(hoursView);
+            }
+
+            clearWorkHourInputFields();
+            showWorkHoursInputSuccess();
+        }
+    }
+
+    /**
+     * Check if all work hour config fields are ok
+     * @return True when fields are ok, false if one of the fields is missing a value
+     */
+    private boolean checkWorkHourFields() {
         boolean success = false;
         if(hoursFromField.getValue() == null) {
             hoursFromField.getStyleClass().add("error");
@@ -257,18 +278,7 @@ public class SettingsController {
         else {
             success = true;
         }
-        if(success) {
-            logic.setWorkHours(hoursFromField.getValue(), hoursToField.getValue(), hoursField.getText(),
-                               noteField.getText());
-
-            if(workHoursViewRoot.isVisible()) {
-                logic.populateHoursTable(hoursView);
-            }
-
-            clearWorkHourInputFields();
-            showWorkHoursInputSuccess();
-        }
-
+        return success;
     }
 
     private void showWorkHourInputErrorMessage(String errorMessage) {
