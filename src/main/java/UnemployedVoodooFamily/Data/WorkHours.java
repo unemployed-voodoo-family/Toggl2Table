@@ -1,5 +1,7 @@
 package UnemployedVoodooFamily.Data;
 
+import com.sun.javaws.exceptions.InvalidArgumentException;
+
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -15,11 +17,17 @@ public class WorkHours {
 
     /**
      * Construct the object.
-     * @param from Start of the period when the work hour config is valid
-     * @param to End of the period
+     * @param from  Start of the period when the work hour config is valid
+     * @param to    End of the period
      * @param hours How many work hours/day there are during this period
      */
     public WorkHours(LocalDate from, LocalDate to, Double hours) {
+        if(from == null) {
+            throw new IllegalArgumentException("FROM date can't be null!");
+        }
+        if(to == null) {
+            throw new IllegalArgumentException("FROM date can't be null!");
+        }
         this.from = from;
         this.to = to;
         this.hours = hours;
@@ -81,5 +89,18 @@ public class WorkHours {
     @Override
     public int hashCode() {
         return Objects.hash(from, to, hours, note);
+    }
+
+    @Override
+    public String toString() {
+        String date;
+        if(to != null && ! to.equals(from)) {
+            date = from.toString() + " - " + to.toString();
+        }
+        else {
+            // A 1-day interval
+            date = from.toString();
+        }
+        return date + ": " + hours + "h";
     }
 }
