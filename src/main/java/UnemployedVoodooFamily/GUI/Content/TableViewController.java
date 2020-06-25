@@ -22,7 +22,6 @@ import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
@@ -45,7 +44,6 @@ import java.net.URL;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.Month;
-import java.time.OffsetDateTime;
 import java.time.YearMonth;
 import java.time.format.TextStyle;
 import java.util.List;
@@ -524,7 +522,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
      * Sets data to the raw data table, using selected time period
      */
     private void setRawDataTableData() {
-        rawData.getItems().setAll(getObservableRawData());
+        rawData.getItems().setAll(buildObservableRawData());
         Platform.runLater(() -> {
             rawEndDate.setValue(rawTimeDataLogic.getFilteredDataEndDate());
             rawStartDate.setValue(rawTimeDataLogic.getFilteredDataStartDate());
@@ -537,7 +535,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
      * Creates an observable list containing RawTimeDataModel objects
      * @return an ObservableList containing RawTimeDatModel objects
      */
-    private ObservableList<RawTimeDataModel> getObservableRawData() {
+    private ObservableList<RawTimeDataModel> buildObservableRawData() {
         Session session = Session.getInstance();
         return FXCollections.observableArrayList(rawTimeDataLogic.buildRawMasterData(session.getTimeEntries(),
                                                                                      session.getProjects(),
@@ -592,11 +590,11 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
      * Update the weekly table and summary labels.
      */
     private void updateWeeklyTable() {
-        ObservableList<DailyFormattedDataModel> data = getObservableWeeklyData();
+        ObservableList<DailyFormattedDataModel> data = createObservableWeeklyData();
         try {
             Platform.runLater(() -> {
                 double[] values = calculateSummary(data);
-                weeklyTable.getItems().setAll(getObservableWeeklyData());
+                weeklyTable.getItems().setAll(data);
                 hoursWorkedLabel.setText(df.format(values[0]));
                 extraTimeWorkedLabel.setText(df.format(values[1]));
             });
@@ -902,7 +900,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
      * Creates an observable list containing WeeklyTimeDataModel objects
      * @return an ObservableList containing WeeklyTimeDatModel objects
      */
-    private ObservableList<DailyFormattedDataModel> getObservableWeeklyData() {
+    private ObservableList<DailyFormattedDataModel> createObservableWeeklyData() {
 
         // find the yearweek to fetch data from
         YearWeek yearWeek = YearWeek.of(Integer.parseInt(yearSpinner.getEditor().getText()),
@@ -1086,7 +1084,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         if(loadedData.containsAll(
                 EnumSet.of(Data.TIME_ENTRIES, Data.PROJECTS, Data.TASKS, Data.WORKSPACES, Data.WORKHOURS,
                            Data.CLIENT))) {
-            loadedData = EnumSet.noneOf(Data.class); //empty the set, readying it for next
+            loadedData.clear(); // clear the set, readying it for next
             setRawDataTableData();
             updateFormattedTableData();
             setFilterOptions();

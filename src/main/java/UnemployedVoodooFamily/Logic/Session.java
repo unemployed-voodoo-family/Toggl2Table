@@ -101,8 +101,6 @@ public class Session {
 
     /**
      * Fetch all the time-entries from the given period
-     * @param start the start date to fetch from
-     * @param end   the end date to fetch from
      */
     public void refreshTimeEntries() {
         // fetch time entries
@@ -126,6 +124,8 @@ public class Session {
                 // fetch from new start date
                 OffsetDateTime newStart = fetchedEntries.get(fetchedEntries.size() - 1).getStart();
                 fetchedEntries = jToggl.getTimeEntries(newStart, end);
+
+                System.out.println("Fetched time entries until " + fetchedEntries.get(fetchedEntries.size() - 1).getStart());
 
                 //remove eventual duplicate time entry
                 int duplicateCheckIndex = timeEntries.indexOf(fetchedEntries.get(0));

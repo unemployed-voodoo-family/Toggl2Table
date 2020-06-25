@@ -1,14 +1,8 @@
 package UnemployedVoodooFamily.Logic;
 
-import java.awt.*;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-
 public class ProfileLogic {
 
-
-    public String getFirstDayOfWeek(long weekDay){
+    public static String getFirstDayOfWeek(long weekDay){
         if(weekDay == 0){
             return "Sunday";
         }
@@ -35,7 +29,7 @@ public class ProfileLogic {
         }
     }
 
-    public String getTimeFormat(String format){
+    public static String getTimeFormat(String format){
         if(format.equals("h:mm A")){
             return "12-hour";
         }
@@ -44,28 +38,6 @@ public class ProfileLogic {
         }
         else{
             return "no format specified";
-        }
-    }
-
-    public void browseTogglProfile() {
-            String url = "https://toggl.com/app/profile";
-
-            if(Desktop.isDesktopSupported()){
-                Desktop desktop = Desktop.getDesktop();
-                try {
-                    desktop.browse(new URI(url));
-                } catch (IOException | URISyntaxException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-            }else{
-                Runtime runtime = Runtime.getRuntime();
-                try {
-                    runtime.exec("xdg-open " + url);
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
         }
     }
 }
