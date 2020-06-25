@@ -1,30 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.DatePicker?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.MenuButton?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.ProgressIndicator?>
-<?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.Spinner?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.Tooltip?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<HBox fx:id="root" prefHeight="743.0" prefWidth="880.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UnemployedVoodooFamily.GUI.Content.TableViewController">
+<HBox fx:id="root" prefHeight="743.0" prefWidth="880.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UnemployedVoodooFamily.GUI.Content.TableViewController">
    <children>
       <TabPane fx:id="tableTabPane" HBox.hgrow="ALWAYS">
          <tabs>
@@ -325,6 +306,41 @@
                               <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
                            </padding>
                         </GridPane>
+                     </children>
+                  </GridPane>
+               </content>
+            </Tab>
+            <Tab fx:id="projectDataTab" closable="false" text="Project data">
+               <content>
+                  <GridPane>
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="ALWAYS" minWidth="400.0" />
+                        <ColumnConstraints />
+                     </columnConstraints>
+                     <rowConstraints>
+<!--                        <RowConstraints maxHeight="105.0" minHeight="105.0" prefHeight="105.0" vgrow="ALWAYS" />-->
+<!--                        <RowConstraints maxHeight="40.0" minHeight="40.0" prefHeight="40.0" vgrow="ALWAYS" />-->
+<!--                        <RowConstraints maxHeight="24.0" minHeight="24.0" prefHeight="24.0" vgrow="NEVER" />-->
+                        <RowConstraints maxHeight="1.7976931348623157E308" minHeight="15.0" prefHeight="546.0" vgrow="ALWAYS" />
+                     </rowConstraints>
+                     <children>
+                        <TableView fx:id="projectDataTable">
+                            <columns>
+                                <TableColumn prefWidth="150.0" text="Project"/>
+                                <TableColumn prefWidth="50.0" text="Jan"/>
+                                <TableColumn prefWidth="50.0" text="Feb"/>
+                                <TableColumn prefWidth="50.0" text="Mar"/>
+                                <TableColumn prefWidth="50.0" text="Apr"/>
+                                <TableColumn prefWidth="50.0" text="May"/>
+                                <TableColumn prefWidth="50.0" text="Jun"/>
+                                <TableColumn prefWidth="50.0" text="Jul" />
+                                <TableColumn prefWidth="50.0" text="Aug" />
+                                <TableColumn prefWidth="50.0" text="Sep" />
+                                <TableColumn prefWidth="50.0" text="Oct" />
+                                <TableColumn prefWidth="50.0" text="Nov" />
+                                <TableColumn prefWidth="50.0" text="Dec" />
+                            </columns>
+                        </TableView>
                      </children>
                   </GridPane>
                </content>
