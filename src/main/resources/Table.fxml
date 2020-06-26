@@ -310,41 +310,60 @@
                   </GridPane>
                </content>
             </Tab>
-            <Tab fx:id="projectDataTab" closable="false" text="Project data">
-               <content>
-                  <GridPane>
-                     <columnConstraints>
-                        <ColumnConstraints hgrow="ALWAYS" minWidth="400.0" />
-                        <ColumnConstraints />
-                     </columnConstraints>
-                     <rowConstraints>
-<!--                        <RowConstraints maxHeight="105.0" minHeight="105.0" prefHeight="105.0" vgrow="ALWAYS" />-->
-<!--                        <RowConstraints maxHeight="40.0" minHeight="40.0" prefHeight="40.0" vgrow="ALWAYS" />-->
-<!--                        <RowConstraints maxHeight="24.0" minHeight="24.0" prefHeight="24.0" vgrow="NEVER" />-->
-                        <RowConstraints maxHeight="1.7976931348623157E308" minHeight="15.0" prefHeight="546.0" vgrow="ALWAYS" />
-                     </rowConstraints>
-                     <children>
-                        <TableView fx:id="projectDataTable">
-                            <columns>
-                                <TableColumn prefWidth="150.0" text="Project"/>
-                                <TableColumn prefWidth="50.0" text="Jan"/>
-                                <TableColumn prefWidth="50.0" text="Feb"/>
-                                <TableColumn prefWidth="50.0" text="Mar"/>
-                                <TableColumn prefWidth="50.0" text="Apr"/>
-                                <TableColumn prefWidth="50.0" text="May"/>
-                                <TableColumn prefWidth="50.0" text="Jun"/>
-                                <TableColumn prefWidth="50.0" text="Jul" />
-                                <TableColumn prefWidth="50.0" text="Aug" />
-                                <TableColumn prefWidth="50.0" text="Sep" />
-                                <TableColumn prefWidth="50.0" text="Oct" />
-                                <TableColumn prefWidth="50.0" text="Nov" />
-                                <TableColumn prefWidth="50.0" text="Dec" />
-                            </columns>
-                        </TableView>
-                     </children>
-                  </GridPane>
-               </content>
-            </Tab>
+             <Tab fx:id="projectDataTab" closable="false" text="Project data">
+                 <content>
+                     <VBox>
+                         <HBox minHeight="50.0" prefHeight="50.0" prefWidth="650.0">
+                             <Label fx:id="projectYearSpinnerLabel" prefHeight="50.0" prefWidth="85.0"
+                                    text="Year"/>
+                             <GridPane prefHeight="50.0">
+                                 <columnConstraints>
+                                     <ColumnConstraints/>
+                                     <ColumnConstraints/>
+                                     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="120.0"/>
+                                 </columnConstraints>
+                                 <rowConstraints>
+                                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                 </rowConstraints>
+                                 <Spinner fx:id="projectYearSpinner" prefHeight="25.0" prefWidth="120.0"
+                                          GridPane.columnIndex="2" GridPane.halignment="RIGHT"
+                                          GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER"
+                                          GridPane.vgrow="ALWAYS">
+                                     <GridPane.margin>
+                                         <Insets right="2.0"/>
+                                     </GridPane.margin>
+                                 </Spinner>
+                                 <ComboBox fx:id="projectYearDropdown" maxHeight="-Infinity"
+                                           maxWidth="-Infinity" minHeight="-Infinity"
+                                           minWidth="-Infinity" prefHeight="0.0" prefWidth="82.0"
+                                           GridPane.columnIndex="2" GridPane.halignment="RIGHT"
+                                           GridPane.valignment="CENTER">
+                                     <GridPane.margin>
+                                         <Insets bottom="25.0" right="22.0"/>
+                                     </GridPane.margin>
+                                 </ComboBox>
+                             </GridPane>
+                         </HBox>
+                         <TableView fx:id="projectDataTable" layoutX="10.0" layoutY="8.0">
+                             <columns>
+                                 <TableColumn prefWidth="150.0" text="Project"/>
+                                 <TableColumn prefWidth="50.0" text="Jan"/>
+                                 <TableColumn prefWidth="50.0" text="Feb"/>
+                                 <TableColumn prefWidth="50.0" text="Mar"/>
+                                 <TableColumn prefWidth="50.0" text="Apr"/>
+                                 <TableColumn prefWidth="50.0" text="May"/>
+                                 <TableColumn prefWidth="50.0" text="Jun"/>
+                                 <TableColumn prefWidth="50.0" text="Jul"/>
+                                 <TableColumn prefWidth="50.0" text="Aug"/>
+                                 <TableColumn prefWidth="50.0" text="Sep"/>
+                                 <TableColumn prefWidth="50.0" text="Oct"/>
+                                 <TableColumn prefWidth="50.0" text="Nov"/>
+                                 <TableColumn prefWidth="50.0" text="Dec"/>
+                             </columns>
+                         </TableView>
+                     </VBox>
+                 </content>
+             </Tab>
          </tabs>
       </TabPane>
       <VBox maxWidth="220.0" minWidth="220.0" prefWidth="220.0">
