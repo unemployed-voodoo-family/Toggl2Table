@@ -364,6 +364,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         initSpinnerAndDropdownClickEvents(yearSpinner, yearlyDropdown);
         yearSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
             formattedTimeDataLogic.setSelectedYear(newValue);
+            updateFormattedTableData();
         });
 
         //Week Spinner + Dropdown
