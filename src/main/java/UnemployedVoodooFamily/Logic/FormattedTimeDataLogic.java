@@ -56,11 +56,10 @@ public class FormattedTimeDataLogic {
     }
 
     /**
-     * Build the masterdata for one full year, from scratch.
+     * Build the masterdata for the currently selected year, from scratch.
      * @param timeEntries
-     * @param year
      */
-    public void buildMasterData(List<TimeEntry> timeEntries, int year) {
+    public void buildMasterData(List<TimeEntry> timeEntries) {
         if(timeEntries.isEmpty()) {
             return;
         }
@@ -68,7 +67,7 @@ public class FormattedTimeDataLogic {
         Iterator<TimeEntry> it = timeEntries.iterator();
         TimeEntry te = it.next();
         // Skip the time entries before the given year
-        while(it.hasNext() && te.getStart().getYear() < year) {
+        while(it.hasNext() && te.getStart().getYear() < this.selectedYear) {
             te = it.next();
         }
 
@@ -80,12 +79,12 @@ public class FormattedTimeDataLogic {
         weeklyMasterData = new HashMap<>();
         monthlyMasterData = new HashMap<>();
 
-        while(te != null && te.getStart().getYear() == year) {
+        while(te != null && te.getStart().getYear() == this.selectedYear) {
             if(newDayStarts(te, day)) {
                 DailyFormattedDataModel dayData = createDayData(date, workedHours);
                 addDayToWeek(dayData);
                 addDayToMonth(dayData);
-                markEmptyWorkdaysAsZero(year, day, te.getStart().getDayOfYear());
+                markEmptyWorkdaysAsZero(this.selectedYear, day, te.getStart().getDayOfYear());
                 // Reset the state
                 date = te.getStart().toLocalDate();
                 day = date.getDayOfYear();

@@ -3,7 +3,7 @@ package UnemployedVoodooFamily.GUI.Content;
 import UnemployedVoodooFamily.Data.DailyFormattedDataModel;
 import UnemployedVoodooFamily.Data.Enums.Data;
 import UnemployedVoodooFamily.Data.Enums.FilePath;
-import UnemployedVoodooFamily.Data.ProjectListSummary;
+import UnemployedVoodooFamily.Data.ProjectModel;
 import UnemployedVoodooFamily.Data.RawTimeDataModel;
 import UnemployedVoodooFamily.Logic.FormattedTimeDataLogic;
 import UnemployedVoodooFamily.Logic.Listeners.DataLoadListener;
@@ -50,9 +50,6 @@ import java.util.List;
 import java.util.*;
 
 public class TableViewController<Content extends Pane> implements DataLoadListener {
-
-    @FXML
-    public TableView<ProjectListSummary> projectDataTable;
 
     @FXML
     public Label projectYearSpinnerLabel;
@@ -131,6 +128,8 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     private TableView<DailyFormattedDataModel> monthlyTable;
     @FXML
     private TableView<DailyFormattedDataModel> weeklyTable;
+    @FXML
+    public TableView<ProjectModel> projectDataTable;
 
     @FXML
     private Label yearSpinnerLabel;
@@ -152,7 +151,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
 
     private final RawTimeDataLogic rawTimeDataLogic = new RawTimeDataLogic();
     private final FormattedTimeDataLogic formattedTimeDataLogic = new FormattedTimeDataLogic();
-    private final ProjectSummaryLogic projectSummaryLogic = new ProjectSummaryLogic();
+    private final ProjectSummaryLogic projectLogic = new ProjectSummaryLogic();
     private final EnumSet<Data> loadedData = EnumSet.noneOf(Data.class);
 
     private final Set<Object> filterOptions = new HashSet<>();
@@ -187,9 +186,10 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     private void setupUIElements() {
 
         // set up table views
-        buildFormattedWeeklyTable();
-        buildFormattedMonthlyTable();
-        buildRawDataTable();
+        prepareFormattedWeeklyTable();
+        prepareFormattedMonthlyTable();
+        prepareRawDataTable();
+        preparedProjectSummaryTable();
 
         // set uo UI elements for each table
         setupFormattedTableUIElements();
@@ -389,7 +389,8 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         initSpinnerAndDropdownClickEvents(projectYearSpinner, projectYearDropdown);
         projectYearSpinner.valueProperty().addListener((observable, oldYear, newYear) -> {
             if ((int) newYear != oldYear) {
-                projectSummaryLogic.setSelectedYear(newYear);
+                projectLogic.setSelectedYear(newYear);
+                updateProjectTableData();
             }
         });
 
@@ -556,8 +557,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         if(rawTimeDataLogic.getMasterTimeEntries() == null) {
             return;
         }
-        formattedTimeDataLogic
-                .buildMasterData(rawTimeDataLogic.getFilteredTimeEntries(), formattedTimeDataLogic.getSelectedYear());
+        formattedTimeDataLogic.buildMasterData(rawTimeDataLogic.getFilteredTimeEntries());
         if(weekSpinner.isVisible()) {
             updateWeeklyTable();
         }
@@ -566,12 +566,21 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         }
     }
 
+    private void updateProjectTableData() {
+        if(rawTimeDataLogic.getMasterTimeEntries() == null) {
+            return;
+        }
+        List<ProjectModel> data = projectLogic.buildMasterData(rawTimeDataLogic.getFilteredTimeEntries());
+        ObservableList<ProjectModel> observableData = FXCollections.observableArrayList(data);
+        showProjectDataInTable(observableData);
+    }
+
     /**
      * Update the monthly table and summary labels
      */
     private void updateMonthlyTable() {
-        ObservableList<DailyFormattedDataModel> data = getObservableMonthlyData();
-        showDataInTable(data, monthlyTable);
+        ObservableList<DailyFormattedDataModel> data = createObservableMonthlyData();
+        showDailyDataInTable(data, monthlyTable);
     }
 
     /**
@@ -579,11 +588,16 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
      */
     private void updateWeeklyTable() {
         ObservableList<DailyFormattedDataModel> data = createObservableWeeklyData();
-        showDataInTable(data, weeklyTable);
+        showDailyDataInTable(data, weeklyTable);
     }
 
-    private void showDataInTable(ObservableList<DailyFormattedDataModel> data,
-                                 TableView<DailyFormattedDataModel> tableView) {
+    /**
+     * Update GUI: Show a day-by-day data in a summary table
+     * @param data The daily data
+     * @param tableView TableView where to display the data
+     */
+    private void showDailyDataInTable(ObservableList<DailyFormattedDataModel> data,
+                                      TableView<DailyFormattedDataModel> tableView) {
         try {
             Platform.runLater(() -> {
                 double[] values = calculateSummary(data);
@@ -598,6 +612,22 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         }
     }
 
+    /**
+     * Update GUI: Show a project-wise data in a summary table
+     * @param data      Data for each project
+     */
+    private void showProjectDataInTable(ObservableList<ProjectModel> data) {
+        System.out.println("Show project data in table");
+        try {
+            Platform.runLater(() -> {
+                projectDataTable.getItems().setAll(data);
+            });
+        }
+        catch(IllegalStateException e) {
+            // tried getting data before it was loaded
+            System.out.println(e.getMessage());
+        }
+    }
 
     /**
      * Calculate hours worked and hours worked, respectively for the given dataset
@@ -624,7 +654,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
      * Sets up a formatted table with a weekly overview
      */
     @SuppressWarnings("Duplicates")
-    private void buildFormattedWeeklyTable() {
+    private void prepareFormattedWeeklyTable() {
         this.weeklyTable = new TableView<>();
         //Create all columns necessary
 
@@ -699,10 +729,30 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     }
 
     /**
+     * Sets up a formatted table with project summary
+     */
+    private void preparedProjectSummaryTable() {
+        this.projectDataTable = new TableView<>();
+        //Create all columns necessary
+
+        TableColumn<ProjectModel, String> nameCol = new TableColumn<>("Project");
+        nameCol.setCellValueFactory(ProjectFormatter.getNameInstance());
+        nameCol.setSortable(true);
+
+        //Adds the columns to the table and updates it
+        this.projectDataTable.getColumns().addAll(nameCol);
+        this.projectDataTable.setEditable(false);
+
+        //must be called, or else the table won't appear
+        switchView(tableRoot, projectDataTable);
+    }
+
+
+    /**
      * Sets up a formatted table with monthly overview
      */
     @SuppressWarnings("Duplicates")
-    private void buildFormattedMonthlyTable() {
+    private void prepareFormattedMonthlyTable() {
         //Clears the already existing data in the table
 
         this.monthlyTable = new TableView();
@@ -826,7 +876,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     /**
      * Builds the viewable table of all the raw from the Toggl user's data
      */
-    private void buildRawDataTable() {
+    private void prepareRawDataTable() {
         //Clears the already existing data in the table
         clearTable(rawData);
 
@@ -906,7 +956,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
      * Creates an observable list containing MonthlyTimeDataModel objects
      * @return an ObservableList containing MonthlyTimeDatModel objects
      */
-    private ObservableList<DailyFormattedDataModel> getObservableMonthlyData() {
+    private ObservableList<DailyFormattedDataModel> createObservableMonthlyData() {
         // find the yearmonth to fetch data from
         YearMonth yearMonth = YearMonth
                 .of(Integer.parseInt(yearSpinner.getEditor().getText()), monthSpinner.getValue().get());

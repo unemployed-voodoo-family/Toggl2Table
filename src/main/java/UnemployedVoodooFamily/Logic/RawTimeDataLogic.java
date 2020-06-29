@@ -30,8 +30,10 @@ public class RawTimeDataLogic {
         List<RawTimeDataModel> data = new ArrayList<>();
         this.masterTimeEntries = timeEntries;
 
-        //fill timeentries with workspace and proejct objects
+        //fill timeentries with workspace and project objects
         assembleLooseData(projects, workspaces, clients, timeEntries);
+
+        // removeAll is a O(n^2) algorithm, this could be improved. However, it works in ~50-200ms for ~6000 time entries
 
         //filter timeentries
         filteredTimeEntries = new LinkedList<>(masterTimeEntries);

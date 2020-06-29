@@ -345,21 +345,6 @@
                              </GridPane>
                          </HBox>
                          <TableView fx:id="projectDataTable" layoutX="10.0" layoutY="8.0">
-                             <columns>
-                                 <TableColumn prefWidth="150.0" text="Project"/>
-                                 <TableColumn prefWidth="50.0" text="Jan"/>
-                                 <TableColumn prefWidth="50.0" text="Feb"/>
-                                 <TableColumn prefWidth="50.0" text="Mar"/>
-                                 <TableColumn prefWidth="50.0" text="Apr"/>
-                                 <TableColumn prefWidth="50.0" text="May"/>
-                                 <TableColumn prefWidth="50.0" text="Jun"/>
-                                 <TableColumn prefWidth="50.0" text="Jul"/>
-                                 <TableColumn prefWidth="50.0" text="Aug"/>
-                                 <TableColumn prefWidth="50.0" text="Sep"/>
-                                 <TableColumn prefWidth="50.0" text="Oct"/>
-                                 <TableColumn prefWidth="50.0" text="Nov"/>
-                                 <TableColumn prefWidth="50.0" text="Dec"/>
-                             </columns>
                          </TableView>
                      </VBox>
                  </content>
