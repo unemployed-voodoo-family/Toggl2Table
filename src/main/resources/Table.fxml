@@ -344,8 +344,10 @@
                                  </ComboBox>
                              </GridPane>
                          </HBox>
-                         <TableView fx:id="projectDataTable" layoutX="10.0" layoutY="8.0">
-                         </TableView>
+                         <GridPane fx:id="projectRoot">
+                             <TableView fx:id="projectDataTable" layoutX="10.0" layoutY="8.0">
+                             </TableView>
+                         </GridPane>
                      </VBox>
                  </content>
              </Tab>

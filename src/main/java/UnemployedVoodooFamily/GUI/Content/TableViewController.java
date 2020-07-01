@@ -88,6 +88,9 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     private GridPane tableRoot;
 
     @FXML
+    private GridPane projectRoot;
+
+    @FXML
     private DatePicker rawStartDate;
     @FXML
     private DatePicker rawEndDate;
@@ -342,7 +345,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         });
 
         weeklyToggleBtn.setOnAction((ActionEvent e) -> {
-            switchView(tableRoot, weeklyTable);
+            showContentInParentContainer(tableRoot, weeklyTable);
             summarySelectionBtn.setText("Weekly Summary");
             //switchView(summaryRoot, weeklySummary);
             updateWeeklySpinner(true);
@@ -351,7 +354,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
             updateFormattedTableData();
         });
         monthlyToggleBtn.setOnAction((ActionEvent e) -> {
-            switchView(tableRoot, monthlyTable);
+            showContentInParentContainer(tableRoot, monthlyTable);
             summarySelectionBtn.setText("Monthly Summary");
             //switchView(summaryRoot, monthlySummary);
             updateWeeklySpinner(false);
@@ -725,7 +728,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         this.weeklyTable.setEditable(false);
 
         //must be called, or else the table won't appear
-        switchView(tableRoot, weeklyTable);
+        showContentInParentContainer(tableRoot, weeklyTable);
     }
 
     /**
@@ -736,15 +739,22 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         //Create all columns necessary
 
         TableColumn<ProjectModel, String> nameCol = new TableColumn<>("Project");
-        nameCol.setCellValueFactory(ProjectFormatter.getNameInstance());
+        nameCol.setCellValueFactory(ProjectFormatter.createNameFormatter());
         nameCol.setSortable(true);
 
         //Adds the columns to the table and updates it
-        this.projectDataTable.getColumns().addAll(nameCol);
+        ObservableList<TableColumn<ProjectModel, ?>> columns = this.projectDataTable.getColumns();
+        columns.add(nameCol);
+        for (String month : ValueFactory.getMonthNames()) {
+            TableColumn<ProjectModel, Number> monthHourCol = new TableColumn<>(month);
+            monthHourCol.setSortable(true);
+            monthHourCol.setCellValueFactory(ProjectFormatter.createMonthFormatter(month));
+            columns.add(monthHourCol);
+        }
         this.projectDataTable.setEditable(false);
 
         //must be called, or else the table won't appear
-        switchView(tableRoot, projectDataTable);
+        showContentInParentContainer(projectRoot, projectDataTable);
     }
 
 
@@ -1097,13 +1107,18 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
      * Clears the selected TableView
      * @param table the TableView to clear
      */
-    private void clearTable(TableView table) {
+    private <T> void clearTable(TableView<T> table) {
         table.getColumns().clear();
         table.getItems().clear();
     }
 
-    private <T extends Pane, S extends Region> void switchView(T root, S content) {
-        ObservableList<Node> children = root.getChildren();
+    /**
+     * Add content to a parent container
+     * @param parent A parent container where to add the content to.
+     * @param content The content to add
+     */
+    private void showContentInParentContainer(Pane parent, Region content) {
+        ObservableList<Node> children = parent.getChildren();
         if(children.isEmpty()) {
             children.addAll(content);
         }

@@ -32,4 +32,14 @@ public class ProjectModel {
     public String getName() {
         return projectName;
     }
+
+    /**
+     * Get accumulated hours for a particular month
+     * @param month Month name
+     * @return hours, or 0 if no information found for the given month
+     */
+    public double getMonthHours(String month) {
+        Double hours = monthHours.get(month);
+        return hours != null ? hours : 0;
+    }
 }

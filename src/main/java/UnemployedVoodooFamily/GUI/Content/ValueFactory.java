@@ -16,6 +16,7 @@ import java.util.stream.IntStream;
  * A helper class to generate lists and factories for spinners and dropdowns for years, weeks, months
  */
 public class ValueFactory {
+    private static String[] MONTH_NAMES;
     private static final int FIRST_TOGGL_YEAR = 2006;
     private static final int CURRENT_YEAR = LocalDate.now().getYear();
     private static final ObservableList<SimpleObjectProperty<Month>> MONTH_LIST = FXCollections.observableArrayList();
@@ -71,6 +72,17 @@ public class ValueFactory {
         return MONTH_LIST;
     }
 
+    public static String[] getMonthNames() {
+        if (MONTH_NAMES == null) {
+            MONTH_NAMES = new String[12];
+            int i = 0;
+            for(Month m: Month.values()) {
+                MONTH_NAMES[i++] = formatMonthName(m);
+            }
+        }
+        return MONTH_NAMES;
+    }
+
     /**
      * Get observable property with current month as the value
      * @return observable property with current month as the value
@@ -78,4 +90,19 @@ public class ValueFactory {
     public static SimpleObjectProperty<Month> getCurrentMonth() {
         return getMonthList().get(Month.from(LocalDate.now()).getValue() - 1);
     }
+
+    /**
+     * Format a month in a unified way (capitalized name)
+     * @param month A month object
+     * @return String representation of the month, or null
+     */
+    public static String formatMonthName(Month month) {
+        if(month == null) {
+            return null;
+        }
+
+        String m = month.toString();
+        return m.substring(0, 1).toUpperCase() + m.substring(1,3).toLowerCase();
+    }
+
 }
