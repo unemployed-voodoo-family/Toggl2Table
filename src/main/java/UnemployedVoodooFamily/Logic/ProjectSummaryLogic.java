@@ -10,25 +10,42 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * A class for logic related to project summary data
+ */
 public class ProjectSummaryLogic {
+    // The year when Toggl was launched, year selection can't go below this one
     public static final int FIRST_TOGGL_YEAR = 2006;
     public static final int CURRENT_YEAR = LocalDate.now().getYear();
-    private int year = CURRENT_YEAR;
+    private int selectedYear = CURRENT_YEAR;
     private final Map<String, ProjectModel> projects = new HashMap<>();
 
+    /**
+     * Set selected year which will be used by all following data selections etc
+     * @param year
+     */
     public void setSelectedYear(int year) {
-        this.year = year;
+        this.selectedYear = year;
     }
 
+    /**
+     * Take time entries, build project-wise data
+     * @param timeEntries Time entries from Toggl
+     * @return List with project-wise summaries
+     */
     public List<ProjectModel> buildMasterData(List<TimeEntry> timeEntries) {
         buildProjectMonthTotals(timeEntries);
         return generateSummaryList();
     }
 
+    /**
+     * Build project-wise summary data, fill in data in the projects map
+     * @param timeEntries
+     */
     private void buildProjectMonthTotals(List<TimeEntry> timeEntries) {
         projects.clear();
         for(TimeEntry te: timeEntries) {
-            if(te.getStart().getYear() == year && te.getProject() != null) {
+            if(te.getStart().getYear() == selectedYear && te.getProject() != null) {
                 String projectName = te.getProject().getName();
                 String month = formatMonthName(te.getStart().getMonth());
                 ProjectModel projectData = projects.get(projectName);
@@ -43,7 +60,7 @@ public class ProjectSummaryLogic {
     }
 
     /**
-     * Generate a list containing project summary data
+     * Generate a list containing project summary data (convert the projects map to a list)
      * @return A list with accumulated project summaries
      */
     private List<ProjectModel> generateSummaryList() {
