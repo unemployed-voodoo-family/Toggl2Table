@@ -1,6 +1,5 @@
 package UnemployedVoodooFamily.GUI.Content;
 
-import UnemployedVoodooFamily.Logic.ProjectSummaryLogic;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,7 +19,6 @@ import static UnemployedVoodooFamily.Logic.ProjectSummaryLogic.FIRST_TOGGL_YEAR;
  * A helper class to generate lists and factories for spinners and dropdowns for years, weeks, months
  */
 public class ValueFactory {
-    private static String[] MONTH_NAMES;
     private static final ObservableList<SimpleObjectProperty<Month>> MONTH_LIST = FXCollections.observableArrayList();
 
     /**
@@ -72,17 +70,6 @@ public class ValueFactory {
             }
         }
         return MONTH_LIST;
-    }
-
-    public static String[] getMonthNames() {
-        if (MONTH_NAMES == null) {
-            MONTH_NAMES = new String[12];
-            int i = 0;
-            for(Month m: Month.values()) {
-                MONTH_NAMES[i++] = ProjectSummaryLogic.formatMonthName(m);
-            }
-        }
-        return MONTH_NAMES;
     }
 
     /**

@@ -14,6 +14,8 @@ import java.util.Map;
  * A class for logic related to project summary data
  */
 public class ProjectSummaryLogic {
+    private static String[] MONTH_NAMES;
+
     // The year when Toggl was launched, year selection can't go below this one
     public static final int FIRST_TOGGL_YEAR = 2006;
     public static final int CURRENT_YEAR = LocalDate.now().getYear();
@@ -79,5 +81,20 @@ public class ProjectSummaryLogic {
 
         String m = month.toString();
         return m.substring(0, 1).toUpperCase() + m.substring(1,3).toLowerCase();
+    }
+
+    /**
+     * Get names of all 12 months
+     * @return A list with "Jan" , "Feb", etc
+     */
+    public static String[] getMonthNames() {
+        if (MONTH_NAMES == null) {
+            MONTH_NAMES = new String[12];
+            int i = 0;
+            for(Month m: Month.values()) {
+                MONTH_NAMES[i++] = ProjectSummaryLogic.formatMonthName(m);
+            }
+        }
+        return MONTH_NAMES;
     }
 }

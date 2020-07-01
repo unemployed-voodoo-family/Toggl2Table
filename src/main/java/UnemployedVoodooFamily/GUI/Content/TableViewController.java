@@ -570,6 +570,9 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         }
     }
 
+    /**
+     * Get data for currently selected year, generate project-wise report and show it in the table
+     */
     private void updateProjectTableData() {
         if(rawTimeDataLogic.getMasterTimeEntries() == null) {
             return;
@@ -753,7 +756,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         //Adds the columns to the table and updates it
         ObservableList<TableColumn<ProjectModel, ?>> columns = this.projectDataTable.getColumns();
         columns.add(nameCol);
-        for (String month : ValueFactory.getMonthNames()) {
+        for (String month : ProjectSummaryLogic.getMonthNames()) {
             TableColumn<ProjectModel, Number> monthHourCol = new TableColumn<>(month);
             monthHourCol.setSortable(true);
             monthHourCol.setCellValueFactory(TableColumnFormatting.createMonthFormatter(month));
@@ -773,7 +776,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     private void prepareFormattedMonthlyTable() {
         //Clears the already existing data in the table
 
-        this.monthlyTable = new TableView();
+        this.monthlyTable = new TableView<>();
 
         //this.monthlyTable.setRowFactory();
 
@@ -885,7 +888,6 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         weekNumbCol.setPrefWidth(90);
         //Adds the columns to the table and updates it
         monthlyTable.getColumns().
-
                 addAll(weekNumbCol, weekdayCol, dateCol, supposedHoursCol, workedHoursCol, extraTimeCol,
                        accumulatedHoursCol, noteCol);
         monthlyTable.setEditable(false);
