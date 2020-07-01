@@ -351,6 +351,11 @@
     -fx-background-color: #ffffff;
 }
 
+.table-view .scroll-bar * {
+    -fx-min-height: 0;
+    -fx-pref-height: 0;
+    -fx-max-height: 0;
+}
 
 .hyperlink {
     -fx-text-fill: -fx-main;

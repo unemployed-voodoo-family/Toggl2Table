@@ -30,6 +30,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -192,7 +193,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         prepareFormattedWeeklyTable();
         prepareFormattedMonthlyTable();
         prepareRawDataTable();
-        preparedProjectSummaryTable();
+        prepareProjectSummaryTable();
 
         // set uo UI elements for each table
         setupFormattedTableUIElements();
@@ -734,13 +735,21 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
     /**
      * Sets up a formatted table with project summary
      */
-    private void preparedProjectSummaryTable() {
+    private void prepareProjectSummaryTable() {
         this.projectDataTable = new TableView<>();
-        //Create all columns necessary
+        this.projectDataTable.setEditable(false);
+        // Disable horizontal scrollbar (code from https://stackoverflow.com/questions/55093764/javafx-how-to-disable-scrollbars-in-tableview)
+        this.projectDataTable.addEventFilter(ScrollEvent.ANY, event -> {
+            if (event.getDeltaX() != 0) {
+                event.consume();
+            }
+        });
 
+        //Create all columns
         TableColumn<ProjectModel, String> nameCol = new TableColumn<>("Project");
         nameCol.setCellValueFactory(ProjectFormatter.createNameFormatter());
         nameCol.setSortable(true);
+        nameCol.setMinWidth(250);
 
         //Adds the columns to the table and updates it
         ObservableList<TableColumn<ProjectModel, ?>> columns = this.projectDataTable.getColumns();
@@ -749,9 +758,9 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
             TableColumn<ProjectModel, Number> monthHourCol = new TableColumn<>(month);
             monthHourCol.setSortable(true);
             monthHourCol.setCellValueFactory(ProjectFormatter.createMonthFormatter(month));
+            monthHourCol.setPrefWidth(50);
             columns.add(monthHourCol);
         }
-        this.projectDataTable.setEditable(false);
 
         //must be called, or else the table won't appear
         showContentInParentContainer(projectRoot, projectDataTable);
