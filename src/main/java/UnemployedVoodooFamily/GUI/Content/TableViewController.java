@@ -1110,6 +1110,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         if (rawTimeDataLogic.getMasterTimeEntries() != null) {
             setRawDataTableData();
             updateFormattedTableData();
+            updateProjectTableData();
         }
     }
 
