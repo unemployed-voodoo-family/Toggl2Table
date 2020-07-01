@@ -746,7 +746,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
 
         //Create all columns
         TableColumn<ProjectModel, String> nameCol = new TableColumn<>("Project");
-        nameCol.setCellValueFactory(ProjectFormatter.createNameFormatter());
+        nameCol.setCellValueFactory(TableColumnFormatting.createNameFormatter());
         nameCol.setSortable(true);
         nameCol.setMinWidth(250);
 
@@ -756,7 +756,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
         for (String month : ValueFactory.getMonthNames()) {
             TableColumn<ProjectModel, Number> monthHourCol = new TableColumn<>(month);
             monthHourCol.setSortable(true);
-            monthHourCol.setCellValueFactory(ProjectFormatter.createMonthFormatter(month));
+            monthHourCol.setCellValueFactory(TableColumnFormatting.createMonthFormatter(month));
             monthHourCol.setPrefWidth(50);
             columns.add(monthHourCol);
         }
