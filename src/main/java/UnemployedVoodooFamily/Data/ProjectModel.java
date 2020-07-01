@@ -1,7 +1,5 @@
 package UnemployedVoodooFamily.Data;
 
-import javafx.beans.value.ObservableValue;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,19 +8,30 @@ import java.util.Map;
  */
 public class ProjectModel {
     private final Map<String, Double> monthHours = new HashMap<>();
-    private final String projectName;
+    private final String name;
 
-    public ProjectModel(String projectName) {
-        this.projectName = projectName;
+    /**
+     * Create a project model
+     * @param name name of the project
+     */
+    public ProjectModel(String name) {
+        this.name = name;
     }
 
-    public void addHours(String month, double hours) {
+    /**
+     * Add hours to a specific month for the project
+     * @param month
+     * @param hours
+     * @return currently accumulated hours for the given month
+     */
+    public double addHours(String month, double hours) {
         Double accumulatedHours = monthHours.get(month);
         if (accumulatedHours == null) {
             accumulatedHours = 0.0;
         }
         accumulatedHours += hours;
         monthHours.put(month, accumulatedHours);
+        return accumulatedHours;
     }
 
     /**
@@ -30,7 +39,7 @@ public class ProjectModel {
      * @return Name of the project
      */
     public String getName() {
-        return projectName;
+        return name;
     }
 
     /**
