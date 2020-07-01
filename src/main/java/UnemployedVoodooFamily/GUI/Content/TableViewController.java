@@ -621,7 +621,6 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
      * @param data      Data for each project
      */
     private void showProjectDataInTable(ObservableList<ProjectModel> data) {
-        System.out.println("Show project data in table");
         try {
             Platform.runLater(() -> {
                 projectDataTable.getItems().setAll(data);
@@ -1152,6 +1151,7 @@ public class TableViewController<Content extends Pane> implements DataLoadListen
             loadedData.clear(); // clear the set, readying it for next
             setRawDataTableData();
             updateFormattedTableData();
+            updateProjectTableData();
             setFilterOptions();
         }
     }

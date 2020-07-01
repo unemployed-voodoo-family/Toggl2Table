@@ -1,5 +1,6 @@
 package UnemployedVoodooFamily.GUI.Content;
 
+import UnemployedVoodooFamily.Logic.ProjectSummaryLogic;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -12,13 +13,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static UnemployedVoodooFamily.Logic.ProjectSummaryLogic.CURRENT_YEAR;
+import static UnemployedVoodooFamily.Logic.ProjectSummaryLogic.FIRST_TOGGL_YEAR;
+
 /**
  * A helper class to generate lists and factories for spinners and dropdowns for years, weeks, months
  */
 public class ValueFactory {
     private static String[] MONTH_NAMES;
-    private static final int FIRST_TOGGL_YEAR = 2006;
-    private static final int CURRENT_YEAR = LocalDate.now().getYear();
     private static final ObservableList<SimpleObjectProperty<Month>> MONTH_LIST = FXCollections.observableArrayList();
 
     /**
@@ -77,7 +79,7 @@ public class ValueFactory {
             MONTH_NAMES = new String[12];
             int i = 0;
             for(Month m: Month.values()) {
-                MONTH_NAMES[i++] = formatMonthName(m);
+                MONTH_NAMES[i++] = ProjectSummaryLogic.formatMonthName(m);
             }
         }
         return MONTH_NAMES;
@@ -90,19 +92,4 @@ public class ValueFactory {
     public static SimpleObjectProperty<Month> getCurrentMonth() {
         return getMonthList().get(Month.from(LocalDate.now()).getValue() - 1);
     }
-
-    /**
-     * Format a month in a unified way (capitalized name)
-     * @param month A month object
-     * @return String representation of the month, or null
-     */
-    public static String formatMonthName(Month month) {
-        if(month == null) {
-            return null;
-        }
-
-        String m = month.toString();
-        return m.substring(0, 1).toUpperCase() + m.substring(1,3).toLowerCase();
-    }
-
 }
