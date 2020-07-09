@@ -43,7 +43,8 @@ public class FormattedTimeDataLogicTest {
         YearMonth nov = YearMonth.of(2019, 11);
         YearMonth dec = YearMonth.of(2019, 12);
 
-        formattedTimeDataLogic.buildMasterData(timeEntries, 2019);
+        formattedTimeDataLogic.setSelectedYear(2019);
+        formattedTimeDataLogic.buildMasterData(timeEntries);
 
         Map<YearMonth, List<DailyFormattedDataModel>> masterData = formattedTimeDataLogic.getMonthlyMasterData();
         assertNotNull(masterData);
@@ -117,7 +118,8 @@ public class FormattedTimeDataLogicTest {
 
     @Test
     public void testWeeks() {
-        formattedTimeDataLogic.buildMasterData(timeEntries, 2019);
+        formattedTimeDataLogic.setSelectedYear(2019);
+        formattedTimeDataLogic.buildMasterData(timeEntries);
         Map<YearWeek, List<DailyFormattedDataModel>> data = formattedTimeDataLogic.getWeeklyMasterData();
         assertNotNull(data);
         assertEquals(53, data.size());

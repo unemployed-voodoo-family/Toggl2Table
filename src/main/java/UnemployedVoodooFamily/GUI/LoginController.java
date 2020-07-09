@@ -16,6 +16,7 @@ import javafx.scene.layout.HBox;
 import javafx.util.Duration;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Optional;
 import java.util.Properties;
 
@@ -72,11 +73,11 @@ public class LoginController {
         forgotPasswordLink.setOnAction(event -> {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Leaving Toggl Time Sheet");
-            alert.setHeaderText("You will now be sent to Toggls website");
+            alert.setHeaderText("You will now be sent to Toggl's website");
             alert.setContentText("Are you ok with this?");
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK){
-                loginLogic.browseTogglForgotPW();
+                browseTogglForgotPW();
             } else {
                 alert.close();
             }
@@ -110,14 +111,27 @@ public class LoginController {
                 }
                 else {
                     Main.closeLogin();
-                    //checks if a loginStage already exists, if it does, its closed.
+                    //checks if a loginStage already exists, if it does, close it.
                     if(GUIBaseController.loginStageExists()) {
                         GUIBaseController.closeLogin();
+                    }
+                    try {
+                        new GUIBaseController().start();
+                    }
+                    catch(IOException e) {
+                        System.out.println("Error whiel starting GUIBaseController: " + e.getMessage());
                     }
                 }
             });
         });
         loginCredThread.start();
+    }
+
+    /**
+     * Go to a "forgot password" section of Toggl website
+     */
+    public void browseTogglForgotPW() {
+        GUIHelper.navigateToUrl("https://toggl.com/forgot-password/");
     }
 
     public void buttonPressedListener(KeyEvent e) {

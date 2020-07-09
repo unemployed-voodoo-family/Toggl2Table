@@ -40,8 +40,8 @@ public class ExcelWriter {
 
     private void buildWorkbook(HashMap<String, List> monthLists, int year) throws IOException {
         //Create monthly sheets
-        for(String key: monthLists.keySet()) {
-            constructMonthlySheet(key, monthLists.get(key));
+        for(String month: monthLists.keySet()) {
+            constructMonthlySheet(month, monthLists.get(month));
         }
 
         //Create summary sheet
@@ -50,10 +50,10 @@ public class ExcelWriter {
 
         workbook.setSheetOrder(summarySheetName, 0);
 
-        int order = 1;
-        for(Month month: Month.values()) { //Order the monthly sheets
-            workbook.setSheetOrder(StringUtils.capitalize(month.toString().toLowerCase()), order);
-            order++;
+        Month[] months = Month.values();
+        for(int i = 0; i < monthLists.size(); ++i) { //Order the monthly sheets
+            String monthName = StringUtils.capitalize(months[i].toString().toLowerCase());
+            workbook.setSheetOrder(monthName, i + 1);
         }
 
         //Set other default settings and write to file

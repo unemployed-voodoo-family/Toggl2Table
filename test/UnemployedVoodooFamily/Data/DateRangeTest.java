@@ -14,16 +14,14 @@ public class DateRangeTest {
 
     LocalDate date1 = LocalDate.of(2019, 1, 1);
     LocalDate date2 = LocalDate.of(2019, 1, 31);
-    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
-    DateRange range = new DateRange(date1, date2, formatter);
+    DateRange range = new DateRange(date1, date2);
 
     @Before
     public void setUp() throws Exception {
         date1 = LocalDate.of(2019, 1, 1);
         date2 = LocalDate.of(2019, 1, 31);
-        formatter = DateTimeFormatter.ISO_LOCAL_TIME;
-        range = new DateRange(date1, date2, formatter);
+        range = new DateRange(date1, date2);
     }
 
     @After
@@ -60,7 +58,7 @@ public class DateRangeTest {
         LocalDate date4 = LocalDate.of(2019, 3, 15);
         LocalDate date3 = LocalDate.of(2019, 1, 15);
 
-        DateRange otherRange = new DateRange(date3, date4, formatter);
+        DateRange otherRange = new DateRange(date3, date4);
         assertFalse(range.fromValueinRange(otherRange));
     }
 
@@ -70,6 +68,21 @@ public class DateRangeTest {
 
     @Test
     public void isEncapsulating() {
+        LocalDate d1 = LocalDate.of(2020, 6, 1);
+        LocalDate d2 = LocalDate.of(2020, 6, 3);
+        LocalDate d3 = LocalDate.of(2020, 6, 5);
+        LocalDate d4 = LocalDate.of(2020, 6, 10);
+
+        assertFalse(DateRange.of(d1, d2).isEncapsulating(DateRange.of(d3, d4)));
+        assertFalse(DateRange.of(d1, d2).isEncapsulating(DateRange.of(d2, d3)));
+        assertFalse(DateRange.of(d1, d3).isEncapsulating(DateRange.of(d2, d4)));
+        assertFalse(DateRange.of(d3, d4).isEncapsulating(DateRange.of(d1, d2)));
+        assertFalse(DateRange.of(d3, d4).isEncapsulating(DateRange.of(d1, d3)));
+        assertFalse(DateRange.of(d2, d4).isEncapsulating(DateRange.of(d1, d3)));
+        assertTrue(DateRange.of(d3, d4).isEncapsulating(DateRange.of(d3, d4)));
+        assertTrue(DateRange.of(d1, d4).isEncapsulating(DateRange.of(d1, d3)));
+        assertTrue(DateRange.of(d1, d4).isEncapsulating(DateRange.of(d2, d3)));
+        assertTrue(DateRange.of(d1, d4).isEncapsulating(DateRange.of(d2, d4)));
     }
 
     @Test

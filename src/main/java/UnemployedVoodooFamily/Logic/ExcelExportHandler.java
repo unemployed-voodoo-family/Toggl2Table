@@ -24,8 +24,10 @@ public class ExcelExportHandler {
         monthlyDataLists = new HashMap<>();
         if(null != timeEntries) {
             for(Month month: Month.values()) {
-                monthlyDataLists.put(StringUtils.capitalize(month.toString().toLowerCase()),
-                                     timeEntries.get(YearMonth.of(year, month)));
+                List<DailyFormattedDataModel> monthData = timeEntries.get(YearMonth.of(year, month));
+                if (monthData != null) {
+                    monthlyDataLists.put(StringUtils.capitalize(month.toString().toLowerCase()), monthData);
+                }
             }
         }
     }

@@ -9,6 +9,9 @@ import java.time.LocalDate;
 import java.time.format.TextStyle;
 import java.util.Locale;
 
+/**
+ * Used to structure data for the corresponding TableView
+ */
 public class DailyFormattedDataModel {
 
     private LocalDate date;
@@ -19,8 +22,6 @@ public class DailyFormattedDataModel {
     private SimpleDoubleProperty accumulatedHours;
     private SimpleStringProperty note = new SimpleStringProperty("");
     private SimpleObjectProperty<YearWeek> weekNumber;
-
-    private boolean isFiller = false;
 
     /**
      * Creates a WeeklyTimeDataModel object
@@ -103,13 +104,5 @@ public class DailyFormattedDataModel {
      */
     public YearWeek getWeekNumber() {
         return weekNumber.get();
-    }
-
-    public boolean isFiller() {
-        return isFiller;
-    }
-
-    public void setFiller(boolean filler) {
-        isFiller = filler;
     }
 }

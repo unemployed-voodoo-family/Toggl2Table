@@ -2,9 +2,7 @@ package UnemployedVoodooFamily.Logic;
 
 import UnemployedVoodooFamily.Data.RawTimeDataModel;
 import ch.simas.jtoggl.*;
-import javafx.collections.ObservableList;
 
-import java.sql.Time;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -12,14 +10,14 @@ import java.util.stream.Collectors;
 
 public class RawTimeDataLogic {
     // and is responsible for handling raw time data
-    private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MMM-dd");
+    private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MMM-dd");
 
     private LocalDate filterStartDate = LocalDate.now().minusWeeks(1);
     private LocalDate filterEndDate = LocalDate.now();
 
     private List<TimeEntry> masterTimeEntries;
     private List<TimeEntry> filteredTimeEntries;
-    private ZoneOffset zoneOffset = Session.getInstance().getZoneOffset();
+    private final ZoneOffset zoneOffset = Session.getInstance().getZoneOffset();
 
     /**
      * Build an observable list with RawTimeDataModel, using time entries imported from Toggl.
@@ -32,8 +30,10 @@ public class RawTimeDataLogic {
         List<RawTimeDataModel> data = new ArrayList<>();
         this.masterTimeEntries = timeEntries;
 
-        //fill timeentries with workspace and proejct objects
+        //fill timeentries with workspace and project objects
         assembleLooseData(projects, workspaces, clients, timeEntries);
+
+        // removeAll is a O(n^2) algorithm, this could be improved. However, it works in ~50-200ms for ~6000 time entries
 
         //filter timeentries
         filteredTimeEntries = new LinkedList<>(masterTimeEntries);
@@ -50,7 +50,7 @@ public class RawTimeDataLogic {
                 if(p == null) {
                     p = new Project();
                 }
-                Client c = p == null ? new Client() : p.getClient();
+                Client c = p.getClient();
                 if (c == null) {
                     c = new Client();
                 }
@@ -73,10 +73,7 @@ public class RawTimeDataLogic {
         }
 
         DateTimeFormatter durationFormatter = DateTimeFormatter.ofPattern("HH:mm");
-        Iterator<TimeEntry> it = filteredTimeEntries.iterator();
-        while(it.hasNext()) {
-            TimeEntry timeEntry = it.next();
-
+        for(TimeEntry timeEntry: filteredTimeEntries) {
             //Check if a timer is going and ignore it if it is
             if(null != timeEntry.getStop()) {
 

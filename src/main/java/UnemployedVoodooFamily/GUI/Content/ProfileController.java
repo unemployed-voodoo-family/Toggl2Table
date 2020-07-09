@@ -1,5 +1,6 @@
 package UnemployedVoodooFamily.GUI.Content;
 
+import UnemployedVoodooFamily.GUI.GUIHelper;
 import UnemployedVoodooFamily.Logic.ProfileLogic;
 import UnemployedVoodooFamily.Logic.Session;
 import javafx.fxml.FXML;
@@ -40,26 +41,28 @@ public class ProfileController {
     @FXML private MenuItem editProfileBtn;
 
 
-    private ProfileLogic profile;
-
-
     public Node loadFXML() throws IOException {
         URL r = getClass().getClassLoader().getResource("Profile.fxml");
         return FXMLLoader.load(r);
     }
 
     public void initialize() {
-        this.profile = new ProfileLogic();
         nameField.setText(Session.getInstance().getUser().getFullname());
         emailField.setText(Session.getInstance().getUser().getEmail());
         countryField.setText(Session.getInstance().getUser().getLanguage());
         timeZoneField.setText(Session.getInstance().getUser().getTimeZone());
         durationDispField.setText(Session.getInstance().getUser().getTimeofday_format());
         dateFormatField.setText(Session.getInstance().getUser().getDate_format());
-        timeFormatField.setText(profile.getTimeFormat(Session.getInstance().getUser().getTimeofday_format()));
-        firstDayOfWeekField.setText(profile.getFirstDayOfWeek(Session.getInstance().getUser().getBeginning_of_week()));
-        editProfileBtn.setOnAction(e -> profile.browseTogglProfile());
+        timeFormatField.setText(ProfileLogic.getTimeFormat(Session.getInstance().getUser().getTimeofday_format()));
+        firstDayOfWeekField.setText(ProfileLogic.getFirstDayOfWeek(Session.getInstance().getUser().getBeginning_of_week()));
+        editProfileBtn.setOnAction(e -> browseTogglProfile());
 
     }
 
+    /**
+     * Open profile section of Toggl website
+     */
+    public void browseTogglProfile() {
+        GUIHelper.navigateToUrl("https://toggl.com/app/profile");
+    }
 }

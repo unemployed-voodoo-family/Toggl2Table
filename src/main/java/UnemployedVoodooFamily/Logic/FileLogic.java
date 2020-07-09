@@ -6,16 +6,20 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.*;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
+/**
+ * Handles reading/writing operations for files
+ */
 public class FileLogic {
 
 
-    public Properties loadProps(String path) {
+    /**
+     * Load properties from a file
+     * @param path Path to a file where properties are stored
+     * @return Loaded properties
+     */
+    public static Properties loadProps(String path) {
         Properties props = new Properties();
         File file = getFile(path);
         try {
@@ -29,20 +33,27 @@ public class FileLogic {
         return props;
     }
 
-    public void saveProps(String path, Properties props) {
-        File file = getFile(path);
+
+    /**
+     * Save properties to a file
+     * @param props Properties to store
+     * @param filepath path to property file
+     * @return True on success, false on error
+     */
+    public static boolean saveProps(Properties props, String filepath) {
+        boolean storeSuccessful = false;
         try {
-            OutputStream o = new FileOutputStream(file);
-            props.store(o, "");
-            o.close();
+            FileOutputStream output = new FileOutputStream(filepath);
+            props.store(output, null);
+            storeSuccessful = true;
         }
         catch(IOException e) {
             e.printStackTrace();
         }
-
+        return storeSuccessful;
     }
 
-    private File getFile(String path) {
+    private static File getFile(String path) {
         File file = new File(path);
         try {
             file.createNewFile();
@@ -53,63 +64,83 @@ public class FileLogic {
         return file;
     }
 
-    public boolean deleteFile(String path) {
-        File file = new File(path);
-        return file.delete();
-    }
-
-    public List<WorkHours> loadJson(String path) {
-        FileReader reader = null;
-        File file = getFile(path);
+    /**
+     * Read a JSON file, interpret it as a list of objects
+     * @param path Path to the JSON file
+     * @return The collection containing the objects from the JSON file
+     */
+    public static List<WorkHours> loadWorkHourListFromJsonFile(String path) {
         List<WorkHours> list = null;
+        File file = getFile(path);
         try {
-            reader = new FileReader(file);
+            FileReader reader = new FileReader(file);
             Gson gson = new GsonBuilder().serializeNulls().setPrettyPrinting().create();
-            Type listType = new TypeToken<List<WorkHours>>() {}.getType();
-            list = gson.fromJson(reader, listType);
+            TypeToken<ArrayList<WorkHours>> token = new TypeToken<ArrayList<WorkHours>>() {};
+            list = gson.fromJson(reader, token.getType());
+            reader.close();
         }
-        catch(FileNotFoundException e) {
+        catch(IOException e) {
             e.printStackTrace();
         }
-        finally {
-            try {
-                reader.close();
-            }
-            catch(IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return list == null ? new ArrayList<>() : list;
+        return list;
     }
 
-    public void saveJson(String path, Collection<?> dataset) {
+    /**
+     * Save a collection to a JSON file. Create the file and all parent directories if necessary.
+     * @param path PAth to the JSON file
+     * @param dataset the data to be stored
+     * @return True on success, false on error
+     */
+    public static boolean saveCollectionToJson(String path, Collection<?> dataset) {
         File file = new File(path);
         try {
             file.getParentFile().mkdirs();
             file.createNewFile();
+            return writeCollectionToFile(file, dataset);
         }
         catch(IOException e) {
             e.printStackTrace();
         }
-        writeFile(file, dataset);
+        return false;
     }
 
-    private void writeFile(File file, Collection<?> dataset) {
-        FileWriter writer = null;
+    /**
+     * Write a collection to a file.
+     * @param file A file, already opened for writing
+     * @param dataset Dataset to write to a file
+     * @return True on success, false on error
+     */
+    private static boolean writeCollectionToFile(File file, Collection<?> dataset) {
         try {
-            writer = new FileWriter(file);
-        }
-        catch(IOException e) {
-            e.printStackTrace();
-        }
-        GsonBuilder builder = new GsonBuilder();
-        Gson gson = builder.setPrettyPrinting().serializeNulls().create();
-        gson.toJson(dataset, writer);
-        try {
+            FileWriter writer = new FileWriter(file);
+            GsonBuilder builder = new GsonBuilder();
+            Gson gson = builder.setPrettyPrinting().serializeNulls().create();
+            gson.toJson(dataset, writer);
             writer.close();
+            return true;
         }
         catch(IOException e) {
             e.printStackTrace();
         }
+        return false;
+    }
+
+    /**
+     * This method's main function is to delete files in a specific directory,
+     * files including files in subdirectories will also be deleted, disregarding it's extension.
+     * @param path is the directory path from where all files will be removed.
+     */
+    public static void deleteStoredData(String path) throws SecurityException{
+        File directory = new File(path);
+
+        for(File file: directory.listFiles()) {
+            if(file.isDirectory()) {
+                deleteStoredData(directory + File.separator + file.getName());
+            }
+            else {
+                file.delete();
+            }
+        }
+
     }
 }

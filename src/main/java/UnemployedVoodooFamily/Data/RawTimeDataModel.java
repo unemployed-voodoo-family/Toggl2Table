@@ -2,6 +2,9 @@ package UnemployedVoodooFamily.Data;
 
 import javafx.beans.property.SimpleStringProperty;
 
+/**
+ * Data to be displayed in Raw data table
+ */
 public class RawTimeDataModel {
 
     private SimpleStringProperty project;

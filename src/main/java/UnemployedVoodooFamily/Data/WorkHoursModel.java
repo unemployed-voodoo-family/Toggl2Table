@@ -10,8 +10,6 @@ import java.time.format.DateTimeFormatter;
  * for use with JavaFX components.
  */
 public class WorkHoursModel {
-
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd. LLLL yyyy");
     private SimpleObjectProperty<LocalDate> from;
     private SimpleObjectProperty<LocalDate> to;
     private SimpleObjectProperty<Double> hours;
